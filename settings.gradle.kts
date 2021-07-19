@@ -1,0 +1,8 @@
+rootProject.name = "FabricHG"
+
+pluginManagement {
+    repositories {
+        maven("https://maven.fabricmc.net/")
+        gradlePluginPortal()
+    }
+}

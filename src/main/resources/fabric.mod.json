@@ -1,0 +1,21 @@
+{
+  "entrypoints": {
+    "client": [
+    ]
+  },
+  "id": "FabricHG",
+  "version": "${version}",
+  "schemaVersion": 1,
+  "authors": [
+    "r0yzer"
+  ],
+  "depends": {
+    "minecraft": "1.17.x",
+    "fabric-language-kotlin": "*",
+    "fabricloader": ">=0.8.7",
+    "fabric": "*"
+  },
+  "mixins": [
+    "mod.mixins.json"
+  ]
+}
