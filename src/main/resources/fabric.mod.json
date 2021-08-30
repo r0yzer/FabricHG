@@ -1,9 +1,10 @@
 {
   "entrypoints": {
-    "client": [
+    "server": [
+      "de.royzer.fabrichg.MainKt::initServer"
     ]
   },
-  "id": "FabricHG",
+  "id": "fabrichg",
   "version": "${version}",
   "schemaVersion": 1,
   "authors": [

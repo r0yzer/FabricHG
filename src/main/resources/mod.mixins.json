@@ -6,5 +6,9 @@
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "ServerPlayerEntityMixin",
+    "SoupHealing"
+  ]
 }
