@@ -9,15 +9,15 @@ import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.axay.fabrik.core.text.literalText
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.LiteralText
 import java.util.*
 
 class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
 
-    val endTime = GamePhaseManager.timer.get()
+    val endTime by lazy { GamePhaseManager.timer.get() }
     private val serverPlayerEntity = hgPlayer?.serverPlayerEntity
-
 
     override fun init() {
         serverPlayerEntity?.abilities?.allowFlying = true

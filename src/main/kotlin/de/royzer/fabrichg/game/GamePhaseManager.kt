@@ -3,6 +3,7 @@ package de.royzer.fabrichg.game
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
+import de.royzer.fabrichg.scoreboard.showScoreboard
 import kotlinx.coroutines.*
 import net.axay.fabrik.core.logging.logInfo
 import net.axay.fabrik.core.task.coroutineTask
@@ -17,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger
 object GamePhaseManager {
     lateinit var server: MinecraftDedicatedServer
     val timer = AtomicInteger()
-    val gameCoroutineScope = CoroutineScope(Dispatchers.Default)
     var currentPhase: GamePhase = LobbyPhase
     val currentPhaseType: PhaseType get() = currentPhase.phaseType
 

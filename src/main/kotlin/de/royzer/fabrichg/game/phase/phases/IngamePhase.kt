@@ -18,6 +18,8 @@ object IngamePhase : GamePhase() {
     override val maxPhaseTime = 15 * 60
     override val nextPhase by lazy { EndPhase(winner) }
 
+    val maxPlayers by lazy { PlayerList.alivePlayers.size }
+
     override fun init() {
         broadcast(literalText("${phaseType.name} starting"))
         GamePhaseManager.server.isPvpEnabled = true

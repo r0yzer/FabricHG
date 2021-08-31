@@ -3,6 +3,9 @@ package de.royzer.fabrichg.game
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.game.phase.GamePhase
+import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import net.axay.fabrik.core.text.literalText
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.server.network.ServerPlayerEntity
@@ -15,6 +18,9 @@ object PlayerList {
     val alivePlayers get() = players.filter { it.value.status == HGPlayerStatus.ALIVE || it.value.status == HGPlayerStatus.COMBATLOGGED}
 
     val spectators get() = players.filter { it.value.status == HGPlayerStatus.SPECTATOR }
+
+    val maxPlayers: Int
+        get() = if (GamePhaseManager.currentPhaseType == PhaseType.INGAME || GamePhaseManager.currentPhaseType == PhaseType.END) IngamePhase.maxPlayers else alivePlayers.size
 
     fun getPlayer(uuid: UUID, name: String): HGPlayer {
         return players.computeIfAbsent(uuid) {

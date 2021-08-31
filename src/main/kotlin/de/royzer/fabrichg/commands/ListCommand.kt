@@ -10,7 +10,7 @@ import net.axay.fabrik.core.text.literalText
 
 val listCommand = command("list") {
     simpleExecutes {
-        val text = literalText text@{
+        val text = literalText {
             PlayerList.players.forEach { data ->
                 val hgPlayer = data.value
 

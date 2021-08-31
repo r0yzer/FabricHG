@@ -1,6 +1,5 @@
 package de.royzer.fabrichg.data.hgplayer
 
-import de.royzer.fabrichg.game.combatlog.maxCombatlogTime
 import de.royzer.fabrichg.hgId
 import kotlinx.serialization.Serializable
 import net.axay.fabrik.persistence.compoundKey

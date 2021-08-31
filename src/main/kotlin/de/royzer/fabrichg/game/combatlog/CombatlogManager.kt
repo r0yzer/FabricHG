@@ -13,11 +13,7 @@ import net.axay.fabrik.core.task.mcSyncLaunch
 import net.minecraft.server.network.ServerPlayerEntity
 import java.util.*
 
-const val maxCombatlogTime = 60
-
 val combatloggedPlayers = hashMapOf<UUID, Job>()
-
-val combatlogTimes = hashMapOf<UUID, Int>()
 
 fun ServerPlayerEntity.startCombatlog() {
     hgPlayer.status = HGPlayerStatus.COMBATLOGGED

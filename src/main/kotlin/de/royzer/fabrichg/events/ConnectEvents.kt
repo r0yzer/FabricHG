@@ -9,8 +9,10 @@ import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
+import de.royzer.fabrichg.scoreboard.showScoreboard
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.job
+import net.axay.fabrik.core.sideboard.showSideboard
 import net.axay.fabrik.core.text.literalText
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.network.ServerPlayerEntity
@@ -22,6 +24,8 @@ object ConnectEvents {
             val gamePhase = GamePhaseManager.currentPhase.phaseType
             val player = handler.player
             val uuid = player.uuid
+
+            player.showScoreboard()
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
@@ -40,7 +44,6 @@ object ConnectEvents {
                     when (player.hgPlayer.status) {
                         HGPlayerStatus.COMBATLOGGED -> {
                             combatloggedPlayers[uuid]?.job?.cancel()
-                            broadcast("${handler.player.name.asString()} ist wieder da")
                             player.hgPlayer.status = HGPlayerStatus.ALIVE
                         }
                         else -> {
