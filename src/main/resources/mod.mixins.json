@@ -3,12 +3,13 @@
   "package": "de.royzer.fabrichg.mixins",
   "compatibilityLevel": "JAVA_16",
   "server": [
+    "LivingEntityMixin",
+    "ServerPlayerEntityMixin",
+    "SoupHealing"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "ServerPlayerEntityMixin",
-    "SoupHealing"
   ]
 }

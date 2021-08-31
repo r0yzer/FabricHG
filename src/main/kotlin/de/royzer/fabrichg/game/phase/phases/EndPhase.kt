@@ -1,6 +1,6 @@
 package de.royzer.fabrichg.game.phase.phases
 
-import de.royzer.fabrichg.data.hgplayer.hgPlayerData
+import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
@@ -13,10 +13,10 @@ import net.minecraft.text.HoverEvent
 import net.minecraft.text.LiteralText
 import java.util.*
 
-class EndPhase(private val winnerInformation: WinnerInformation) : GamePhase() {
+class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
 
     val endTime = GamePhaseManager.timer.get()
-    private val serverPlayerEntity = GamePhaseManager.server.playerManager.getPlayer(winnerInformation.uuid)
+    private val serverPlayerEntity = hgPlayer?.serverPlayerEntity
 
 
     override fun init() {
@@ -26,7 +26,7 @@ class EndPhase(private val winnerInformation: WinnerInformation) : GamePhase() {
     }
 
     override fun tick(timer: Int) {
-        broadcast(winnerText(winnerInformation))
+        broadcast(winnerText(hgPlayer))
         if (timer >= maxPhaseTime) {
             GamePhaseManager.server.shutdown()
         }
@@ -37,7 +37,7 @@ class EndPhase(private val winnerInformation: WinnerInformation) : GamePhase() {
     override val nextPhase = null
 }
 
-fun winnerText(winner: WinnerInformation?): LiteralText {
+fun winnerText(winner: HGPlayer?): LiteralText {
     if (winner == null) return literalText("nunja kein winner wohl")
     return literalText {
         color = 0x00A0FF
@@ -47,10 +47,10 @@ fun winnerText(winner: WinnerInformation?): LiteralText {
         }
         text(" hat gewonnen!")
         hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, literalText {
-            text("Kills: ${winner.hgPlayerData.kills}\n") {
+            text("Kills: ${winner.kills}\n") {
                 color = 0x00FF51
             }
-            text("Kit: ${winner.hgPlayerData.kits}") {
+            text("Kit: womble}") {
                 color = 0x42FF51
             }
         })

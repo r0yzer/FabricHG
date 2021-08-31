@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.commands
 
+import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
@@ -10,19 +11,24 @@ import net.axay.fabrik.core.text.literalText
 val listCommand = command("list") {
     simpleExecutes {
         val text = literalText text@{
-            PlayerList.players.forEach { uuid ->
-                val serverPlayerEntity = GamePhaseManager.server.playerManager.getPlayer(uuid)
+            PlayerList.players.forEach { data ->
+                val hgPlayer = data.value
 
-                if (serverPlayerEntity != null) {
-                    text(serverPlayerEntity.name.string) {
+                when (hgPlayer.status) {
+                    HGPlayerStatus.ALIVE -> text("${hgPlayer.name}, ") {
                         color = 0x00FF32
                     }
-                } else {
-                    val offlinePlayer = combatloggedPlayers[uuid]
-                    text(offlinePlayer?.name.orEmpty()) {
+                    HGPlayerStatus.DEAD -> text("${hgPlayer.name}, ") {
                         color = 0xFF0000
                     }
+                    HGPlayerStatus.SPECTATOR -> text("${hgPlayer.name}, ") {
+                        color = 0xE9E9E9
+                    }
+                    else -> text("${hgPlayer.name}, ") {
+                        color = 0xFF4CC0
+                    }
                 }
+
             }
         }
         this.source.player.sendMessage(text, false)

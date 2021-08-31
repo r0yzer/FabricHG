@@ -4,5 +4,5 @@ enum class HGPlayerStatus {
     ALIVE,
     SPECTATOR,
     DEAD,
-    COMBATLOGGED
+    COMBATLOGGED,
 }
