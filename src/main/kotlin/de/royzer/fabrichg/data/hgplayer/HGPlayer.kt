@@ -2,6 +2,7 @@ package de.royzer.fabrichg.data.hgplayer
 
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.game.combatlog.maxOfflineTime
 import net.minecraft.server.network.ServerPlayerEntity
 import java.util.*
 
@@ -11,7 +12,7 @@ class HGPlayer(
 ) {
     var status: HGPlayerStatus = HGPlayerStatus.ALIVE
     var kills: Int = 0
-    var offlineTime = 10
+    var offlineTime = maxOfflineTime
 
     val serverPlayerEntity get() = GamePhaseManager.server.playerManager.getPlayer(uuid)
 }

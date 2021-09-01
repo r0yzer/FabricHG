@@ -12,8 +12,11 @@ import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.scoreboard.showScoreboard
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.job
+import net.axay.fabrik.core.logging.logInfo
 import net.axay.fabrik.core.sideboard.showSideboard
+import net.axay.fabrik.core.task.coroutineTask
 import net.axay.fabrik.core.text.literalText
+import net.axay.fabrik.core.text.sendText
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.world.GameMode
@@ -25,7 +28,9 @@ object ConnectEvents {
             val player = handler.player
             val uuid = player.uuid
 
-            player.showScoreboard()
+            coroutineTask(delay = 1000) {
+                player.showScoreboard()
+            }
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
@@ -38,9 +43,7 @@ object ConnectEvents {
                     PlayerList.getPlayer(player.uuid, player.name.string)
                 }
                 PhaseType.INGAME -> {
-
                     broadcast("${player.name.string} joined in ${gamePhase.name} als ${player.hgPlayer.status}")
-
                     when (player.hgPlayer.status) {
                         HGPlayerStatus.COMBATLOGGED -> {
                             combatloggedPlayers[uuid]?.job?.cancel()
@@ -49,9 +52,14 @@ object ConnectEvents {
                         else -> {
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                             player.changeGameMode(GameMode.SPECTATOR)
-                            player.sendMessage(literalText("nunja gamne schon start") { }, false)
+                            player.sendText(literalText("nunja gamne schon start") { })
                         }
                     }
+                }
+                PhaseType.END -> {
+                    player.hgPlayer.status = HGPlayerStatus.SPECTATOR
+                    player.changeGameMode(GameMode.SPECTATOR)
+                    player.sendText(literalText("nunja gamne schon vorbei") { })
                 }
             }
         }

@@ -15,6 +15,8 @@ val infoCommand = command("info") {
                 text("Status: ${source.player.hgPlayer.status}") { color = 0xFF0802 }
                 newLine()
                 text("Kills: ${source.player.hgPlayer.kills}") { color = 0x143CFF }
+                newLine()
+                text("Verbleibende offline Zeit: ${source.player.hgPlayer.offlineTime}") { color = 0x143CFF }
             }, false
         )
     }

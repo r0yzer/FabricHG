@@ -32,5 +32,12 @@ object IngamePhase : GamePhase() {
             winner = winnerData?.value
             startNextPhase()
         }
+        when (val timeLeft = maxPhaseTime - timer) {
+            60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText("spiel endet in $timeLeft"))
+            0 -> {
+                winner = PlayerList.alivePlayers.values.random()
+                startNextPhase()
+            }
+        }
     }
 }

@@ -11,5 +11,7 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "CreeperIgniteGoalMixin",
+    "FollowTargetGoalMixin"
   ]
 }

@@ -15,6 +15,8 @@ import java.util.*
 
 val combatloggedPlayers = hashMapOf<UUID, Job>()
 
+const val maxOfflineTime = 60
+
 fun ServerPlayerEntity.startCombatlog() {
     hgPlayer.status = HGPlayerStatus.COMBATLOGGED
     val job = fabrichgScope.launch job@{
@@ -23,7 +25,6 @@ fun ServerPlayerEntity.startCombatlog() {
                 delay(1000)
                 mcSyncLaunch {
                     if (GamePhaseManager.currentPhaseType == PhaseType.INGAME) hgPlayer.offlineTime -= 1
-                    broadcast(hgPlayer.offlineTime.toString())
                     if (hgPlayer.offlineTime <= 0) {
                         removeHGPlayer()
                         broadcast("${name.string} ist, nunja, combatlogged und somit tot")
