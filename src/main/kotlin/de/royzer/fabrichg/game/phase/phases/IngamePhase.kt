@@ -15,15 +15,13 @@ import java.util.*
 object IngamePhase : GamePhase() {
     var winner: HGPlayer? = null
     override val phaseType = PhaseType.INGAME
-    override val maxPhaseTime = 15 * 60
+    override val maxPhaseTime = 5 * 60
     override val nextPhase by lazy { EndPhase(winner) }
 
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
-        broadcast(literalText("${phaseType.name} starting"))
         GamePhaseManager.server.isPvpEnabled = true
-        GamePhaseManager.resetTimer()
     }
 
     override fun tick(timer: Int) {

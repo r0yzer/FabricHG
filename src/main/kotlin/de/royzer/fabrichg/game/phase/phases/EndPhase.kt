@@ -20,6 +20,7 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
     private val serverPlayerEntity = hgPlayer?.serverPlayerEntity
 
     override fun init() {
+        endTime
         serverPlayerEntity?.abilities?.allowFlying = true
         serverPlayerEntity?.abilities?.flying = true
         GamePhaseManager.resetTimer()

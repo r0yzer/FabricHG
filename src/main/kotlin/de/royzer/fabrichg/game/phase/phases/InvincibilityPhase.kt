@@ -5,14 +5,18 @@ import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.axay.fabrik.core.text.literalText
+import net.minecraft.util.math.BlockPos
 import net.minecraft.world.GameMode
+import net.minecraft.world.Heightmap
 
 object InvincibilityPhase : GamePhase() {
     override fun init() {
         GamePhaseManager.resetTimer()
-        broadcast("hg geht los ok")
+        broadcast("hg geht los ok :)")
         GamePhaseManager.server.playerManager.playerList.forEach {
             it.teleport(0.0, 100.0, 0.0)
+            val highestPos = it.world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, BlockPos(0,100,0))
+            it.teleport(highestPos.x.toDouble(), highestPos.y.toDouble(), highestPos.z.toDouble())
             it.changeGameMode(GameMode.SURVIVAL)
         }
     }
@@ -25,6 +29,6 @@ object InvincibilityPhase : GamePhase() {
     }
 
     override val phaseType = PhaseType.INVINCIBILITY
-    override val maxPhaseTime = 2 * 1
+    override val maxPhaseTime = 5 * 1
     override val nextPhase = IngamePhase
 }

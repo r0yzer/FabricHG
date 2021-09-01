@@ -4,6 +4,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.phase.phases.EndPhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import net.axay.fabrik.core.sideboard.showSideboard
 import net.axay.fabrik.core.sideboard.sideboard
@@ -19,6 +20,8 @@ fun ServerPlayerEntity.showScoreboard() {
             lineChangingPeriodically(1000) {
                 if (GamePhaseManager.currentPhaseType == PhaseType.LOBBY)
                     literalText("Start in: ${LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()}")
+                else if (GamePhaseManager.currentPhaseType == PhaseType.END)
+                    literalText("Zeit: ${(GamePhaseManager.currentPhase as EndPhase).endTime}")
                 else
                     literalText("Zeit: ${GamePhaseManager.timer.get()}")
             }

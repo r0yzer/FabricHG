@@ -28,9 +28,7 @@ object ConnectEvents {
             val player = handler.player
             val uuid = player.uuid
 
-            coroutineTask(delay = 1000) {
-                player.showScoreboard()
-            }
+            player.showScoreboard()
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
