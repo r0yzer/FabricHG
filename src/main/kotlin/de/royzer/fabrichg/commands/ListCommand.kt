@@ -5,32 +5,21 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import net.axay.fabrik.commands.command
+import net.axay.fabrik.commands.internal.SimpleCommandContext
+import net.axay.fabrik.commands.runs
 import net.axay.fabrik.commands.simpleExecutes
 import net.axay.fabrik.core.text.literalText
+import net.minecraft.server.command.ServerCommandSource
 
 val listCommand = command("list") {
-    simpleExecutes {
+    runs {
         val text = literalText {
-            PlayerList.players.forEach { data ->
-                val hgPlayer = data.value
-
-                when (hgPlayer.status) {
-                    HGPlayerStatus.ALIVE -> text("${hgPlayer.name}, ") {
-                        color = 0x00FF32
-                    }
-                    HGPlayerStatus.DEAD -> text("${hgPlayer.name}, ") {
-                        color = 0xFF0000
-                    }
-                    HGPlayerStatus.SPECTATOR -> text("${hgPlayer.name}, ") {
-                        color = 0xE9E9E9
-                    }
-                    else -> text("${hgPlayer.name}, ") {
-                        color = 0xFF4CC0
-                    }
+            PlayerList.players.values.forEach { hgPlayer ->
+                text("${hgPlayer.name}, ") {
+                    color = hgPlayer.status.statusColor
                 }
-
             }
         }
-        this.source.player.sendMessage(text, false)
+        source.player.sendMessage(text, false)
     }
 }

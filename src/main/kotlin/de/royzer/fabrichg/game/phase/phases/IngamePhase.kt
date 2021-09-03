@@ -26,14 +26,13 @@ object IngamePhase : GamePhase() {
 
     override fun tick(timer: Int) {
         if (PlayerList.alivePlayers.size <= 1) {
-            val winnerData = PlayerList.alivePlayers.entries.firstOrNull()
-            winner = winnerData?.value
+            winner = PlayerList.alivePlayers.firstOrNull()
             startNextPhase()
         }
         when (val timeLeft = maxPhaseTime - timer) {
             60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText("spiel endet in $timeLeft"))
             0 -> {
-                winner = PlayerList.alivePlayers.values.random()
+                winner = PlayerList.alivePlayers.random()
                 startNextPhase()
             }
         }

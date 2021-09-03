@@ -3,12 +3,15 @@ package de.royzer.fabrichg.commands
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import net.axay.fabrik.commands.command
+import net.axay.fabrik.commands.internal.SimpleCommandContext
+import net.axay.fabrik.commands.runs
 import net.axay.fabrik.commands.simpleExecutes
 import net.axay.fabrik.core.text.literalText
+import net.minecraft.server.command.ServerCommandSource
 
 val infoCommand = command("info") {
-    simpleExecutes {
-        this.source.player.sendMessage(
+    runs {
+        source.player.sendMessage(
             literalText {
                 text("Phase: ${GamePhaseManager.currentPhaseType.name}") { color = 0xFF006E }
                 newLine()

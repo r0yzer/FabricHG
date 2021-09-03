@@ -10,14 +10,11 @@ import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.scoreboard.showScoreboard
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.job
-import net.axay.fabrik.core.logging.logInfo
-import net.axay.fabrik.core.sideboard.showSideboard
-import net.axay.fabrik.core.task.coroutineTask
 import net.axay.fabrik.core.text.literalText
 import net.axay.fabrik.core.text.sendText
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
+import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.world.GameMode
 
@@ -29,10 +26,12 @@ object ConnectEvents {
             val uuid = player.uuid
 
             player.showScoreboard()
+            player.attributes.getCustomInstance(EntityAttributes.GENERIC_ATTACK_SPEED)?.baseValue = 100.0
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
                     player.health = player.maxHealth
+                    player.inventory.clear()
                     player.hungerManager.foodLevel = 40
                     player.changeGameMode(GameMode.ADVENTURE)
                     PlayerList.getPlayer(player.uuid, player.name.string)
@@ -43,7 +42,7 @@ object ConnectEvents {
                 PhaseType.INGAME -> {
                     broadcast("${player.name.string} joined in ${gamePhase.name} als ${player.hgPlayer.status}")
                     when (player.hgPlayer.status) {
-                        HGPlayerStatus.COMBATLOGGED -> {
+                        HGPlayerStatus.DISCONNECTED -> {
                             combatloggedPlayers[uuid]?.job?.cancel()
                             player.hgPlayer.status = HGPlayerStatus.ALIVE
                         }

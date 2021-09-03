@@ -5,13 +5,14 @@
   "server": [
     "LivingEntityMixin",
     "ServerPlayerEntityMixin",
-    "SoupHealing"
+    "ItemStackMixin",
+    "CreeperIgniteGoalMixin",
+    "DamageTrackerAccessor",
+    "FollowTargetGoalMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "CreeperIgniteGoalMixin",
-    "FollowTargetGoalMixin"
   ]
 }

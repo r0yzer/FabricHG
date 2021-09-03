@@ -3,7 +3,6 @@ package de.royzer.fabrichg.game
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import net.axay.fabrik.core.text.literalText
@@ -15,9 +14,9 @@ import java.util.*
 object PlayerList {
     val players = mutableMapOf<UUID, HGPlayer>()
 
-    val alivePlayers get() = players.filter { it.value.status == HGPlayerStatus.ALIVE || it.value.status == HGPlayerStatus.COMBATLOGGED}
+    val alivePlayers get() = players.values.filter { it.status == HGPlayerStatus.ALIVE || it.status == HGPlayerStatus.DISCONNECTED}
 
-    val spectators get() = players.filter { it.value.status == HGPlayerStatus.SPECTATOR }
+    val spectators get() = players.values.filter { it.status == HGPlayerStatus.SPECTATOR }
 
     val maxPlayers: Int
         get() = if (GamePhaseManager.currentPhaseType == PhaseType.INGAME || GamePhaseManager.currentPhaseType == PhaseType.END) IngamePhase.maxPlayers else alivePlayers.size
@@ -58,6 +57,6 @@ object PlayerList {
 
 fun ServerPlayerEntity.removeHGPlayer() {
     PlayerList.removePlayer(uuid)
-    hgPlayer.status = HGPlayerStatus.DEAD
+    hgPlayer.status = HGPlayerStatus.SPECTATOR
     changeGameMode(GameMode.SPECTATOR)
 }

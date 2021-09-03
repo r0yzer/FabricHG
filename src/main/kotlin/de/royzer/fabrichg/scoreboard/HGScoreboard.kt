@@ -19,11 +19,11 @@ fun ServerPlayerEntity.showScoreboard() {
         ) {
             lineChangingPeriodically(1000) {
                 if (GamePhaseManager.currentPhaseType == PhaseType.LOBBY)
-                    literalText("Start in: ${LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()}")
+                    literalText("Start in: ${(LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()).formattedTime}")
                 else if (GamePhaseManager.currentPhaseType == PhaseType.END)
-                    literalText("Zeit: ${(GamePhaseManager.currentPhase as EndPhase).endTime}")
+                    literalText("Zeit: ${(GamePhaseManager.currentPhase as EndPhase).endTime.formattedTime}")
                 else
-                    literalText("Zeit: ${GamePhaseManager.timer.get()}")
+                    literalText("Zeit: ${(GamePhaseManager.timer.get()).formattedTime}")
             }
             literalLine("")
             lineChangingPeriodically(1000) {
@@ -31,14 +31,21 @@ fun ServerPlayerEntity.showScoreboard() {
             }
             literalLine("Kit(s): nunja") { color = 0x00FFFF }
             literalLine("")
-            literalLine("Spieler:") { color = 0xFF00BB }
+            literalLine("Spieler:") { color = 0x83CDFF }
             lineChangingPeriodically(1000) {
                 literalText("${PlayerList.alivePlayers.size}/${PlayerList.maxPlayers}") { color = 0x0032FF }
             }
             literalLine("")
             lineChangingPeriodically(1000) {
-                literalText(hgPlayer.status.toString()) { color = 0x0032FF }
+                literalText(hgPlayer.status.toString()) { color = hgPlayer.status.statusColor }
             }
         }
     )
 }
+
+val Int.formattedTime: String
+    get() {
+        val m = this / 60
+        val s = if (this % 60 >= 10) this % 60 else "0${this % 60}"
+        return "$m:$s"
+    }

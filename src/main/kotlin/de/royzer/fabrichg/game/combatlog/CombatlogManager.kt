@@ -18,7 +18,7 @@ val combatloggedPlayers = hashMapOf<UUID, Job>()
 const val maxOfflineTime = 60
 
 fun ServerPlayerEntity.startCombatlog() {
-    hgPlayer.status = HGPlayerStatus.COMBATLOGGED
+    hgPlayer.status = HGPlayerStatus.DISCONNECTED
     val job = fabrichgScope.launch job@{
         try {
             while (isActive) {
