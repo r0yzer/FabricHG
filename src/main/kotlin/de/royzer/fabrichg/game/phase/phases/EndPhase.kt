@@ -29,7 +29,7 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
     override fun tick(timer: Int) {
         broadcast(winnerText(hgPlayer))
         if (timer >= maxPhaseTime) {
-            GamePhaseManager.server.shutdown()
+            GamePhaseManager.server.stop(true)
         }
     }
 

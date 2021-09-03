@@ -8,6 +8,8 @@ import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.phase.phases.LobbyPhase
+import de.royzer.fabrichg.game.phase.phases.freeze
 import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.scoreboard.showScoreboard
 import kotlinx.coroutines.job
@@ -30,10 +32,12 @@ object ConnectEvents {
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
+                    player.clearStatusEffects()
                     player.health = player.maxHealth
                     player.inventory.clear()
                     player.hungerManager.foodLevel = 40
                     player.changeGameMode(GameMode.ADVENTURE)
+                    if (LobbyPhase.isStarting) player.freeze()
                     PlayerList.getPlayer(player.uuid, player.name.string)
                 }
                 PhaseType.INVINCIBILITY -> {
@@ -49,6 +53,7 @@ object ConnectEvents {
                         else -> {
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                             player.changeGameMode(GameMode.SPECTATOR)
+                            player.clearStatusEffects()
                             player.sendText(literalText("nunja gamne schon start") { })
                         }
                     }

@@ -3,16 +3,17 @@
   "package": "de.royzer.fabrichg.mixins",
   "compatibilityLevel": "JAVA_16",
   "server": [
-    "LivingEntityMixin",
-    "ServerPlayerEntityMixin",
-    "ItemStackMixin",
     "CreeperIgniteGoalMixin",
     "DamageTrackerAccessor",
-    "FollowTargetGoalMixin"
+    "FollowTargetGoalMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "ServerPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
+    "EntityMixin"
   ]
 }

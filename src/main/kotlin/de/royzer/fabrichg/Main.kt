@@ -1,6 +1,7 @@
 package de.royzer.fabrichg
 
 import de.royzer.fabrichg.commands.infoCommand
+import de.royzer.fabrichg.commands.kitCommand
 import de.royzer.fabrichg.commands.listCommand
 import de.royzer.fabrichg.commands.startCommand
 import de.royzer.fabrichg.events.PlayerDeath
@@ -34,4 +35,5 @@ fun registerCommands() {
     startCommand
     infoCommand
     listCommand
+    kitCommand
 }

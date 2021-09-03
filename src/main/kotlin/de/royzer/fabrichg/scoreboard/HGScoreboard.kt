@@ -29,9 +29,9 @@ fun ServerPlayerEntity.showScoreboard() {
             lineChangingPeriodically(1000) {
                 literalText("Kills: ${hgPlayer.kills}") { color = 0x0032FF }
             }
-            literalLine("Kit(s): nunja") { color = 0x00FFFF }
+            literalLine("Kit: None") { color = 0x00FFFF }
             literalLine("")
-            literalLine("Spieler:") { color = 0x83CDFF }
+            literalLine("Spieler:") { color = 0xFF0096 }
             lineChangingPeriodically(1000) {
                 literalText("${PlayerList.alivePlayers.size}/${PlayerList.maxPlayers}") { color = 0x0032FF }
             }

@@ -32,7 +32,7 @@ object Tracker {
                 player.networkHandler.sendPacket(PlayerSpawnPositionS2CPacket(BlockPos(nearestPlayer.x, nearestPlayer.y, nearestPlayer.z), nearestPlayer.yaw))
             } else {
                 player.sendText("Es konnte kein Spieler gefunden werden") {
-                    color = 0xFF3219
+                    color = 0xFF4B4B
                 }
             }
         }

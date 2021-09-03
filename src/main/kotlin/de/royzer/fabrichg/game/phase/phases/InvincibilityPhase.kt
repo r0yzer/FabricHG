@@ -4,6 +4,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.scoreboard.formattedTime
 import net.axay.fabrik.core.item.itemStack
 import net.axay.fabrik.core.item.setCustomName
 import net.axay.fabrik.core.text.literalText
@@ -23,7 +24,7 @@ object InvincibilityPhase : GamePhase() {
             it.changeGameMode(GameMode.SURVIVAL)
             it.inventory.clear()
             with(it.inventory) {
-                setStack(0, itemStack(Items.COMPASS) {
+                insertStack(itemStack(Items.COMPASS) {
                     setCustomName {
                         text("Tracker")
                     }
@@ -34,7 +35,11 @@ object InvincibilityPhase : GamePhase() {
 
     override fun tick(timer: Int) {
         when (val timeLeft = maxPhaseTime - timer) {
-            180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText("invincibility endet in $timeLeft"))
+            180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText("Die Invincibility endet in ") {
+                color = 0x7A7A7A
+                text(timeLeft.formattedTime) { color = 0x00FFFF }
+                text(" Minuten")
+            })
             0 -> startNextPhase()
         }
     }
