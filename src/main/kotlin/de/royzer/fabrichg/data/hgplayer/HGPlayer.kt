@@ -13,6 +13,7 @@ class HGPlayer(
     var status: HGPlayerStatus = HGPlayerStatus.ALIVE
     var kills: Int = 0
     var offlineTime = maxOfflineTime
+    var kits = "None"
 
     val serverPlayerEntity get() = GamePhaseManager.server.playerManager.getPlayer(uuid)
 }

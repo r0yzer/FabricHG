@@ -27,7 +27,6 @@ object ConnectEvents {
             val player = handler.player
             val uuid = player.uuid
 
-            player.showScoreboard()
             player.attributes.getCustomInstance(EntityAttributes.GENERIC_ATTACK_SPEED)?.baseValue = 100.0
 
             when (gamePhase) {
@@ -44,7 +43,6 @@ object ConnectEvents {
                     PlayerList.getPlayer(player.uuid, player.name.string)
                 }
                 PhaseType.INGAME -> {
-                    broadcast("${player.name.string} joined in ${gamePhase.name} als ${player.hgPlayer.status}")
                     when (player.hgPlayer.status) {
                         HGPlayerStatus.DISCONNECTED -> {
                             combatloggedPlayers[uuid]?.job?.cancel()
@@ -64,9 +62,10 @@ object ConnectEvents {
                     player.sendText(literalText("nunja gamne schon vorbei") { })
                 }
             }
+
+            player.showScoreboard()
         }
         ServerPlayConnectionEvents.DISCONNECT.register { handler, server ->
-            broadcast("${handler.player.name.string} quit in ${GamePhaseManager.currentPhase.phaseType.name} als ${handler.player.hgPlayer.status}")
             val uuid = handler.player.uuid
             when (GamePhaseManager.currentPhase.phaseType) {
                 PhaseType.LOBBY -> PlayerList.removePlayer(uuid)
@@ -83,9 +82,11 @@ object ConnectEvents {
                         } else {
                             handler.player.startCombatlog()
                         }
+                    } else {
+                        PlayerList.removePlayer(uuid)
                     }
                 }
-                else -> {}
+                PhaseType.END -> {}
             }
         }
     }

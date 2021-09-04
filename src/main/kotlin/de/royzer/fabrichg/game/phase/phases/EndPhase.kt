@@ -21,15 +21,17 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
 
     override fun init() {
         endTime
-        serverPlayerEntity?.abilities?.allowFlying = true
-        serverPlayerEntity?.abilities?.flying = true
         GamePhaseManager.resetTimer()
     }
 
     override fun tick(timer: Int) {
         broadcast(winnerText(hgPlayer))
         if (timer >= maxPhaseTime) {
-            GamePhaseManager.server.stop(true)
+            GamePhaseManager.server.playerManager.playerList.forEach {
+                it.networkHandler.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
+            }
+            GamePhaseManager.server.shutdown()
+            return
         }
     }
 

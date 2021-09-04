@@ -50,6 +50,8 @@ object LobbyPhase : GamePhase() {
                 })
                 0 -> startNextPhase()
             }
+            if (timeLeft >= 15 && isStarting)
+                isStarting = false
         } else {
             isStarting = false
             GamePhaseManager.resetTimer()

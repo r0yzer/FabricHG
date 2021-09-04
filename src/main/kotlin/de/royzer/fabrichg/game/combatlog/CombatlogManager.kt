@@ -10,6 +10,7 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import kotlinx.coroutines.*
 import net.axay.fabrik.core.task.mcSyncLaunch
+import net.axay.fabrik.core.text.literalText
 import net.minecraft.server.network.ServerPlayerEntity
 import java.util.*
 
@@ -27,7 +28,7 @@ fun ServerPlayerEntity.startCombatlog() {
                     if (GamePhaseManager.currentPhaseType == PhaseType.INGAME) hgPlayer.offlineTime -= 1
                     if (hgPlayer.offlineTime <= 0) {
                         removeHGPlayer()
-                        broadcast("${name.string} ist, nunja, combatlogged und somit tot")
+                        broadcast(literalText("${name.string} war zu lange offline") { color = 0xFFE128 })
                         PlayerList.announceRemainingPlayers()
                         this@job.cancel()
                     }

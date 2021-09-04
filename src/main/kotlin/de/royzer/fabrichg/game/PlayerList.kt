@@ -35,10 +35,12 @@ object PlayerList {
         players.remove(uuid)
     }
 
-    fun announcePlayerDeath(name: String, damageSource: DamageSource) {
+    fun announcePlayerDeath(serverPlayerEntity: ServerPlayerEntity, killer: ServerPlayerEntity?) {
+        val hgPlayer = serverPlayerEntity.hgPlayer
+        val otherHGPlayer = killer?.hgPlayer
         broadcast(
             literalText {
-                text("$name wurde von ${damageSource.attacker?.name?.asString()} getötet")
+                text("${serverPlayerEntity.name.string}(${hgPlayer.kits}) wurde von ${killer?.name?.string}(${otherHGPlayer?.kits}) getötet")
                 color = 0xFFE128
             }
         )
@@ -48,7 +50,7 @@ object PlayerList {
     fun announceRemainingPlayers() {
         broadcast(
             literalText {
-                text("${alivePlayers.size} players über")
+                text("Es verbleiben ${alivePlayers.size} Spieler")
                 color = 0xFFE128
             }
         )

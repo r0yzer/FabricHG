@@ -16,11 +16,8 @@ import net.minecraft.world.Heightmap
 object InvincibilityPhase : GamePhase() {
     override fun init() {
         GamePhaseManager.resetTimer()
-        broadcast("hg geht los ok :)")
+        broadcast(literalText("HG startet :)") { color = 0x7A7A7A })
         GamePhaseManager.server.playerManager.playerList.forEach {
-            it.teleport(0.0, 100.0, 0.0)
-            val highestPos = it.world.getTopPosition(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, BlockPos(0, 100, 0))
-            it.teleport(highestPos.x.toDouble(), highestPos.y.toDouble(), highestPos.z.toDouble())
             it.changeGameMode(GameMode.SURVIVAL)
             it.inventory.clear()
             with(it.inventory) {
