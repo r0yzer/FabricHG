@@ -7,20 +7,20 @@ import net.axay.fabrik.commands.internal.SimpleCommandContext
 import net.axay.fabrik.commands.runs
 import net.axay.fabrik.commands.simpleExecutes
 import net.axay.fabrik.core.text.literalText
+import net.axay.fabrik.core.text.sendText
 import net.minecraft.server.command.ServerCommandSource
 
 val infoCommand = command("info") {
     runs {
-        source.player.sendMessage(
+        val hgPlayer = source.player.hgPlayer
+        source.player.sendText(
             literalText {
                 text("Phase: ${GamePhaseManager.currentPhaseType.name}") { color = 0xFF006E }
                 newLine()
-                text("Status: ${source.player.hgPlayer.status}") { color = 0xFF0802 }
+                text("Status: ${hgPlayer.status}") { color = hgPlayer.status.statusColor }
                 newLine()
-                text("Kills: ${source.player.hgPlayer.kills}") { color = 0x143CFF }
-                newLine()
-                text("Verbleibende offline Zeit: ${source.player.hgPlayer.offlineTime}") { color = 0x143CFF }
-            }, false
+                text("Kills: ${hgPlayer.kills}") { color = 0x143CFF }
+            }
         )
     }
 }

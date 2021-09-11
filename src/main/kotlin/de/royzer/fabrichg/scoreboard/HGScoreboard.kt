@@ -1,6 +1,5 @@
 package de.royzer.fabrichg.scoreboard
 
-import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
@@ -12,7 +11,7 @@ import net.axay.fabrik.core.text.literalText
 import net.minecraft.server.network.ServerPlayerEntity
 
 fun ServerPlayerEntity.showScoreboard() {
-    val hgPlayer = PlayerList.getPlayer(uuid, name.string)
+    val hgPlayer = PlayerList.addOrGetPlayer(uuid, name.string)
     showSideboard(
         sideboard(
             literalText("Fabric HG") { color = 0xFF00C8 }

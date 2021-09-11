@@ -4,10 +4,9 @@ import de.royzer.fabrichg.commands.infoCommand
 import de.royzer.fabrichg.commands.kitCommand
 import de.royzer.fabrichg.commands.listCommand
 import de.royzer.fabrichg.commands.startCommand
-import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.events.ConnectEvents
+import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.mixins.VanillaLayeredBiomeSourceAccessor
 import de.royzer.fabrichg.world.MoreMushroomsFeature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +20,6 @@ import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.RegistryKey
 import net.minecraft.world.Heightmap
-import net.minecraft.world.biome.Biome
-import net.minecraft.world.biome.BiomeKeys
 import net.minecraft.world.gen.GenerationStep
 import net.minecraft.world.gen.decorator.Decorator
 import net.minecraft.world.gen.decorator.HeightmapDecoratorConfig
@@ -33,8 +30,6 @@ val String.hgId get() = Identifier("fabrichg", this)
 val fabrichgScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
 fun initServer() {
-
-
     registerCommands()
     ConnectEvents
     PlayerDeath

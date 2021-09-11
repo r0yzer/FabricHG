@@ -20,4 +20,4 @@ class HGPlayer(
 }
 
 val ServerPlayerEntity.hgPlayer
-    get() = PlayerList.getPlayer(uuid, name.string)
+    get() = PlayerList.addOrGetPlayer(uuid, name.string)

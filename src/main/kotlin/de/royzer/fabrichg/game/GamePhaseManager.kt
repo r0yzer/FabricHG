@@ -21,7 +21,7 @@ object GamePhaseManager {
     fun enable(minecraftDedicatedServer: MinecraftDedicatedServer) {
         server = minecraftDedicatedServer
         server.gameRules[GameRules.SHOW_DEATH_MESSAGES].set(false, server)
-        server.overworld.time
+        server.overworld.timeOfDay = 0
         currentPhase.init()
         coroutineTask(period = 1000, howOften = Long.MAX_VALUE) {
             currentPhase.tick(timer.getAndIncrement())

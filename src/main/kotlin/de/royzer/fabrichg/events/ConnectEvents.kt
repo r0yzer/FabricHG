@@ -37,10 +37,10 @@ object ConnectEvents {
                     player.hungerManager.foodLevel = 40
                     player.changeGameMode(GameMode.ADVENTURE)
                     if (LobbyPhase.isStarting) player.freeze()
-                    PlayerList.getPlayer(player.uuid, player.name.string)
+                    PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                 }
                 PhaseType.INVINCIBILITY -> {
-                    PlayerList.getPlayer(player.uuid, player.name.string)
+                    PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                 }
                 PhaseType.INGAME -> {
                     when (player.hgPlayer.status) {

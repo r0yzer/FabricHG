@@ -21,7 +21,7 @@ object PlayerList {
     val maxPlayers: Int
         get() = if (GamePhaseManager.currentPhaseType == PhaseType.INGAME || GamePhaseManager.currentPhaseType == PhaseType.END) IngamePhase.maxPlayers else alivePlayers.size
 
-    fun getPlayer(uuid: UUID, name: String): HGPlayer {
+    fun addOrGetPlayer(uuid: UUID, name: String): HGPlayer {
         return players.computeIfAbsent(uuid) {
             HGPlayer(uuid, name)
         }
@@ -35,6 +35,7 @@ object PlayerList {
         players.remove(uuid)
     }
 
+    // TODO fix
     fun announcePlayerDeath(serverPlayerEntity: ServerPlayerEntity, killer: ServerPlayerEntity?) {
         val hgPlayer = serverPlayerEntity.hgPlayer
         val otherHGPlayer = killer?.hgPlayer

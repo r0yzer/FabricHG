@@ -2,17 +2,12 @@ package de.royzer.fabrichg.game.phase.phases
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
-import de.royzer.fabrichg.game.combatlog.OfflinePlayer
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.ClickEvent
 import net.minecraft.text.HoverEvent
 import net.minecraft.text.LiteralText
-import java.util.*
 
 class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
 
