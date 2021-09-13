@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.mixins;
+package de.royzer.fabrichg.mixins.world.biome.source;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.util.registry.Registry;

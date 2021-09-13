@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.mixins;
+package de.royzer.fabrichg.mixins.entity.damage;
 
 import net.minecraft.entity.damage.DamageRecord;
 import net.minecraft.entity.damage.DamageTracker;

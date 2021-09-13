@@ -3,19 +3,23 @@
   "package": "de.royzer.fabrichg.mixins",
   "compatibilityLevel": "JAVA_16",
   "server": [
-    "CreeperIgniteGoalMixin",
-    "DamageTrackerAccessor",
-    "FollowTargetGoalMixin",
-    "ItemStackMixin",
-    "LivingEntityMixin",
-    "ServerPlayerEntityMixin"
+    "MainMixin",
+    "entity.EntityMixin",
+    "entity.LivingEntityAccessor",
+    "entity.LivingEntityMixin",
+    "entity.ai.goal.CreeperIgniteGoalMixin",
+    "entity.ai.goal.FollowTargetGoalMixin",
+    "entity.damage.DamageTrackerAccessor",
+    "item.ItemStackMixin",
+    "kits.MagmaMixin",
+    "server.network.ServerPlayerEntityMixin",
+    "server.network.ServerPlayerInteractionManagerMixin",
+    "kits.AnchorLivingEntityMixin",
+    "kits.AnchorMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "EntityMixin",
-    "LivingEntityAccessor",
-    "MainMixin"
   ]
 }

@@ -3,21 +3,11 @@ package de.royzer.fabrichg.events
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
-import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
-import de.royzer.fabrichg.mixins.DamageTrackerAccessor
-import de.royzer.fabrichg.mixins.LivingEntityAccessor
-import net.axay.fabrik.core.text.literalText
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents
+import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.world.GameMode
 
 object PlayerDeath {
     init {

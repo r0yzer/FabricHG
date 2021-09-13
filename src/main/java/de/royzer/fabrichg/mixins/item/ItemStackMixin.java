@@ -1,5 +1,7 @@
-package de.royzer.fabrichg.mixins;
+package de.royzer.fabrichg.mixins.item;
 
+import de.royzer.fabrichg.game.GamePhaseManager;
+import de.royzer.fabrichg.game.phase.PhaseType;
 import de.royzer.fabrichg.mixinskt.SoupHealingKt;
 import de.royzer.fabrichg.mixinskt.Tracker;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +32,10 @@ public class ItemStackMixin {
     )
     public void onUse(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
         ItemStack itemStack = (ItemStack) (Object) this;
+        if (GamePhaseManager.INSTANCE.getCurrentPhaseType().equals(PhaseType.LOBBY)) {
+            cir.setReturnValue(TypedActionResult.pass(itemStack));
+            return;
+        }
         if (itemStack.getItem() == Items.MUSHROOM_STEW) {
             SoupHealingKt.onSoupUse(user, itemStack, cir, world, hand);
         }

@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.mixins;
+package de.royzer.fabrichg.mixins.world.biome.source;
 
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;

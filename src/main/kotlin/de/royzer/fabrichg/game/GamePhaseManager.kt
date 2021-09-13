@@ -22,12 +22,15 @@ object GamePhaseManager {
         server = minecraftDedicatedServer
         server.gameRules[GameRules.SHOW_DEATH_MESSAGES].set(false, server)
         server.overworld.timeOfDay = 0
+        server.overworld.worldBorder.size = 1000.0
         currentPhase.init()
         coroutineTask(period = 1000, howOften = Long.MAX_VALUE) {
             currentPhase.tick(timer.getAndIncrement())
         }
     }
     fun resetTimer() = timer.set(0)
+
+    val isBuildingForbidden get() = currentPhaseType == PhaseType.LOBBY || currentPhaseType == PhaseType.END
 }
 
 fun broadcast(text: LiteralText) {

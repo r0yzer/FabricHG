@@ -17,6 +17,6 @@ public class MainMixin {
             at = @At("HEAD")
     )
     private static void onStart(String[] args, CallbackInfo ci) throws IOException {
-        FileUtils.deleteDirectory(new File("world"));
+//        FileUtils.deleteDirectory(new File("world"));
     }
 }

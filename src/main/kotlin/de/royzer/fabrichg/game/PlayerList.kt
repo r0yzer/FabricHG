@@ -41,7 +41,7 @@ object PlayerList {
         val otherHGPlayer = killer?.hgPlayer
         broadcast(
             literalText {
-                text("${serverPlayerEntity.name.string}(${hgPlayer.kits}) wurde von ${killer?.name?.string}(${otherHGPlayer?.kits}) getötet")
+                text("${serverPlayerEntity.name.string}(${hgPlayer.kits.first().name}) wurde von ${killer?.name?.string}(${otherHGPlayer?.kits?.first()?.name}) getötet")
                 color = 0xFFE128
             }
         )

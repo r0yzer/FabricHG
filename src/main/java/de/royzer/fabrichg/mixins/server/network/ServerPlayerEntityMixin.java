@@ -1,9 +1,7 @@
-package de.royzer.fabrichg.mixins;
+package de.royzer.fabrichg.mixins.server.network;
 
-import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTracker;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

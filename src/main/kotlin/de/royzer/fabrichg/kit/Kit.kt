@@ -1,7 +1,16 @@
 package de.royzer.fabrichg.kit
 
-import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.kit.kits.AnchorKit
+import de.royzer.fabrichg.kit.kits.MagmaKit
+import de.royzer.fabrichg.kit.kits.NoneKit
 
-abstract class Kit
 
-fun HGPlayer.hasKit(kit: Kit) = kit in kits
+abstract class Kit {
+    abstract val name: String
+}
+
+val kits = listOf(
+    MagmaKit,
+    NoneKit,
+    AnchorKit
+)

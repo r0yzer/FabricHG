@@ -11,7 +11,9 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.game.phase.phases.freeze
 import de.royzer.fabrichg.game.removeHGPlayer
+import de.royzer.fabrichg.kit.kits.NoneKit
 import de.royzer.fabrichg.scoreboard.showScoreboard
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.job
 import net.axay.fabrik.core.text.literalText
 import net.axay.fabrik.core.text.sendText
@@ -26,15 +28,19 @@ object ConnectEvents {
             val gamePhase = GamePhaseManager.currentPhase.phaseType
             val player = handler.player
             val uuid = player.uuid
+            val hgPlayer = player.hgPlayer
 
             player.attributes.getCustomInstance(EntityAttributes.GENERIC_ATTACK_SPEED)?.baseValue = 100.0
+
+            if (hgPlayer.kits.isEmpty())
+                hgPlayer.kits.add(NoneKit)
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
                     player.clearStatusEffects()
                     player.health = player.maxHealth
                     player.inventory.clear()
-                    player.hungerManager.foodLevel = 40
+                    player.hungerManager.foodLevel = 20
                     player.changeGameMode(GameMode.ADVENTURE)
                     if (LobbyPhase.isStarting) player.freeze()
                     PlayerList.addOrGetPlayer(player.uuid, player.name.string)

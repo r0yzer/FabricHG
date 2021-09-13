@@ -14,9 +14,11 @@ class HGPlayer(
     var status: HGPlayerStatus = HGPlayerStatus.ALIVE
     var kills: Int = 0
     var offlineTime = maxOfflineTime
-    var kits = listOf<Kit>()
+    val kits = mutableListOf<Kit>()
 
     val serverPlayerEntity get() = GamePhaseManager.server.playerManager.getPlayer(uuid)
+
+    fun hasKit(kit: Kit) = kit in kits
 }
 
 val ServerPlayerEntity.hgPlayer

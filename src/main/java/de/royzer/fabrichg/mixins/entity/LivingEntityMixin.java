@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.mixins;
+package de.royzer.fabrichg.mixins.entity;
 
 import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import net.minecraft.entity.LivingEntity;
