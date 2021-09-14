@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.game.phase.phases
 
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
@@ -17,15 +18,18 @@ object InvincibilityPhase : GamePhase() {
     override fun init() {
         GamePhaseManager.resetTimer()
         broadcast(literalText("HG startet :)") { color = 0x7A7A7A })
-        GamePhaseManager.server.playerManager.playerList.forEach {
-            it.changeGameMode(GameMode.SURVIVAL)
-            it.inventory.clear()
-            with(it.inventory) {
-                insertStack(itemStack(Items.COMPASS) {
-                    setCustomName {
-                        text("Tracker")
-                    }
+        PlayerList.alivePlayers.forEach { hgPlayer ->
+            hgPlayer.serverPlayerEntity?.changeGameMode(GameMode.SURVIVAL)
+            with(hgPlayer.serverPlayerEntity?.inventory) {
+                this?.clear()
+                this?.insertStack(itemStack(Items.COMPASS) {
+                    setCustomName { text("Tracker") }
                 })
+            }
+            hgPlayer.kits.forEach {
+                if (it.kitItem != null) {
+                    hgPlayer.serverPlayerEntity?.inventory?.insertStack(it.kitItem)
+                }
             }
         }
     }

@@ -25,11 +25,7 @@ public class AnchorMixin {
             at = @At("RETURN")
     )
     public void onAttackEntity(Entity target, CallbackInfo ci) {
-        ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) (Object) this;
-        HGPlayer hgPlayer = PlayerList.INSTANCE.getPlayer(serverPlayerEntity.getUuid());
-        if (hgPlayer.hasKit(AnchorKit.INSTANCE)) {
-            VectorExtensionsKt.modifyVelocity(target, 0,0,0, false);
-        }
+        AnchorKit.INSTANCE.onAttackEntity(target, (ServerPlayerEntity) (Object) this);
     }
 //    @Inject(
 //            method = "damage",
@@ -52,14 +48,7 @@ class AnchorLivingEntityMixin {
             cancellable = true
     )
     public void onKnock(double strength, double x, double z, CallbackInfo ci) {
-        //noinspection ConstantConditions
-        if ((LivingEntity) (Object) this instanceof ServerPlayerEntity player) {
-            HGPlayer hgPlayer = PlayerList.INSTANCE.getPlayer(player.getUuid());
-            if (hgPlayer == null) return;
-            if (hgPlayer.hasKit(AnchorKit.INSTANCE)) {
-                ci.cancel();
-            }
-        }
+        AnchorKit.INSTANCE.onKnockback(strength, x, z, ci, (LivingEntity) (Object) this);
     }
 }
 

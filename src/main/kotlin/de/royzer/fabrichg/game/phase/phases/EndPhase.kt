@@ -48,7 +48,7 @@ fun winnerText(winner: HGPlayer?): LiteralText {
             text("Kills: ${winner.kills}\n") {
                 color = 0x00FF51
             }
-            text("Kit: womble}") {
+            text("Kit: ${winner.kits.first().name}}") {
                 color = 0x42FF51
             }
         })
