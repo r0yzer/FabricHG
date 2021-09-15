@@ -2,6 +2,7 @@ package de.royzer.fabrichg.mixins.item;
 
 import de.royzer.fabrichg.game.GamePhaseManager;
 import de.royzer.fabrichg.game.phase.PhaseType;
+import de.royzer.fabrichg.kit.KitItemKt;
 import de.royzer.fabrichg.mixinskt.KitSelector;
 import de.royzer.fabrichg.mixinskt.SoupHealingKt;
 import de.royzer.fabrichg.mixinskt.Tracker;
@@ -33,6 +34,7 @@ public class ItemStackMixin {
     )
     public void onUse(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir) {
         ItemStack itemStack = (ItemStack) (Object) this;
+        KitItemKt.onClick(user, itemStack, cir);
         if (itemStack.getItem().equals(Items.CHEST)) {
             KitSelector.INSTANCE.onClick(user, itemStack, cir, world, hand);
         }

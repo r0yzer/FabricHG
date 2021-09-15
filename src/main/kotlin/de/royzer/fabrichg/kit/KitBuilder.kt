@@ -1,5 +1,8 @@
 package de.royzer.fabrichg.kit
 
+import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import net.axay.fabrik.core.item.setLore
+import net.axay.fabrik.core.text.literalText
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 
@@ -11,10 +14,12 @@ class KitBuilder(val kit: Kit) {
         }
 
     fun addKitItem(kitItem: KitItem) {
+        kitItem.itemStack.setLore(listOf(literalText("Kititem")))
         kit.kitItems.add(kitItem)
     }
-    fun addKitItem(itemStack: ItemStack, droppable: Boolean) {
-        kit.kitItems.add(KitItem(itemStack, droppable))
+
+    fun addKitItem(itemStack: ItemStack, droppable: Boolean, clickAction: ((HGPlayer, Kit) -> Unit)? = null) {
+        addKitItem(KitItem(itemStack, droppable, clickAction))
     }
 
     var cooldown: Double? = null

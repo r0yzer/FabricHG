@@ -4,6 +4,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.kit.isKitItem
 import net.minecraft.entity.ItemEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.item.ItemStack
@@ -22,7 +23,7 @@ object ServerPlayerEntityMixinKt {
             return
         }
         serverPlayerEntity.hgPlayer.kits.forEach { kit ->
-            if (stack.item in kit.kitItems.filterNot { it.droppable }.map { it.itemStack.item }) {
+            if (stack.item in kit.kitItems.filterNot { it.droppable }.map { it.itemStack.item } && stack.isKitItem) {
                 cir.returnValue = true
             }
         }

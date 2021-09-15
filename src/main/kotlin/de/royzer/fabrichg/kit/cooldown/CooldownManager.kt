@@ -1,15 +1,14 @@
-package de.royzer.fabrichg.kit
+package de.royzer.fabrichg.kit.cooldown
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.Kit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
-data class Cooldown(
-    val hgPlayer: HGPlayer,
-    val kit: Kit,
-)
+import net.axay.fabrik.core.text.literalText
+import net.minecraft.server.network.ServerPlayerEntity
 
 private val cooldownMap = HashMap<Cooldown, Double>()
 private val cooldownCoroutineScope = CoroutineScope(Dispatchers.IO)
@@ -20,7 +19,8 @@ fun HGPlayer.startCooldown(kit: Kit) {
     cooldownCoroutineScope.launch scope@{
         while (hasCooldown(kit)) {
             delay(100)
-            cooldownMap[cooldown] = cooldownMap[cooldown]!!.minus(0.1)
+            val time = cooldownMap[cooldown]?.minus(0.1) ?: break
+            cooldownMap[cooldown] = time
         }
         cooldownMap.remove(cooldown)
     }
@@ -36,4 +36,12 @@ fun HGPlayer.hasCooldown(kit: Kit): Boolean {
 fun HGPlayer.cooldown(kit: Kit): Double {
     return if (!hasCooldown(kit)) 0.0
     else cooldownMap[Cooldown(this, kit)] ?: 0.0
+}
+
+fun ServerPlayerEntity.sendCooldown(kit: Kit) {
+    if (!hgPlayer.hasCooldown(kit)) return
+    sendMessage(literalText {
+        text("Du hast noch ${hgPlayer.cooldown(kit)} Sekunden Cooldown")
+        color = 0xFF0000
+    }, true)
 }
