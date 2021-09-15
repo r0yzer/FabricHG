@@ -33,6 +33,7 @@ fun onClick(player: PlayerEntity, itemStack: ItemStack, cir: CallbackInfoReturna
     }
 }
 
+// hehe
 val ItemStack.isKitItem: Boolean get() {
     val lore = getOrCreateSubNbt("display").get("Lore")?.asString() ?: return false
     return lore.contains("Kititem")
