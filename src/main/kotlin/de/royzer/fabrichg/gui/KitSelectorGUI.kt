@@ -24,7 +24,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayerEntity) = igui(GuiType.NINE_B
                         text(kit.name) {
                             color = if (hgPlayer.hasKit(kit)) 0x00FF00 else 0x00FFFF
                             strikethrough = false
-                            bold = false
+                            bold = hgPlayer.hasKit(kit)
                             italic = false
                         }
                     }

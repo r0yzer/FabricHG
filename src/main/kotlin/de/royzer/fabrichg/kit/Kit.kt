@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 
 class Kit(val name: String) {
-    val kitItems = mutableListOf<ItemStack>()
+    val kitItems = mutableListOf<KitItem>()
     var kitSelectorItem: Item? = null
 }
 
@@ -22,4 +22,6 @@ val kits = listOfNotNull(
     magmaKit,
     noneKit,
     switcherKit,
+    neoKit,
+    backupKit,
 )

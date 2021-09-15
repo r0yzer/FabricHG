@@ -28,12 +28,4 @@ public class ServerPlayerEntityMixin {
     public void onDropSelectedItem(boolean entireStack, CallbackInfoReturnable<Boolean> cir) {
         ServerPlayerEntityMixinKt.INSTANCE.onDropSelectedItem(entireStack, cir, (ServerPlayerEntity) (Object) this);
     }
-    @Inject(
-            method = "dropItem",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    public void onDropItem(ItemStack stack, boolean throwRandomly, boolean retainOwnership, CallbackInfoReturnable<ItemEntity> cir) {
-        ServerPlayerEntityMixinKt.INSTANCE.onDropItem(stack, cir, (ServerPlayerEntity) (Object) this);
-    }
 }

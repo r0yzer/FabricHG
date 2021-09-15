@@ -31,6 +31,8 @@ object GamePhaseManager {
     fun resetTimer() = timer.set(0)
 
     val isBuildingForbidden get() = currentPhaseType == PhaseType.LOBBY || currentPhaseType == PhaseType.END
+
+    val isNotStarted get() = currentPhaseType == PhaseType.LOBBY || currentPhaseType == PhaseType.INVINCIBILITY
 }
 
 fun broadcast(text: LiteralText) {

@@ -3,6 +3,8 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
+import de.royzer.fabrichg.mixins.entity.damage.DamageTrackerAccessor
 import net.axay.fabrik.core.math.vector.modifyVelocity
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
@@ -17,6 +19,9 @@ val anchorKit = kit("Anchor") {
 
 fun onAnchorAttackEntity(target: Entity, serverPlayerEntity: ServerPlayerEntity) {
     if (serverPlayerEntity.hgPlayer.canUseKit(anchorKit)) {
+        if (target is ServerPlayerEntity) {
+            if ((target as? ServerPlayerEntity)?.hgPlayer?.hasKit(neoKit) == true) return
+        }
         target.setVelocity(0.0,0.0,0.0)
         target.modifyVelocity(0,-0.5,0, false)
     }
@@ -25,6 +30,7 @@ fun onAnchorAttackEntity(target: Entity, serverPlayerEntity: ServerPlayerEntity)
 fun onAnchorKnockback(strength: Double, x: Double, z: Double, ci: CallbackInfo, livingEntity: LivingEntity) {
     val serverPlayerEntity = livingEntity as? ServerPlayerEntity ?: return
     if (serverPlayerEntity.hgPlayer.canUseKit(anchorKit)) {
+        if ((((serverPlayerEntity as LivingEntityAccessor).attackingPlayer) as? ServerPlayerEntity)?.hgPlayer?.hasKit(neoKit) == true) return
         ci.cancel()
         serverPlayerEntity.modifyVelocity(0,-0.5,0, false)
     }

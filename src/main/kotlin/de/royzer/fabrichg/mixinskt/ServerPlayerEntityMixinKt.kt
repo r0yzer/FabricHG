@@ -1,7 +1,9 @@
 package de.royzer.fabrichg.mixinskt
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcast
+import de.royzer.fabrichg.game.phase.PhaseType
 import net.minecraft.entity.ItemEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.item.ItemStack
@@ -15,20 +17,14 @@ object ServerPlayerEntityMixinKt {
 
     fun onDropSelectedItem(entireStack: Boolean, cir: CallbackInfoReturnable<Boolean>, serverPlayerEntity: ServerPlayerEntity) {
         val stack = serverPlayerEntity.mainHandStack
+        if (GamePhaseManager.currentPhaseType == PhaseType.LOBBY) {
+            cir.returnValue = true
+            return
+        }
         serverPlayerEntity.hgPlayer.kits.forEach { kit ->
-            cir.returnValue = false
-            if (stack.item in kit.kitItems.map { it.item }) {
-                broadcast("merkel")
+            if (stack.item in kit.kitItems.filterNot { it.droppable }.map { it.itemStack.item }) {
                 cir.returnValue = true
-            } else {
-                broadcast("${stack.item.name.string} - ${kit.kitItems.map { it.item.name.string }} -- kit: ${kit.name} -- ${kit.kitItems.first().name.string} --")
             }
         }
-    }
-    fun onDropItem(stack: ItemStack, cir: CallbackInfoReturnable<ItemEntity>, serverPlayerEntity: ServerPlayerEntity) {
-//        broadcast("das andere")
-//        serverPlayerEntity.hgPlayer.kits.forEach { kit ->
-//            if (stack.item in kit.kitItems.map { it.item }) cir.returnValue = null else broadcast("${stack.item.name.string} - ${kit.kitItems.map { it.item.name.string }} -- kit: ${kit.name}")
-//        }
     }
 }

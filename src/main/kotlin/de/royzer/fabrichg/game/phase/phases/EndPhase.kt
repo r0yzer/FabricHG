@@ -12,7 +12,6 @@ import net.minecraft.text.LiteralText
 class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
 
     val endTime by lazy { GamePhaseManager.timer.get() }
-    private val serverPlayerEntity = hgPlayer?.serverPlayerEntity
 
     override fun init() {
         endTime
@@ -32,15 +31,15 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
 
     override val phaseType = PhaseType.END
     override val maxPhaseTime = 20
-    override val nextPhase = null
+    override val nextPhase: GamePhase? = null
 }
 
 fun winnerText(winner: HGPlayer?): LiteralText {
     if (winner == null) return literalText("nunja kein winner wohl")
     return literalText {
-        color = 0x00A0FF
+        color = 0x7A7A7A
         text(winner.name) {
-            color = 0xFF1FBB
+            color = 0x00FFFF
             underline = true
         }
         text(" hat gewonnen!")
@@ -48,8 +47,9 @@ fun winnerText(winner: HGPlayer?): LiteralText {
             text("Kills: ${winner.kills}\n") {
                 color = 0x00FF51
             }
-            text("Kit: ${winner.kits.first().name}") {
+            text("Kit(s): ") {
                 color = 0x42FF51
+                text(winner.kits.joinToString { it.name })
             }
         })
     }

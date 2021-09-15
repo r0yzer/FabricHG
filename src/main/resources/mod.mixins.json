@@ -15,12 +15,13 @@
     "kits.AnchorMixin",
     "kits.MagmaMixin",
     "server.network.ServerPlayerEntityMixin",
-    "server.network.ServerPlayerInteractionManagerMixin"
+    "server.network.ServerPlayerInteractionManagerMixin",
+    "kits.NeoMixin",
+    "kits.SwitcherMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "kits.SwitcherMixin"
   ]
 }

@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.KitItem
 import de.royzer.fabrichg.kit.kit
 import net.axay.fabrik.core.item.itemStack
 import net.minecraft.entity.damage.DamageSource
@@ -13,8 +14,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 val switcherKit = kit("Switcher") {
     kitSelectorItem = itemStack(Items.SNOWBALL) {}
     addKitItem(itemStack(Items.SNOWBALL) {
-        count = 16
-    })
+            count = 16
+        }, true
+    )
 }
 
 fun switcherOnEntityHit(entityHitResult: EntityHitResult, ci: CallbackInfo, snowballEntity: SnowballEntity) {

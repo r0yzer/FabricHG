@@ -20,15 +20,16 @@ object InvincibilityPhase : GamePhase() {
         broadcast(literalText("HG startet :)") { color = 0x7A7A7A })
         PlayerList.alivePlayers.forEach { hgPlayer ->
             hgPlayer.serverPlayerEntity?.changeGameMode(GameMode.SURVIVAL)
+            hgPlayer.serverPlayerEntity?.closeHandledScreen()
             with(hgPlayer.serverPlayerEntity?.inventory) {
                 this?.clear()
                 this?.insertStack(itemStack(Items.COMPASS) {
                     setCustomName { text("Tracker") }
                 })
-            }
-            hgPlayer.kits.forEach { kit ->
-                kit.kitItems.forEach {
-                    hgPlayer.serverPlayerEntity?.inventory?.insertStack(it)
+                hgPlayer.kits.forEach { kit ->
+                    kit.kitItems.forEach {
+                        hgPlayer.serverPlayerEntity?.inventory?.insertStack(it.itemStack.copy())
+                    }
                 }
             }
         }
