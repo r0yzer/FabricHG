@@ -4,6 +4,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.maxOfflineTime
 import de.royzer.fabrichg.kit.Kit
+import de.royzer.fabrichg.kit.hasCooldown
 import net.minecraft.server.network.ServerPlayerEntity
 import java.util.*
 
@@ -20,7 +21,7 @@ class HGPlayer(
 
     fun hasKit(kit: Kit) = kit in kits
 
-    fun canUseKit(kit: Kit) = hasKit(kit) && true // TODO cooldown/rouge
+    fun canUseKit(kit: Kit) = hasKit(kit) && !hasCooldown(kit) // TODO cooldown/rouge
 }
 
 val ServerPlayerEntity.hgPlayer

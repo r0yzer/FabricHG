@@ -4,5 +4,5 @@ import net.minecraft.item.ItemStack
 
 class KitItem(
     val itemStack: ItemStack,
-    val droppable: Boolean
+    val droppable: Boolean = false
 )

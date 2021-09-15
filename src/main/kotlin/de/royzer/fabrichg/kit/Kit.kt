@@ -10,6 +10,7 @@ import net.minecraft.item.Items
 class Kit(val name: String) {
     val kitItems = mutableListOf<KitItem>()
     var kitSelectorItem: Item? = null
+    var cooldown: Double? = null
 }
 
 fun kit(name: String, builder: KitBuilder.() -> Unit): Kit {

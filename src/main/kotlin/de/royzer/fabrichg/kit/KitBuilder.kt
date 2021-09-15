@@ -16,4 +16,11 @@ class KitBuilder(val kit: Kit) {
     fun addKitItem(itemStack: ItemStack, droppable: Boolean) {
         kit.kitItems.add(KitItem(itemStack, droppable))
     }
+
+    var cooldown: Double? = null
+        get() = kit.cooldown
+        set(value) {
+            kit.cooldown = value
+            field = value
+        }
 }
