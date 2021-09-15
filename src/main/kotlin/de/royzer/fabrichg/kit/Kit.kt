@@ -1,32 +1,25 @@
 package de.royzer.fabrichg.kit
 
-import de.royzer.fabrichg.kit.kits.AnchorKit
-import de.royzer.fabrichg.kit.kits.MagmaKit
-import de.royzer.fabrichg.kit.kits.NoneKit
-import de.royzer.fabrichg.kit.kits.SwitcherKit
+import de.royzer.fabrichg.kit.kits.*
+import net.axay.fabrik.core.item.itemStack
+import net.axay.fabrik.core.logging.logInfo
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
+import net.minecraft.item.Items
 
-
-abstract class Kit {
-    abstract val name: String
-    abstract val kitSelectorItem: Item
-    abstract val kitItem: ItemStack?
+class Kit(val name: String) {
+    val kitItems = mutableListOf<ItemStack>()
+    var kitSelectorItem: Item? = null
 }
 
-class KKit(
-    val name: String,
-    val kitSelectorItem: Item,
-    val kitItem: ItemStack?
-) {
-
+fun kit(name: String, builder: KitBuilder.() -> Unit): Kit {
+    val kit = Kit(name)
+    return kit.apply { KitBuilder(kit).apply(builder) }
 }
 
-fun kit(name: String, kitSelectorItem: Item) = KKit(name, kitSelectorItem, null)
-
-val kits = listOf(
-    MagmaKit,
-    NoneKit,
-    AnchorKit,
-    SwitcherKit,
+val kits = listOfNotNull(
+    anchorKit,
+    magmaKit,
+    noneKit,
+    switcherKit,
 )

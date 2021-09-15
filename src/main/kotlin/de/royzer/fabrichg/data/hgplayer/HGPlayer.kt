@@ -19,6 +19,8 @@ class HGPlayer(
     val serverPlayerEntity get() = GamePhaseManager.server.playerManager.getPlayer(uuid)
 
     fun hasKit(kit: Kit) = kit in kits
+
+    fun canUseKit(kit: Kit) = hasKit(kit) && true // TODO cooldown/rouge
 }
 
 val ServerPlayerEntity.hgPlayer

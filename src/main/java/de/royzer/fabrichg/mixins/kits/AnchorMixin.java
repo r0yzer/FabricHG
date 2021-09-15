@@ -1,22 +1,13 @@
 package de.royzer.fabrichg.mixins.kits;
 
-import de.royzer.fabrichg.data.hgplayer.HGPlayer;
-import de.royzer.fabrichg.game.PlayerList;
-import de.royzer.fabrichg.kit.kits.AnchorKit;
-import de.royzer.fabrichg.kit.kits.MagmaKit;
-import net.axay.fabrik.core.math.vector.VectorExtensionsKt;
+import de.royzer.fabrichg.kit.kits.AnchorKitKt;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerEntity.class)
 public class AnchorMixin {
@@ -25,7 +16,7 @@ public class AnchorMixin {
             at = @At("RETURN")
     )
     public void onAttackEntity(Entity target, CallbackInfo ci) {
-        AnchorKit.INSTANCE.onAttackEntity(target, (ServerPlayerEntity) (Object) this);
+        AnchorKitKt.onAnchorAttackEntity(target, (ServerPlayerEntity) (Object) this);
     }
 //    @Inject(
 //            method = "damage",
@@ -48,7 +39,7 @@ class AnchorLivingEntityMixin {
             cancellable = true
     )
     public void onKnock(double strength, double x, double z, CallbackInfo ci) {
-        AnchorKit.INSTANCE.onKnockback(strength, x, z, ci, (LivingEntity) (Object) this);
+        AnchorKitKt.onAnchorKnockback(strength, x, z, ci, (LivingEntity) (Object) this);
     }
 }
 

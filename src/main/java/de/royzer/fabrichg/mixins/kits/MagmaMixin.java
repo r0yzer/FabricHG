@@ -1,6 +1,6 @@
 package de.royzer.fabrichg.mixins.kits;
 
-import de.royzer.fabrichg.kit.kits.MagmaKit;
+import de.royzer.fabrichg.kit.kits.MagmaKitKt;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,6 +15,7 @@ public class MagmaMixin {
             at = @At("HEAD")
     )
     public void onAttackPlayer(Entity target, CallbackInfo ci) {
-        MagmaKit.INSTANCE.onAttackEntity(target, (ServerPlayerEntity) (Object) this);
+//        MagmaKit.INSTANCE.onAttackEntity(target, (ServerPlayerEntity) (Object) this);
+        MagmaKitKt.onAttackEntity(target, (ServerPlayerEntity) (Object) this);
     }
 }

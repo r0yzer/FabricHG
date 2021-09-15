@@ -11,15 +11,16 @@
     "entity.ai.goal.FollowTargetGoalMixin",
     "entity.damage.DamageTrackerAccessor",
     "item.ItemStackMixin",
+    "kits.AnchorLivingEntityMixin",
+    "kits.AnchorMixin",
     "kits.MagmaMixin",
     "server.network.ServerPlayerEntityMixin",
-    "server.network.ServerPlayerInteractionManagerMixin",
-    "kits.AnchorLivingEntityMixin",
-    "kits.AnchorMixin"
+    "server.network.ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
+    "kits.SwitcherMixin"
   ]
 }

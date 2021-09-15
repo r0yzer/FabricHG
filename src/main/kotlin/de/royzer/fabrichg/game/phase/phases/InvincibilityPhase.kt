@@ -26,9 +26,9 @@ object InvincibilityPhase : GamePhase() {
                     setCustomName { text("Tracker") }
                 })
             }
-            hgPlayer.kits.forEach {
-                if (it.kitItem != null) {
-                    hgPlayer.serverPlayerEntity?.inventory?.insertStack(it.kitItem)
+            hgPlayer.kits.forEach { kit ->
+                kit.kitItems.forEach {
+                    hgPlayer.serverPlayerEntity?.inventory?.insertStack(it)
                 }
             }
         }

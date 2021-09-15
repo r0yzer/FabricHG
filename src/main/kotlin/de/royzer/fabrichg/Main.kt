@@ -7,6 +7,10 @@ import de.royzer.fabrichg.commands.startCommand
 import de.royzer.fabrichg.events.ConnectEvents
 import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.kit.Kit
+import de.royzer.fabrichg.kit.kits
+import de.royzer.fabrichg.kit.kits.anchorKit
+import de.royzer.fabrichg.kit.kits.magmaKit
 import de.royzer.fabrichg.world.MoreMushroomsFeature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +34,9 @@ val String.hgId get() = Identifier("fabrichg", this)
 val fabrichgScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
 fun initServer() {
+
+    kits
+
     registerCommands()
     ConnectEvents
     PlayerDeath

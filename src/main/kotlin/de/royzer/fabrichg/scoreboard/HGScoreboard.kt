@@ -29,7 +29,10 @@ fun ServerPlayerEntity.showScoreboard() {
                 literalText("Kills: ${hgPlayer.kills}") { color = 0x0032FF }
             }
             lineChangingPeriodically(1000) {
-                literalText("Kit: ${hgPlayer.kits.firstOrNull()?.name ?: "ERROR"}") { color = 0x00FFFF }
+                literalText("Kit: ${hgPlayer.kits.first().name}") {
+                    color = 0x00FFFF
+                    strikethrough = !hgPlayer.canUseKit(hgPlayer.kits.first())
+                }
             }
             literalLine("")
             literalLine("Spieler:") { color = 0xFF0096 }

@@ -11,14 +11,16 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.game.phase.phases.freeze
 import de.royzer.fabrichg.game.removeHGPlayer
-import de.royzer.fabrichg.kit.kits.NoneKit
+import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.scoreboard.showScoreboard
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.job
+import net.axay.fabrik.core.item.itemStack
+import net.axay.fabrik.core.item.setCustomName
 import net.axay.fabrik.core.text.literalText
 import net.axay.fabrik.core.text.sendText
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.entity.attribute.EntityAttributes
+import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.world.GameMode
 
@@ -33,13 +35,16 @@ object ConnectEvents {
             player.attributes.getCustomInstance(EntityAttributes.GENERIC_ATTACK_SPEED)?.baseValue = 100.0
 
             if (hgPlayer.kits.isEmpty())
-                hgPlayer.kits.add(NoneKit)
+                hgPlayer.kits.add(noneKit)
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
                     player.clearStatusEffects()
                     player.health = player.maxHealth
                     player.inventory.clear()
+                    player.inventory.insertStack(itemStack(Items.CHEST) {
+                        setCustomName { text("Kit Selector") }
+                    })
                     player.hungerManager.foodLevel = 20
                     player.changeGameMode(GameMode.ADVENTURE)
                     if (LobbyPhase.isStarting) player.freeze()

@@ -11,7 +11,7 @@ val startCommand = command("start", true) {
     runs {
         val currentPhase = GamePhaseManager.currentPhase
         if (currentPhase != LobbyPhase) return@runs
-        if (GamePhaseManager.timer.get() > currentPhase.maxPhaseTime - 5)
+        if (GamePhaseManager.timer.get() < currentPhase.maxPhaseTime - 5)
             GamePhaseManager.timer.set(currentPhase.maxPhaseTime - 5)
     }
     argument<Int>("time") time@{
