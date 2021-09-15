@@ -18,17 +18,6 @@ public class AnchorMixin {
     public void onAttackEntity(Entity target, CallbackInfo ci) {
         AnchorKitKt.onAnchorAttackEntity(target, (ServerPlayerEntity) (Object) this);
     }
-//    @Inject(
-//            method = "damage",
-//            at = @At("RETURN")
-//    )
-//    public void onAttackedByEntity(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-//        ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) (Object) this;
-//        HGPlayer hgPlayer = PlayerList.INSTANCE.getPlayer(serverPlayerEntity.getUuid());
-//        if (hgPlayer.hasKit(AnchorKit.INSTANCE)) {
-//            serverPlayerEntity.setVelocity(0,0,0);
-//        }
-//    }
 }
 
 @Mixin(LivingEntity.class)
