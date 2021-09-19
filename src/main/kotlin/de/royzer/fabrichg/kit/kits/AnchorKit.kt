@@ -20,7 +20,7 @@ val anchorKit = kit("Anchor") {
 fun onAnchorAttackEntity(target: Entity, serverPlayerEntity: ServerPlayerEntity) {
     if (serverPlayerEntity.hgPlayer.canUseKit(anchorKit)) {
         if (target is ServerPlayerEntity) {
-            if ((target as? ServerPlayerEntity)?.hgPlayer?.hasKit(neoKit) == true) return
+            if ((target as? ServerPlayerEntity)?.hgPlayer?.canUseKit(neoKit, true) == true) return
         }
         target.setVelocity(0.0,0.0,0.0)
         target.modifyVelocity(0,-0.5,0, false)

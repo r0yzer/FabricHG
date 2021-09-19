@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.mixinskt
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.PlayerList
 import net.axay.fabrik.core.text.sendText
 import net.minecraft.entity.player.PlayerEntity
@@ -23,10 +25,10 @@ object Tracker {
             if (nearestPlayer != null) {
                 val distance = player.nearestPlayerInfo()?.second?.toInt()
                 player.sendText {
-                    color = 0x7A7A7A
-                    text(nearestPlayer.name.string) { color = 0x00FFFF }
+                    color = TEXT_GRAY
+                    text(nearestPlayer.name.string) { color = TEXT_BLUE }
                     text(" ist ")
-                    text(distance.toString()) { color = 0x00FFFF }
+                    text(distance.toString()) { color = TEXT_BLUE }
                     text(" Blöcke entfernt")
                 }
                 player.networkHandler.sendPacket(PlayerSpawnPositionS2CPacket(BlockPos(nearestPlayer.x, nearestPlayer.y, nearestPlayer.z), nearestPlayer.yaw))

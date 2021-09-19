@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.kit.cooldown
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.Kit
@@ -40,8 +42,13 @@ fun HGPlayer.cooldown(kit: Kit): Double {
 
 fun ServerPlayerEntity.sendCooldown(kit: Kit) {
     if (!hgPlayer.hasCooldown(kit)) return
+    val sec = "%.1f".format(hgPlayer.cooldown(kit))
     sendMessage(literalText {
-        text("Du hast noch ${hgPlayer.cooldown(kit)} Sekunden Cooldown")
-        color = 0xFF0000
+        text("Du hast noch ")
+        text(sec) {
+            color = TEXT_BLUE
+        }
+        text(" Sekunden Cooldown")
+        color = TEXT_GRAY
     }, true)
 }

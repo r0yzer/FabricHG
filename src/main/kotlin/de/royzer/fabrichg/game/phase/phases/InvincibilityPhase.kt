@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.game.phase.phases
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
@@ -38,8 +40,8 @@ object InvincibilityPhase : GamePhase() {
     override fun tick(timer: Int) {
         when (val timeLeft = maxPhaseTime - timer) {
             180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText("Die Invincibility endet in ") {
-                color = 0x7A7A7A
-                text(timeLeft.formattedTime) { color = 0x00FFFF }
+                color = TEXT_GRAY
+                text(timeLeft.formattedTime) { color = TEXT_BLUE }
                 text(" Minuten")
             })
             0 -> startNextPhase()

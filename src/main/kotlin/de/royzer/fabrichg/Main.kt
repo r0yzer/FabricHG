@@ -34,6 +34,9 @@ val String.hgId get() = Identifier("fabrichg", this)
 
 val fabrichgScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
+const val TEXT_BLUE = 0x00FFFF
+const val TEXT_GRAY = 0x7A7A7A
+
 fun initServer() {
 
     kits

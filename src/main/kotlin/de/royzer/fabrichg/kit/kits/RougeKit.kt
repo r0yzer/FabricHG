@@ -1,10 +1,14 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.kit.KitItem
+import de.royzer.fabrichg.kit.cooldown.startCooldown
 import de.royzer.fabrichg.kit.kit
 import net.axay.fabrik.core.task.coroutineTask
+import net.axay.fabrik.core.text.sendText
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
@@ -26,7 +30,17 @@ val rougeKit = kit("Rouge") {
                     }
                 }
             }
+            hgPlayer.startCooldown(kit)
+            hgPlayer.serverPlayerEntity!!.sendText {
+                text("Du hast die Kits von ")
+                text(nearbyPlayers.size.toString()) {
+                    color = TEXT_BLUE
+                }
+                text(" Spielern disabled")
+                color = TEXT_GRAY
+            }
         }
     )
     kitSelectorItem = ItemStack(Items.GRAY_DYE)
+    cooldown = 35.0
 }

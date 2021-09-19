@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.game.phase.phases
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
@@ -30,7 +32,12 @@ object IngamePhase : GamePhase() {
             startNextPhase()
         }
         when (val timeLeft = maxPhaseTime - timer) {
-            60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText("spiel endet in $timeLeft"))
+            60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText {
+                text("Das Spiel endet in ")
+                text(timeLeft.toString()) { color = TEXT_BLUE }
+                text(" Sekunden")
+                color = TEXT_GRAY
+            })
             0 -> {
                 winner = PlayerList.alivePlayers.shuffled().maxByOrNull { it.kills }
                 startNextPhase()

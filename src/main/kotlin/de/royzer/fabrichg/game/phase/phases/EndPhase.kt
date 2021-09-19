@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.game.phase.phases
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcast
@@ -37,9 +39,9 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
 fun winnerText(winner: HGPlayer?): LiteralText {
     if (winner == null) return literalText("nunja kein winner wohl")
     return literalText {
-        color = 0x7A7A7A
+        color = TEXT_GRAY
         text(winner.name) {
-            color = 0x00FFFF
+            color = TEXT_BLUE
             underline = true
         }
         text(" hat gewonnen!")
