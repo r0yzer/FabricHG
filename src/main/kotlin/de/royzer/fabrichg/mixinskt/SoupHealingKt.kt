@@ -11,10 +11,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 object SoupHealingKt {
     @JvmStatic
     fun onSoupUse(player: PlayerEntity, stack: ItemStack, cir: CallbackInfoReturnable<TypedActionResult<ItemStack>>, world: World, hand: Hand) {
-//            if (player.hungerManager.isNotFull) player.hungerManager.add(6, 1F)
-        if (player.health >= player.maxHealth) return
+        if (player.health >= player.maxHealth) {
+            if (player.hungerManager.isNotFull) player.hungerManager.add(6, 1F)
+            cir.returnValue = TypedActionResult.pass(ItemStack(Items.BOWL))
+            return
+        }
         player.heal(7F)
-        player.clearActiveItem()
-        cir.returnValue = TypedActionResult.pass(ItemStack(Items.BOWL))  //itemStack.use(world, player, hand)
+        cir.returnValue = TypedActionResult.pass(ItemStack(Items.BOWL))
     }
 }
