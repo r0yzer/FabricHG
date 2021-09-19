@@ -19,7 +19,7 @@ import net.minecraft.world.Heightmap
 object InvincibilityPhase : GamePhase() {
     override fun init() {
         GamePhaseManager.resetTimer()
-        broadcast(literalText("HG startet :)") { color = 0x7A7A7A })
+        broadcast(literalText("HG startet :)") { color = TEXT_GRAY })
         PlayerList.alivePlayers.forEach { hgPlayer ->
             hgPlayer.serverPlayerEntity?.changeGameMode(GameMode.SURVIVAL)
             hgPlayer.serverPlayerEntity?.closeHandledScreen()
@@ -32,6 +32,7 @@ object InvincibilityPhase : GamePhase() {
                     kit.kitItems.forEach {
                         hgPlayer.serverPlayerEntity?.inventory?.insertStack(it.itemStack.copy())
                     }
+                    kit.onEnable?.invoke(hgPlayer, kit)
                 }
             }
         }

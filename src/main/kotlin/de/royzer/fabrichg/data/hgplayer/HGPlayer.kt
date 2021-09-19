@@ -17,6 +17,8 @@ class HGPlayer(
     var offlineTime = maxOfflineTime
     val kits = mutableListOf<Kit>()
 
+    val playerData = mutableMapOf<String, Any?>()
+
     var kitsDisabled = false
 
     val serverPlayerEntity get() = GamePhaseManager.server.playerManager.getPlayer(uuid)
@@ -29,8 +31,6 @@ class HGPlayer(
         return if (ignoreCooldown) hasKit(kit) && GamePhaseManager.isIngame && !kitsDisabled
         else canUseKit(kit)
     }
-
-
 }
 
 val ServerPlayerEntity.hgPlayer

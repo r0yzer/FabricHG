@@ -26,7 +26,7 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
             GamePhaseManager.server.playerManager.playerList.forEach {
                 it.networkHandler.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
             }
-            GamePhaseManager.server.shutdown()
+            GamePhaseManager.server.stop(false)
             return
         }
     }

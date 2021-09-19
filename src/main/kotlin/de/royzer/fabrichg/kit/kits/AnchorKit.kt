@@ -23,7 +23,7 @@ fun onAnchorAttackEntity(target: Entity, serverPlayerEntity: ServerPlayerEntity)
             if ((target as? ServerPlayerEntity)?.hgPlayer?.canUseKit(neoKit, true) == true) return
         }
         target.setVelocity(0.0,0.0,0.0)
-        target.modifyVelocity(0,-0.5,0, false)
+        target.modifyVelocity(0,-0.2,0, false)
     }
 }
 
@@ -32,6 +32,7 @@ fun onAnchorKnockback(strength: Double, x: Double, z: Double, ci: CallbackInfo, 
     if (serverPlayerEntity.hgPlayer.canUseKit(anchorKit)) {
         if ((((serverPlayerEntity as LivingEntityAccessor).attackingPlayer) as? ServerPlayerEntity)?.hgPlayer?.hasKit(neoKit) == true) return
         ci.cancel()
-        serverPlayerEntity.modifyVelocity(0,-0.5,0, false)
+        serverPlayerEntity.setVelocity(0.0,0.0,0.0)
+        serverPlayerEntity.modifyVelocity(0,-0.2,0, false)
     }
 }

@@ -17,10 +17,10 @@ val neoKit = kit("Neo") {
 
 fun neoOnProjectileHit(entityHitResult: EntityHitResult, projectileEntity: ProjectileEntity, ci: CallbackInfo) {
     if ((entityHitResult.entity as? ServerPlayerEntity)?.hgPlayer?.canUseKit(neoKit) == false) return
+    projectileEntity.remove(Entity.RemovalReason.KILLED)
     ci.cancel()
     val hitEntity = entityHitResult.entity
     val vel = projectileEntity.velocity
-    projectileEntity.remove(Entity.RemovalReason.KILLED)
     entityHitResult.entity.world.spawnEntity(projectileEntity.type.create(hitEntity.world).apply {
         this?.velocity = vel.multiply(-1.0)
         this?.setPosition(hitEntity.pos.add(0.0, 0.5, 0.0))

@@ -25,4 +25,6 @@ val kits = listOfNotNull(
     neoKit,
     backupKit,
     rougeKit,
+    scoutKit,
+    reviveKit,
 )

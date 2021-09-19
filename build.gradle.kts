@@ -51,3 +51,7 @@ tasks.processResources {
         expand("version" to project.version)
     }
 }
+
+gradle.buildFinished {
+    Runtime.getRuntime().exec("scp ./build/libs/FabricHG-1.0.jar royzer@royzer.de:/home/royzer/minecraft/fabric/mods/FabricHG-1.0.jar")
+}

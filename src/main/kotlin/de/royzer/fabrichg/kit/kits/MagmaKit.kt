@@ -15,22 +15,6 @@ import kotlin.random.Random
 
 val magmaKit = kit("Magma") {
     kitSelectorItem = ItemStack(Items.MAGMA_BLOCK)
-    addKitItem(
-        KitItem(ItemStack(Items.MAGMA_BLOCK)) { hgPlayer, kit ->
-            hgPlayer.serverPlayerEntity?.addStatusEffect(StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 100))
-            hgPlayer.startCooldown(kit)
-        }
-    )
-    cooldown = 3.5
-
-    onDisable { hgPlayer, kit ->
-        broadcast("${hgPlayer.name} wird gemerkelt (magma)")
-    }
-
-    onEnable { hgPlayer, kit ->
-        broadcast("${hgPlayer.name} wird entmerkelt (magma)")
-    }
-
 }
 
 fun onAttackEntity(target: Entity, serverPlayerEntity: ServerPlayerEntity) {

@@ -5,6 +5,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.IngamePhase
+import net.axay.fabrik.core.logging.logInfo
 import net.axay.fabrik.core.text.literalText
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.server.network.ServerPlayerEntity
@@ -14,7 +15,7 @@ import java.util.*
 object PlayerList {
     val players = mutableMapOf<UUID, HGPlayer>()
 
-    val alivePlayers get() = players.values.filter { it.status == HGPlayerStatus.ALIVE || it.status == HGPlayerStatus.DISCONNECTED}
+    val alivePlayers get() = players.values.filter { it.status == HGPlayerStatus.ALIVE || it.status == HGPlayerStatus.DISCONNECTED }
 
     val spectators get() = players.values.filter { it.status == HGPlayerStatus.SPECTATOR }
 
@@ -41,7 +42,7 @@ object PlayerList {
         val otherHGPlayer = killer?.hgPlayer
         broadcast(
             literalText {
-                text("${serverPlayerEntity.name.string}() wurde von ${killer?.name?.string}() getötet")
+                text("${serverPlayerEntity.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killer?.name?.string}(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killer?.mainHandStack?.name?.string} getötet")
                 color = 0xFFE128
             }
         )
@@ -51,7 +52,7 @@ object PlayerList {
     fun announceRemainingPlayers() {
         broadcast(
             literalText {
-                text("Es verbleiben ${alivePlayers.size} Spieler")
+                text("Es verbleiben ${alivePlayers.size - 1} Spieler")
                 color = 0xFFE128
             }
         )
@@ -59,7 +60,6 @@ object PlayerList {
 }
 
 fun ServerPlayerEntity.removeHGPlayer() {
-    PlayerList.removePlayer(uuid)
     hgPlayer.status = HGPlayerStatus.SPECTATOR
     changeGameMode(GameMode.SPECTATOR)
 }
