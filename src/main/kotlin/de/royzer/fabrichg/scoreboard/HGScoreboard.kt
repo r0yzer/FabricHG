@@ -31,7 +31,7 @@ fun ServerPlayerEntity.showScoreboard() {
             lineChangingPeriodically(1000) {
                 literalText("Kit: ${hgPlayer.kits.first().name}") {
                     color = 0x00FFFF
-                    strikethrough = !hgPlayer.canUseKit(hgPlayer.kits.first())
+                    strikethrough = hgPlayer.kitsDisabled
                 }
             }
             literalLine("")

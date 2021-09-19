@@ -19,6 +19,7 @@ import net.fabricmc.fabric.api.biome.v1.BiomeModifications
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.server.dedicated.MinecraftDedicatedServer
+import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.BuiltinRegistries
 import net.minecraft.util.registry.Registry
@@ -65,3 +66,5 @@ fun registerCommands() {
     listCommand
     kitCommand
 }
+
+fun ServerPlayerEntity.sendPlayerStatus() = GamePhaseManager.server.playerManager.sendPlayerStatus(this)

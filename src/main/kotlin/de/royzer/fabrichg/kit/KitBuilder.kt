@@ -22,6 +22,13 @@ class KitBuilder(val kit: Kit) {
         addKitItem(KitItem(itemStack, droppable, clickAction))
     }
 
+    fun onDisable(action: (hgPlayer: HGPlayer, kit: Kit) -> Unit) {
+        kit.onDisable = action
+    }
+    fun onEnable(action: (hgPlayer: HGPlayer, kit: Kit) -> Unit) {
+        kit.onEnable = action
+    }
+
     var cooldown: Double? = null
         get() = kit.cooldown
         set(value) {

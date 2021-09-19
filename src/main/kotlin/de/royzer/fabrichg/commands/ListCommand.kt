@@ -2,7 +2,6 @@ package de.royzer.fabrichg.commands
 
 import de.royzer.fabrichg.game.PlayerList
 import net.axay.fabrik.commands.command
-import net.axay.fabrik.commands.runs
 import net.axay.fabrik.core.text.literalText
 
 val listCommand = command("list") {

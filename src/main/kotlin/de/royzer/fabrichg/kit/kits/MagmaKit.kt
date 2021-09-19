@@ -5,11 +5,8 @@ import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.kit.KitItem
 import de.royzer.fabrichg.kit.cooldown.startCooldown
 import de.royzer.fabrichg.kit.kit
-import net.minecraft.block.Material
 import net.minecraft.entity.Entity
-import net.minecraft.entity.effect.StatusEffect
 import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffectType
 import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
@@ -25,6 +22,15 @@ val magmaKit = kit("Magma") {
         }
     )
     cooldown = 3.5
+
+    onDisable { hgPlayer, kit ->
+        broadcast("${hgPlayer.name} wird gemerkelt (magma)")
+    }
+
+    onEnable { hgPlayer, kit ->
+        broadcast("${hgPlayer.name} wird entmerkelt (magma)")
+    }
+
 }
 
 fun onAttackEntity(target: Entity, serverPlayerEntity: ServerPlayerEntity) {

@@ -17,13 +17,20 @@ class HGPlayer(
     var offlineTime = maxOfflineTime
     val kits = mutableListOf<Kit>()
 
+    var kitsDisabled = false
+
     val serverPlayerEntity get() = GamePhaseManager.server.playerManager.getPlayer(uuid)
 
     fun hasKit(kit: Kit) = kit in kits
 
-    fun canUseKit(kit: Kit) = hasKit(kit) && !hasCooldown(kit) // TODO cooldown/rouge
+    fun canUseKit(kit: Kit) = hasKit(kit) && !hasCooldown(kit) && GamePhaseManager.isIngame && !kitsDisabled // TODO cooldown/rouge
 
-    fun canUseKit(kit: Kit, ignoreCooldown: Boolean) = hasKit(kit) // TODO rouge
+    fun canUseKit(kit: Kit, ignoreCooldown: Boolean): Boolean {
+        return if (ignoreCooldown) hasKit(kit) && GamePhaseManager.isIngame && !kitsDisabled
+        else canUseKit(kit)
+    }
+
+
 }
 
 val ServerPlayerEntity.hgPlayer

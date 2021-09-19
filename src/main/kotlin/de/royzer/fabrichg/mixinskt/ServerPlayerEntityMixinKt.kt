@@ -5,6 +5,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.isKitItem
+import de.royzer.fabrichg.sendPlayerStatus
 import net.minecraft.entity.ItemEntity
 import net.minecraft.entity.damage.DamageSource
 import net.minecraft.item.ItemStack
@@ -19,11 +20,13 @@ object ServerPlayerEntityMixinKt {
     fun onDropSelectedItem(entireStack: Boolean, cir: CallbackInfoReturnable<Boolean>, serverPlayerEntity: ServerPlayerEntity) {
         val stack = serverPlayerEntity.mainHandStack
         if (GamePhaseManager.currentPhaseType == PhaseType.LOBBY) {
+            serverPlayerEntity.sendPlayerStatus()
             cir.returnValue = true
             return
         }
         serverPlayerEntity.hgPlayer.kits.forEach { kit ->
             if (stack.item in kit.kitItems.filterNot { it.droppable }.map { it.itemStack.item } && stack.isKitItem) {
+                serverPlayerEntity.sendPlayerStatus()
                 cir.returnValue = true
             }
         }

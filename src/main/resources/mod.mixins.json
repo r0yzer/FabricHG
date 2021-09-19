@@ -14,14 +14,15 @@
     "kits.AnchorLivingEntityMixin",
     "kits.AnchorMixin",
     "kits.MagmaMixin",
-    "server.network.ServerPlayerEntityMixin",
-    "server.network.ServerPlayerInteractionManagerMixin",
     "kits.NeoMixin",
-    "kits.SwitcherMixin"
+    "kits.SwitcherMixin",
+    "server.network.ServerPlayerEntityMixin",
+    "server.network.ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
+    "item.BlockItemMixin"
   ]
 }

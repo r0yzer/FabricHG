@@ -13,7 +13,7 @@ val yarnMappingsVersion = "1.17.1+build.39:v2"
 val fabricLoaderVersion = "0.11.6"
 val fabricApiVersion = "0.38.0+1.17"
 val fabricLanguageKotlinVersion = "1.6.3+kotlin.1.5.21"
-val fabrikVersion = "1.3.1"
+val fabrikVersion = "1.4.4"
 
 repositories {
     mavenCentral()
