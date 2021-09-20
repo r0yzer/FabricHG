@@ -15,5 +15,5 @@ val magmaKit = kit("Magma") {
 fun onAttackEntity(target: Entity, serverPlayerEntity: ServerPlayerEntity) {
     if (serverPlayerEntity.hgPlayer.canUseKit(magmaKit, true))
         if (Random.nextInt(4) == 3)
-            target.fireTicks = 40
+            target.fireTicks += 40
 }
