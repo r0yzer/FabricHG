@@ -27,4 +27,5 @@ val kits = listOfNotNull(
     rougeKit,
     scoutKit,
     reviveKit,
+    kangarooKit,
 )

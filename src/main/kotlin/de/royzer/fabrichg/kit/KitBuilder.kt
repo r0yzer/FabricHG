@@ -20,7 +20,13 @@ class KitBuilder(val kit: Kit) {
     }
 
     fun addKitItem(itemStack: ItemStack, droppable: Boolean, clickAction: ((HGPlayer, Kit) -> Unit)? = null) {
-        addKitItem(KitItem(itemStack, droppable, clickAction))
+        addKitItem(KitItem(itemStack, droppable, clickAction = clickAction))
+    }
+
+    fun kitItem(itemStack: ItemStack = Items.BARRIER.defaultStack, builder: KitItemBuilder.() -> Unit) {
+        val kitItem = KitItem(itemStack)
+        kitItem.apply { KitItemBuilder(kitItem).apply(builder) }
+        addKitItem(kitItem)
     }
 
     fun onDisable(action: (hgPlayer: HGPlayer, kit: Kit) -> Unit) {

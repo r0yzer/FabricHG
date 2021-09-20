@@ -24,6 +24,7 @@
   },
   "mixins": [
     "entity.PlayerEntityMixin",
-    "item.BlockItemMixin"
+    "item.BlockItemMixin",
+    "kits.KangarooMixin"
   ]
 }

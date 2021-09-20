@@ -4,7 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.KitItem
-import de.royzer.fabrichg.kit.cooldown.startCooldown
+import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import net.axay.fabrik.core.task.coroutineTask
 import net.axay.fabrik.core.text.sendText
@@ -29,7 +29,7 @@ val rougeKit = kit("Rouge") {
                     }
                 }
             }
-            hgPlayer.startCooldown(kit)
+            hgPlayer.activateCooldown(kit)
             hgPlayer.serverPlayerEntity!!.sendText {
                 text("Du hast die Kits von ")
                 text(nearbyPlayers.size.toString()) {

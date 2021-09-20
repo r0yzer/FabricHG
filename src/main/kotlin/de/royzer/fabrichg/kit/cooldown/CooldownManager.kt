@@ -15,7 +15,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 private val cooldownMap = HashMap<Cooldown, Double>()
 private val cooldownCoroutineScope = CoroutineScope(Dispatchers.IO)
 
-fun HGPlayer.startCooldown(kit: Kit) {
+fun HGPlayer.activateCooldown(kit: Kit) {
     val cooldown = Cooldown(this, kit)
     cooldownMap[cooldown] = kit.cooldown ?: return
     cooldownCoroutineScope.launch scope@{

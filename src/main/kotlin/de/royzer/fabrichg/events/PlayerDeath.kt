@@ -8,9 +8,7 @@ import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
-import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.world.biome.source.BiomeAccess
 
 object PlayerDeath {
     init {
@@ -21,7 +19,10 @@ object PlayerDeath {
             }
             if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return@register true
             val killer: ServerPlayerEntity? = (serverPlayerEntity as LivingEntityAccessor).attackingPlayer as? ServerPlayerEntity
-            PlayerList.announcePlayerDeath(serverPlayerEntity, killer)
+            serverPlayerEntity.hgPlayer.kits.forEach {
+                it.onDisable?.invoke(serverPlayerEntity.hgPlayer, it)
+            }
+             PlayerList.announcePlayerDeath(serverPlayerEntity, killer)
             serverPlayerEntity.removeHGPlayer()
             val hgPlayer = killer?.hgPlayer ?: return@register true
             hgPlayer.kills += 1

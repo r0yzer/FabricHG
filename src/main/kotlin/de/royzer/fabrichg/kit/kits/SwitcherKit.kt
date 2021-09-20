@@ -12,11 +12,11 @@ import net.minecraft.util.hit.EntityHitResult
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 val switcherKit = kit("Switcher") {
-    kitSelectorItem = itemStack(Items.SNOWBALL) {}
-    addKitItem(itemStack(Items.SNOWBALL) {
-            count = 16
-        }, true
-    )
+    kitSelectorItem = Items.SNOWBALL.defaultStack
+
+    kitItem {
+        itemStack = itemStack(Items.SNOWBALL) { count = 16 }
+    }
 }
 
 fun switcherOnEntityHit(entityHitResult: EntityHitResult, ci: CallbackInfo, snowballEntity: SnowballEntity) {
