@@ -92,6 +92,6 @@ fun onPlace(context: ItemPlacementContext, cir: CallbackInfoReturnable<ActionRes
 
 // hehe
 val ItemStack.isKitItem: Boolean get() {
-    val lore = getOrCreateSubNbt("display").get("Lore")?.asString() ?: return false
+    val lore = getSubNbt("display")?.get("Lore")?.asString() ?: return false
     return lore.contains("Kititem")
 }
