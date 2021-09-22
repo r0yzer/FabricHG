@@ -4,28 +4,29 @@
   "compatibilityLevel": "JAVA_16",
   "server": [
     "MainMixin",
+    "block.MushroomPlantBlockMixin",
     "entity.EntityMixin",
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
+    "entity.PlayerEntityMixin",
     "entity.ai.goal.CreeperIgniteGoalMixin",
     "entity.ai.goal.FollowTargetGoalMixin",
     "entity.damage.DamageTrackerAccessor",
+    "item.BlockItemMixin",
     "item.ItemStackMixin",
     "kits.AnchorLivingEntityMixin",
     "kits.AnchorMixin",
+    "kits.KangarooMixin",
     "kits.MagmaMixin",
     "kits.NeoMixin",
     "kits.SwitcherMixin",
     "server.network.ServerPlayerEntityMixin",
-    "server.network.ServerPlayerInteractionManagerMixin",
-    "block.MushroomPlantBlockMixin",
-    "entity.PlayerEntityMixin",
-    "item.BlockItemMixin",
-    "kits.KangarooMixin"
+    "server.network.ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
+    "entity.HungerManagerMixin"
   ]
 }
