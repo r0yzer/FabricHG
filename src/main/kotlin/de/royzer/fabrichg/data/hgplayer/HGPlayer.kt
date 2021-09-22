@@ -19,6 +19,10 @@ class HGPlayer(
 
     val playerData = mutableMapOf<String, Any?>()
 
+    inline fun <reified T> getPlayerData(key: String): T? {
+        return playerData[key] as? T
+    }
+
     var kitsDisabled = false
 
     val serverPlayerEntity get() = GamePhaseManager.server.playerManager.getPlayer(uuid)

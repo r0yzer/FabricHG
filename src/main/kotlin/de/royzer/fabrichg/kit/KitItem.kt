@@ -52,7 +52,6 @@ fun kitItem(itemStack: ItemStack): KitItem {
 
 @JvmOverloads
 fun onClick(player: PlayerEntity, itemStack: ItemStack, cir: CallbackInfoReturnable<TypedActionResult<ItemStack>>? = null) {
-    logInfo("onCLICK")
     val serverPlayerEntity = player as? ServerPlayerEntity ?: return
     val hgPlayer = serverPlayerEntity.hgPlayer
     if (itemStack.isKitItem)
@@ -79,7 +78,6 @@ fun onClickAtEntity(player: PlayerEntity, hand: Hand, entity: Entity, cir: Callb
 }
 
 fun onPlace(context: ItemPlacementContext, cir: CallbackInfoReturnable<ActionResult>) {
-    logInfo("onPlace")
     if (context.stack.isKitItem) {
         val serverPlayerEntity = (context.player as? ServerPlayerEntity) ?: return
         cir.returnValue = ActionResult.PASS

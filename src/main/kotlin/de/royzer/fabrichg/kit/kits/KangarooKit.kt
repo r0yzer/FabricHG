@@ -27,7 +27,7 @@ val kangarooKit = kit("Kangaroo") {
     }
 }
 
-private val ServerPlayerEntity.direction: Vec3d
+val ServerPlayerEntity.direction: Vec3d
     get() {
         var v = Vec3d.ZERO
         v = v.add(0.0, -sin(Math.toRadians(pitch.toDouble())), 0.0)

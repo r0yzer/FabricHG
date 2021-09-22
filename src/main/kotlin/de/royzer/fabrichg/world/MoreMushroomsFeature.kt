@@ -23,7 +23,7 @@ class MoreMushroomsFeature(configCodec: Codec<DefaultFeatureConfig>) : Feature<D
 
         ((origin.x -8)..(origin.x +8)).forEach { x ->
             ((origin.z -8)..(origin.z +8)).forEach { z ->
-                if (Random.nextInt(4) == 3)
+                if (Random.nextInt(10) == 3)
                     mushroomsPositions += world.getTopPosition(Heightmap.Type.WORLD_SURFACE_WG, BlockPos(x, origin.y, z))
             }
         }

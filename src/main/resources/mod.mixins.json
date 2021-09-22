@@ -17,14 +17,15 @@
     "kits.NeoMixin",
     "kits.SwitcherMixin",
     "server.network.ServerPlayerEntityMixin",
-    "server.network.ServerPlayerInteractionManagerMixin"
+    "server.network.ServerPlayerInteractionManagerMixin",
+    "block.MushroomPlantBlockMixin",
+    "entity.PlayerEntityMixin",
+    "item.BlockItemMixin",
+    "kits.KangarooMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "entity.PlayerEntityMixin",
-    "item.BlockItemMixin",
-    "kits.KangarooMixin"
   ]
 }
