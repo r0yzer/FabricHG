@@ -19,11 +19,11 @@ val blinkKit = kit("Blink") {
             val player = hgPlayer.serverPlayerEntity ?: return@onClick
             hgPlayer.checkUsesForCooldown(kit, maxUses)
             val newPos = player.pos.add(player.direction.normalize().multiply(blinkDistance))
-            hgPlayer.serverPlayerEntity?.teleport(
+            player.teleport(
                 newPos.x, newPos.y, newPos.z
             )
             player.world.setBlockState(BlockPos(player.pos.subtract(0.0,1.0,0.0)), Blocks.OAK_LEAVES.defaultState)
-            hgPlayer.serverPlayerEntity?.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, 100F, 100F)
+            player.playSound(SoundEvents.ENTITY_FIREWORK_ROCKET_LAUNCH, 100F, 100F)
         }
     }
 }
