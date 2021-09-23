@@ -12,8 +12,10 @@ object SoupHealingKt {
     @JvmStatic
     fun onSoupUse(player: PlayerEntity, stack: ItemStack, cir: CallbackInfoReturnable<TypedActionResult<ItemStack>>, world: World, hand: Hand) {
         if (player.health >= player.maxHealth) {
-            if (player.hungerManager.isNotFull) player.hungerManager.add(6, 1F)
-            cir.returnValue = TypedActionResult.pass(ItemStack(Items.BOWL))
+            if (player.hungerManager.isNotFull) {
+                player.hungerManager.add(6, 1F)
+                cir.returnValue = TypedActionResult.pass(ItemStack(Items.BOWL))
+            }
             return
         }
         player.heal(7F)
