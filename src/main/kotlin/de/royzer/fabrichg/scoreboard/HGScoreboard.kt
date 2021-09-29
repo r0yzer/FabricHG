@@ -5,9 +5,9 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.EndPhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
-import net.axay.fabrik.core.sideboard.showSideboard
-import net.axay.fabrik.core.sideboard.sideboard
 import net.axay.fabrik.core.text.literalText
+import net.axay.fabrik.game.sideboard.showSideboard
+import net.axay.fabrik.game.sideboard.sideboard
 import net.minecraft.server.network.ServerPlayerEntity
 
 fun ServerPlayerEntity.showScoreboard() {

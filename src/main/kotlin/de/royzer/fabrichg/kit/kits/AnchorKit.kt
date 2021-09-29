@@ -1,11 +1,9 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
-import de.royzer.fabrichg.mixins.entity.damage.DamageTrackerAccessor
-import net.axay.fabrik.core.math.vector.modifyVelocity
+import net.axay.fabrik.core.entity.modifyVelocity
 import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.item.ItemStack

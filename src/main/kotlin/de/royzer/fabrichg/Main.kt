@@ -32,6 +32,8 @@ import net.minecraft.world.gen.feature.DefaultFeatureConfig
 
 val String.hgId get() = Identifier("fabrichg", this)
 
+val server get() = GamePhaseManager.server
+
 val fabrichgScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
 const val TEXT_BLUE = 0x00FFFF

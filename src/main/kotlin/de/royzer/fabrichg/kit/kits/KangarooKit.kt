@@ -1,8 +1,8 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
+import net.axay.fabrik.core.entity.modifyVelocity
 import net.axay.fabrik.core.logging.logInfo
-import net.axay.fabrik.core.math.vector.modifyVelocity
 import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.math.Vec3d
