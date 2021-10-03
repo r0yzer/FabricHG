@@ -3,6 +3,7 @@ package de.royzer.fabrichg.game.phase.phases
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
@@ -20,6 +21,8 @@ object IngamePhase : GamePhase() {
     override val maxPhaseTime = 15 * 60
     override val nextPhase by lazy { EndPhase(winner) }
 
+    val feastStartTime = 600
+
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
@@ -34,6 +37,11 @@ object IngamePhase : GamePhase() {
             winner = PlayerList.alivePlayers.firstOrNull()
             startNextPhase()
         }
+
+        if (timer == feastStartTime) {
+            Feast.start()
+        }
+
         when (val timeLeft = maxPhaseTime - timer) {
             60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText {
                 text("Das Spiel endet in ")
