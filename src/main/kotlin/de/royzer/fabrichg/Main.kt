@@ -1,9 +1,6 @@
 package de.royzer.fabrichg
 
-import de.royzer.fabrichg.commands.infoCommand
-import de.royzer.fabrichg.commands.kitCommand
-import de.royzer.fabrichg.commands.listCommand
-import de.royzer.fabrichg.commands.startCommand
+import de.royzer.fabrichg.commands.*
 import de.royzer.fabrichg.events.ConnectEvents
 import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
@@ -70,6 +67,7 @@ fun registerCommands() {
     infoCommand
     listCommand
     kitCommand
+    feastCommand
 }
 
 fun ServerPlayerEntity.sendPlayerStatus() = GamePhaseManager.server.playerManager.sendPlayerStatus(this)
