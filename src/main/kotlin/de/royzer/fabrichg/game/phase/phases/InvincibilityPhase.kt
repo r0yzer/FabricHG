@@ -20,6 +20,10 @@ object InvincibilityPhase : GamePhase() {
     override fun init() {
         GamePhaseManager.resetTimer()
         broadcast(literalText("HG startet :)") { color = TEXT_GRAY })
+        broadcast(literalText("Tritt gerne dem offiziellen hg.royzer.de Discord bei\n") {
+            color = TEXT_GRAY
+            text("https://discord.gg/bS8JKatZkD") { color = TEXT_BLUE }
+        })
         PlayerList.alivePlayers.forEach { hgPlayer ->
             hgPlayer.serverPlayerEntity?.changeGameMode(GameMode.SURVIVAL)
             hgPlayer.serverPlayerEntity?.closeHandledScreen()
@@ -50,6 +54,6 @@ object InvincibilityPhase : GamePhase() {
     }
 
     override val phaseType = PhaseType.INVINCIBILITY
-    override val maxPhaseTime = 5 * 1
+    override val maxPhaseTime = 120 * 1
     override val nextPhase = IngamePhase
 }
