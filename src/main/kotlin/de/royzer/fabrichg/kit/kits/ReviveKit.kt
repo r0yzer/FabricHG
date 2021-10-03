@@ -9,7 +9,10 @@ val reviveKit = kit("Revive") {
     val defaultPeriod = 120 * 1000L
     kitSelectorItem = Items.TOTEM_OF_UNDYING.defaultStack
 
-    addKitItem(Items.TOTEM_OF_UNDYING.defaultStack, false)
+    kitItem {
+        itemStack = kitSelectorItem
+        droppable = false
+    }
 
     onEnable { hgPlayer, kit ->
         if (hgPlayer.playerData[reviveJobKey] != null) return@onEnable

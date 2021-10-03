@@ -28,7 +28,11 @@ val scoutKit = kit("Scout") {
     val scoutJobKey = "${this.kit.name}JobKey"
     val scoutPotionPeriod = 5 * 60 * 1000L
     kitSelectorItem = scoutPotion
-    addKitItem(scoutPotion, false)
+
+    kitItem {
+        itemStack = scoutPotion
+        droppable = false
+    }
 
     onEnable { hgPlayer, kit ->
         val job = coroutineTask(howOften = Long.MAX_VALUE, period = scoutPotionPeriod, delay = scoutPotionPeriod) {
