@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.kit.events.KitEventsBuilder
 import net.axay.fabrik.core.item.setLore
 import net.axay.fabrik.core.text.literalText
 import net.minecraft.item.ItemStack
@@ -11,6 +12,17 @@ class KitBuilder(val kit: Kit) {
         get() = kit.kitSelectorItem?.defaultStack ?: ItemStack(Items.AIR)
         set(value) {
             kit.kitSelectorItem = value.item
+            field = value
+        }
+
+    /**
+     * Set if the kit should be useable in the invincibility time
+     * defaults to true
+     */
+    var useableInInvincibility: Boolean = true
+        get() = kit.usableInInvincibility
+        set(value) {
+            kit.usableInInvincibility = value
             field = value
         }
 
@@ -34,6 +46,10 @@ class KitBuilder(val kit: Kit) {
     }
     fun onEnable(action: (hgPlayer: HGPlayer, kit: Kit) -> Unit) {
         kit.onEnable = action
+    }
+
+    fun events(builder: KitEventsBuilder.() -> Unit) {
+        kit.events.apply { KitEventsBuilder(kit).apply(builder) }
     }
 
     var cooldown: Double? = null

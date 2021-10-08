@@ -3,6 +3,7 @@ package de.royzer.fabrichg.data.hgplayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.maxOfflineTime
+import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import net.minecraft.server.network.ServerPlayerEntity
@@ -29,7 +30,12 @@ class HGPlayer(
 
     fun hasKit(kit: Kit) = kit in kits
 
-    fun canUseKit(kit: Kit) = hasKit(kit) && !hasCooldown(kit) && GamePhaseManager.isIngame && !kitsDisabled // TODO cooldown/rouge
+    fun canUseKit(kit: Kit): Boolean  {
+        return if (kit.usableInInvincibility)
+            hasKit(kit) && !hasCooldown(kit) && GamePhaseManager.isIngame && !kitsDisabled
+        else
+            hasKit(kit) && !hasCooldown(kit) && GamePhaseManager.currentPhaseType == PhaseType.INGAME && !kitsDisabled
+    }
 
     fun canUseKit(kit: Kit, ignoreCooldown: Boolean): Boolean {
         return if (ignoreCooldown) hasKit(kit) && GamePhaseManager.isIngame && !kitsDisabled

@@ -17,7 +17,6 @@
     "kits.AnchorLivingEntityMixin",
     "kits.AnchorMixin",
     "kits.KangarooMixin",
-    "kits.MagmaMixin",
     "kits.NeoMixin",
     "kits.SwitcherMixin",
     "server.network.ServerPlayerEntityMixin",
