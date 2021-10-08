@@ -19,7 +19,7 @@ class KitBuilder(val kit: Kit) {
      * Set if the kit should be useable in the invincibility time
      * defaults to true
      */
-    var useableInInvincibility: Boolean = true
+    var usableInInvincibility: Boolean = true
         get() = kit.usableInInvincibility
         set(value) {
             kit.usableInInvincibility = value

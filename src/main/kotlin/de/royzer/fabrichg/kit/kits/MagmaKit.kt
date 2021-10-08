@@ -8,7 +8,7 @@ import kotlin.random.Random
 val magmaKit = kit("Magma") {
     kitSelectorItem = ItemStack(Items.MAGMA_BLOCK)
 
-    useableInInvincibility = false
+    usableInInvincibility = false
 
     events {
         onHitEntity { _, _, entity ->
