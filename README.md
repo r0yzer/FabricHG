@@ -108,4 +108,20 @@ val blinkKit = kit("Blink") {
     }
 }
 ```
+If you want to execute something when the player does something without his kititem, use the `events` function
 
+```kt
+val magmaKit = kit("Magma") {
+    kitSelectorItem = ItemStack(Items.MAGMA_BLOCK)
+
+    usableInInvincibility = false
+
+    events {
+        onHitEntity { _, _, entity ->
+            if (Random.nextInt(4) == 3)
+                entity.fireTicks += 40
+        }
+    }
+}
+```
+If you need a event which is not available, feel free to add it
