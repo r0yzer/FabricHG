@@ -12,4 +12,7 @@ class KitEventsBuilder(val kit: Kit) {
     fun onHitEntity(action: (HGPlayer, Kit, Entity) -> Unit) {
         kit.events.hitEntityAction = action
     }
+    fun onMove(action: (HGPlayer, Kit) -> Unit) {
+        kit.events.moveAction = action
+    }
 }

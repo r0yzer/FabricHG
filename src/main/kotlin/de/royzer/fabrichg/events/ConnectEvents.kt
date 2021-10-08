@@ -51,7 +51,15 @@ object ConnectEvents {
                     PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                 }
                 PhaseType.INVINCIBILITY -> {
-                    PlayerList.addOrGetPlayer(player.uuid, player.name.string)
+                    when (hgPlayer.status) {
+                        HGPlayerStatus.DISCONNECTED -> {
+                            combatloggedPlayers[uuid]?.job?.cancel()
+                            player.hgPlayer.status = HGPlayerStatus.ALIVE
+                        }
+                        else -> {
+                            PlayerList.addOrGetPlayer(player.uuid, player.name.string)
+                        }
+                    }
                 }
                 PhaseType.INGAME -> {
                     when (player.hgPlayer.status) {

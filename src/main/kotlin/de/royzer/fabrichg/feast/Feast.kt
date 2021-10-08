@@ -40,13 +40,12 @@ object Feast {
                 300, 180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText {
                     text("Das Feast startet in ")
                     text(timeLeft.formattedTime) { color = TEXT_BLUE }
-                    text(" Sekunden bei ")
+                    text(" Minuten bei ")
                     text("${feastCenter.x} ${feastCenter.y} ${feastCenter.z}") { color = TEXT_BLUE }
                     color = TEXT_GRAY
                 })
                 0 -> {
                     server.overworld.setBlockState(feastCenter.add(0,1,0), Blocks.ENCHANTING_TABLE.defaultState)
-                    broadcast("das feast startet")
                 }
             }
         }
