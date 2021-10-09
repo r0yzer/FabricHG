@@ -2,18 +2,14 @@ package de.royzer.fabrichg.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.game.broadcast
-import de.royzer.fabrichg.kit.cooldown.cooldown
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
 import de.royzer.fabrichg.sendPlayerStatus
-import net.axay.fabrik.core.logging.logInfo
-import net.axay.fabrik.core.text.literalText
-import net.axay.fabrik.core.text.sendText
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemPlacementContext
 import net.minecraft.item.ItemStack
+import net.minecraft.item.ItemUsageContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -29,7 +25,16 @@ class KitItem(
     internal var clickAtPlayerAction: ((HGPlayer, Kit, ServerPlayerEntity, Hand) -> Unit)? = null,
     internal var placeAction: ((HGPlayer, Kit, ItemStack, BlockPos, World) -> Unit)? = null,
     internal var clickAction: ((HGPlayer, Kit) -> Unit)? = null,
+    internal var useOnBlockAction: ((HGPlayer, Kit, ItemUsageContext) -> Unit)? = null
 ) {
+    fun invokeUseOnBlockAction(hgPlayer: HGPlayer, kit: Kit, context: ItemUsageContext, ignoreCooldown: Boolean = false){
+        if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
+            useOnBlockAction?.invoke(hgPlayer, kit, context)
+        } else if (hgPlayer.hasCooldown(kit)) {
+            hgPlayer.serverPlayerEntity?.sendCooldown(kit)
+        }
+    }
+
     fun invokeClickAction(hgPlayer: HGPlayer, kit: Kit, ignoreCooldown: Boolean = false) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             clickAction?.invoke(hgPlayer, kit)
@@ -59,6 +64,20 @@ class KitItem(
 
 fun kitItem(itemStack: ItemStack): KitItem {
     return KitItem(itemStack)
+}
+
+fun onUseBlock(player: PlayerEntity, context: ItemUsageContext ){
+    val serverPlayerEntity = player as? ServerPlayerEntity ?: return
+    val hgPlayer = serverPlayerEntity.hgPlayer
+    if(context.stack.isKitItem){
+        hgPlayer.kits.forEach { kit ->
+            kit.kitItems.forEach {
+                if(it.itemStack.item == context.stack.item){
+                    it.invokeUseOnBlockAction(hgPlayer, kit, context)
+                }
+            }
+        }
+    }
 }
 
 @JvmOverloads

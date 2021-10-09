@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import net.minecraft.entity.Entity
 import net.minecraft.item.ItemStack
+import net.minecraft.item.ItemUsageContext
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Hand
 import net.minecraft.util.math.BlockPos
@@ -35,6 +36,10 @@ class KitItemBuilder(val kitItem: KitItem) {
 
     fun onClickAtPlayer(action: (hgPlayer: HGPlayer, kit: Kit, clickedPlayer: ServerPlayerEntity, hand: Hand) -> Unit) {
         kitItem.clickAtPlayerAction = action
+    }
+
+    fun onUseBlock(action: ((HGPlayer, Kit, ItemUsageContext) -> Unit)?){
+        kitItem.useOnBlockAction = action
     }
 
 }

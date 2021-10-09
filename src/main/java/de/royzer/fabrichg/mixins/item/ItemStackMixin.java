@@ -10,8 +10,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.StackReference;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUsageContext;
 import net.minecraft.item.Items;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ClickType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -48,5 +50,13 @@ public class ItemStackMixin {
         if (itemStack.getItem() == Items.COMPASS) {
             Tracker.INSTANCE.onTrackerUse(user, itemStack, cir, world, hand);
         }
+    }
+
+    @Inject(
+            method = "useOnBlock",
+            at = @At("HEAD")
+    )
+    public void useOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir){
+        KitItemKt.onUseBlock(context.getPlayer(), context);
     }
 }
