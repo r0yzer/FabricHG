@@ -21,7 +21,7 @@ object IngamePhase : GamePhase() {
     override val maxPhaseTime = 15 * 60
     override val nextPhase by lazy { EndPhase(winner) }
 
-    val feastStartTime = 180
+    val feastStartTime = 600
 
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 

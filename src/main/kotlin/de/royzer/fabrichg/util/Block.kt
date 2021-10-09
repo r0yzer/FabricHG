@@ -13,8 +13,11 @@ fun getRandomHighestPos(radius: Int): BlockPos {
     ).toHighestPos()
 }
 
-fun BlockPos.toHighestPos() = BlockPos(
-    x,
-    server.overworld.getTopY(Heightmap.Type.WORLD_SURFACE, x, z),
-    z
-)
+fun BlockPos.toHighestPos(): BlockPos {
+    server.overworld.getChunk(this)
+    return BlockPos(
+        x,
+        server.overworld.getTopY(Heightmap.Type.WORLD_SURFACE, x, z),
+        z
+    )
+}
