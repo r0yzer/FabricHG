@@ -23,9 +23,11 @@ val diggerKit = kit("Digger") {
                 repeat(size) { x ->
                     repeat(size) { y ->
                         repeat(size) { z ->
-                            val x = x - 3
-                            val z = z - 3
-                            world.setBlockState(blockPos.subtract(Vec3i(x, y, z)), Blocks.AIR.defaultState)
+                            val x = x - size / 2
+                            val z = z - size / 2
+                            val pos = blockPos.subtract(Vec3i(x, y, z))
+                            if (world.getBlockState(pos).block != Blocks.BEDROCK)
+                                world.setBlockState(pos, Blocks.AIR.defaultState)
                         }
                     }
                 }
