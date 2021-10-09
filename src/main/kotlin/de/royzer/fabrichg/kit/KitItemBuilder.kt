@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Hand
+import net.minecraft.util.math.BlockPos
 
 class KitItemBuilder(val kitItem: KitItem) {
     var itemStack: ItemStack = kitItem.itemStack
@@ -22,6 +23,10 @@ class KitItemBuilder(val kitItem: KitItem) {
 
     fun onClick(action: (HGPlayer, Kit) -> Unit) {
         kitItem.clickAction = action
+    }
+
+    fun onPlace(action: (HGPlayer, Kit, BlockPos) -> Unit) {
+        kitItem.placeAction = action
     }
 
     fun onClickAtEntity(action: (HGPlayer, Kit, Entity, Hand) -> Unit) {

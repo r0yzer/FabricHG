@@ -68,6 +68,7 @@ fun registerCommands() {
     listCommand
     kitCommand
     feastCommand
+    pingCommand
 }
 
 fun ServerPlayerEntity.sendPlayerStatus() = GamePhaseManager.server.playerManager.sendPlayerStatus(this)

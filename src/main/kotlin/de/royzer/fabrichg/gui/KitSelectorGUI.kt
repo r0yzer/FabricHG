@@ -34,9 +34,10 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayerEntity) = igui(GuiType.NINE_B
             },
             onClick = { _, kit ->
                 hgPlayer.kits[0] = kit
-                if (GamePhaseManager.isIngame) kit.onEnable?.invoke(hgPlayer, kit)
-                if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY)
+                if (GamePhaseManager.isIngame) {
+                    kit.onEnable?.invoke(hgPlayer, kit)
                     kit.kitItems.forEach { serverPlayerEntity.inventory.insertStack(it.itemStack.copy()) }
+                }
                 serverPlayerEntity.closeHandledScreen()
             }
         )

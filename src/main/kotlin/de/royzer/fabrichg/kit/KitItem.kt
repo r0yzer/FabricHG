@@ -18,6 +18,7 @@ import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
+import net.minecraft.util.math.BlockPos
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 class KitItem(
@@ -26,10 +27,19 @@ class KitItem(
     internal var clickAtEntityAction: ((HGPlayer, Kit, Entity, Hand) -> Unit)? = null,
     internal var clickAtPlayerAction: ((HGPlayer, Kit, ServerPlayerEntity, Hand) -> Unit)? = null,
     internal var clickAction: ((HGPlayer, Kit) -> Unit)? = null,
+    internal var placeAction: ((HGPlayer, Kit, BlockPos) -> Unit)? = null,
 ) {
     fun invokeClickAction(hgPlayer: HGPlayer, kit: Kit, ignoreCooldown: Boolean = false) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             clickAction?.invoke(hgPlayer, kit)
+        } else if (hgPlayer.hasCooldown(kit)) {
+            hgPlayer.serverPlayerEntity?.sendCooldown(kit)
+        }
+    }
+
+    fun invokePlaceAction(hgPlayer: HGPlayer, kit: Kit, blockPos: BlockPos, ignoreCooldown: Boolean = false) {
+        if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
+            placeAction?.invoke(hgPlayer, kit, blockPos)
         } else if (hgPlayer.hasCooldown(kit)) {
             hgPlayer.serverPlayerEntity?.sendCooldown(kit)
         }
@@ -84,6 +94,7 @@ fun onPlace(context: ItemPlacementContext, cir: CallbackInfoReturnable<ActionRes
         serverPlayerEntity.hgPlayer.kits.forEach { kit ->
             kit.kitItems.filter { it.itemStack.item == context.stack.item }.forEach {
                 it.invokeClickAction(serverPlayerEntity.hgPlayer, kit)
+                it.invokePlaceAction(serverPlayerEntity.hgPlayer, kit, context.blockPos)
             }
         }
         serverPlayerEntity.sendPlayerStatus()
