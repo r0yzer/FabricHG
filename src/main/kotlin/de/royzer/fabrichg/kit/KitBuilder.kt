@@ -26,13 +26,9 @@ class KitBuilder(val kit: Kit) {
             field = value
         }
 
-    fun addKitItem(kitItem: KitItem) {
+    private fun addKitItem(kitItem: KitItem) {
         kitItem.itemStack.setLore(listOf(literalText("Kititem")))
         kit.kitItems.add(kitItem)
-    }
-
-    fun addKitItem(itemStack: ItemStack, droppable: Boolean, clickAction: ((HGPlayer, Kit) -> Unit)? = null) {
-        addKitItem(KitItem(itemStack, droppable, clickAction = clickAction))
     }
 
     fun kitItem(itemStack: ItemStack = Items.BARRIER.defaultStack, builder: KitItemBuilder.() -> Unit) {

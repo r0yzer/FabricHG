@@ -13,9 +13,13 @@ import net.minecraft.item.Items
 import net.minecraft.server.network.ServerPlayerEntity
 
 val rougeKit = kit("Rouge") {
-    addKitItem(
-        KitItem(ItemStack(Items.GRAY_DYE)) { hgPlayer, kit ->
-            val player = hgPlayer.serverPlayerEntity ?: return@KitItem
+
+    kitSelectorItem = ItemStack(Items.GRAY_DYE)
+    cooldown = 35.0
+
+    kitItem {
+        onClick { hgPlayer, kit ->
+            val player = hgPlayer.serverPlayerEntity ?: return@onClick
             val nearbyPlayers = player.world.getEntitiesByClass(ServerPlayerEntity::class.java, player.boundingBox.expand(8.0)) {
                 it != player
             }
@@ -39,7 +43,6 @@ val rougeKit = kit("Rouge") {
                 color = TEXT_GRAY
             }
         }
-    )
-    kitSelectorItem = ItemStack(Items.GRAY_DYE)
-    cooldown = 35.0
+    }
+
 }
