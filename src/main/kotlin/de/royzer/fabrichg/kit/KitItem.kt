@@ -19,6 +19,7 @@ import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.TypedActionResult
 import net.minecraft.util.math.BlockPos
+import net.minecraft.world.World
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 class KitItem(
@@ -26,8 +27,8 @@ class KitItem(
     var droppable: Boolean = false,
     internal var clickAtEntityAction: ((HGPlayer, Kit, Entity, Hand) -> Unit)? = null,
     internal var clickAtPlayerAction: ((HGPlayer, Kit, ServerPlayerEntity, Hand) -> Unit)? = null,
+    internal var placeAction: ((HGPlayer, Kit, ItemStack, BlockPos, World) -> Unit)? = null,
     internal var clickAction: ((HGPlayer, Kit) -> Unit)? = null,
-    internal var placeAction: ((HGPlayer, Kit, BlockPos) -> Unit)? = null,
 ) {
     fun invokeClickAction(hgPlayer: HGPlayer, kit: Kit, ignoreCooldown: Boolean = false) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
@@ -37,9 +38,9 @@ class KitItem(
         }
     }
 
-    fun invokePlaceAction(hgPlayer: HGPlayer, kit: Kit, blockPos: BlockPos, ignoreCooldown: Boolean = false) {
+    fun invokePlaceAction(hgPlayer: HGPlayer, kit: Kit, itemStack: ItemStack, blockPos: BlockPos, world: World, ignoreCooldown: Boolean = false) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
-            placeAction?.invoke(hgPlayer, kit, blockPos)
+            placeAction?.invoke(hgPlayer, kit, itemStack, blockPos, world)
         } else if (hgPlayer.hasCooldown(kit)) {
             hgPlayer.serverPlayerEntity?.sendCooldown(kit)
         }
@@ -94,7 +95,7 @@ fun onPlace(context: ItemPlacementContext, cir: CallbackInfoReturnable<ActionRes
         serverPlayerEntity.hgPlayer.kits.forEach { kit ->
             kit.kitItems.filter { it.itemStack.item == context.stack.item }.forEach {
                 it.invokeClickAction(serverPlayerEntity.hgPlayer, kit)
-                it.invokePlaceAction(serverPlayerEntity.hgPlayer, kit, context.blockPos)
+                it.invokePlaceAction(serverPlayerEntity.hgPlayer, kit, context.stack, context.blockPos, context.world)
             }
         }
         serverPlayerEntity.sendPlayerStatus()

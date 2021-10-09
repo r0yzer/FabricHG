@@ -5,6 +5,7 @@ import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import net.axay.fabrik.commands.command
 
 val startCommand = command("start", true) {
+    requiresPermissionLevel(4)
     runs {
         val currentPhase = GamePhaseManager.currentPhase
         if (currentPhase != LobbyPhase) return@runs
