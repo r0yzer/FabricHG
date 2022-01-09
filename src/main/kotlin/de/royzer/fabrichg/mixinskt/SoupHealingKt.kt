@@ -23,7 +23,7 @@ object SoupHealingKt {
         var consumedSoup = false
 
         if (player.health < player.maxHealth) {
-            player.health = min(player.health + 7, player.maxHealth)
+            player.heal(7F)
             consumedSoup = true
         } else if (hungerManager.isNotFull) {
             hungerManager.add(item.restoredFood, item.restoredSaturation)
