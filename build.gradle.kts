@@ -1,19 +1,15 @@
 plugins {
     java
-    id("fabric-loom") version "0.8-SNAPSHOT"
-    kotlin("jvm") version "1.5.30"
-    kotlin("plugin.serialization") version "1.5.30"
+    kotlin("jvm") version "1.6.20"
+    id("fabric-loom") version "0.11-SNAPSHOT"
+    id("org.quiltmc.quilt-mappings-on-loom") version "4.0.0"
+    kotlin("plugin.serialization") version "1.6.20"
 }
 
 group = "de.royzer"
 version = "1.0"
 
-val minecraftVersion = "1.17.1"
-val yarnMappingsVersion = "1.17.1+build.39:v2"
-val fabricLoaderVersion = "0.11.6"
-val fabricApiVersion = "0.38.0+1.17"
-val fabricLanguageKotlinVersion = "1.6.3+kotlin.1.5.21"
-val fabrikVersion = "1.5.0"
+val fabrikVersion = "1.7.2"
 
 repositories {
     mavenCentral()
@@ -22,26 +18,29 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:$minecraftVersion")
-    mappings("net.fabricmc:yarn:$yarnMappingsVersion")
-    modImplementation("net.fabricmc:fabric-loader:$fabricLoaderVersion")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabricApiVersion")
-    modImplementation("net.fabricmc:fabric-language-kotlin:$fabricLanguageKotlinVersion")
+    minecraft("com.mojang:minecraft:1.18.2")
+    mappings(loom.layered {
+        addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.18.2+build.22:v2"))
+        officialMojangMappings()
+    })
+    modImplementation("net.fabricmc:fabric-loader:0.13.3")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:0.50.0+1.18.2")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.7.3+kotlin.1.6.20")
     modImplementation("net.axay:fabrikmc-core:$fabrikVersion")
     modImplementation("net.axay:fabrikmc-commands:$fabrikVersion")
     modImplementation("net.axay:fabrikmc-igui:$fabrikVersion")
     modImplementation("net.axay:fabrikmc-persistence:$fabrikVersion")
     modImplementation("net.axay:fabrikmc-nbt:$fabrikVersion")
+    modImplementation("net.axay:fabrikmc-network:$fabrikVersion")
     modImplementation("net.axay:fabrikmc-game:$fabrikVersion")
-}
-
-tasks.withType<JavaCompile> {
-    options.encoding = "UTF-8"
 }
 
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "16"
+        kotlinOptions.jvmTarget = "18"
+    }
+    withType<JavaCompile> {
+        options.encoding = "UTF-8"
     }
 }
 
