@@ -44,8 +44,8 @@ public class ItemStackMixin {
             cir.setReturnValue(TypedActionResult.pass(itemStack));
             return;
         }
-        if (itemStack.getItem() == Items.MUSHROOM_STEW) {
-            SoupHealingKt.onSoupUse(user, itemStack, cir, world, hand);
+        if (itemStack.getItem().isFood()) {
+            SoupHealingKt.INSTANCE.onPotentialSoupUse(user, itemStack.getItem(), cir, world, hand);
         }
         if (itemStack.getItem() == Items.COMPASS) {
             Tracker.INSTANCE.onTrackerUse(user, itemStack, cir, world, hand);
