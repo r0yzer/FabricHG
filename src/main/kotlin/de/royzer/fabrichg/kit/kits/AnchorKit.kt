@@ -4,33 +4,34 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import net.axay.fabrik.core.entity.modifyVelocity
-import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.phys.Vec3
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 val anchorKit = kit("Anchor") {
     kitSelectorItem = ItemStack(Items.ANVIL)
 }
 
-fun onAnchorAttackEntity(target: Entity, serverPlayerEntity: ServerPlayerEntity) {
+fun onAnchorAttackEntity(target: Entity, serverPlayerEntity: ServerPlayer) {
     if (serverPlayerEntity.hgPlayer.canUseKit(anchorKit)) {
-        if (target is ServerPlayerEntity) {
-            if ((target as? ServerPlayerEntity)?.hgPlayer?.canUseKit(neoKit, true) == true) return
+        if (target is ServerPlayer) {
+            if ((target as? ServerPlayer)?.hgPlayer?.canUseKit(neoKit, true) == true) return
         }
-        target.setVelocity(0.0,0.0,0.0)
+        target.modifyVelocity(0, 0, 0, false)
         target.modifyVelocity(0,-0.1,0, false)
     }
 }
 
 fun onAnchorKnockback(strength: Double, x: Double, z: Double, ci: CallbackInfo, livingEntity: LivingEntity) {
-    val serverPlayerEntity = livingEntity as? ServerPlayerEntity ?: return
+    val serverPlayerEntity = livingEntity as? ServerPlayer ?: return
     if (serverPlayerEntity.hgPlayer.canUseKit(anchorKit)) {
-        if ((((serverPlayerEntity as LivingEntityAccessor).attackingPlayer) as? ServerPlayerEntity)?.hgPlayer?.hasKit(neoKit) == true) return
+        if ((((serverPlayerEntity as LivingEntityAccessor).attackingPlayer) as? ServerPlayer)?.hgPlayer?.hasKit(neoKit) == true) return
         ci.cancel()
-        serverPlayerEntity.setVelocity(0.0,0.0,0.0)
-        serverPlayerEntity.modifyVelocity(0,-0.1,0, false)
+        serverPlayerEntity.deltaMovement = Vec3.ZERO
+//        serverPlayerEntity.modifyVelocity(0,-0.1,0, false)
     }
 }

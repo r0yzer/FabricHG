@@ -6,7 +6,7 @@ import de.royzer.fabrichg.game.combatlog.maxOfflineTime
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 import java.util.*
 
 class HGPlayer(
@@ -26,7 +26,7 @@ class HGPlayer(
 
     var kitsDisabled = false
 
-    val serverPlayerEntity get() = GamePhaseManager.server.playerManager.getPlayer(uuid)
+    val serverPlayerEntity get() = GamePhaseManager.server.playerList.getPlayer(uuid)
 
     fun hasKit(kit: Kit) = kit in kits
 
@@ -43,5 +43,5 @@ class HGPlayer(
     }
 }
 
-val ServerPlayerEntity.hgPlayer
+val ServerPlayer.hgPlayer
     get() = PlayerList.addOrGetPlayer(uuid, name.string)

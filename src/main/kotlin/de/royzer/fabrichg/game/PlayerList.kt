@@ -5,11 +5,9 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.IngamePhase
-import net.axay.fabrik.core.logging.logInfo
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.world.GameMode
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.level.GameType
 import java.util.*
 
 object PlayerList {
@@ -37,12 +35,12 @@ object PlayerList {
     }
 
     // TODO fix
-    fun announcePlayerDeath(serverPlayerEntity: ServerPlayerEntity, killer: ServerPlayerEntity?) {
+    fun announcePlayerDeath(serverPlayerEntity: ServerPlayer, killer: ServerPlayer?) {
         val hgPlayer = serverPlayerEntity.hgPlayer
         val otherHGPlayer = killer?.hgPlayer
         broadcast(
             literalText {
-                text("${serverPlayerEntity.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killer?.name?.string}(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killer?.mainHandStack?.name?.string} getötet")
+                text("${serverPlayerEntity.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killer?.name?.string}(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killer?.mainHandItem?.item} getötet")
                 color = 0xFFE128
             }
         )
@@ -59,7 +57,7 @@ object PlayerList {
     }
 }
 
-fun ServerPlayerEntity.removeHGPlayer() {
+fun ServerPlayer.removeHGPlayer() {
     hgPlayer.status = HGPlayerStatus.SPECTATOR
-    changeGameMode(GameMode.SPECTATOR)
+    setGameMode(GameType.SPECTATOR)
 }

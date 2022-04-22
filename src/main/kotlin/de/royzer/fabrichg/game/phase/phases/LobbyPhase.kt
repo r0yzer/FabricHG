@@ -9,11 +9,10 @@ import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.scoreboard.formattedTime
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.entity.effect.StatusEffect
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.world.Heightmap
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.item.alchemy.Potions.SLOWNESS
 import kotlin.random.Random
 
 object LobbyPhase : GamePhase() {
@@ -24,7 +23,7 @@ object LobbyPhase : GamePhase() {
     var isStarting = false
 
     override fun init() {
-        GamePhaseManager.server.isPvpEnabled = false
+        GamePhaseManager.server.isPvpAllowed = false
     }
 
     override fun tick(timer: Int) {
@@ -37,9 +36,9 @@ object LobbyPhase : GamePhase() {
                     PlayerList.alivePlayers.forEach {
                         val x = Random.nextInt(-20, 20)
                         val z = Random.nextInt(-20, 20)
-                        it.serverPlayerEntity?.teleport(
+                        it.serverPlayerEntity?.teleportTo(
                             x.toDouble(),
-                            it.serverPlayerEntity!!.world.getTopY(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, x, z).toDouble(),
+                            100.0, // TODO höchste
                             z.toDouble()
                         )
                         it.serverPlayerEntity?.freeze()
@@ -58,13 +57,13 @@ object LobbyPhase : GamePhase() {
             isStarting = false
             GamePhaseManager.resetTimer()
             PlayerList.alivePlayers.forEach { hgPlayer ->
-                hgPlayer.serverPlayerEntity?.clearStatusEffects()
+                hgPlayer.serverPlayerEntity?.removeAllEffects()
             }
         }
     }
 }
 
-fun ServerPlayerEntity.freeze() {
-    this.addStatusEffect(StatusEffectInstance(StatusEffects.SLOWNESS, 15 * 20, 255, false, false))
-    this.addStatusEffect(StatusEffectInstance(StatusEffects.JUMP_BOOST, 15 * 20, 129, false, false))
+fun ServerPlayer.freeze() {
+    this.addEffect(MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 15 * 20, 255, false, false))
+    this.addEffect(MobEffectInstance(MobEffects.JUMP, 15 * 20, 129, false, false))
 }

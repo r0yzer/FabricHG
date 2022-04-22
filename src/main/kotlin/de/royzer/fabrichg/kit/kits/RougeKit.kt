@@ -3,14 +3,13 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.kit.KitItem
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import net.axay.fabrik.core.task.coroutineTask
 import net.axay.fabrik.core.text.sendText
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 
 val rougeKit = kit("Rouge") {
 
@@ -20,7 +19,7 @@ val rougeKit = kit("Rouge") {
     kitItem {
         onClick { hgPlayer, kit ->
             val player = hgPlayer.serverPlayerEntity ?: return@onClick
-            val nearbyPlayers = player.world.getEntitiesByClass(ServerPlayerEntity::class.java, player.boundingBox.expand(8.0)) {
+            val nearbyPlayers = player.level.getEntitiesOfClass(ServerPlayer::class.java, player.boundingBox.expandTowards(8.0, 8.0, 8.0)) {
                 it != player
             }
             nearbyPlayers.forEach { otherPlayer ->

@@ -8,9 +8,9 @@ import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import net.axay.fabrik.core.text.literalText
 import net.axay.fabrik.game.sideboard.showSideboard
 import net.axay.fabrik.game.sideboard.sideboard
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
-fun ServerPlayerEntity.showScoreboard() {
+fun ServerPlayer.showScoreboard() {
     val hgPlayer = PlayerList.addOrGetPlayer(uuid, name.string)
     showSideboard(
         sideboard(

@@ -11,10 +11,8 @@ import de.royzer.fabrichg.scoreboard.formattedTime
 import net.axay.fabrik.core.item.itemStack
 import net.axay.fabrik.core.item.setCustomName
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.item.Items
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.GameMode
-import net.minecraft.world.Heightmap
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.GameType
 
 object InvincibilityPhase : GamePhase() {
     override fun init() {
@@ -25,16 +23,16 @@ object InvincibilityPhase : GamePhase() {
             text("https://discord.gg/bS8JKatZkD") { color = TEXT_BLUE }
         })
         PlayerList.alivePlayers.forEach { hgPlayer ->
-            hgPlayer.serverPlayerEntity?.changeGameMode(GameMode.SURVIVAL)
-            hgPlayer.serverPlayerEntity?.closeHandledScreen()
+            hgPlayer.serverPlayerEntity?.setGameMode(GameType.SURVIVAL)
+            hgPlayer.serverPlayerEntity?.closeContainer()
             with(hgPlayer.serverPlayerEntity?.inventory) {
-                this?.clear()
-                this?.insertStack(itemStack(Items.COMPASS) {
+                this?.clearContent()
+                this?.add(itemStack(Items.COMPASS) {
                     setCustomName { text("Tracker") }
                 })
                 hgPlayer.kits.forEach { kit ->
                     kit.kitItems.forEach {
-                        hgPlayer.serverPlayerEntity?.inventory?.insertStack(it.itemStack.copy())
+                        hgPlayer.serverPlayerEntity?.inventory?.add(it.itemStack.copy())
                     }
                     kit.onEnable?.invoke(hgPlayer, kit)
                 }

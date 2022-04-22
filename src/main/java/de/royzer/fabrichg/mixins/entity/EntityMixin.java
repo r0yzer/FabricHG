@@ -1,17 +1,14 @@
 package de.royzer.fabrichg.mixins.entity;
 
 import de.royzer.fabrichg.kit.KitItemKt;
-import de.royzer.fabrichg.kit.events.KitEvents;
 import de.royzer.fabrichg.kit.events.KitEventsKt;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.MovementType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,19 +18,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin {
-    @Shadow public abstract boolean equals(Object o);
 
-    @Inject(
-            method = "dropItem(Lnet/minecraft/item/ItemConvertible;)Lnet/minecraft/entity/ItemEntity;",
-            at = @At("HEAD")
-    )
-    public void onDropItem(ItemConvertible item, CallbackInfoReturnable<ItemEntity> cir) {}
+//    @Inject(
+//            method = "dropItem(Lnet/minecraft/item/ItemConvertible;)Lnet/minecraft/entity/ItemEntity;",
+//            at = @At("HEAD")
+//    )
+//    public void onDropItem(ItemConvertible item, CallbackInfoReturnable<ItemEntity> cir) {}
 
     @Inject(
             method = "interact",
             at = @At("HEAD")
     )
-    public void onInteract(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
+    public void onInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         KitItemKt.onClickAtEntity(player, hand, (Entity) (Object) this, cir);
     }
 
@@ -41,11 +37,11 @@ public abstract class EntityMixin {
             method = "move",
             at = @At("HEAD")
     )
-    public void onMove(MovementType movementType, Vec3d movement, CallbackInfo ci) {
-        if ((Entity) (Object) (this) instanceof ServerPlayerEntity) {
-            if (movementType.equals(MovementType.PLAYER)) {
-                if (!movement.equals(Vec3d.ZERO)) {
-                    KitEventsKt.onMove((ServerPlayerEntity) (Object) (this));
+    public void onMove(MoverType movementType, Vec3 movement, CallbackInfo ci) {
+        if ((Entity) (Object) (this) instanceof ServerPlayer) {
+            if (movementType.equals(MoverType.PLAYER)) {
+                if (!movement.equals(Vec3.ZERO)) {
+                    KitEventsKt.onMove((ServerPlayer) (Object) (this));
                 }
             }
         }

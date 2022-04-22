@@ -8,8 +8,8 @@ import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.text.HoverEvent
-import net.minecraft.text.LiteralText
+import net.minecraft.network.chat.HoverEvent
+import net.minecraft.network.chat.TextComponent
 
 class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
 
@@ -23,10 +23,10 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
     override fun tick(timer: Int) {
         broadcast(winnerText(hgPlayer))
         if (timer >= maxPhaseTime) {
-            GamePhaseManager.server.playerManager.playerList.forEach {
-                it.networkHandler.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
+            GamePhaseManager.server.playerList.players.forEach {
+                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
             }
-            GamePhaseManager.server.stop(false)
+            GamePhaseManager.server.stopServer()
             return
         }
     }
@@ -36,7 +36,7 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
     override val nextPhase: GamePhase? = null
 }
 
-fun winnerText(winner: HGPlayer?): LiteralText {
+fun winnerText(winner: HGPlayer?): TextComponent {
     if (winner == null) return literalText("nunja kein winner wohl")
     return literalText {
         color = TEXT_GRAY

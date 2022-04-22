@@ -8,7 +8,7 @@ import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 
 object PlayerDeath {
     init {
@@ -18,11 +18,11 @@ object PlayerDeath {
                 return@register false
             }
             if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return@register true
-            val killer: ServerPlayerEntity? = (serverPlayerEntity as LivingEntityAccessor).attackingPlayer as? ServerPlayerEntity
+            val killer: ServerPlayer? = (serverPlayerEntity as LivingEntityAccessor).attackingPlayer as? ServerPlayer
             serverPlayerEntity.hgPlayer.kits.forEach {
                 it.onDisable?.invoke(serverPlayerEntity.hgPlayer, it)
             }
-             PlayerList.announcePlayerDeath(serverPlayerEntity, killer)
+             PlayerList.announcePlayerDeath(serverPlayerEntity, serverPlayerEntity) // TODO
             serverPlayerEntity.removeHGPlayer()
             val hgPlayer = killer?.hgPlayer ?: return@register true
             hgPlayer.kills += 1

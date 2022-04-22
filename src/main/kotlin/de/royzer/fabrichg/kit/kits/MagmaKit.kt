@@ -1,8 +1,8 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 import kotlin.random.Random
 
 val magmaKit = kit("Magma") {
@@ -13,7 +13,7 @@ val magmaKit = kit("Magma") {
     events {
         onHitEntity { _, _, entity ->
             if (Random.nextInt(4) == 3)
-                entity.fireTicks += 40
+                entity.setSecondsOnFire(2)
         }
     }
 }

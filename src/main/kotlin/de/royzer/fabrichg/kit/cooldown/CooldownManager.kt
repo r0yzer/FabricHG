@@ -10,7 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.Util.NIL_UUID
+import net.minecraft.server.level.ServerPlayer
 
 private val cooldownMap = HashMap<Cooldown, Double>()
 private val cooldownCoroutineScope = CoroutineScope(Dispatchers.IO)
@@ -40,7 +41,7 @@ fun HGPlayer.cooldown(kit: Kit): Double {
     else cooldownMap[Cooldown(this, kit)] ?: 0.0
 }
 
-fun ServerPlayerEntity.sendCooldown(kit: Kit) {
+fun ServerPlayer.sendCooldown(kit: Kit) {
     if (!hgPlayer.hasCooldown(kit)) return
     val sec = "%.1f".format(hgPlayer.cooldown(kit))
     sendMessage(literalText {
@@ -50,5 +51,5 @@ fun ServerPlayerEntity.sendCooldown(kit: Kit) {
         }
         text(" Sekunden Cooldown")
         color = TEXT_GRAY
-    }, true)
+    }, NIL_UUID)
 }

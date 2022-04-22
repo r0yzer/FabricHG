@@ -1,10 +1,11 @@
 package de.royzer.fabrichg.gui
 
 import de.royzer.fabrichg.game.PlayerList
+import net.axay.fabrik.core.item.setCustomName
 import net.axay.fabrik.core.text.literal
 import net.axay.fabrik.igui.*
 import net.axay.fabrik.igui.observable.toGuiList
-import net.minecraft.item.Items
+import net.minecraft.world.item.Items
 
 val gameOverviewGUI = igui(GuiType.NINE_BY_FIVE, "Spielübersicht".literal, 1) {
     page(1) {
@@ -14,7 +15,7 @@ val gameOverviewGUI = igui(GuiType.NINE_BY_FIVE, "Spielübersicht".literal, 1) {
             (2 sl 2) rectTo (4 sl 8),
             PlayerList.alivePlayers.toGuiList(),
             iconGenerator = {
-                Items.PLAYER_HEAD.defaultStack.setCustomName(it.name.literal)
+                Items.PLAYER_HEAD.defaultInstance.setCustomName(it.name.literal.toString())
             },
             onClick = { event, element ->
 

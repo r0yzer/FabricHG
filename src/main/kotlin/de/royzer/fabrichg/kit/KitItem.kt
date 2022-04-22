@@ -5,29 +5,30 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
 import de.royzer.fabrichg.sendPlayerStatus
-import net.minecraft.entity.Entity
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemPlacementContext
-import net.minecraft.item.ItemStack
-import net.minecraft.item.ItemUsageContext
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.ActionResult
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResult
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.item.context.UseOnContext
+import net.minecraft.world.level.Level
+import org.apache.logging.log4j.core.jmx.Server
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 class KitItem(
     var itemStack: ItemStack,
     var droppable: Boolean = false,
-    internal var clickAtEntityAction: ((HGPlayer, Kit, Entity, Hand) -> Unit)? = null,
-    internal var clickAtPlayerAction: ((HGPlayer, Kit, ServerPlayerEntity, Hand) -> Unit)? = null,
-    internal var placeAction: ((HGPlayer, Kit, ItemStack, BlockPos, World) -> Unit)? = null,
+    internal var clickAtEntityAction: ((HGPlayer, Kit, Entity, InteractionHand) -> Unit)? = null,
+    internal var clickAtPlayerAction: ((HGPlayer, Kit, ServerPlayer, InteractionHand) -> Unit)? = null,
+    internal var placeAction: ((HGPlayer, Kit, ItemStack, BlockPos, Level) -> Unit)? = null,
     internal var clickAction: ((HGPlayer, Kit) -> Unit)? = null,
-    internal var useOnBlockAction: ((HGPlayer, Kit, ItemUsageContext) -> Unit)? = null
+    internal var useOnBlockAction: ((HGPlayer, Kit, BlockPlaceContext) -> Unit)? = null
 ) {
-    fun invokeUseOnBlockAction(hgPlayer: HGPlayer, kit: Kit, context: ItemUsageContext, ignoreCooldown: Boolean = false){
+    fun invokeUseOnBlockAction(hgPlayer: HGPlayer, kit: Kit, context: BlockPlaceContext, ignoreCooldown: Boolean = false){
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             useOnBlockAction?.invoke(hgPlayer, kit, context)
         } else if (hgPlayer.hasCooldown(kit)) {
@@ -43,7 +44,7 @@ class KitItem(
         }
     }
 
-    fun invokePlaceAction(hgPlayer: HGPlayer, kit: Kit, itemStack: ItemStack, blockPos: BlockPos, world: World, ignoreCooldown: Boolean = false) {
+    fun invokePlaceAction(hgPlayer: HGPlayer, kit: Kit, itemStack: ItemStack, blockPos: BlockPos, world: Level, ignoreCooldown: Boolean = false) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             placeAction?.invoke(hgPlayer, kit, itemStack, blockPos, world)
         } else if (hgPlayer.hasCooldown(kit)) {
@@ -51,9 +52,9 @@ class KitItem(
         }
     }
 
-    fun invokeClickAtEntityAction(hgPlayer: HGPlayer, kit: Kit, entity: Entity, hand: Hand, ignoreCooldown: Boolean = false) {
+    fun invokeClickAtEntityAction(hgPlayer: HGPlayer, kit: Kit, entity: Entity, hand: InteractionHand, ignoreCooldown: Boolean = false) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
-            if (entity is ServerPlayerEntity)
+            if (entity is ServerPlayer)
                 clickAtPlayerAction?.invoke(hgPlayer, kit, entity, hand)
             else clickAtEntityAction?.invoke(hgPlayer, kit, entity, hand)
         } else if (hgPlayer.hasCooldown(kit)) {
@@ -66,13 +67,13 @@ fun kitItem(itemStack: ItemStack): KitItem {
     return KitItem(itemStack)
 }
 
-fun onUseBlock(player: PlayerEntity, context: ItemUsageContext ){
-    val serverPlayerEntity = player as? ServerPlayerEntity ?: return
+fun onUseBlock(player: Player, context: BlockPlaceContext ){
+    val serverPlayerEntity = player as? ServerPlayer ?: return
     val hgPlayer = serverPlayerEntity.hgPlayer
-    if(context.stack.isKitItem){
+    if(context.itemInHand.isKitItem){
         hgPlayer.kits.forEach { kit ->
             kit.kitItems.forEach {
-                if(it.itemStack.item == context.stack.item){
+                if(it.itemStack.item == context.itemInHand.item){
                     it.invokeUseOnBlockAction(hgPlayer, kit, context)
                 }
             }
@@ -81,8 +82,8 @@ fun onUseBlock(player: PlayerEntity, context: ItemUsageContext ){
 }
 
 @JvmOverloads
-fun onClick(player: PlayerEntity, itemStack: ItemStack, cir: CallbackInfoReturnable<TypedActionResult<ItemStack>>? = null) {
-    val serverPlayerEntity = player as? ServerPlayerEntity ?: return
+fun onClick(player: Player, itemStack: ItemStack, cir: CallbackInfoReturnable<InteractionResultHolder<ItemStack>>? = null) {
+    val serverPlayerEntity = player as? ServerPlayer ?: return
     val hgPlayer = serverPlayerEntity.hgPlayer
     if (itemStack.isKitItem)
         hgPlayer.kits.forEach { kit ->
@@ -93,11 +94,11 @@ fun onClick(player: PlayerEntity, itemStack: ItemStack, cir: CallbackInfoReturna
         }
 }
 
-fun onClickAtEntity(player: PlayerEntity, hand: Hand, entity: Entity, cir: CallbackInfoReturnable<ActionResult>) {
-    val serverPlayerEntity = player as? ServerPlayerEntity ?: return
+fun onClickAtEntity(player: Player, hand: InteractionHand, entity: Entity, cir: CallbackInfoReturnable<InteractionResult>) {
+    val serverPlayerEntity = player as? ServerPlayer ?: return
     val hgPlayer = serverPlayerEntity.hgPlayer
-    val mainHandStack = serverPlayerEntity.mainHandStack
-    val offhandStack = serverPlayerEntity.offHandStack
+    val mainHandStack = serverPlayerEntity.mainHandItem
+    val offhandStack = serverPlayerEntity.offhandItem
     if (mainHandStack.isKitItem || offhandStack.isKitItem)
         hgPlayer.kits.forEach { kit ->
             kit.kitItems.forEach {
@@ -107,14 +108,14 @@ fun onClickAtEntity(player: PlayerEntity, hand: Hand, entity: Entity, cir: Callb
         }
 }
 
-fun onPlace(context: ItemPlacementContext, cir: CallbackInfoReturnable<ActionResult>) {
-    if (context.stack.isKitItem) {
-        val serverPlayerEntity = (context.player as? ServerPlayerEntity) ?: return
-        cir.returnValue = ActionResult.PASS
+fun onPlace(context: BlockPlaceContext, cir: CallbackInfoReturnable<InteractionResult>) {
+    if (context.itemInHand.isKitItem) {
+        val serverPlayerEntity = (context.player as? ServerPlayer) ?: return
+        cir.returnValue = InteractionResult.PASS
         serverPlayerEntity.hgPlayer.kits.forEach { kit ->
-            kit.kitItems.filter { it.itemStack.item == context.stack.item }.forEach {
+            kit.kitItems.filter { it.itemStack.item == context.itemInHand.item }.forEach {
                 it.invokeClickAction(serverPlayerEntity.hgPlayer, kit)
-                it.invokePlaceAction(serverPlayerEntity.hgPlayer, kit, context.stack, context.blockPos, context.world)
+                it.invokePlaceAction(serverPlayerEntity.hgPlayer, kit, context.itemInHand, context.clickedPos, context.level)
             }
         }
         serverPlayerEntity.sendPlayerStatus()
@@ -123,6 +124,7 @@ fun onPlace(context: ItemPlacementContext, cir: CallbackInfoReturnable<ActionRes
 
 // hehe
 val ItemStack.isKitItem: Boolean get() {
-    val lore = getSubNbt("display")?.get("Lore")?.asString() ?: return false
+    val lore = getTagElement(ItemStack.TAG_LORE) ?: return false
+//    val lore = tag?.get("display")?.get("Lore")?.asString() ?: return false
     return lore.contains("Kititem")
 }

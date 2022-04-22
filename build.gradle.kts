@@ -1,15 +1,15 @@
 plugins {
     java
-    kotlin("jvm") version "1.6.20"
-    id("fabric-loom") version "0.11-SNAPSHOT"
+    kotlin("jvm") version "1.6.10"
+    id("fabric-loom") version "0.12-SNAPSHOT"
     id("org.quiltmc.quilt-mappings-on-loom") version "4.0.0"
-    kotlin("plugin.serialization") version "1.6.20"
+    kotlin("plugin.serialization") version "1.6.10"
 }
 
 group = "de.royzer"
 version = "1.0"
 
-val fabrikVersion = "1.7.2"
+val fabrikVersion = "1.7.3"
 
 repositories {
     mavenCentral()
@@ -35,9 +35,10 @@ dependencies {
     modImplementation("net.axay:fabrikmc-game:$fabrikVersion")
 }
 
+
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "18"
+        kotlinOptions.jvmTarget = "17"
     }
     withType<JavaCompile> {
         options.encoding = "UTF-8"

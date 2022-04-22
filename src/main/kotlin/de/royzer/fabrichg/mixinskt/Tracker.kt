@@ -4,23 +4,22 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.PlayerList
 import net.axay.fabrik.core.text.sendText
-import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
-import net.minecraft.network.packet.s2c.play.PlayerSpawnPositionS2CPacket
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Hand
-import net.minecraft.util.TypedActionResult
-import net.minecraft.util.math.BlockPos
-import net.minecraft.util.math.Vec3d
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.level.Level
+import net.minecraft.world.phys.Vec3
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 import kotlin.math.sqrt
 
 object Tracker {
-    fun onTrackerUse(playerEntity: PlayerEntity, stack: ItemStack, cir: CallbackInfoReturnable<TypedActionResult<ItemStack>>, world: World, hand: Hand) {
-        val player = playerEntity as? ServerPlayerEntity ?: return
-        if (stack.name.string == "Tracker") {
+    fun onTrackerUse(playerEntity: Player, stack: ItemStack, cir: CallbackInfoReturnable<InteractionResultHolder<ItemStack>>, world: Level, hand: InteractionHand) {
+        val player = playerEntity as? ServerPlayer ?: return
+        if (stack.displayName.string == "Tracker") {
             val nearestPlayer = player.nearestPlayerInfo()?.first
             if (nearestPlayer != null) {
                 val distance = player.nearestPlayerInfo()?.second?.toInt()
@@ -31,7 +30,9 @@ object Tracker {
                     text(distance.toString()) { color = TEXT_BLUE }
                     text(" Blöcke entfernt")
                 }
-                player.networkHandler.sendPacket(PlayerSpawnPositionS2CPacket(BlockPos(nearestPlayer.x, nearestPlayer.y, nearestPlayer.z), nearestPlayer.yaw))
+                player.connection.send(ClientboundSetDefaultSpawnPositionPacket(BlockPos(nearestPlayer.x, nearestPlayer.y, nearestPlayer.z),
+                    0.0F
+                ))
             } else {
                 player.sendText("Es konnte kein Spieler gefunden werden") {
                     color = 0xFF4B4B
@@ -40,11 +41,11 @@ object Tracker {
         }
     }
 
-    private fun ServerPlayerEntity.nearestPlayerInfo(): Pair<ServerPlayerEntity, Double>? {
-        val playerDistances: MutableMap<ServerPlayerEntity, Double> = mutableMapOf()
+    private fun ServerPlayer.nearestPlayerInfo(): Pair<ServerPlayer, Double>? {
+        val playerDistances: MutableMap<ServerPlayer, Double> = mutableMapOf()
         for (player in PlayerList.alivePlayers) {
             val otherPlayer = player.serverPlayerEntity ?: continue
-            val distance = sqrt(this.squaredDistanceTo(Vec3d(otherPlayer.x, this.y, otherPlayer.z)))
+            val distance = sqrt(this.distanceToSqr(Vec3(otherPlayer.x, this.y, otherPlayer.z)))
             if (distance > 10) {
                 playerDistances[otherPlayer] = distance
             }

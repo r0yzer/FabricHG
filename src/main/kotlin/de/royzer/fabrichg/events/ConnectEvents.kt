@@ -19,10 +19,10 @@ import net.axay.fabrik.core.item.setCustomName
 import net.axay.fabrik.core.text.literalText
 import net.axay.fabrik.core.text.sendText
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
-import net.minecraft.entity.attribute.EntityAttributes
-import net.minecraft.item.Items
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.world.GameMode
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.GameType
 
 object ConnectEvents {
     init {
@@ -32,21 +32,22 @@ object ConnectEvents {
             val uuid = player.uuid
             val hgPlayer = player.hgPlayer
 
-            player.attributes.getCustomInstance(EntityAttributes.GENERIC_ATTACK_SPEED)?.baseValue = 100.0
+
+            player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 100.0
 
             if (hgPlayer.kits.isEmpty())
                 hgPlayer.kits.add(noneKit)
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
-                    player.clearStatusEffects()
+                    player.removeAllEffects()
                     player.health = player.maxHealth
-                    player.inventory.clear()
-                    player.inventory.insertStack(itemStack(Items.CHEST) {
+                    player.inventory.clearContent()
+                    player.inventory.add(itemStack(Items.CHEST) {
                         setCustomName { text("Kit Selector") }
                     })
-                    player.hungerManager.foodLevel = 20
-                    player.changeGameMode(GameMode.ADVENTURE)
+                    player.foodData.foodLevel = 20
+                    player.setGameMode(GameType.ADVENTURE)
                     if (LobbyPhase.isStarting) player.freeze()
                     PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                 }
@@ -69,21 +70,22 @@ object ConnectEvents {
                         }
                         else -> {
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
-                            player.changeGameMode(GameMode.SPECTATOR)
-                            player.clearStatusEffects()
+                            player.setGameMode(GameType.SPECTATOR)
+                            player.removeAllEffects()
                             player.sendText(literalText("nunja gamne schon start") { })
                         }
                     }
                 }
                 PhaseType.END -> {
                     player.hgPlayer.status = HGPlayerStatus.SPECTATOR
-                    player.changeGameMode(GameMode.SPECTATOR)
+                    player.setGameMode(GameType.SPECTATOR)
                     player.sendText(literalText("nunja gamne schon vorbei") { })
                 }
             }
 
             player.showScoreboard()
         }
+
         ServerPlayConnectionEvents.DISCONNECT.register { handler, server ->
             val uuid = handler.player.uuid
             when (GamePhaseManager.currentPhase.phaseType) {
@@ -93,7 +95,7 @@ object ConnectEvents {
                 }
                 PhaseType.INGAME -> {
                     if (handler.player.hgPlayer.status == HGPlayerStatus.ALIVE) {
-                        if (handler.player.damageTracker.mostRecentDamage?.attacker is ServerPlayerEntity) {
+                        if (handler.player.combatTracker.lastEntry?.attacker is ServerPlayer) {
                             handler.player.health = 0F
                             handler.player.removeHGPlayer()
                             broadcast("tot weil in combat leaved tja")

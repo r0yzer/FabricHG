@@ -3,15 +3,15 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import net.axay.fabrik.core.task.coroutineTask
-import net.minecraft.block.Blocks
-import net.minecraft.item.Items
-import net.minecraft.sound.SoundCategory
-import net.minecraft.sound.SoundEvents
-import net.minecraft.util.math.Vec3i
+import net.minecraft.core.Vec3i
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.item.Items
+import net.minecraft.world.level.block.Blocks
 
 val diggerKit = kit("Digger") {
     val size = 6
-    kitSelectorItem = Items.DRAGON_EGG.defaultStack
+    kitSelectorItem = Items.DRAGON_EGG.defaultInstance
     cooldown = 7.0
 
     kitItem {
@@ -27,11 +27,11 @@ val diggerKit = kit("Digger") {
                             val z = z - size / 2
                             val pos = blockPos.subtract(Vec3i(x, y, z))
                             if (world.getBlockState(pos).block != Blocks.BEDROCK)
-                                world.setBlockState(pos, Blocks.AIR.defaultState)
+                                world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
                         }
                     }
                 }
-                world.playSound(null, blockPos, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 10F, 1F)
+                world.playSound(null, blockPos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 10F, 1F)
                 stack.apply { count -= 1 }
             }
         }

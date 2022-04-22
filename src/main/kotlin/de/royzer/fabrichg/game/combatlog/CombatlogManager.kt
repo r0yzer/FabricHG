@@ -11,14 +11,14 @@ import de.royzer.fabrichg.game.removeHGPlayer
 import kotlinx.coroutines.*
 import net.axay.fabrik.core.task.mcSyncLaunch
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
 import java.util.*
 
 val combatloggedPlayers = hashMapOf<UUID, Job>()
 
 const val maxOfflineTime = 60
 
-fun ServerPlayerEntity.startCombatlog() {
+fun ServerPlayer.startCombatlog() {
     hgPlayer.status = HGPlayerStatus.DISCONNECTED
     val job = fabrichgScope.launch job@{
         try {

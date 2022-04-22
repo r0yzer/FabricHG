@@ -2,17 +2,16 @@ package de.royzer.fabrichg.gui
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.kits
 import net.axay.fabrik.core.item.itemStack
 import net.axay.fabrik.core.item.setCustomName
 import net.axay.fabrik.core.text.literal
 import net.axay.fabrik.igui.*
 import net.axay.fabrik.igui.observable.toGuiList
-import net.minecraft.item.Items
-import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.item.Items
 
-fun kitSelectorGUI(serverPlayerEntity: ServerPlayerEntity) = igui(GuiType.NINE_BY_FIVE, "Kits".literal, 1) {
+fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE, "Kits".literal, 1) {
     val hgPlayer = serverPlayerEntity.hgPlayer
     page(1) {
         placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
@@ -36,9 +35,9 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayerEntity) = igui(GuiType.NINE_B
                 hgPlayer.kits[0] = kit
                 if (GamePhaseManager.isIngame) {
                     kit.onEnable?.invoke(hgPlayer, kit)
-                    kit.kitItems.forEach { serverPlayerEntity.inventory.insertStack(it.itemStack.copy()) }
+                    kit.kitItems.forEach { serverPlayerEntity.inventory.add(it.itemStack.copy()) }
                 }
-                serverPlayerEntity.closeHandledScreen()
+                serverPlayerEntity.closeContainer()
             }
         )
 

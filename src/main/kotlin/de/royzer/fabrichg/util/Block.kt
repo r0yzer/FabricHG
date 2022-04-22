@@ -1,8 +1,8 @@
 package de.royzer.fabrichg.util
 
 import de.royzer.fabrichg.server
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.Heightmap
+import net.minecraft.core.BlockPos
+import net.minecraft.world.level.levelgen.Heightmap
 import kotlin.random.Random
 
 fun getRandomHighestPos(radius: Int): BlockPos {
@@ -14,10 +14,10 @@ fun getRandomHighestPos(radius: Int): BlockPos {
 }
 
 fun BlockPos.toHighestPos(): BlockPos {
-    server.overworld.getChunk(this)
+    server.overworld().getChunk(this)
     return BlockPos(
         x,
-        server.overworld.getTopY(Heightmap.Type.WORLD_SURFACE, x, z),
+        server.overworld().getHeight(Heightmap.Types.WORLD_SURFACE, x, z),
         z
     )
 }

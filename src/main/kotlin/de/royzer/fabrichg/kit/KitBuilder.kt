@@ -4,12 +4,12 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.events.KitEventsBuilder
 import net.axay.fabrik.core.item.setLore
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
 
 class KitBuilder(val kit: Kit) {
     var kitSelectorItem: ItemStack = ItemStack(Items.AIR)
-        get() = kit.kitSelectorItem?.defaultStack ?: ItemStack(Items.AIR)
+        get() = kit.kitSelectorItem?.defaultInstance ?: ItemStack(Items.AIR)
         set(value) {
             kit.kitSelectorItem = value.item
             field = value
@@ -31,7 +31,7 @@ class KitBuilder(val kit: Kit) {
         kit.kitItems.add(kitItem)
     }
 
-    fun kitItem(itemStack: ItemStack = Items.BARRIER.defaultStack, builder: KitItemBuilder.() -> Unit) {
+    fun kitItem(itemStack: ItemStack = Items.BARRIER.defaultInstance, builder: KitItemBuilder.() -> Unit) {
         val kitItem = KitItem(itemStack)
         kitItem.apply { KitItemBuilder(kitItem).apply(builder) }
         addKitItem(kitItem)

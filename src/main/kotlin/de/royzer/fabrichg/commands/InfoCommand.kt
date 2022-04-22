@@ -8,8 +8,8 @@ import net.axay.fabrik.core.text.sendText
 
 val infoCommand = command("info") {
     runs {
-        val hgPlayer = source.player.hgPlayer
-        source.player.sendText(
+        val hgPlayer = source.playerOrException.hgPlayer
+        source.playerOrException.sendText(
             literalText {
                 text("Phase: ${GamePhaseManager.currentPhaseType.name}") { color = 0xFF006E }
                 newLine()

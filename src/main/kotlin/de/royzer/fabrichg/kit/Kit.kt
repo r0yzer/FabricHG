@@ -3,7 +3,7 @@ package de.royzer.fabrichg.kit
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.events.KitEvents
 import de.royzer.fabrichg.kit.kits.*
-import net.minecraft.item.Item
+import net.minecraft.world.item.Item
 
 class Kit(val name: String) {
     val kitItems = mutableListOf<KitItem>()

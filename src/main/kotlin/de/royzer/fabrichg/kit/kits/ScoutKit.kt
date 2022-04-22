@@ -1,23 +1,23 @@
 package de.royzer.fabrichg.kit.kits
 
-import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.kit.kit
 import net.axay.fabrik.core.item.setCustomName
 import net.axay.fabrik.core.item.setLore
 import net.axay.fabrik.core.task.coroutineTask
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.entity.effect.StatusEffectInstance
-import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.item.ItemStack
-import net.minecraft.item.Items
-import net.minecraft.potion.Potion
-import net.minecraft.potion.PotionUtil
+import net.minecraft.world.effect.MobEffect
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.Items
+import net.minecraft.world.item.alchemy.Potion
+import net.minecraft.world.item.alchemy.PotionUtils
 
-private val scoutPotion = PotionUtil.setPotion(
+private val scoutPotion = PotionUtils.setPotion(
     ItemStack(Items.SPLASH_POTION, 2),
-    Potion(StatusEffectInstance(StatusEffects.SPEED, 120, 1))
+    Potion(MobEffectInstance(MobEffects.MOVEMENT_SPEED, 120, 1))
 ).also {
-    it.setCustomName {
+    it.setCustomName{
         text("Scout Potion")
         color = 0x64F0FF
     }
@@ -36,7 +36,7 @@ val scoutKit = kit("Scout") {
 
     onEnable { hgPlayer, kit ->
         val job = coroutineTask(howOften = Long.MAX_VALUE, period = scoutPotionPeriod, delay = scoutPotionPeriod) {
-            hgPlayer.serverPlayerEntity?.inventory?.insertStack(scoutPotion.copy())
+            hgPlayer.serverPlayerEntity?.inventory?.add(scoutPotion.copy())
         }
         job.start()
         hgPlayer.playerData[scoutJobKey] = job

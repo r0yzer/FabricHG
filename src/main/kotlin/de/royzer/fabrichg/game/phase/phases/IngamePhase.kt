@@ -7,13 +7,9 @@ import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
-import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.axay.fabrik.core.text.literalText
-import net.minecraft.client.RunArgs
-import net.minecraft.server.network.ServerPlayerEntity
-import java.util.*
 
 object IngamePhase : GamePhase() {
     var winner: HGPlayer? = null
@@ -26,9 +22,9 @@ object IngamePhase : GamePhase() {
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
-        GamePhaseManager.server.isPvpEnabled = true
+        GamePhaseManager.server.isPvpAllowed = true
         PlayerList.alivePlayers.forEach { hgPlayer ->
-            hgPlayer.serverPlayerEntity?.closeHandledScreen()
+            hgPlayer.serverPlayerEntity?.closeContainer()
         }
     }
 

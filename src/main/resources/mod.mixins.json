@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_18",
   "server": [
     "MainMixin",
-    "block.MushroomPlantBlockMixin",
     "entity.EntityMixin",
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
@@ -19,7 +18,7 @@
     "kits.KangarooMixin",
     "kits.NeoMixin",
     "kits.SwitcherMixin",
-    "server.network.ServerPlayerEntityMixin",
+    "server.network.ServerPlayerMixin",
     "server.network.ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {

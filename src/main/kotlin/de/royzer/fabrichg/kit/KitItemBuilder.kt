@@ -1,13 +1,13 @@
 package de.royzer.fabrichg.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
-import net.minecraft.entity.Entity
-import net.minecraft.item.ItemStack
-import net.minecraft.item.ItemUsageContext
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Hand
-import net.minecraft.util.math.BlockPos
-import net.minecraft.world.World
+import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.level.Level
 
 class KitItemBuilder(val kitItem: KitItem) {
     var itemStack: ItemStack = kitItem.itemStack
@@ -26,19 +26,19 @@ class KitItemBuilder(val kitItem: KitItem) {
         kitItem.clickAction = action
     }
 
-    fun onPlace(action: (HGPlayer, Kit, ItemStack, BlockPos, World) -> Unit) {
+    fun onPlace(action: (HGPlayer, Kit, ItemStack, BlockPos, Level) -> Unit) {
         kitItem.placeAction = action
     }
 
-    fun onClickAtEntity(action: (HGPlayer, Kit, Entity, Hand) -> Unit) {
+    fun onClickAtEntity(action: (HGPlayer, Kit, Entity, InteractionHand) -> Unit) {
         kitItem.clickAtEntityAction = action
     }
 
-    fun onClickAtPlayer(action: (hgPlayer: HGPlayer, kit: Kit, clickedPlayer: ServerPlayerEntity, hand: Hand) -> Unit) {
+    fun onClickAtPlayer(action: (hgPlayer: HGPlayer, kit: Kit, clickedPlayer: ServerPlayer, hand: InteractionHand) -> Unit) {
         kitItem.clickAtPlayerAction = action
     }
 
-    fun onUseBlock(action: ((HGPlayer, Kit, ItemUsageContext) -> Unit)?){
+    fun onUseBlock(action: ((HGPlayer, Kit, BlockPlaceContext) -> Unit)?){
         kitItem.useOnBlockAction = action
     }
 

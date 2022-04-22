@@ -3,6 +3,7 @@ package de.royzer.fabrichg.commands
 import de.royzer.fabrichg.game.PlayerList
 import net.axay.fabrik.commands.command
 import net.axay.fabrik.core.text.literalText
+import net.minecraft.Util
 
 val listCommand = command("list") {
     runs {
@@ -13,6 +14,6 @@ val listCommand = command("list") {
                 }
             }
         }
-        source.player.sendMessage(text, false)
+        source.playerOrException.sendMessage(text, Util.NIL_UUID)
     }
 }

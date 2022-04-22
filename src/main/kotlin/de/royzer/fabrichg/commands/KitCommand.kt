@@ -13,41 +13,45 @@ import net.axay.fabrik.igui.*
 
 val kitCommand = command("kit") {
     runs {
-        if (GamePhaseManager.isNotStarted || source.player.hgPlayer.canUseKit(backupKit)|| source.player.hasPermissionLevel(PermissionLevel.OWNER.level)) {
+        val player = source.playerOrException
+        if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit)|| player.hasPermissions(PermissionLevel.OWNER.level)) {
             if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
-                if (source.player.hgPlayer.hasKit(backupKit) || source.player.hgPlayer.hasKit(noneKit))
-                    this.source.player.openGui(
-                        kitSelectorGUI(this.source.player), 1
+                if (player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))
+                    player.openGui(
+                        kitSelectorGUI(player), 1
                     )
-            } else this.source.player.openGui(
-                kitSelectorGUI(this.source.player), 1
+            } else player.openGui(
+                kitSelectorGUI(player), 1
             )
         }
     }
     argument<String>("kit") { kitArg ->
         suggestList { kits.map { it.name } }
         runs {
-            if (GamePhaseManager.isNotStarted || source.player.hgPlayer.canUseKit(backupKit) || source.player.hasPermissionLevel(PermissionLevel.OWNER.level)) {
+            val player = source.playerOrException
+            if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit) || player.hasPermissions(PermissionLevel.OWNER.level)) {
                 if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY)
-                    if (!(source.player.hgPlayer.hasKit(backupKit) || source.player.hgPlayer.hasKit(noneKit))) return@runs
+                    if (!(player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))) return@runs
                 val kitName = kitArg()
                 val kit = kits.firstOrNull { it.name.equals(kitName, true) }
                 if (kit != null) {
                     if (GamePhaseManager.isIngame) {
-                        kit.onEnable?.invoke(source.player.hgPlayer, kit)
-                        kit.kitItems.forEach { source.player.inventory.insertStack(it.itemStack.copy()) }
+                        kit.onEnable?.invoke(player.hgPlayer, kit)
+                        kit.kitItems.forEach { player.inventory.add(it.itemStack.copy()) }
                     }
-                    source.player.hgPlayer.kits[0] = kit
+                    player.hgPlayer.kits[0] = kit
                 }
                 else
-                    source.player.sendText("Es konnte kein Kit mit dem Namen gefunden werden") { color = 0xFF0000 }
+                    player.sendText("Es konnte kein Kit mit dem Namen gefunden werden") { color = 0xFF0000 }
             }
         }
     }
-    literal("info") runs { source.player.sendText {
-            source.player.hgPlayer.kits.forEach {
+    literal("info") runs {
+        val player = source.playerOrException
+        player.sendText {
+            player.hgPlayer.kits.forEach {
                 text(it.name) {
-                    strikethrough = source.player.hgPlayer.kitsDisabled
+                    strikethrough = player.hgPlayer.kitsDisabled
                 }
             }
             color = 0x00FF00

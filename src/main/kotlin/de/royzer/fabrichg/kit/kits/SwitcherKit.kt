@@ -1,32 +1,32 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.kit.KitItem
 import de.royzer.fabrichg.kit.kit
+import net.axay.fabrik.core.entity.pos
 import net.axay.fabrik.core.item.itemStack
-import net.minecraft.entity.damage.DamageSource
-import net.minecraft.entity.projectile.thrown.SnowballEntity
-import net.minecraft.item.Items
-import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.hit.EntityHitResult
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.projectile.Snowball
+import net.minecraft.world.item.Items
+import net.minecraft.world.phys.EntityHitResult
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 val switcherKit = kit("Switcher") {
-    kitSelectorItem = Items.SNOWBALL.defaultStack
+    kitSelectorItem = Items.SNOWBALL.defaultInstance
 
     kitItem {
         itemStack = itemStack(Items.SNOWBALL) { count = 16 }
     }
 }
 
-fun switcherOnEntityHit(entityHitResult: EntityHitResult, ci: CallbackInfo, snowballEntity: SnowballEntity) {
-    val owner = snowballEntity.owner as? ServerPlayerEntity ?: return
+fun switcherOnEntityHit(entityHitResult: EntityHitResult, ci: CallbackInfo, snowballEntity: Snowball) {
+    val owner = snowballEntity.owner as? ServerPlayer ?: return
     val hitEntity = entityHitResult.entity
     if (owner.hgPlayer.canUseKit(switcherKit)) {
         val hitEntityPos = hitEntity.pos
         val ownerPos = owner.pos
-        owner.teleport(hitEntityPos.x, hitEntityPos.y, hitEntityPos.z)
-        hitEntity.teleport(ownerPos.x, ownerPos.y, ownerPos.z)
-        hitEntity.damage(DamageSource.player(owner), 0.1F)
+        owner.teleportTo(hitEntityPos.x, hitEntityPos.y, hitEntityPos.z)
+        hitEntity.teleportTo(ownerPos.x, ownerPos.y, ownerPos.z)
+        hitEntity.hurt(DamageSource.playerAttack(owner), 0.1F)
     }
 }

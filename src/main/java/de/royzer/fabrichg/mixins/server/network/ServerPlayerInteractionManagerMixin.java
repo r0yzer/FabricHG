@@ -1,30 +1,29 @@
 package de.royzer.fabrichg.mixins.server.network;
 
 import de.royzer.fabrichg.game.GamePhaseManager;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.server.network.ServerPlayerInteractionManager;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ServerPlayerInteractionManager.class)
+@Mixin(MultiPlayerGameMode.class)
 public class ServerPlayerInteractionManagerMixin {
-    @Redirect(
-            method = "interactBlock",
+    @Inject(
+            method = "useItemOn",
             at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/block/BlockState;onUse(Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/hit/BlockHitResult;)Lnet/minecraft/util/ActionResult;"
-            )
+                    value = "HEAD"
+            ),
+            cancellable = true
     )
-    public ActionResult onUse(BlockState blockState, World world, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public void onUse(LocalPlayer player, ClientLevel world, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
         if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
-            return ActionResult.FAIL;
+            cir.setReturnValue(InteractionResult.FAIL);
         }
-        return blockState.onUse(world, player, hand, hit);
     }
 }
