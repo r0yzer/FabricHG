@@ -218,15 +218,15 @@ object MapRenderer {
 
 val flerKit = kit("Fler") {
     val flerImages = listOf(
-        "https://media1.faz.net/ppmedia/aktuell/1516460241/1.7036321/default-retina/der-rapper-fler-am-mittwoch-im.jpg",
-        "https://www.watson.de/imgdb/957c/Qx,A,0,0,1080,720,450,300,180,120/6833823809424002",
-        "https://www.24hamburg.de/bilder/2020/08/13/90023148/23681144-fler-deutschrap-anzeige-gericht-polizei-berlin-instagram-fanboy-anwalt-video-freundin-2IlAZaBg2We9.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Fler_2011_by_NicoJenner.JPG/1200px-Fler_2011_by_NicoJenner.JPG",
-        "https://www.musikexpress.de/wp-content/uploads/2020/11/10/14/fler_pr_katja_kuhl_1600_2020.jpg",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuJem4rwPbl5yjhmqxyFn7-HAqUKmECGy--Q&usqp=CAU",
-        "https://upload.wikimedia.org/wikipedia/commons/2/2a/Fler_2011_%28cropped%29.JPG",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwg7038B6vQwesFv1RGQUdM0vNojX0dtv3fA&usqp=CAU",
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsAQse6MZT78bFLCFWQ6arGOo77uvy9rlf5g&usqp=CAU"
+        ImageIO.read(URL("https://media1.faz.net/ppmedia/aktuell/1516460241/1.7036321/default-retina/der-rapper-fler-am-mittwoch-im.jpg")),
+        ImageIO.read(URL("https://www.watson.de/imgdb/957c/Qx,A,0,0,1080,720,450,300,180,120/6833823809424002")),
+        ImageIO.read(URL("https://www.24hamburg.de/bilder/2020/08/13/90023148/23681144-fler-deutschrap-anzeige-gericht-polizei-berlin-instagram-fanboy-anwalt-video-freundin-2IlAZaBg2We9.jpg")),
+        ImageIO.read(URL("https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Fler_2011_by_NicoJenner.JPG/1200px-Fler_2011_by_NicoJenner.JPG")),
+        ImageIO.read(URL("https://www.musikexpress.de/wp-content/uploads/2020/11/10/14/fler_pr_katja_kuhl_1600_2020.jpg")),
+        ImageIO.read(URL("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuJem4rwPbl5yjhmqxyFn7-HAqUKmECGy--Q&usqp=CAU")),
+        ImageIO.read(URL("https://upload.wikimedia.org/wikipedia/commons/2/2a/Fler_2011_%28cropped%29.JPG")),
+        ImageIO.read(URL("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwg7038B6vQwesFv1RGQUdM0vNojX0dtv3fA&usqp=CAU")),
+        ImageIO.read(URL("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsAQse6MZT78bFLCFWQ6arGOo77uvy9rlf5g&usqp=CAU"))
     )
     val mode = DitherMode.NONE // das andere sieht scheiße aus
     val flerJobKey = "${this.kit.name}JobKey"
@@ -240,7 +240,7 @@ val flerKit = kit("Fler") {
         val job = coroutineTask(howOften = Long.MAX_VALUE, period = defaultPeriod) {
             hgPlayer.serverPlayerEntity?.giveItemStack(
                 MapRenderer.render(
-                    ImageIO.read(URL(flerImages.random())),
+                    flerImages.random(),
                     mode,
                     hgPlayer.serverPlayerEntity!!.serverWorld,
                     hgPlayer.serverPlayerEntity!!.pos.x,
@@ -270,7 +270,7 @@ val flerKit = kit("Fler") {
             serverPlayerEntity.equipStack(
                 EquipmentSlot.OFFHAND,
                 MapRenderer.render(
-                    ImageIO.read(URL(flerImages.random())),
+                    flerImages.random(),
                     mode,
                     fler.serverPlayerEntity!!.serverWorld,
                     fler.serverPlayerEntity!!.pos.x,
