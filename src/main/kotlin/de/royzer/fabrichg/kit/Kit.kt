@@ -32,5 +32,6 @@ val kits = listOfNotNull(
     reviveKit,
     kangarooKit,
     blinkKit,
-    diggerKit
+    diggerKit,
+    flerKit
 )
