@@ -4,24 +4,27 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.broadcast
+import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.game.broadcastComp
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
-import net.axay.fabrik.core.text.literalText
+import net.minecraft.network.chat.Component
+import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.HoverEvent
-import net.minecraft.network.chat.TextComponent
 
-class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
+class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 
     val endTime by lazy { GamePhaseManager.timer.get() }
 
     override fun init() {
         endTime
         GamePhaseManager.resetTimer()
+        winner?.serverPlayerEntity?.abilities?.mayfly = true
+        winner?.serverPlayerEntity?.abilities?.flying = true
     }
 
     override fun tick(timer: Int) {
-        broadcast(winnerText(hgPlayer))
+        broadcastComp(winnerText(winner))
         if (timer >= maxPhaseTime) {
             GamePhaseManager.server.playerList.players.forEach {
                 it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
@@ -36,7 +39,7 @@ class EndPhase(private val hgPlayer: HGPlayer?) : GamePhase() {
     override val nextPhase: GamePhase? = null
 }
 
-fun winnerText(winner: HGPlayer?): TextComponent {
+fun winnerText(winner: HGPlayer?): Component {
     if (winner == null) return literalText("nunja kein winner wohl")
     return literalText {
         color = TEXT_GRAY

@@ -14,7 +14,8 @@ import java.io.IOException;
 public class MainMixin {
     @Inject(
             method = "main",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            remap = false
     )
     private static void onStart(String[] args, CallbackInfo ci) throws IOException {
 //        FileUtils.deleteDirectory(new File("world"));

@@ -2,12 +2,13 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
-import net.axay.fabrik.core.task.coroutineTask
 import net.minecraft.core.Vec3i
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
+import net.silkmc.silk.core.task.mcCoroutineTask
+import kotlin.time.Duration.Companion.milliseconds
 
 val diggerKit = kit("Digger") {
     val size = 6
@@ -19,13 +20,13 @@ val diggerKit = kit("Digger") {
 
         onPlace { hgPlayer, kit, stack, blockPos, world ->
             hgPlayer.activateCooldown(kit)
-            coroutineTask(delay = 750L) {
-                repeat(size) { x ->
-                    repeat(size) { y ->
-                        repeat(size) { z ->
-                            val x = x - size / 2
-                            val z = z - size / 2
-                            val pos = blockPos.subtract(Vec3i(x, y, z))
+            mcCoroutineTask(period = 0.milliseconds, delay = 750L.milliseconds) {
+                repeat(size) { _x ->
+                    repeat(size) { _y ->
+                        repeat(size) { _z ->
+                            val x = _x - size / 2
+                            val z = _z - size / 2
+                            val pos = blockPos.subtract(Vec3i(x, _y, z))
                             if (world.getBlockState(pos).block != Blocks.BEDROCK)
                                 world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
                         }

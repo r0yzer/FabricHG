@@ -7,9 +7,10 @@ import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
+import de.royzer.fabrichg.game.broadcastComp
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
-import net.axay.fabrik.core.text.literalText
+import net.silkmc.silk.core.text.literalText
 
 object IngamePhase : GamePhase() {
     var winner: HGPlayer? = null
@@ -17,7 +18,7 @@ object IngamePhase : GamePhase() {
     override val maxPhaseTime = 15 * 60
     override val nextPhase by lazy { EndPhase(winner) }
 
-    val feastStartTime = 600
+    private const val feastStartTime = 600
 
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
@@ -39,7 +40,7 @@ object IngamePhase : GamePhase() {
         }
 
         when (val timeLeft = maxPhaseTime - timer) {
-            60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText {
+            60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComp(literalText {
                 text("Das Spiel endet in ")
                 text(timeLeft.toString()) { color = TEXT_BLUE }
                 text(" Sekunden")

@@ -1,8 +1,7 @@
 package de.royzer.fabrichg.commands
 
 import de.royzer.fabrichg.feast.Feast
-import net.axay.fabrik.commands.PermissionLevel
-import net.axay.fabrik.commands.command
+import net.silkmc.silk.commands.command
 
 val feastCommand = command("feast") {
     literal("start") {

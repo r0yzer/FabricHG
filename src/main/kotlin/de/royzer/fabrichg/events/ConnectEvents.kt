@@ -14,10 +14,10 @@ import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.scoreboard.showScoreboard
 import kotlinx.coroutines.job
-import net.axay.fabrik.core.item.itemStack
-import net.axay.fabrik.core.item.setCustomName
-import net.axay.fabrik.core.text.literalText
-import net.axay.fabrik.core.text.sendText
+import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.core.text.sendText
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.ai.attributes.Attributes
@@ -95,7 +95,7 @@ object ConnectEvents {
                 }
                 PhaseType.INGAME -> {
                     if (handler.player.hgPlayer.status == HGPlayerStatus.ALIVE) {
-                        if (handler.player.combatTracker.lastEntry?.attacker is ServerPlayer) {
+                        if (false){//handler.player.combatTracker.lastEntry?.attacker is ServerPlayer) {
                             handler.player.health = 0F
                             handler.player.removeHGPlayer()
                             broadcast("tot weil in combat leaved tja")

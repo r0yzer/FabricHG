@@ -3,7 +3,7 @@ package de.royzer.fabrichg.mixinskt
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.PlayerList
-import net.axay.fabrik.core.text.sendText
+import net.silkmc.silk.core.text.sendText
 import net.minecraft.core.BlockPos
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket
 import net.minecraft.server.level.ServerPlayer
@@ -19,7 +19,7 @@ import kotlin.math.sqrt
 object Tracker {
     fun onTrackerUse(playerEntity: Player, stack: ItemStack, cir: CallbackInfoReturnable<InteractionResultHolder<ItemStack>>, world: Level, hand: InteractionHand) {
         val player = playerEntity as? ServerPlayer ?: return
-        if (stack.displayName.string == "Tracker") {
+        if (stack.displayName.string == "[Tracker]") {
             val nearestPlayer = player.nearestPlayerInfo()?.first
             if (nearestPlayer != null) {
                 val distance = player.nearestPlayerInfo()?.second?.toInt()
@@ -30,7 +30,10 @@ object Tracker {
                     text(distance.toString()) { color = TEXT_BLUE }
                     text(" Blöcke entfernt")
                 }
-                player.connection.send(ClientboundSetDefaultSpawnPositionPacket(BlockPos(nearestPlayer.x, nearestPlayer.y, nearestPlayer.z),
+                player.connection.send(ClientboundSetDefaultSpawnPositionPacket(BlockPos(nearestPlayer.x.toInt(),
+                    nearestPlayer.y.toInt(),
+                    nearestPlayer.z.toInt()
+                ),
                     0.0F
                 ))
             } else {

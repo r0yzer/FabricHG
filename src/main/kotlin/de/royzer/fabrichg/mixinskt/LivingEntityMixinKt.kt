@@ -11,7 +11,7 @@ object LivingEntityMixinKt {
     fun onDamage(source: DamageSource, amount: Float, entity: LivingEntity, cir: CallbackInfoReturnable<Boolean>) {
         if (entity is ServerPlayer) {
             if (GamePhaseManager.currentPhaseType != PhaseType.INGAME) cir.returnValue = false
-        }
-        else if (GamePhaseManager.currentPhaseType == PhaseType.LOBBY) cir.returnValue = false
+        } else if (GamePhaseManager.currentPhaseType == PhaseType.LOBBY || GamePhaseManager.currentPhaseType == PhaseType.END)
+            cir.returnValue = false
     }
 }

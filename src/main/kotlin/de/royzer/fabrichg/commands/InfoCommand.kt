@@ -2,9 +2,9 @@ package de.royzer.fabrichg.commands
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
-import net.axay.fabrik.commands.command
-import net.axay.fabrik.core.text.literalText
-import net.axay.fabrik.core.text.sendText
+import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.core.text.sendText
+import net.silkmc.silk.commands.command
 
 val infoCommand = command("info") {
     runs {

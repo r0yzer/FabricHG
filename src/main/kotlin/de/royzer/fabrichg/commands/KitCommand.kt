@@ -7,9 +7,9 @@ import de.royzer.fabrichg.gui.kitSelectorGUI
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.kits.backupKit
 import de.royzer.fabrichg.kit.kits.noneKit
-import net.axay.fabrik.commands.*
-import net.axay.fabrik.core.text.sendText
-import net.axay.fabrik.igui.*
+import net.silkmc.silk.commands.*
+import net.silkmc.silk.core.text.sendText
+import net.silkmc.silk.igui.*
 
 val kitCommand = command("kit") {
     runs {

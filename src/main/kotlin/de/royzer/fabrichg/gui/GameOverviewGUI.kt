@@ -1,10 +1,10 @@
 package de.royzer.fabrichg.gui
 
 import de.royzer.fabrichg.game.PlayerList
-import net.axay.fabrik.core.item.setCustomName
-import net.axay.fabrik.core.text.literal
-import net.axay.fabrik.igui.*
-import net.axay.fabrik.igui.observable.toGuiList
+import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.text.literal
+import net.silkmc.silk.igui.*
+import net.silkmc.silk.igui.observable.toGuiList
 import net.minecraft.world.item.Items
 
 val gameOverviewGUI = igui(GuiType.NINE_BY_FIVE, "Spielübersicht".literal, 1) {

@@ -2,7 +2,7 @@ package de.royzer.fabrichg.commands
 
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
-import net.axay.fabrik.commands.command
+import net.silkmc.silk.commands.command
 
 val startCommand = command("start", true) {
     requiresPermissionLevel(4)

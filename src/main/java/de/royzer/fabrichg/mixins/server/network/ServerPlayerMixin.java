@@ -44,7 +44,7 @@ public abstract class ServerPlayerMixin extends Player {
         }
     }
     @Inject(
-            method = "drop",
+            method = "drop*",
             at = @At("HEAD"),
             cancellable = true
     )

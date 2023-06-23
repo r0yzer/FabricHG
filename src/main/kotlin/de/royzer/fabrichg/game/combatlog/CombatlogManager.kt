@@ -3,14 +3,11 @@ package de.royzer.fabrichg.game.combatlog
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.fabrichgScope
-import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.PlayerList
-import de.royzer.fabrichg.game.broadcast
+import de.royzer.fabrichg.game.*
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.game.removeHGPlayer
 import kotlinx.coroutines.*
-import net.axay.fabrik.core.task.mcSyncLaunch
-import net.axay.fabrik.core.text.literalText
+import net.silkmc.silk.core.task.mcSyncLaunch
+import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
 import java.util.*
 
@@ -28,7 +25,7 @@ fun ServerPlayer.startCombatlog() {
                     if (GamePhaseManager.currentPhaseType == PhaseType.INGAME) hgPlayer.offlineTime -= 1
                     if (hgPlayer.offlineTime <= 0) {
                         removeHGPlayer()
-                        broadcast(literalText("${name.string} war zu lange offline") { color = 0xFFE128 })
+                        broadcastComp(literalText("${name.string} war zu lange offline") { color = 0xFFE128 })
                         PlayerList.announceRemainingPlayers()
                         this@job.cancel()
                     }

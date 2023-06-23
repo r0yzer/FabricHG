@@ -3,11 +3,11 @@ package de.royzer.fabrichg.gui
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.kit.kits
-import net.axay.fabrik.core.item.itemStack
-import net.axay.fabrik.core.item.setCustomName
-import net.axay.fabrik.core.text.literal
-import net.axay.fabrik.igui.*
-import net.axay.fabrik.igui.observable.toGuiList
+import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.text.literal
+import net.silkmc.silk.igui.*
+import net.silkmc.silk.igui.observable.toGuiList
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 

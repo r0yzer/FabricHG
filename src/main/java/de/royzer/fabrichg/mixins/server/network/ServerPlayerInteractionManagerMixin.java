@@ -21,7 +21,7 @@ public class ServerPlayerInteractionManagerMixin {
             ),
             cancellable = true
     )
-    public void onUse(LocalPlayer player, ClientLevel world, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
+    public void onUse(LocalPlayer localPlayer, InteractionHand interactionHand, BlockHitResult blockHitResult, CallbackInfoReturnable<InteractionResult> cir) {
         if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
             cir.setReturnValue(InteractionResult.FAIL);
         }

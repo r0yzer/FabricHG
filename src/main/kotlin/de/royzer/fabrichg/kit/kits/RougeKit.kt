@@ -5,8 +5,8 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
-import net.axay.fabrik.core.task.coroutineTask
-import net.axay.fabrik.core.text.sendText
+import net.silkmc.silk.core.task.coroutineTask
+import net.silkmc.silk.core.text.sendText
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -19,7 +19,7 @@ val rougeKit = kit("Rouge") {
     kitItem {
         onClick { hgPlayer, kit ->
             val player = hgPlayer.serverPlayerEntity ?: return@onClick
-            val nearbyPlayers = player.level.getEntitiesOfClass(ServerPlayer::class.java, player.boundingBox.expandTowards(8.0, 8.0, 8.0)) {
+            val nearbyPlayers = player.level().getEntitiesOfClass(ServerPlayer::class.java, player.boundingBox.expandTowards(8.0, 8.0, 8.0)) {
                 it != player
             }
             nearbyPlayers.forEach { otherPlayer ->

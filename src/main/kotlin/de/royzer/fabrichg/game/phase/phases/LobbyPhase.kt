@@ -5,10 +5,11 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
+import de.royzer.fabrichg.game.broadcastComp
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.scoreboard.formattedTime
-import net.axay.fabrik.core.text.literalText
+import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
@@ -17,7 +18,7 @@ import kotlin.random.Random
 
 object LobbyPhase : GamePhase() {
     override val phaseType = PhaseType.LOBBY
-    override val maxPhaseTime = 60 * 3
+    override val maxPhaseTime = 10 * 3
     override val nextPhase = InvincibilityPhase
 
     var isStarting = false
@@ -44,7 +45,7 @@ object LobbyPhase : GamePhase() {
                         it.serverPlayerEntity?.freeze()
                     }
                 }
-                180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcast(literalText("Das Spiel start in ") {
+                180, 120, 60, 30, 10, 5, 4, 3, 2, 1 -> broadcastComp(literalText("Das Spiel start in ") {
                     color = TEXT_GRAY
                     text(timeLeft.formattedTime) { color = TEXT_BLUE }
                     text(" Minuten")

@@ -1,10 +1,10 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
-import net.axay.fabrik.core.item.setCustomName
-import net.axay.fabrik.core.item.setLore
-import net.axay.fabrik.core.task.coroutineTask
-import net.axay.fabrik.core.text.literalText
+import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.core.task.coroutineTask
+import net.silkmc.silk.core.text.literalText
 import net.minecraft.world.effect.MobEffect
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects

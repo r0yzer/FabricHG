@@ -1,7 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
-import net.axay.fabrik.core.entity.modifyVelocity
+import net.silkmc.silk.core.entity.modifyVelocity
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
@@ -30,7 +30,7 @@ val kangarooKit = kit("Kangaroo") {
     events {
         onMove { hgPlayer, kit ->
             if (hgPlayer.getPlayerData<Boolean>(canJumpKey) == false) {
-                if (hgPlayer.serverPlayerEntity?.isOnGround == true) hgPlayer.playerData[canJumpKey] = true
+                if (hgPlayer.serverPlayerEntity?.onGround() == true) hgPlayer.playerData[canJumpKey] = true
             }
         }
     }

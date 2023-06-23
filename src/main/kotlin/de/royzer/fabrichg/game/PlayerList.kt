@@ -5,7 +5,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.IngamePhase
-import net.axay.fabrik.core.text.literalText
+import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.GameType
 import java.util.*
@@ -38,7 +38,7 @@ object PlayerList {
     fun announcePlayerDeath(serverPlayerEntity: ServerPlayer, killer: ServerPlayer?) {
         val hgPlayer = serverPlayerEntity.hgPlayer
         val otherHGPlayer = killer?.hgPlayer
-        broadcast(
+        broadcastComp(
             literalText {
                 text("${serverPlayerEntity.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killer?.name?.string}(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killer?.mainHandItem?.item} getötet")
                 color = 0xFFE128
@@ -48,7 +48,7 @@ object PlayerList {
     }
 
     fun announceRemainingPlayers() {
-        broadcast(
+        broadcastComp(
             literalText {
                 text("Es verbleiben ${alivePlayers.size - 1} Spieler")
                 color = 0xFFE128

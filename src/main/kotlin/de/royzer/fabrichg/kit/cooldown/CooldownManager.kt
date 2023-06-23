@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import net.axay.fabrik.core.text.literalText
+import net.silkmc.silk.core.text.literalText
 import net.minecraft.Util.NIL_UUID
 import net.minecraft.server.level.ServerPlayer
 
@@ -44,12 +44,12 @@ fun HGPlayer.cooldown(kit: Kit): Double {
 fun ServerPlayer.sendCooldown(kit: Kit) {
     if (!hgPlayer.hasCooldown(kit)) return
     val sec = "%.1f".format(hgPlayer.cooldown(kit))
-    sendMessage(literalText {
+    sendSystemMessage(literalText {
         text("Du hast noch ")
         text(sec) {
             color = TEXT_BLUE
         }
         text(" Sekunden Cooldown")
         color = TEXT_GRAY
-    }, NIL_UUID)
+    })
 }

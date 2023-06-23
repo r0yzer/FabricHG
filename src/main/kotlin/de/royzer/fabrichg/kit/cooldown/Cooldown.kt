@@ -2,7 +2,7 @@ package de.royzer.fabrichg.kit.cooldown
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.Kit
-import net.axay.fabrik.core.logging.logInfo
+import net.silkmc.silk.core.logging.logInfo
 
 data class Cooldown(
     val hgPlayer: HGPlayer,

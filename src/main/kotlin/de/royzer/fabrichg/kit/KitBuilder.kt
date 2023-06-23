@@ -2,8 +2,8 @@ package de.royzer.fabrichg.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.events.KitEventsBuilder
-import net.axay.fabrik.core.item.setLore
-import net.axay.fabrik.core.text.literalText
+import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.core.text.literalText
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 

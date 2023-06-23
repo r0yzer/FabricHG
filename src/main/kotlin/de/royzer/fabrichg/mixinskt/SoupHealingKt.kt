@@ -15,17 +15,17 @@ object SoupHealingKt {
         cir: CallbackInfoReturnable<InteractionResultHolder<ItemStack>>,
         world: Level, hand: InteractionHand
     ) {
-        val hungerManager = player.foodData
+        val foodData = player.foodData
 
-        if (!item.isStew || player.health >= player.maxHealth && !hungerManager.needsFood()) return
+        if (!item.isStew || player.health >= player.maxHealth && !foodData.needsFood()) return
 
         var consumedSoup = false
 
         if (player.health < player.maxHealth) {
             player.heal(7F)
             consumedSoup = true
-        } else if (hungerManager.needsFood()) {
-//            hungerManager.(item.restoredFood, item.restoredSaturation)
+        } else if (foodData.needsFood()) {
+            foodData.foodLevel += item.restoredFood
             consumedSoup = true
         }
 

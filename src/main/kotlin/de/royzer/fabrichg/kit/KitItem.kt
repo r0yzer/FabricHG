@@ -6,6 +6,9 @@ import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
 import de.royzer.fabrichg.sendPlayerStatus
 import net.minecraft.core.BlockPos
+import net.minecraft.nbt.ListTag
+import net.minecraft.nbt.StringTag
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -14,9 +17,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
-import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
-import org.apache.logging.log4j.core.jmx.Server
+import net.silkmc.silk.core.logging.logInfo
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 class KitItem(
@@ -124,7 +126,6 @@ fun onPlace(context: BlockPlaceContext, cir: CallbackInfoReturnable<InteractionR
 
 // hehe
 val ItemStack.isKitItem: Boolean get() {
-    val lore = getTagElement(ItemStack.TAG_LORE) ?: return false
-//    val lore = tag?.get("display")?.get("Lore")?.asString() ?: return false
+    val lore = getTagElement("display").toString()
     return lore.contains("Kititem")
 }

@@ -1,13 +1,14 @@
 package de.royzer.fabrichg.kit.kits
 
-import com.mojang.math.Vector3f
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
-import net.axay.fabrik.core.entity.pos
+import net.silkmc.silk.core.entity.pos
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Vec3i
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
+import net.silkmc.silk.core.entity.blockPos
 
 val blinkKit = kit("Blink") {
     val maxUses = 5
@@ -25,7 +26,7 @@ val blinkKit = kit("Blink") {
             player.teleportTo(
                 newPos.x, newPos.y, newPos.z
             )
-            player.level.setBlockAndUpdate(BlockPos(player.pos.subtract(0.0,1.0,0.0)), Blocks.OAK_LEAVES.defaultBlockState())
+            player.level().setBlockAndUpdate(BlockPos(player.blockPos.subtract(Vec3i(0,1,0))), Blocks.OAK_LEAVES.defaultBlockState())
             player.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 100F, 100F)
         }
     }

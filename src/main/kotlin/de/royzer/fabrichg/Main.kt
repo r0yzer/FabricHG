@@ -55,6 +55,7 @@ fun registerCommands() {
     listCommand
     kitCommand
     feastCommand
+    phaseCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

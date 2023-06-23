@@ -3,7 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
-import net.axay.fabrik.core.entity.modifyVelocity
+import net.silkmc.silk.core.entity.modifyVelocity
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
