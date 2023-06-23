@@ -35,21 +35,26 @@ object PlayerList {
         players.remove(uuid)
     }
 
-    // TODO fix
-    fun announcePlayerDeath(serverPlayer: ServerPlayer, source: DamageSource) {
-        val killer = source.entity
-        val killerPlayer = if (killer !is ServerPlayer) null else killer
+    fun announcePlayerDeath(serverPlayer: ServerPlayer, source: DamageSource, killer: ServerPlayer?) {
+        val sourceKiller = source.entity
         val hgPlayer = serverPlayer.hgPlayer
-        val otherHGPlayer = killerPlayer?.hgPlayer
+        val otherHGPlayer = killer?.hgPlayer
         broadcastComponent(
             literalText {
-                if (killerPlayer != null) {
-                    text("${serverPlayer.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killerPlayer.name?.string?.uppercase()}" +
-                            "(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killerPlayer.mainHandItem?.item} getötet")
+                if (killer == sourceKiller && killer != null) {
+                    text("${serverPlayer.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killer.name?.string}" +
+                            "(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killer.mainHandItem?.item.toString().uppercase()} getötet")
+                } else if (killer != null){
+                    text("${serverPlayer.name.string} wurde von ${killer.name.string} getötet")
                 } else {
-                    text("${serverPlayer.name.string} ist gestorben")
+                    when (val cause = source.type().msgId) {
+                        "cactus" -> text("${serverPlayer.name.string} ist an einem Kaktus gestorben")
+                        "mob_attack" -> text("${serverPlayer.name.string} ist an einem Mob gestorben")
+                        "fireball" -> text("${serverPlayer.name.string} ist an einem Feuerball gestorben")
+                        else -> text("${serverPlayer.name.string} ist an ${cause.uppercase()} gestorben")
+                    }
                 }
-                color = 0xFFE128
+                color = 0xFFFF55
             }
         )
         announceRemainingPlayers()
@@ -58,8 +63,9 @@ object PlayerList {
     fun announceRemainingPlayers() {
         broadcastComponent(
             literalText {
-                text("Es verbleiben ${alivePlayers.size - 1} Spieler")
-                color = 0xFFE128
+                if (alivePlayers.size - 1 == 1) text("Es verbleibt ${alivePlayers.size - 1} Spieler")
+                else text("Es verbleiben ${alivePlayers.size - 1} Spieler")
+                color = 0xFFFF55
             }
         )
     }

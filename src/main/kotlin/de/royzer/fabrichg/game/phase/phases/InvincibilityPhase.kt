@@ -25,6 +25,7 @@ object InvincibilityPhase : GamePhase() {
         PlayerList.alivePlayers.forEach { hgPlayer ->
             hgPlayer.serverPlayerEntity?.setGameMode(GameType.SURVIVAL)
             hgPlayer.serverPlayerEntity?.closeContainer()
+            hgPlayer.serverPlayerEntity?.removeAllEffects()
             with(hgPlayer.serverPlayerEntity?.inventory) {
                 this?.clearContent()
                 this?.add(itemStack(Items.COMPASS) {

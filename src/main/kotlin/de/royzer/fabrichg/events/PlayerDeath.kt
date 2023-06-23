@@ -23,7 +23,7 @@ object PlayerDeath {
             serverPlayerEntity.hgPlayer.kits.forEach {
                 it.onDisable?.invoke(serverPlayerEntity.hgPlayer, it)
             }
-             PlayerList.announcePlayerDeath(serverPlayerEntity, damageSource) // TODO
+             PlayerList.announcePlayerDeath(serverPlayerEntity, damageSource, killer)
             serverPlayerEntity.removeHGPlayer()
             val hgPlayer = killer?.hgPlayer ?: return@register true
             hgPlayer.kills += 1
