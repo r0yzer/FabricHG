@@ -6,8 +6,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
-import de.royzer.fabrichg.game.broadcast
-import de.royzer.fabrichg.game.broadcastComp
+import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.silkmc.silk.core.text.literalText
@@ -40,7 +39,7 @@ object IngamePhase : GamePhase() {
         }
 
         when (val timeLeft = maxPhaseTime - timer) {
-            60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComp(literalText {
+            60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText {
                 text("Das Spiel endet in ")
                 text(timeLeft.toString()) { color = TEXT_BLUE }
                 text(" Sekunden")

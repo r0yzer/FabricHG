@@ -2,16 +2,12 @@ package de.royzer.fabrichg.feast
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
-import de.royzer.fabrichg.feast.Feast.feastCenter
-import de.royzer.fabrichg.feast.Feast.timeLeft
-import de.royzer.fabrichg.game.broadcast
-import de.royzer.fabrichg.game.broadcastComp
+import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.scoreboard.formattedTime
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.util.getRandomHighestPos
 import kotlinx.coroutines.Job
 import net.silkmc.silk.core.math.geometry.produceFilledCirclePositions
-import net.silkmc.silk.core.task.coroutineTask
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
@@ -46,7 +42,7 @@ object Feast {
         feastJob =
             mcCoroutineTask(howOften = timeLeft.toLong() + 1, period = 1000.milliseconds, delay = 0.milliseconds) {
                 when (timeLeft) {
-                    300, 180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComp(literalText {
+                    300, 180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText {
                         text("Das Feast startet in ")
                         text(timeLeft.formattedTime) { color = TEXT_BLUE }
                         text(" Minuten bei ")

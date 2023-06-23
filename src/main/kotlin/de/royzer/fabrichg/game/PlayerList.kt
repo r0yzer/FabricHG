@@ -7,6 +7,7 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.level.GameType
 import java.util.*
 
@@ -35,12 +36,19 @@ object PlayerList {
     }
 
     // TODO fix
-    fun announcePlayerDeath(serverPlayerEntity: ServerPlayer, killer: ServerPlayer?) {
-        val hgPlayer = serverPlayerEntity.hgPlayer
-        val otherHGPlayer = killer?.hgPlayer
-        broadcastComp(
+    fun announcePlayerDeath(serverPlayer: ServerPlayer, source: DamageSource) {
+        val killer = source.entity
+        val killerPlayer = if (killer !is ServerPlayer) null else killer
+        val hgPlayer = serverPlayer.hgPlayer
+        val otherHGPlayer = killerPlayer?.hgPlayer
+        broadcastComponent(
             literalText {
-                text("${serverPlayerEntity.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killer?.name?.string}(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killer?.mainHandItem?.item} getötet")
+                if (killerPlayer != null) {
+                    text("${serverPlayer.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killerPlayer.name?.string?.uppercase()}" +
+                            "(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killerPlayer.mainHandItem?.item} getötet")
+                } else {
+                    text("${serverPlayer.name.string} ist gestorben")
+                }
                 color = 0xFFE128
             }
         )
@@ -48,7 +56,7 @@ object PlayerList {
     }
 
     fun announceRemainingPlayers() {
-        broadcastComp(
+        broadcastComponent(
             literalText {
                 text("Es verbleiben ${alivePlayers.size - 1} Spieler")
                 color = 0xFFE128

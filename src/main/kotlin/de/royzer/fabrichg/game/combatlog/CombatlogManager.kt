@@ -25,7 +25,7 @@ fun ServerPlayer.startCombatlog() {
                     if (GamePhaseManager.currentPhaseType == PhaseType.INGAME) hgPlayer.offlineTime -= 1
                     if (hgPlayer.offlineTime <= 0) {
                         removeHGPlayer()
-                        broadcastComp(literalText("${name.string} war zu lange offline") { color = 0xFFE128 })
+                        broadcastComponent(literalText("${name.string} war zu lange offline") { color = 0xFFE128 })
                         PlayerList.announceRemainingPlayers()
                         this@job.cancel()
                     }

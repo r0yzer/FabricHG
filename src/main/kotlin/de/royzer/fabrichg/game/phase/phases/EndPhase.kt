@@ -4,8 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.PlayerList
-import de.royzer.fabrichg.game.broadcastComp
+import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.minecraft.network.chat.Component
@@ -24,7 +23,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
     }
 
     override fun tick(timer: Int) {
-        broadcastComp(winnerText(winner))
+        broadcastComponent(winnerText(winner))
         if (timer >= maxPhaseTime) {
             GamePhaseManager.server.playerList.players.forEach {
                 it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })

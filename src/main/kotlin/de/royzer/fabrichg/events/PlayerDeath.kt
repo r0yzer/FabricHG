@@ -7,12 +7,13 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
-import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
+import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.minecraft.server.level.ServerPlayer
 
 object PlayerDeath {
     init {
-        ServerPlayerEvents.ALLOW_DEATH.register { serverPlayerEntity, damageSource, amount ->
+        ServerLivingEntityEvents.ALLOW_DEATH.register { serverPlayerEntity, damageSource, amount ->
+            if (serverPlayerEntity !is ServerPlayer) return@register false
             if ((serverPlayerEntity as? LivingEntityAccessor)?.invokeTryUseTotem(damageSource) == true) {
                 serverPlayerEntity.sendPlayerStatus()
                 return@register false
@@ -22,7 +23,7 @@ object PlayerDeath {
             serverPlayerEntity.hgPlayer.kits.forEach {
                 it.onDisable?.invoke(serverPlayerEntity.hgPlayer, it)
             }
-             PlayerList.announcePlayerDeath(serverPlayerEntity, serverPlayerEntity) // TODO
+             PlayerList.announcePlayerDeath(serverPlayerEntity, damageSource) // TODO
             serverPlayerEntity.removeHGPlayer()
             val hgPlayer = killer?.hgPlayer ?: return@register true
             hgPlayer.kills += 1

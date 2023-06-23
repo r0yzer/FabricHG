@@ -95,7 +95,7 @@ object ConnectEvents {
                 }
                 PhaseType.INGAME -> {
                     if (handler.player.hgPlayer.status == HGPlayerStatus.ALIVE) {
-                        if (false){//handler.player.combatTracker.lastEntry?.attacker is ServerPlayer) {
+                        if (true){//handler.player.combatTracker.lastEntry?.attacker is ServerPlayer) { TODO
                             handler.player.health = 0F
                             handler.player.removeHGPlayer()
                             broadcast("tot weil in combat leaved tja")

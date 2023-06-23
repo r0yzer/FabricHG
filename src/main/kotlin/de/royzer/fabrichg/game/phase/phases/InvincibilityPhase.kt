@@ -4,8 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
-import de.royzer.fabrichg.game.broadcast
-import de.royzer.fabrichg.game.broadcastComp
+import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.scoreboard.formattedTime
@@ -18,8 +17,8 @@ import net.minecraft.world.level.GameType
 object InvincibilityPhase : GamePhase() {
     override fun init() {
         GamePhaseManager.resetTimer()
-        broadcastComp(literalText("HG startet") { color = TEXT_GRAY })
-        broadcastComp(literalText("Tritt gerne dem offiziellen hg.royzer.de Discord bei\n") {
+        broadcastComponent(literalText("HG startet") { color = TEXT_GRAY })
+        broadcastComponent(literalText("Tritt gerne dem offiziellen hg.royzer.de Discord bei\n") {
             color = TEXT_GRAY
             text("https://discord.gg/bS8JKatZkD") { color = TEXT_BLUE }
         })
@@ -43,7 +42,7 @@ object InvincibilityPhase : GamePhase() {
 
     override fun tick(timer: Int) {
         when (val timeLeft = maxPhaseTime - timer) {
-            180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComp(literalText("Die Invincibility endet in ") {
+            180, 120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText("Die Invincibility endet in ") {
                 color = TEXT_GRAY
                 text(timeLeft.formattedTime) { color = TEXT_BLUE }
                 text(" Minuten")
