@@ -6,9 +6,6 @@ import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
 import de.royzer.fabrichg.sendPlayerStatus
 import net.minecraft.core.BlockPos
-import net.minecraft.nbt.ListTag
-import net.minecraft.nbt.StringTag
-import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -18,7 +15,6 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
 import net.minecraft.world.level.Level
-import net.silkmc.silk.core.logging.logInfo
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 class KitItem(
@@ -34,7 +30,7 @@ class KitItem(
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             useOnBlockAction?.invoke(hgPlayer, kit, context)
         } else if (hgPlayer.hasCooldown(kit)) {
-            hgPlayer.serverPlayerEntity?.sendCooldown(kit)
+            hgPlayer.serverPlayer?.sendCooldown(kit)
         }
     }
 
@@ -42,7 +38,7 @@ class KitItem(
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             clickAction?.invoke(hgPlayer, kit)
         } else if (hgPlayer.hasCooldown(kit)) {
-            hgPlayer.serverPlayerEntity?.sendCooldown(kit)
+            hgPlayer.serverPlayer?.sendCooldown(kit)
         }
     }
 
@@ -50,7 +46,7 @@ class KitItem(
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             placeAction?.invoke(hgPlayer, kit, itemStack, blockPos, world)
         } else if (hgPlayer.hasCooldown(kit)) {
-            hgPlayer.serverPlayerEntity?.sendCooldown(kit)
+            hgPlayer.serverPlayer?.sendCooldown(kit)
         }
     }
 
@@ -60,7 +56,7 @@ class KitItem(
                 clickAtPlayerAction?.invoke(hgPlayer, kit, entity, hand)
             else clickAtEntityAction?.invoke(hgPlayer, kit, entity, hand)
         } else if (hgPlayer.hasCooldown(kit)) {
-            hgPlayer.serverPlayerEntity?.sendCooldown(kit)
+            hgPlayer.serverPlayer?.sendCooldown(kit)
         }
     }
 }

@@ -2,16 +2,13 @@ package de.royzer.fabrichg.events
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.PlayerList
-import de.royzer.fabrichg.game.broadcast
+import de.royzer.fabrichg.game.*
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
-import de.royzer.fabrichg.game.phase.phases.freeze
-import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.kit.kits.noneKit
+import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.scoreboard.showScoreboard
 import kotlinx.coroutines.job
 import net.silkmc.silk.core.item.itemStack
@@ -23,6 +20,8 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameType
+import net.silkmc.silk.core.logging.logError
+import net.silkmc.silk.core.logging.logInfo
 
 object ConnectEvents {
     init {
@@ -31,6 +30,7 @@ object ConnectEvents {
             val player = handler.player
             val uuid = player.uuid
             val hgPlayer = player.hgPlayer
+            logInfo("${player.name.string} joint in ${gamePhase.name} mit Status ${hgPlayer.status}")
 
 
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 100.0
@@ -48,7 +48,7 @@ object ConnectEvents {
                     })
                     player.foodData.foodLevel = 20
                     player.setGameMode(GameType.ADVENTURE)
-                    if (LobbyPhase.isStarting) player.freeze()
+//                    if (LobbyPhase.isStarting) player.freeze()
                     PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                 }
                 PhaseType.INVINCIBILITY -> {
@@ -67,6 +67,13 @@ object ConnectEvents {
                         HGPlayerStatus.DISCONNECTED -> {
                             combatloggedPlayers[uuid]?.job?.cancel()
                             player.hgPlayer.status = HGPlayerStatus.ALIVE
+                            logInfo("${player.name.string} ist wieder da")
+                        }
+                        HGPlayerStatus.ALIVE -> {
+                            logError("${player.name.string} joint als Alive")
+                            player.hgPlayer.status = HGPlayerStatus.SPECTATOR
+                            player.setGameMode(GameType.SPECTATOR)
+                            player.removeAllEffects()
                         }
                         else -> {
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
@@ -84,24 +91,37 @@ object ConnectEvents {
             }
 
             player.showScoreboard()
+//            logInfo("END${player.name.string} joint in ${gamePhase.name} mit Status ${hgPlayer.status}")
         }
 
         ServerPlayConnectionEvents.DISCONNECT.register { handler, server ->
+            val gamePhase = GamePhaseManager.currentPhase.phaseType
+            val player = handler.player
+            val hgPlayer = player.hgPlayer
             val uuid = handler.player.uuid
+            logInfo("${player.name.string} leaved in ${gamePhase.name} mit Status ${hgPlayer.status}")
+
             when (GamePhaseManager.currentPhase.phaseType) {
                 PhaseType.LOBBY -> PlayerList.removePlayer(uuid)
                 PhaseType.INVINCIBILITY -> {
-                    handler.player.startCombatlog()
+                    player.startCombatlog()
                 }
                 PhaseType.INGAME -> {
-                    if (handler.player.hgPlayer.status == HGPlayerStatus.ALIVE) {
-                        if (true){//handler.player.combatTracker.lastEntry?.attacker is ServerPlayer) { TODO
-                            handler.player.health = 0F
-                            handler.player.removeHGPlayer()
-                            broadcast("tot weil in combat leaved tja")
+                    if (player.hgPlayer.status == HGPlayerStatus.ALIVE) {
+                        val combatTracker = player.combatTracker
+                        val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
+                        if (lastCombatEntry?.source?.entity is ServerPlayer) {
+                            val killer = lastCombatEntry.source.entity as ServerPlayer
+                            player.health = 0F
+                            player.removeHGPlayer()
+                            broadcastComponent(literalText {
+                                text("${player.name.string} ist im Kampf gegen ${killer.name.string} geleaved")
+                                color = 0xFFFF55
+                            })
+                            killer.hgPlayer.kills += 1
                             PlayerList.announceRemainingPlayers()
                         } else {
-                            handler.player.startCombatlog()
+                            player.startCombatlog()
                         }
                     } else {
                         PlayerList.removePlayer(uuid)
@@ -109,6 +129,8 @@ object ConnectEvents {
                 }
                 PhaseType.END -> {}
             }
+
+//            logInfo("END: ${player.name.string} leaved in ${gamePhase.name} mit Status ${hgPlayer.status}")
         }
     }
 }

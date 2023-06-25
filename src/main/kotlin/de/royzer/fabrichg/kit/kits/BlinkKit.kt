@@ -19,7 +19,7 @@ val blinkKit = kit("Blink") {
     kitItem {
         itemStack = kitSelectorItem
         onClick { hgPlayer, kit ->
-            val player = hgPlayer.serverPlayerEntity ?: return@onClick
+            val player = hgPlayer.serverPlayer ?: return@onClick
             hgPlayer.checkUsesForCooldown(kit, maxUses)
             val p = player.lookDirection.normalize().scale(blinkDistance.toDouble())
             val newPos = player.pos.add(p.x, p.y, p.z)

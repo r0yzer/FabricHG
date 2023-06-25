@@ -14,7 +14,7 @@ val kangarooKit = kit("Kangaroo") {
     kitItem {
         itemStack = kitSelectorItem
         onClick { hgPlayer, _ ->
-            val serverPlayerEntity = hgPlayer.serverPlayerEntity ?: return@onClick
+            val serverPlayerEntity = hgPlayer.serverPlayer ?: return@onClick
             if (hgPlayer.getPlayerData<Boolean>(canJumpKey) == false) return@onClick
             if (serverPlayerEntity.isShiftKeyDown) {
                 val vec = serverPlayerEntity.lookDirection
@@ -30,7 +30,7 @@ val kangarooKit = kit("Kangaroo") {
     events {
         onMove { hgPlayer, kit ->
             if (hgPlayer.getPlayerData<Boolean>(canJumpKey) == false) {
-                if (hgPlayer.serverPlayerEntity?.onGround() == true) hgPlayer.playerData[canJumpKey] = true
+                if (hgPlayer.serverPlayer?.onGround() == true) hgPlayer.playerData[canJumpKey] = true
             }
         }
     }

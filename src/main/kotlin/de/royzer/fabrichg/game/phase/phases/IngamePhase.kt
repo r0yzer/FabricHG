@@ -9,6 +9,7 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.text.literalText
 
 object IngamePhase : GamePhase() {
@@ -22,9 +23,10 @@ object IngamePhase : GamePhase() {
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
+        logInfo("IngamePhase startet")
         GamePhaseManager.server.isPvpAllowed = true
         PlayerList.alivePlayers.forEach { hgPlayer ->
-            hgPlayer.serverPlayerEntity?.closeContainer()
+            hgPlayer.serverPlayer?.closeContainer()
         }
     }
 

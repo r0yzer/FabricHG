@@ -5,6 +5,7 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcastComponent
+import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.minecraft.network.chat.Component
@@ -16,30 +17,34 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
     val endTime by lazy { GamePhaseManager.timer.get() }
 
     override fun init() {
+        combatloggedPlayers.forEach { (_, u) -> u.cancel() }
         endTime
         GamePhaseManager.resetTimer()
-        winner?.serverPlayerEntity?.abilities?.mayfly = true
-        winner?.serverPlayerEntity?.abilities?.flying = true
+        winner?.serverPlayer?.abilities?.mayfly = true
+        winner?.serverPlayer?.abilities?.flying = true
+
     }
 
     override fun tick(timer: Int) {
         broadcastComponent(winnerText(winner))
-        if (timer >= maxPhaseTime) {
+        if (timer == maxPhaseTime - 1) {
             GamePhaseManager.server.playerList.players.forEach {
                 it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
             }
-            GamePhaseManager.server.stopServer()
+        }
+        if (timer >= maxPhaseTime) {
+            GamePhaseManager.server.halt(false)
             return
         }
     }
 
     override val phaseType = PhaseType.END
-    override val maxPhaseTime = 20
+    override val maxPhaseTime = 21
     override val nextPhase: GamePhase? = null
 }
 
 fun winnerText(winner: HGPlayer?): Component {
-    if (winner == null) return literalText("nunja kein winner wohl")
+    if (winner == null) return literalText("Kein Sieger?")
     return literalText {
         color = TEXT_GRAY
         text(winner.name) {

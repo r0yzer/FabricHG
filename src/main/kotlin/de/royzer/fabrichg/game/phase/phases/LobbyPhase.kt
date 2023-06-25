@@ -35,12 +35,12 @@ object LobbyPhase : GamePhase() {
                     PlayerList.alivePlayers.forEach {
                         val x = Random.nextInt(-20, 20)
                         val z = Random.nextInt(-20, 20)
-                        it.serverPlayerEntity?.teleportTo(
+                        it.serverPlayer?.teleportTo(
                             x.toDouble(),
                             100.0, // TODO höchste
                             z.toDouble()
                         )
-                        it.serverPlayerEntity?.freeze()
+//                        it.serverPlayer?.freeze()
                     }
                 }
                 180, 120, 60, 30, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText("Das Spiel start in ") {
@@ -56,7 +56,7 @@ object LobbyPhase : GamePhase() {
             isStarting = false
             GamePhaseManager.resetTimer()
             PlayerList.alivePlayers.forEach { hgPlayer ->
-                hgPlayer.serverPlayerEntity?.removeAllEffects()
+                hgPlayer.serverPlayer?.removeAllEffects()
             }
         }
     }

@@ -63,8 +63,8 @@ object PlayerList {
     fun announceRemainingPlayers() {
         broadcastComponent(
             literalText {
-                if (alivePlayers.size - 1 == 1) text("Es verbleibt ${alivePlayers.size - 1} Spieler")
-                else text("Es verbleiben ${alivePlayers.size - 1} Spieler")
+                val v = if (alivePlayers.size == 1) "verbleibt" else "verbleiben"
+                text("Es $v ${alivePlayers.size} Spieler")
                 color = 0xFFFF55
             }
         )

@@ -47,7 +47,7 @@ object Tracker {
     private fun ServerPlayer.nearestPlayerInfo(): Pair<ServerPlayer, Double>? {
         val playerDistances: MutableMap<ServerPlayer, Double> = mutableMapOf()
         for (player in PlayerList.alivePlayers) {
-            val otherPlayer = player.serverPlayerEntity ?: continue
+            val otherPlayer = player.serverPlayer ?: continue
             val distance = sqrt(this.distanceToSqr(Vec3(otherPlayer.x, this.y, otherPlayer.z)))
             if (distance > 10) {
                 playerDistances[otherPlayer] = distance

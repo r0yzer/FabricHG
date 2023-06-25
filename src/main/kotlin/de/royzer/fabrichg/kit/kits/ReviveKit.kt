@@ -1,7 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
-import net.silkmc.silk.core.task.coroutineTask
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.task.mcCoroutineTask
 import kotlin.time.Duration.Companion.milliseconds
@@ -23,8 +22,8 @@ val reviveKit = kit("Revive") {
             period = defaultPeriod.milliseconds,
             delay = defaultPeriod.milliseconds
         ) {
-            if (hgPlayer.serverPlayerEntity?.inventory?.contains(kitSelectorItem) == false && hgPlayer.canUseKit(kit))
-                hgPlayer.serverPlayerEntity?.inventory?.add(kitSelectorItem.copy())
+            if (hgPlayer.serverPlayer?.inventory?.contains(kitSelectorItem) == false && hgPlayer.canUseKit(kit))
+                hgPlayer.serverPlayer?.inventory?.add(kitSelectorItem.copy())
         }
         job.start()
         hgPlayer.playerData[reviveJobKey] = job

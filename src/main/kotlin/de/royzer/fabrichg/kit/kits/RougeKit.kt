@@ -17,8 +17,9 @@ val rougeKit = kit("Rouge") {
     cooldown = 35.0
 
     kitItem {
+        itemStack = kitSelectorItem
         onClick { hgPlayer, kit ->
-            val player = hgPlayer.serverPlayerEntity ?: return@onClick
+            val player = hgPlayer.serverPlayer ?: return@onClick
             val nearbyPlayers = player.level().getEntitiesOfClass(ServerPlayer::class.java, player.boundingBox.expandTowards(8.0, 8.0, 8.0)) {
                 it != player
             }
@@ -33,7 +34,7 @@ val rougeKit = kit("Rouge") {
                 }
             }
             hgPlayer.activateCooldown(kit)
-            hgPlayer.serverPlayerEntity!!.sendText {
+            hgPlayer.serverPlayer!!.sendText {
                 text("Du hast die Kits von ")
                 text(nearbyPlayers.size.toString()) {
                     color = TEXT_BLUE

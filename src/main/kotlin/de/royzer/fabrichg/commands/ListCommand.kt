@@ -1,13 +1,24 @@
 package de.royzer.fabrichg.commands
 
-import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.game.PlayerList
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
-import net.minecraft.Util
 
 val listCommand = command("list") {
-    literal("skip") runs {
-        GamePhaseManager.currentPhase.startNextPhase()
+    runs {
+        val text = literalText {
+            text("Alle Spieler: ") { color = TEXT_GRAY }
+            newLine()
+            PlayerList.players.values.forEach { hgPlayer ->
+                text(hgPlayer.name + " ") {
+                    color = hgPlayer.status.statusColor
+                }
+                text("Verbleibende Offline Zeit: ${hgPlayer.offlineTime}s") { color = TEXT_GRAY }
+                newLine()
+            }
+        }
+        source.playerOrException.sendSystemMessage(text)
     }
 }

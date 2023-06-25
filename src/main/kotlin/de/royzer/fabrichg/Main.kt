@@ -8,11 +8,10 @@ import de.royzer.fabrichg.kit.kits
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import net.fabricmc.fabric.api.biome.v1.BiomeModifications
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.level.GameRules
 
 //val String.hgId get() = Identifier("fabrichg", this)
 
@@ -34,6 +33,9 @@ fun initServer() {
     ServerLifecycleEvents.SERVER_STARTED.register {
         GamePhaseManager.enable(it as DedicatedServer)
         registerCommands()
+        it.overworld().dayTime = 0L
+        it.gameRules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, it)
+        it.gameRules.getRule(GameRules.RULE_DAYLIGHT).set(false, it)
     }
 
 //    val moreMushroomsFeature = MoreMushroomsFeature(DefaultFeatureConfig.CODEC)
@@ -56,6 +58,7 @@ fun registerCommands() {
     kitCommand
     feastCommand
     phaseCommand
+    gameCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

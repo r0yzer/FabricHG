@@ -17,23 +17,23 @@ import net.minecraft.world.level.GameType
 object InvincibilityPhase : GamePhase() {
     override fun init() {
         GamePhaseManager.resetTimer()
-        broadcastComponent(literalText("HG startet") { color = TEXT_GRAY })
+        broadcastComponent(literalText("HG startet") { color = TEXT_BLUE })
         broadcastComponent(literalText("Tritt gerne dem offiziellen hg.royzer.de Discord bei\n") {
             color = TEXT_GRAY
             text("https://discord.gg/bS8JKatZkD") { color = TEXT_BLUE }
         })
         PlayerList.alivePlayers.forEach { hgPlayer ->
-            hgPlayer.serverPlayerEntity?.setGameMode(GameType.SURVIVAL)
-            hgPlayer.serverPlayerEntity?.closeContainer()
-            hgPlayer.serverPlayerEntity?.removeAllEffects()
-            with(hgPlayer.serverPlayerEntity?.inventory) {
+            hgPlayer.serverPlayer?.setGameMode(GameType.SURVIVAL)
+            hgPlayer.serverPlayer?.closeContainer()
+            hgPlayer.serverPlayer?.removeAllEffects()
+            with(hgPlayer.serverPlayer?.inventory) {
                 this?.clearContent()
                 this?.add(itemStack(Items.COMPASS) {
                     setCustomName { text("Tracker") }
                 })
                 hgPlayer.kits.forEach { kit ->
                     kit.kitItems.forEach {
-                        hgPlayer.serverPlayerEntity?.inventory?.add(it.itemStack.copy())
+                        hgPlayer.serverPlayer?.inventory?.add(it.itemStack.copy())
                     }
                     kit.onEnable?.invoke(hgPlayer, kit)
                 }

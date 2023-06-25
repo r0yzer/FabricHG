@@ -19,17 +19,16 @@ fun ServerPlayer.showScoreboard() {
         literalText("Fabric HG") { color = 0xFF00C8 }
     ) {
         updatingLine(1000.milliseconds) {
-            if (GamePhaseManager.currentPhaseType == PhaseType.LOBBY)
-                literalText("Start in: ${(LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()).formattedTime}")
-            else if (GamePhaseManager.currentPhaseType == PhaseType.END)
-                literalText("Zeit: ${(GamePhaseManager.currentPhase as EndPhase).endTime.formattedTime}")
-            else
-                literalText("Zeit: ${(GamePhaseManager.timer.get()).formattedTime}")
+            when (GamePhaseManager.currentPhaseType) {
+                PhaseType.LOBBY -> literalText("Start in: ${(LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()).formattedTime}")
+                PhaseType.END -> literalText("Zeit: ${(GamePhaseManager.currentPhase as EndPhase).endTime.formattedTime}")
+                else -> literalText("Zeit: ${(GamePhaseManager.timer.get()).formattedTime}")
+            }
         }
-        line(literalText("") { })
+        emptyLine()
         updatingLine(1000.milliseconds) { literalText("Kills: ${hgPlayer.kills}") { color = 0x0032FF } }
         updatingLine(1000.milliseconds) {
-            literalText("Kits: ${hgPlayer.kits.joinToString { it.name }}") {
+            literalText("Kit(s): ${hgPlayer.kits.joinToString { it.name }}") {
                 color = 0x00FFFF
                 strikethrough = hgPlayer.kitsDisabled
             }
@@ -43,7 +42,7 @@ fun ServerPlayer.showScoreboard() {
                 color = 0x0032FF
             }
         }
-        line(literalText("") { })
+        emptyLine()
         updatingLine(1000.milliseconds) {
             literalText(hgPlayer.status.toString()) {
                 color = hgPlayer.status.statusColor

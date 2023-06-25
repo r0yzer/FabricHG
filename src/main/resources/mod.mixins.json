@@ -17,13 +17,12 @@
     "kits.KangarooMixin",
     "kits.NeoMixin",
     "kits.SwitcherMixin",
+    "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
-    "server.network.ServerPlayerInteractionManagerMixin"
+    "world.CombatTrackerAcessor",
+    "entity.HungerManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "entity.HungerManagerMixin"
-  ]
+  }
 }

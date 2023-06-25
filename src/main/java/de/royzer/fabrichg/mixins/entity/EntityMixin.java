@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.mixins.entity;
 
+import de.royzer.fabrichg.game.phase.phases.LobbyPhase;
 import de.royzer.fabrichg.kit.KitItemKt;
 import de.royzer.fabrichg.kit.events.KitEventsKt;
 import net.minecraft.server.level.ServerPlayer;
@@ -35,11 +36,18 @@ public abstract class EntityMixin {
 
     @Inject(
             method = "move",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            cancellable = true
     )
     public void onMove(MoverType movementType, Vec3 movement, CallbackInfo ci) {
-        if ((Entity) (Object) (this) instanceof ServerPlayer) {
-            if (movementType.equals(MoverType.PLAYER)) {
+        if (LobbyPhase.INSTANCE.isStarting()) {
+            ci.cancel();
+        }
+        if (movementType.equals(MoverType.PLAYER)) {
+            if (LobbyPhase.INSTANCE.isStarting()) {
+                ci.cancel();
+            }
+            if ((Entity) (Object) (this) instanceof ServerPlayer) {
                 if (!movement.equals(Vec3.ZERO)) {
                     KitEventsKt.onMove((ServerPlayer) (Object) (this));
                 }

@@ -9,6 +9,7 @@ import kotlinx.coroutines.*
 import net.silkmc.silk.core.task.mcSyncLaunch
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
+import net.silkmc.silk.core.logging.logInfo
 import java.util.*
 
 val combatloggedPlayers = hashMapOf<UUID, Job>()
@@ -16,6 +17,7 @@ val combatloggedPlayers = hashMapOf<UUID, Job>()
 const val maxOfflineTime = 60
 
 fun ServerPlayer.startCombatlog() {
+    logInfo("Combatlog für ${name.string} mit ${hgPlayer.offlineTime}s in ${GamePhaseManager.currentPhaseType.name} wird gestartet")
     hgPlayer.status = HGPlayerStatus.DISCONNECTED
     val job = fabrichgScope.launch job@{
         try {
@@ -25,7 +27,7 @@ fun ServerPlayer.startCombatlog() {
                     if (GamePhaseManager.currentPhaseType == PhaseType.INGAME) hgPlayer.offlineTime -= 1
                     if (hgPlayer.offlineTime <= 0) {
                         removeHGPlayer()
-                        broadcastComponent(literalText("${name.string} war zu lange offline") { color = 0xFFE128 })
+                        broadcastComponent(literalText("${name.string} war zu lange offline") { color = 0xFFFF55 })
                         PlayerList.announceRemainingPlayers()
                         this@job.cancel()
                     }
