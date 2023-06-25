@@ -42,6 +42,7 @@ val scoutKit = kit("Scout") {
     }
 
     onEnable { hgPlayer, kit ->
+        if (hgPlayer.playerData[scoutJobKey] != null) return@onEnable
         val job = mcCoroutineTask(
             howOften = Long.MAX_VALUE,
             period = scoutPotionPeriod.milliseconds,

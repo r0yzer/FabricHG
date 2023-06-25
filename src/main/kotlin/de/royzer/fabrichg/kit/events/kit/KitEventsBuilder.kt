@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.kit.events
+package de.royzer.fabrichg.kit.events.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.Kit
@@ -14,5 +14,8 @@ class KitEventsBuilder(val kit: Kit) {
     }
     fun onMove(action: (HGPlayer, Kit) -> Unit) {
         kit.events.moveAction = action
+    }
+    fun onRightClickEntity(action: (HGPlayer, Kit, Entity) -> Unit) {
+        kit.events.rightClickEntityAction = action
     }
 }

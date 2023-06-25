@@ -1,7 +1,7 @@
 package de.royzer.fabrichg.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
-import de.royzer.fabrichg.kit.events.KitEventsBuilder
+import de.royzer.fabrichg.kit.events.kit.KitEventsBuilder
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.world.item.ItemStack
@@ -44,7 +44,7 @@ class KitBuilder(val kit: Kit) {
         kit.onEnable = action
     }
 
-    fun events(builder: KitEventsBuilder.() -> Unit) {
+    fun kitEvents(builder: KitEventsBuilder.() -> Unit) {
         kit.events.apply { KitEventsBuilder(kit).apply(builder) }
     }
 

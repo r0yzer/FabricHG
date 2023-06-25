@@ -27,6 +27,7 @@ class HGPlayer(
     var kitsDisabled = false
 
     val serverPlayer get() = GamePhaseManager.server.playerList.getPlayer(uuid)
+    val serverPlayerOrException get() = GamePhaseManager.server.playerList.getPlayer(uuid) ?: error("HGPlayer has no ServerPlayer")
 
     fun hasKit(kit: Kit) = kit in kits
 

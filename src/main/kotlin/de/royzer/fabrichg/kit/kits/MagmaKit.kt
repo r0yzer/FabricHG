@@ -10,7 +10,7 @@ val magmaKit = kit("Magma") {
 
     usableInInvincibility = false
 
-    events {
+    kitEvents {
         onHitEntity { _, _, entity ->
             if (Random.nextInt(4) == 3)
                 entity.setSecondsOnFire(2)

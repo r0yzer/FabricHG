@@ -27,7 +27,7 @@ val kangarooKit = kit("Kangaroo") {
         }
     }
 
-    events {
+    kitEvents {
         onMove { hgPlayer, kit ->
             if (hgPlayer.getPlayerData<Boolean>(canJumpKey) == false) {
                 if (hgPlayer.serverPlayer?.onGround() == true) hgPlayer.playerData[canJumpKey] = true

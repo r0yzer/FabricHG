@@ -10,6 +10,8 @@ import net.silkmc.silk.core.text.sendText
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.silkmc.silk.core.task.mcCoroutineTask
+import kotlin.time.Duration.Companion.milliseconds
 
 val rougeKit = kit("Rouge") {
 
@@ -27,7 +29,7 @@ val rougeKit = kit("Rouge") {
                 otherPlayer.hgPlayer.kits.forEach { kit ->
                     kit.onDisable?.invoke(otherPlayer.hgPlayer, kit)
                     otherPlayer.hgPlayer.kitsDisabled = true
-                    coroutineTask(delay = 12000) {
+                    mcCoroutineTask(delay = 12000.milliseconds) {
                         otherPlayer.hgPlayer.kitsDisabled = false
                         kit.onEnable?.invoke(otherPlayer.hgPlayer, kit)
                     }

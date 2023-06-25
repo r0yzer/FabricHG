@@ -11,6 +11,8 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import net.minecraft.network.chat.Component
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.HoverEvent
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 
 class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 
@@ -22,16 +24,16 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
         GamePhaseManager.resetTimer()
         winner?.serverPlayer?.abilities?.mayfly = true
         winner?.serverPlayer?.abilities?.flying = true
-
+        winner?.serverPlayer?.addEffect(MobEffectInstance(MobEffects.GLOWING, 400, 0))
     }
 
     override fun tick(timer: Int) {
         broadcastComponent(winnerText(winner))
-        if (timer == maxPhaseTime - 1) {
-            GamePhaseManager.server.playerList.players.forEach {
-                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
-            }
-        }
+//        if (timer == maxPhaseTime - 1) {
+//            GamePhaseManager.server.playerList.players.forEach {
+//                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
+//            }
+//        }
         if (timer >= maxPhaseTime) {
             GamePhaseManager.server.halt(false)
             return

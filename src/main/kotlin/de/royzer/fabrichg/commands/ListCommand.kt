@@ -10,13 +10,12 @@ val listCommand = command("list") {
     runs {
         val text = literalText {
             text("Alle Spieler: ") { color = TEXT_GRAY }
-            newLine()
             PlayerList.players.values.forEach { hgPlayer ->
+                newLine()
                 text(hgPlayer.name + " ") {
                     color = hgPlayer.status.statusColor
                 }
                 text("Verbleibende Offline Zeit: ${hgPlayer.offlineTime}s") { color = TEXT_GRAY }
-                newLine()
             }
         }
         source.playerOrException.sendSystemMessage(text)

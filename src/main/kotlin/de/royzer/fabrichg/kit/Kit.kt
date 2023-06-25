@@ -1,7 +1,7 @@
 package de.royzer.fabrichg.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
-import de.royzer.fabrichg.kit.events.KitEvents
+import de.royzer.fabrichg.kit.events.kit.KitEvents
 import de.royzer.fabrichg.kit.kits.*
 import net.minecraft.world.item.Item
 
@@ -33,4 +33,7 @@ val kits = listOfNotNull(
     kangarooKit,
     blinkKit,
     diggerKit,
+    cannibalKit,
+//    hulkKit,
+    mirrorKit,
 )

@@ -10,7 +10,9 @@ import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.scoreboard.showScoreboard
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.job
+import kotlinx.coroutines.launch
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.text.literalText
@@ -20,9 +22,12 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameType
+import net.silkmc.silk.core.annotations.DelicateSilkApi
 import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.logging.logInfo
+import net.silkmc.silk.core.task.silkCoroutineScope
 
+@OptIn(DelicateSilkApi::class)
 object ConnectEvents {
     init {
         ServerPlayConnectionEvents.JOIN.register { handler, sender, server ->
@@ -32,6 +37,11 @@ object ConnectEvents {
             val hgPlayer = player.hgPlayer
             logInfo("${player.name.string} joint in ${gamePhase.name} mit Status ${hgPlayer.status}")
 
+
+            //            silkCoroutineScope.launch {
+//                delay(200)
+            player.showScoreboard()
+//            }
 
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 100.0
 
@@ -90,8 +100,7 @@ object ConnectEvents {
                 }
             }
 
-            player.showScoreboard()
-//            logInfo("END${player.name.string} joint in ${gamePhase.name} mit Status ${hgPlayer.status}")
+
         }
 
         ServerPlayConnectionEvents.DISCONNECT.register { handler, server ->
@@ -108,6 +117,7 @@ object ConnectEvents {
                 }
                 PhaseType.INGAME -> {
                     if (player.hgPlayer.status == HGPlayerStatus.ALIVE) {
+                        hgPlayer.kits.forEach { it.onDisable?.invoke(hgPlayer, it) }
                         val combatTracker = player.combatTracker
                         val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
                         if (lastCombatEntry?.source?.entity is ServerPlayer) {
@@ -129,8 +139,6 @@ object ConnectEvents {
                 }
                 PhaseType.END -> {}
             }
-
-//            logInfo("END: ${player.name.string} leaved in ${gamePhase.name} mit Status ${hgPlayer.status}")
         }
     }
 }

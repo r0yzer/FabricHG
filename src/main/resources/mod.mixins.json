@@ -5,6 +5,7 @@
   "server": [
     "MainMixin",
     "entity.EntityMixin",
+    "entity.HungerManagerMixin",
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
     "entity.PlayerEntityMixin",
@@ -19,10 +20,11 @@
     "kits.SwitcherMixin",
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
-    "world.CombatTrackerAcessor",
-    "entity.HungerManagerMixin"
+    "world.CombatTrackerAcessor"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+  ]
 }
