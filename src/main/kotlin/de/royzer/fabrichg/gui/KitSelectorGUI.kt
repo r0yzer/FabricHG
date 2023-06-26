@@ -34,7 +34,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
             onClick = { _, kit ->
                 hgPlayer.kits[0] = kit
                 if (GamePhaseManager.isIngame) {
-                    kit.onEnable?.invoke(hgPlayer, kit)
+                    kit.onEnable?.invoke(hgPlayer, kit, serverPlayerEntity)
                     kit.kitItems.forEach { serverPlayerEntity.inventory.add(it.itemStack.copy()) }
                 }
                 serverPlayerEntity.closeContainer()

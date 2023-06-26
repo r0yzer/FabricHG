@@ -2,6 +2,7 @@ package de.royzer.fabrichg.feast
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.scoreboard.formattedTime
 import de.royzer.fabrichg.sendPlayerStatus
@@ -9,10 +10,9 @@ import de.royzer.fabrichg.server
 import de.royzer.fabrichg.util.getRandomHighestPos
 import kotlinx.coroutines.Job
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Position
 import net.minecraft.core.Vec3i
-import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.math.geometry.produceFilledCirclePositions
 import net.silkmc.silk.core.task.mcCoroutineTask
@@ -34,6 +34,16 @@ object Feast {
         server.playerList.players.forEach { it.sendPlayerStatus() }
         started = true
         feastCenter = getRandomHighestPos(150)
+
+        PlayerList.players.forEach { e ->
+            e.value.kits.forEach {
+                if (it.name == "Anchor") {
+                    e.value.serverPlayer?.inventory?.armor?.set(2, Items.AIR.defaultInstance)
+                    e.value.serverPlayer?.inventory?.armor?.set(3, Items.AIR.defaultInstance)
+
+                }
+            }
+        }
 
         repeat(10) { i ->
             feastCenter.produceFilledCirclePositions(radius) {

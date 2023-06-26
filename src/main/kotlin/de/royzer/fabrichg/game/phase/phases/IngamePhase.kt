@@ -15,7 +15,7 @@ import net.silkmc.silk.core.text.literalText
 object IngamePhase : GamePhase() {
     var winner: HGPlayer? = null
     override val phaseType = PhaseType.INGAME
-    override val maxPhaseTime = 15 * 60
+    override val maxPhaseTime = 30 * 60
     override val nextPhase by lazy { EndPhase(winner) }
 
     private const val feastStartTime = 600

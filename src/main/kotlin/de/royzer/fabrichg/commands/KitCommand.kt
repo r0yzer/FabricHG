@@ -36,7 +36,7 @@ val kitCommand = command("kit") {
                 val kit = kits.firstOrNull { it.name.equals(kitName, true) }
                 if (kit != null) {
                     if (GamePhaseManager.isIngame) {
-                        kit.onEnable?.invoke(player.hgPlayer, kit)
+                        kit.onEnable?.invoke(player.hgPlayer, kit, player)
                         kit.kitItems.forEach { player.inventory.add(it.itemStack.copy()) }
                     }
                     player.hgPlayer.kits[0] = kit

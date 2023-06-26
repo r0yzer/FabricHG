@@ -31,7 +31,7 @@ val rougeKit = kit("Rouge") {
                     otherPlayer.hgPlayer.kitsDisabled = true
                     mcCoroutineTask(delay = 12000.milliseconds) {
                         otherPlayer.hgPlayer.kitsDisabled = false
-                        kit.onEnable?.invoke(otherPlayer.hgPlayer, kit)
+                        kit.onEnable?.invoke(otherPlayer.hgPlayer, kit, otherPlayer)
                     }
                 }
             }

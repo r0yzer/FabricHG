@@ -41,7 +41,7 @@ val scoutKit = kit("Scout") {
         droppable = false
     }
 
-    onEnable { hgPlayer, kit ->
+    onEnable { hgPlayer, kit, player ->
         if (hgPlayer.playerData[scoutJobKey] != null) return@onEnable
         val job = mcCoroutineTask(
             howOften = Long.MAX_VALUE,

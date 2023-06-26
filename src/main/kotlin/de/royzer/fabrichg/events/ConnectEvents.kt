@@ -6,8 +6,8 @@ import de.royzer.fabrichg.game.*
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.kit.kits.noneKit
+import de.royzer.fabrichg.kit.kits.onAnchorJoin
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.scoreboard.showScoreboard
 import kotlinx.coroutines.delay
@@ -35,12 +35,13 @@ object ConnectEvents {
             val player = handler.player
             val uuid = player.uuid
             val hgPlayer = player.hgPlayer
+
             logInfo("${player.name.string} joint in ${gamePhase.name} mit Status ${hgPlayer.status}")
 
 
-            //            silkCoroutineScope.launch {
+//            silkCoroutineScope.launch {
 //                delay(200)
-            player.showScoreboard()
+                player.showScoreboard()
 //            }
 
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 100.0
@@ -61,31 +62,39 @@ object ConnectEvents {
 //                    if (LobbyPhase.isStarting) player.freeze()
                     PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                 }
+
                 PhaseType.INVINCIBILITY -> {
                     when (hgPlayer.status) {
                         HGPlayerStatus.DISCONNECTED -> {
                             combatloggedPlayers[uuid]?.job?.cancel()
                             player.hgPlayer.status = HGPlayerStatus.ALIVE
                         }
+
                         else -> {
                             PlayerList.addOrGetPlayer(player.uuid, player.name.string)
+                            hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
                         }
                     }
                 }
+
                 PhaseType.INGAME -> {
+                    onAnchorJoin(player)
                     when (player.hgPlayer.status) {
                         HGPlayerStatus.DISCONNECTED -> {
                             combatloggedPlayers[uuid]?.job?.cancel()
                             player.hgPlayer.status = HGPlayerStatus.ALIVE
                             logInfo("${player.name.string} ist wieder da")
+                            hgPlayer.kits.forEach { it.onEnable?.invoke(hgPlayer, it, player) }
                         }
+
                         HGPlayerStatus.ALIVE -> {
                             logError("${player.name.string} joint als Alive")
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                             player.setGameMode(GameType.SPECTATOR)
                             player.removeAllEffects()
                         }
-                        else -> {
+
+                        HGPlayerStatus.SPECTATOR -> {
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                             player.setGameMode(GameType.SPECTATOR)
                             player.removeAllEffects()
@@ -93,6 +102,7 @@ object ConnectEvents {
                         }
                     }
                 }
+
                 PhaseType.END -> {
                     player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                     player.setGameMode(GameType.SPECTATOR)
@@ -115,6 +125,7 @@ object ConnectEvents {
                 PhaseType.INVINCIBILITY -> {
                     player.startCombatlog()
                 }
+
                 PhaseType.INGAME -> {
                     if (player.hgPlayer.status == HGPlayerStatus.ALIVE) {
                         hgPlayer.kits.forEach { it.onDisable?.invoke(hgPlayer, it) }
@@ -137,6 +148,7 @@ object ConnectEvents {
                         PlayerList.removePlayer(uuid)
                     }
                 }
+
                 PhaseType.END -> {}
             }
         }

@@ -35,6 +35,7 @@ object PlayerList {
         players.remove(uuid)
     }
 
+
     fun announcePlayerDeath(serverPlayer: ServerPlayer, source: DamageSource, killer: ServerPlayer?) {
         val sourceKiller = source.entity
         val hgPlayer = serverPlayer.hgPlayer

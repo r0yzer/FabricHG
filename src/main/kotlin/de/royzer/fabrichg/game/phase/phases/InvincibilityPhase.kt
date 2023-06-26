@@ -35,7 +35,7 @@ object InvincibilityPhase : GamePhase() {
                     kit.kitItems.forEach {
                         hgPlayer.serverPlayer?.inventory?.add(it.itemStack.copy())
                     }
-                    kit.onEnable?.invoke(hgPlayer, kit)
+                    kit.onEnable?.invoke(hgPlayer, kit, hgPlayer.serverPlayer!!)
                 }
             }
         }

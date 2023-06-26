@@ -26,5 +26,6 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "kits.AnchorPlayerMixin"
   ]
 }

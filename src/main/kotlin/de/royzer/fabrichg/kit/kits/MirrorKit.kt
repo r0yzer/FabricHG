@@ -9,7 +9,7 @@ val mirrorKit = kit("Mirror") {
     kitSelectorItem = Items.GLASS_PANE.defaultInstance
 
     usableInInvincibility = false
-    cooldown = 6.0
+    cooldown = 35.0
 
     kitItem {
         itemStack = kitSelectorItem

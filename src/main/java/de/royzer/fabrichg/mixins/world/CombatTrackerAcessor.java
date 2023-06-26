@@ -9,7 +9,6 @@ import java.util.List;
 
 @Mixin(CombatTracker.class)
 public interface CombatTrackerAcessor {
-
     @Accessor
     List<CombatEntry> getEntries();
 }

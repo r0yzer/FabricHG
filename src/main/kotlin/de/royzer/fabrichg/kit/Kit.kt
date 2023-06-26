@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.events.kit.KitEvents
 import de.royzer.fabrichg.kit.kits.*
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Item
 
 class Kit(val name: String) {
@@ -11,7 +12,7 @@ class Kit(val name: String) {
     var cooldown: Double? = null
     var usableInInvincibility = true
     var onDisable: ((HGPlayer, Kit) -> Unit)? = null
-    var onEnable: ((HGPlayer, Kit) -> Unit)? = null
+    var onEnable: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null
     var events = KitEvents()
 }
 
@@ -36,4 +37,5 @@ val kits = listOfNotNull(
     cannibalKit,
 //    hulkKit,
     mirrorKit,
+    monkKit,
 )

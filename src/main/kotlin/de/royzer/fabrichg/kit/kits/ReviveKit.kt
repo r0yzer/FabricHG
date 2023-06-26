@@ -15,7 +15,7 @@ val reviveKit = kit("Revive") {
         droppable = false
     }
 
-    onEnable { hgPlayer, kit ->
+    onEnable { hgPlayer, kit, player ->
         if (hgPlayer.playerData[reviveJobKey] != null) return@onEnable
         val job = mcCoroutineTask(
             howOften = Long.MAX_VALUE,
