@@ -44,7 +44,7 @@ object ConnectEvents {
                 player.showScoreboard()
 //            }
 
-            player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 100.0
+            player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
 
             if (hgPlayer.kits.isEmpty())
                 hgPlayer.kits.add(noneKit)

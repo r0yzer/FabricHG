@@ -26,6 +26,8 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "entity.EntityAcessor",
+    "entity.ProjectileAccessor",
     "kits.AnchorPlayerMixin"
   ]
 }

@@ -7,5 +7,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Entity.class)
 public interface EntityAcessor {
     @Invoker("addPassenger")
-    void addPassenger(Entity entity);
+    void addEntityPassenger(Entity entity);
 }

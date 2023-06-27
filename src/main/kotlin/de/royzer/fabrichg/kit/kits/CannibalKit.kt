@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
@@ -12,7 +13,8 @@ val cannibalKit = kit("Cannibal") {
 
     kitEvents {
         onHitPlayer { _, _, target ->
-            target.addEffect(MobEffectInstance(MobEffects.HUNGER, 30, 1))
+            if (!target.hgPlayer.isNeo)
+                target.addEffect(MobEffectInstance(MobEffects.HUNGER, 30, 1))
         }
     }
 }

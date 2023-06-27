@@ -23,7 +23,7 @@ val rougeKit = kit("Rouge") {
         onClick { hgPlayer, kit ->
             val player = hgPlayer.serverPlayer ?: return@onClick
             val nearbyPlayers = player.level().getEntitiesOfClass(ServerPlayer::class.java, player.boundingBox.expandTowards(8.0, 8.0, 8.0)) {
-                it != player
+                it != player && !it.hgPlayer.isNeo
             }
             nearbyPlayers.forEach { otherPlayer ->
                 otherPlayer.hgPlayer.kits.forEach { kit ->

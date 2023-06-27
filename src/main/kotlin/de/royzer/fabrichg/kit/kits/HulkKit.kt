@@ -12,13 +12,10 @@ val hulkKit = kit("Hulk") {
 
     kitEvents {
         onRightClickEntity { hgPlayer, kit, clickedEntity ->
-            logInfo("hgPlayer ${hgPlayer.name}")
-            logInfo("clicked entity ${clickedEntity.name.string}")
             val serverPlayer = hgPlayer.serverPlayer ?: return@onRightClickEntity
             if (clickedEntity is Boat || clickedEntity is Minecart) return@onRightClickEntity
             if (serverPlayer.mainHandItem.item == Items.AIR && serverPlayer.passengers.isEmpty())
-                null
-//                (serverPlayer as EntityAcessor).addPassenger(clickedEntity)
+                (serverPlayer as EntityAcessor).addEntityPassenger(clickedEntity)
         }
     }
 

@@ -6,6 +6,7 @@ import de.royzer.fabrichg.game.combatlog.maxOfflineTime
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
+import de.royzer.fabrichg.kit.kits.neoKit
 import net.minecraft.server.level.ServerPlayer
 import net.silkmc.silk.core.logging.logInfo
 import java.util.*
@@ -58,6 +59,10 @@ class HGPlayer(
         return if (ignoreCooldown) hasKit(kit) && GamePhaseManager.isIngame && !kitsDisabled
         else canUseKit(kit)
     }
+
+    val isNeo get() = canUseKit(neoKit)
+    
+    val isAlive get() = status == HGPlayerStatus.ALIVE
 }
 
 val ServerPlayer.hgPlayer

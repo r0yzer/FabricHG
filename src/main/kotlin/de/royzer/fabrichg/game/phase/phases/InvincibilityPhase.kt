@@ -28,6 +28,8 @@ object InvincibilityPhase : GamePhase() {
             hgPlayer.serverPlayer?.removeAllEffects()
             with(hgPlayer.serverPlayer?.inventory) {
                 this?.clearContent()
+                this?.add(itemStack(Items.STONE_SWORD, 1) {})
+                repeat(33) { this?.add(itemStack(Items.MUSHROOM_STEW, 1) {}) }
                 this?.add(itemStack(Items.COMPASS) {
                     setCustomName { text("Tracker") }
                 })
@@ -37,6 +39,7 @@ object InvincibilityPhase : GamePhase() {
                     }
                     kit.onEnable?.invoke(hgPlayer, kit, hgPlayer.serverPlayer!!)
                 }
+
             }
         }
     }
@@ -48,6 +51,7 @@ object InvincibilityPhase : GamePhase() {
                 text(timeLeft.formattedTime) { color = TEXT_BLUE }
                 text(" Minuten")
             })
+
             0 -> startNextPhase()
         }
     }

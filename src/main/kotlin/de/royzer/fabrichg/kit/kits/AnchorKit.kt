@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.kit.kit
@@ -17,7 +18,6 @@ import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.posUnder
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
-import net.silkmc.silk.core.logging.logInfo
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 val anvil = itemStack(Items.ANVIL) {
@@ -44,30 +44,44 @@ val anchorKit = kit("Anchor") {
 }
 
 
-fun onAnchorKnockback(strength: Double, x: Double, z: Double, ci: CallbackInfo, attackedEntity: LivingEntity) {
+fun onAnchorAttack(strength: Double, x: Double, z: Double, ci: CallbackInfo, attackedEntity: LivingEntity) {
     val attackingEntity = (attackedEntity.combatTracker as CombatTrackerAcessor).entries.lastOrNull()?.source?.entity ?: return
+    if (attackedEntity !is ServerPlayer && attackingEntity !is ServerPlayer) return
+
+    if (attackedEntity is ServerPlayer && attackingEntity !is ServerPlayer) {
+        if (attackedEntity.hgPlayer.isAnchor) attackedEntity.applyAnchorKnockback(ci)
+        return
+    }
+
     val attacker = attackingEntity as? ServerPlayer ?: return
-    if (attackedEntity !is ServerPlayer) {
+    if (attackedEntity !is ServerPlayer && attacker.hgPlayer.isAnchor) {
         attackedEntity.applyAnchorKnockback(ci)
         return
     }
-    val attackedPlayer = attackedEntity as ServerPlayer
+    val attackedPlayer = attackedEntity as? ServerPlayer ?: return
     // attacked player is anchor
-    if (attackedPlayer.hgPlayer.canUseKit(anchorKit)) {
-        if (attacker.hgPlayer.canUseKit(neoKit)) return
-        attacker.applyAnchorKnockback(ci)
+    if (attackedPlayer.hgPlayer.isAnchor) {
+        if (attacker.hgPlayer.isNeo) return
+        attackedPlayer.applyAnchorKnockback(ci)
     }
 
     // attacker is anchor
-    if (attacker.hgPlayer.canUseKit(anchorKit)) {
-        if (attackedPlayer.hgPlayer.canUseKit(neoKit)) return
+    if (attacker.hgPlayer.isAnchor) {
+        if (attackedPlayer.hgPlayer.isNeo) return
         attackedPlayer.applyAnchorKnockback(ci)
     }
 
 }
 
+fun onAnchorAttacks(attackedEntity: LivingEntity, attackingEntity: LivingEntity, ci: CallbackInfo) {
+
+}
+fun onAnchorGetsAttacked(attackedEntity: LivingEntity, attackingEntity: LivingEntity, ci: CallbackInfo) {
+
+}
+
 private fun Entity.applyAnchorKnockback(ci: CallbackInfo) {
-    world.playLocalSound(posUnder, SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 100f, 100f, false)
+    world.playSound(null, posUnder, SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 1f, 1f)
     ci.cancel()
     deltaMovement = Vec3.ZERO
     modifyVelocity(0,-0.1,0, false)
@@ -84,3 +98,5 @@ fun onAnchorJoin(serverPlayer: ServerPlayer) {
     }
 
 }
+
+private val HGPlayer.isAnchor get() = canUseKit(anchorKit)

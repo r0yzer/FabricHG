@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.world.item.Items
@@ -15,6 +16,7 @@ val mirrorKit = kit("Mirror") {
         itemStack = kitSelectorItem
 
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
+            if (clickedPlayer.hgPlayer.isNeo) return@onClickAtPlayer
             val oldInventory = clickedPlayer.inventory.items
             val newItems = MutableList(oldInventory.size) {Items.AIR.defaultInstance}
             // ?

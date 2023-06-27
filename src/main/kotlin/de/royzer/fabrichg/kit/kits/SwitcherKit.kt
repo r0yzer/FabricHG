@@ -24,6 +24,7 @@ val switcherKit = kit("Switcher") {
 fun switcherOnEntityHit(entityHitResult: EntityHitResult, ci: CallbackInfo, snowballEntity: Snowball) {
     val owner = snowballEntity.owner as? ServerPlayer ?: return
     val hitEntity = entityHitResult.entity
+    if (owner == hitEntity) return
     if (owner.hgPlayer.canUseKit(switcherKit)) {
         val hitEntityPos = hitEntity.pos
         val ownerPos = owner.pos

@@ -13,6 +13,7 @@ import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
+import net.silkmc.silk.core.logging.logInfo
 
 class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 
@@ -24,7 +25,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
         GamePhaseManager.resetTimer()
         winner?.serverPlayer?.abilities?.mayfly = true
         winner?.serverPlayer?.abilities?.flying = true
-        winner?.serverPlayer?.addEffect(MobEffectInstance(MobEffects.GLOWING, 400, 0))
+        winner?.serverPlayer?.addEffect(MobEffectInstance(MobEffects.GLOWING, Int.MAX_VALUE, 0, false, false))
     }
 
     override fun tick(timer: Int) {
@@ -35,13 +36,15 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 //            }
 //        }
         if (timer >= maxPhaseTime) {
+            logInfo("Spiel endet")
+            logInfo("Sieger: ${winner?.name}, Kills: ${winner?.kills}")
             GamePhaseManager.server.halt(false)
             return
         }
     }
 
     override val phaseType = PhaseType.END
-    override val maxPhaseTime = 21
+    override val maxPhaseTime = 20
     override val nextPhase: GamePhase? = null
 }
 
