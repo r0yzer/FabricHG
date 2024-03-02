@@ -18,7 +18,6 @@
     "kits.KangarooMixin",
     "kits.NeoMixin",
     "kits.SwitcherMixin",
-    "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
     "world.CombatTrackerAcessor"
   ],
