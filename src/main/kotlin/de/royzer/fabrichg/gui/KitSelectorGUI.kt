@@ -10,6 +10,8 @@ import net.silkmc.silk.igui.*
 import net.silkmc.silk.igui.observable.toGuiList
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
+import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.core.text.literalText
 
 fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE, "Kits".literal, 1) {
     val hgPlayer = serverPlayerEntity.hgPlayer
@@ -29,6 +31,15 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
                             italic = false
                         }
                     }
+
+                    // dafür MUSS es einen besseren weg geben
+                    if (kit.description.isNotBlank())
+                        setLore(listOf(literalText(kit.description) {
+                            color = if (hgPlayer.hasKit(kit)) 0xF1F2F1 else 0x4C3E4B
+                            strikethrough = false
+                            bold = false
+                            italic = false
+                        }))
                 }
             },
             onClick = { _, kit ->
