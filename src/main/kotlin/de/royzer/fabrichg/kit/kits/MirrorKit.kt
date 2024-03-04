@@ -11,6 +11,7 @@ val mirrorKit = kit("Mirror") {
 
     usableInInvincibility = false
     cooldown = 35.0
+    description = "mirror your enemies"
 
     kitItem {
         itemStack = kitSelectorItem

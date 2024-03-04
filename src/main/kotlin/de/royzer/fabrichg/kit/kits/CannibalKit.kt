@@ -10,6 +10,7 @@ val cannibalKit = kit("Cannibal") {
     kitSelectorItem = Items.COD.defaultInstance
 
     usableInInvincibility = false
+    description = "Give your enemies hunger when attacking them"
 
     kitEvents {
         onHitPlayer { _, _, target ->

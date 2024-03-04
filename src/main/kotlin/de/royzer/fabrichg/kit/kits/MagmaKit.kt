@@ -11,6 +11,7 @@ val magmaKit = kit("Magma") {
     kitSelectorItem = ItemStack(Items.MAGMA_BLOCK)
 
     usableInInvincibility = false
+    description = "burn your enemies"
 
     kitEvents {
         onHitEntity { _, _, entity ->

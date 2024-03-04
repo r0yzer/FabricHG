@@ -16,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 val switcherKit = kit("Switcher") {
     kitSelectorItem = Items.SNOWBALL.defaultInstance
 
+    description = "switch yourself with someone else"
+
     kitItem {
         itemStack = itemStack(Items.SNOWBALL) { count = 16 }
     }

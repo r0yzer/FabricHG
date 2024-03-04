@@ -11,6 +11,8 @@ import kotlin.math.sin
 val kangarooKit = kit("Kangaroo") {
     val canJumpKey = "${this.kit.name}canJump"
     kitSelectorItem = Items.FIREWORK_ROCKET.defaultInstance
+    description = "jump more"
+
     kitItem {
         itemStack = kitSelectorItem
         onClick { hgPlayer, _ ->

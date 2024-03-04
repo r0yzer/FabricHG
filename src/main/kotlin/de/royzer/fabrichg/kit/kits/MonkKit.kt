@@ -10,6 +10,7 @@ val monkKit = kit("Monk") {
     kitSelectorItem = Items.BLAZE_ROD.defaultInstance
     cooldown = 14.0 / 100
     usableInInvincibility = false
+    description = "monk your enemies"
 
     kitItem {
         itemStack = kitSelectorItem
