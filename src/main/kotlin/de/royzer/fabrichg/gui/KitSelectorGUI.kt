@@ -32,7 +32,6 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
                         }
                     }
 
-                    // dafür MUSS es einen besseren weg geben
                     if (kit.description.isNotBlank())
                         setLore(listOf(literalText(kit.description) {
                             color = if (hgPlayer.hasKit(kit)) 0xF1F2F1 else 0x4C3E4B
