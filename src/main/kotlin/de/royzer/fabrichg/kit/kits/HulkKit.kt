@@ -9,7 +9,7 @@ import net.silkmc.silk.core.logging.logInfo
 
 val hulkKit = kit("Hulk") {
     kitSelectorItem = Items.PISTON.defaultInstance
-    description = "carry other players"
+    description = "Carry other players"
 
     kitEvents {
         onRightClickEntity { hgPlayer, kit, clickedEntity ->

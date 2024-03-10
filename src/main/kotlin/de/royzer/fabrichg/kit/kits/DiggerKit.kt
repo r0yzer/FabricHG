@@ -14,7 +14,7 @@ val diggerKit = kit("Digger") {
     val size = 6
     kitSelectorItem = Items.DRAGON_EGG.defaultInstance
     cooldown = 7.0
-    description = "Make 5*5 hole"
+    description = "Make a 5 by 5 hole"
 
     kitItem {
         itemStack = kitSelectorItem.copy().apply { count = 16 }

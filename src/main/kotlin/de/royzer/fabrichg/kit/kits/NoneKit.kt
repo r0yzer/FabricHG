@@ -6,5 +6,5 @@ import net.minecraft.world.item.Items
 
 val noneKit = kit("None") {
     kitSelectorItem = ItemStack(Items.BARRIER)
-    description = "no kit"
+    description = "No kit"
 }
