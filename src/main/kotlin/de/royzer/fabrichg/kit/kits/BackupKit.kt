@@ -6,4 +6,5 @@ import net.minecraft.world.item.Items
 
 val backupKit = kit("Backup") {
     kitSelectorItem = ItemStack(Items.CHEST)
+    kit.description = "Choose your kit later"
 }

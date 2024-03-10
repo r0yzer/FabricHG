@@ -27,6 +27,7 @@ val anvil = itemStack(Items.ANVIL) {
 
 val anchorKit = kit("Anchor") {
     kitSelectorItem = ItemStack(Items.ANVIL)
+    description = "You and other players do not take knockback"
 
     onEnable { hgPlayer, kit, serverPlayer ->
         if (!Feast.started) {

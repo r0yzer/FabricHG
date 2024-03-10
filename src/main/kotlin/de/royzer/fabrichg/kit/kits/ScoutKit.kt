@@ -36,6 +36,8 @@ val scoutKit = kit("Scout") {
     val scoutPotionPeriod = 5 * 60 * 1000L
     kitSelectorItem = scoutPotion.copy()
 
+    description = "Recieve two speed potions every 5 minutes"
+
     kitItem {
         itemStack = scoutPotion.copy()
         droppable = false

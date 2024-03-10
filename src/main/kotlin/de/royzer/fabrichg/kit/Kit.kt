@@ -14,6 +14,7 @@ class Kit(val name: String) {
     var onDisable: ((HGPlayer, Kit) -> Unit)? = null
     var onEnable: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null
     var events = KitEvents()
+    var description: String = ""
 }
 
 inline fun kit(name: String, builder: KitBuilder.() -> Unit): Kit {

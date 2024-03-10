@@ -15,6 +15,7 @@ val blinkKit = kit("Blink") {
     val blinkDistance = 4
     kitSelectorItem = Items.NETHER_STAR.defaultInstance
     cooldown = 15.0
+    description = "Teleport in the direction you are looking"
 
     kitItem {
         itemStack = kitSelectorItem

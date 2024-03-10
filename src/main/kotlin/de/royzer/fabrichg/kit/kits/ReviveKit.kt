@@ -9,6 +9,7 @@ val reviveKit = kit("Revive") {
     val reviveJobKey = "${this.kit.name}JobKey"
     val defaultPeriod = 120 * 1000L
     kitSelectorItem = Items.TOTEM_OF_UNDYING.defaultInstance
+    description = "Recieve a totem every 120 seconds"
 
     kitItem {
         itemStack = kitSelectorItem

@@ -16,6 +16,7 @@ import net.silkmc.silk.core.logging.logInfo
 
 val neoKit = kit("Neo") {
     kitSelectorItem = ItemStack(Items.ARROW)
+    description = "Block enemy kits and projectiles"
 }
 
 // no other kit needs onHitByProjectile so no kit event

@@ -14,9 +14,9 @@ import net.silkmc.silk.core.task.mcCoroutineTask
 import kotlin.time.Duration.Companion.milliseconds
 
 val rougeKit = kit("Rouge") {
-
     kitSelectorItem = ItemStack(Items.GRAY_DYE)
     cooldown = 35.0
+    description = "Disable the kits of your enemies"
 
     kitItem {
         itemStack = kitSelectorItem

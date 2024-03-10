@@ -27,6 +27,17 @@ class KitBuilder(val kit: Kit) {
             field = value
         }
 
+    /**
+     * Sets the kit description
+     * defaults to empty string
+     */
+    var description: String = ""
+        get() = kit.description
+        set(value) {
+            kit.description = value
+            field = value
+        }
+
     private fun addKitItem(kitItem: KitItem) {
         kitItem.itemStack.setLore(listOf(literalText("Kititem")))
         kit.kitItems.add(kitItem)
