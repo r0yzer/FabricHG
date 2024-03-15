@@ -11,6 +11,7 @@ import kotlinx.coroutines.SupervisorJob
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.level.GameRules
 
 //val String.hgId get() = Identifier("fabrichg", this)
@@ -23,7 +24,6 @@ const val TEXT_BLUE = 0x00FFFF
 const val TEXT_GRAY = 0x7A7A7A
 
 fun initServer() {
-
     kits
 
     registerCommands()

@@ -39,5 +39,6 @@ val kits = listOfNotNull(
 //    hulkKit,
     mirrorKit,
     monkKit,
-    urgalKit
+    urgalKit,
+    gravityKit
 )
