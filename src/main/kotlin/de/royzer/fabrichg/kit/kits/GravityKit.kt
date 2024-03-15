@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.world.effect.MobEffectInstance
@@ -17,12 +18,13 @@ val gravityKit = kit("Gravity") {
         onClick { hgPlayer, _ ->
             hgPlayer.serverPlayer?.addEffect(MobEffectInstance(MobEffects.LEVITATION, 300, 0, false, false))
 
-            hgPlayer.checkUsesForCooldown(kit, maxUses)
+            hgPlayer.activateCooldown(kit)
         }
 
         onClickAtPlayer { hgPlayer, _, clickedPlayer, _ ->
             clickedPlayer.addEffect(MobEffectInstance(MobEffects.LEVITATION, 75, 0, false, false))
-            hgPlayer.checkUsesForCooldown(kit, maxUses)
+
+            hgPlayer.activateCooldown(kit)
         }
     }
 }
