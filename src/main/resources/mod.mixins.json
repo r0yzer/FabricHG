@@ -27,6 +27,7 @@
   "mixins": [
     "entity.EntityAcessor",
     "entity.ProjectileAccessor",
-    "kits.AnchorPlayerMixin"
+    "kits.AnchorPlayerMixin",
+    "server.network.MinecraftServerMixin",
   ]
 }
