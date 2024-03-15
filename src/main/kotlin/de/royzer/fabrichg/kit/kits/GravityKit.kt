@@ -9,7 +9,7 @@ import net.minecraft.world.item.Items
 
 val gravityKit = kit("Gravity") {
     cooldown = 40.0
-    val maxUses = 1
+    val maxUses = 3
 
     kitSelectorItem = Items.PHANTOM_MEMBRANE.defaultInstance
 
@@ -24,7 +24,7 @@ val gravityKit = kit("Gravity") {
         onClickAtPlayer { hgPlayer, _, clickedPlayer, _ ->
             clickedPlayer.addEffect(MobEffectInstance(MobEffects.LEVITATION, 75, 0, false, false))
 
-            hgPlayer.activateCooldown(kit)
+            hgPlayer.checkUsesForCooldown(kit, maxUses)
         }
     }
 }
