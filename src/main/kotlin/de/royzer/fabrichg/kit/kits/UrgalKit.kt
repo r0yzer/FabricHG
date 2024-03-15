@@ -6,8 +6,6 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potions
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.item.setPotion
-import net.silkmc.silk.core.task.mcCoroutineTask
-import kotlin.time.Duration.Companion.milliseconds
 
 val urgalPotion = itemStack(Items.POTION) {
     setPotion(Potions.STRENGTH)

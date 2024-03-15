@@ -23,7 +23,6 @@ const val TEXT_BLUE = 0x00FFFF
 const val TEXT_GRAY = 0x7A7A7A
 
 fun initServer() {
-
     kits
 
     registerCommands()
