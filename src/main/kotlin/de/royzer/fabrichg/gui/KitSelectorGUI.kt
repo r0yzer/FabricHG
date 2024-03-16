@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.gui
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.kit.kits
@@ -43,6 +45,12 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
             },
             onClick = { _, kit ->
                 hgPlayer.kits[0] = kit
+                serverPlayerEntity.sendSystemMessage(
+                    literalText {
+                        text("You are now ") { color = TEXT_GRAY }
+                        text(kit.name) { color = TEXT_BLUE }
+                    }
+                )
                 if (GamePhaseManager.isIngame) {
                     kit.onEnable?.invoke(hgPlayer, kit, serverPlayerEntity)
                     kit.kitItems.forEach { serverPlayerEntity.inventory.add(it.itemStack.copy()) }

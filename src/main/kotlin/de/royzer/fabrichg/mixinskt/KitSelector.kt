@@ -8,7 +8,6 @@ import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.level.Level
-import net.silkmc.silk.core.logging.logInfo
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 object KitSelector {
