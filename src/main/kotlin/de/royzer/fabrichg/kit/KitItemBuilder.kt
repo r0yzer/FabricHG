@@ -50,4 +50,8 @@ class KitItemBuilder(val kitItem: KitItem) {
         kitItem.hitEntityAction = action
     }
 
+    fun onDrink(action: ((HGPlayer, Kit, ItemStack) -> Unit)?) {
+        kitItem.drinkAction = action
+    }
+
 }

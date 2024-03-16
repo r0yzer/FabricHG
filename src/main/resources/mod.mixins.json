@@ -13,6 +13,7 @@
     "entity.ai.goal.FollowTargetGoalMixin",
     "item.BlockItemMixin",
     "item.ItemStackMixin",
+    "item.PotionMixin",
     "kits.AnchorLivingEntityMixin",
     "kits.AnchorMixin",
     "kits.KangarooMixin",

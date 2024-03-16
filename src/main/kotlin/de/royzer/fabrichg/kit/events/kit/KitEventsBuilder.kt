@@ -4,6 +4,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.Kit
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.ItemStack
 
 class KitEventsBuilder(val kit: Kit) {
     fun onHitPlayer(action: (HGPlayer, Kit, ServerPlayer) -> Unit) {
@@ -17,5 +18,8 @@ class KitEventsBuilder(val kit: Kit) {
     }
     fun onRightClickEntity(action: (HGPlayer, Kit, Entity) -> Unit) {
         kit.events.rightClickEntityAction = action
+    }
+    fun onDrink(action: (HGPlayer, ItemStack) -> Unit) {
+        kit.events.drinkAction = action
     }
 }
