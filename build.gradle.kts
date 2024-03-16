@@ -1,9 +1,7 @@
 plugins {
     java
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "1.9.23"
     id("fabric-loom") version "1.5-SNAPSHOT"
-//    id("org.quiltmc.quilt-mappings-on-loom") version "4.2.1"
-    id("io.github.juuxel.loom-quiltflower") version "1.9.0"
     kotlin("plugin.serialization") version "1.8.22"
 }
 
@@ -17,17 +15,18 @@ repositories {
     mavenCentral()
     maven("https://maven.fabricmc.net/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
+    maven("https://maven.parchmentmc.org/")
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings(loom.layered {
-//        addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:1.18.2+build.22:v2"))
+        parchment("org.parchmentmc.data:parchment-1.20.4:2024.02.25@zip")
         officialMojangMappings()
     })
     modImplementation("net.fabricmc:fabric-loader:0.15.7")
     modImplementation("net.fabricmc.fabric-api:fabric-api:0.96.4+1.20.4")
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.18+kotlin.1.9.22")
+    modImplementation("net.fabricmc:fabric-language-kotlin:1.10.19+kotlin.1.9.23")
     modImplementation("net.silkmc:silk-core:$silkVersion")
     modImplementation("net.silkmc:silk-commands:$silkVersion")
     modImplementation("net.silkmc:silk-igui:$silkVersion")
