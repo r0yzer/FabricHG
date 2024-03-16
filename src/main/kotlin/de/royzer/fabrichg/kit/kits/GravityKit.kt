@@ -1,6 +1,5 @@
 package de.royzer.fabrichg.kit.kits
 
-import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.world.effect.MobEffectInstance
@@ -11,7 +10,7 @@ val gravityKit = kit("Gravity") {
     cooldown = 40.0
     val maxUses = 3
 
-    kitSelectorItem = Items.PHANTOM_MEMBRANE.defaultInstance
+    kitSelectorItem = Items.PURPLE_GLAZED_TERRACOTTA.defaultInstance
 
     kitItem {
         itemStack = kitSelectorItem
