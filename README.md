@@ -11,7 +11,7 @@ val blinkKit = kit("Blink") {
 }
 ```
 
-First, let´s change the Item which will be displayed in the kitselector, so change the `kitSelectorItem` property:
+First, let´s change the Item which will be displayed in the kit selector, so change the `kitSelectorItem` property:
 
 ```kt
 val blinkKit = kit("Blink") {
@@ -47,7 +47,7 @@ val blinkKit = kit("Blink") {
 
 As we only want to blink if the player clicks the kitItem, use the `onClick` method
 
-Inside the method you have acess to the `HGPlayer` which used the kitItem and the kit which kitItem was used
+Inside the method you have access to the `HGPlayer` which used the kitItem and the kit which kitItem was used
 
 ```kt
 val blinkKit = kit("Blink") {
@@ -108,7 +108,7 @@ val blinkKit = kit("Blink") {
     }
 }
 ```
-If you want to execute something when the player does something without his kititem, use the `events` function
+If you want to execute something when the player does something without his kit item, use the `kitEvents` function
 
 ```kt
 val magmaKit = kit("Magma") {
@@ -124,4 +124,4 @@ val magmaKit = kit("Magma") {
     }
 }
 ```
-If you need a event which is not available, feel free to add it
+If you need an event which is not available, feel free to add it
