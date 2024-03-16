@@ -15,6 +15,10 @@ class Kit(val name: String) {
     var onEnable: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null
     var events = KitEvents()
     var description: String = ""
+
+    override fun toString(): String {
+        return name
+    }
 }
 
 inline fun kit(name: String, builder: KitBuilder.() -> Unit): Kit {
