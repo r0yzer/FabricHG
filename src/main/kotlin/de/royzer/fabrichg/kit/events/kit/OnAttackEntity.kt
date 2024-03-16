@@ -10,15 +10,15 @@ fun onAttackEntity(target: Entity, serverPlayerEntity: ServerPlayer) {
     val item = serverPlayerEntity.mainHandItem
     val offhandItem = serverPlayerEntity.mainHandItem
     hgPlayer.kits.forEach { kit ->
-        if (hgPlayer.canUseKit(kit)) {
-            kit.kitItems.forEach { kitItem ->
-                if (kitItem.itemStack.item == item.item || offhandItem.item == kitItem.itemStack.item) {
-                    kitItem.invokeHitEntityAction(hgPlayer, kit, target)
-                    if (target is ServerPlayer) {
-                        kitItem.invokeHitPlayerAction(hgPlayer, kit, target)
-                    }
+        kit.kitItems.forEach { kitItem ->
+            if (kitItem.itemStack.item == item.item || offhandItem.item == kitItem.itemStack.item) {
+                kitItem.invokeHitEntityAction(hgPlayer, kit, target)
+                if (target is ServerPlayer) {
+                    kitItem.invokeHitPlayerAction(hgPlayer, kit, target)
                 }
             }
+        }
+        if (hgPlayer.canUseKit(kit)) {
             kit.events.hitEntityAction?.invoke(hgPlayer, kit, target)
             if (target is ServerPlayer) {
                 kit.events.hitPlayerAction?.invoke(hgPlayer, kit, target)
