@@ -49,6 +49,6 @@ public class ItemStackMixin {
             at = @At("HEAD")
     )
     public void useOnBlock(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir){
-//        KitItemKt.onUseBlock(context.getPlayer(), context);
+        KitItemKt.onUseBlock(context.getPlayer(), context);
     }
 }

@@ -46,5 +46,6 @@ val kits = listOfNotNull(
     urgalKit,
     gravityKit,
     snailKit,
-    phantomKit
+    phantomKit,
+    thorKit,
 )

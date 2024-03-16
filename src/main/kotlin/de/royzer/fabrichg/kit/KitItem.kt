@@ -15,8 +15,8 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
-import net.silkmc.silk.core.logging.logInfo
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 fun kitItem(itemStack: ItemStack): KitItem {
@@ -30,14 +30,14 @@ class KitItem(
     internal var clickAtPlayerAction: ((HGPlayer, Kit, ServerPlayer, InteractionHand) -> Unit)? = null,
     internal var placeAction: ((HGPlayer, Kit, ItemStack, BlockPos, Level) -> Unit)? = null,
     internal var clickAction: ((HGPlayer, Kit) -> Unit)? = null,
-    internal var useOnBlockAction: ((HGPlayer, Kit, BlockPlaceContext) -> Unit)? = null,
+    internal var useOnBlockAction: ((HGPlayer, Kit, UseOnContext) -> Unit)? = null,
     internal var hitPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
     internal var hitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
 ) {
     fun invokeUseOnBlockAction(
         hgPlayer: HGPlayer,
         kit: Kit,
-        context: BlockPlaceContext,
+        context: UseOnContext,
         ignoreCooldown: Boolean = false
     ) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
@@ -114,7 +114,7 @@ class KitItem(
 }
 
 
-fun onUseBlock(player: Player, context: BlockPlaceContext) {
+fun onUseBlock(player: Player, context: UseOnContext) {
     val serverPlayerEntity = player as? ServerPlayer ?: return
     val hgPlayer = serverPlayerEntity.hgPlayer
     if (context.itemInHand.isKitItem) {

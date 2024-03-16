@@ -6,7 +6,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
-import net.minecraft.world.item.context.BlockPlaceContext
+import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 
 class KitItemBuilder(val kitItem: KitItem) {
@@ -38,7 +38,7 @@ class KitItemBuilder(val kitItem: KitItem) {
         kitItem.clickAtPlayerAction = action
     }
 
-    fun onUseBlock(action: ((HGPlayer, Kit, BlockPlaceContext) -> Unit)?){
+    fun onUseOnBlock(action: ((HGPlayer, Kit, UseOnContext) -> Unit)?){
         kitItem.useOnBlockAction = action
     }
 
