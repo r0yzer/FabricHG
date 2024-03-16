@@ -42,4 +42,12 @@ class KitItemBuilder(val kitItem: KitItem) {
         kitItem.useOnBlockAction = action
     }
 
+    fun onHitPlayer(action: ((HGPlayer, Kit, ServerPlayer) -> Unit)?) {
+        kitItem.hitPlayerAction = action
+    }
+
+    fun onHitEntity(action: ((HGPlayer, Kit, Entity) -> Unit)?) {
+        kitItem.hitEntityAction = action
+    }
+
 }

@@ -30,7 +30,9 @@ class KitItem(
     internal var clickAtPlayerAction: ((HGPlayer, Kit, ServerPlayer, InteractionHand) -> Unit)? = null,
     internal var placeAction: ((HGPlayer, Kit, ItemStack, BlockPos, Level) -> Unit)? = null,
     internal var clickAction: ((HGPlayer, Kit) -> Unit)? = null,
-    internal var useOnBlockAction: ((HGPlayer, Kit, BlockPlaceContext) -> Unit)? = null
+    internal var useOnBlockAction: ((HGPlayer, Kit, BlockPlaceContext) -> Unit)? = null,
+    internal var hitPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
+    internal var hitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
 ) {
     fun invokeUseOnBlockAction(
         hgPlayer: HGPlayer,
@@ -79,6 +81,32 @@ class KitItem(
             if (entity is ServerPlayer)
                 clickAtPlayerAction?.invoke(hgPlayer, kit, entity, hand)
             else clickAtEntityAction?.invoke(hgPlayer, kit, entity, hand)
+        } else if (hgPlayer.hasCooldown(kit)) {
+            hgPlayer.serverPlayer?.sendCooldown(kit)
+        }
+    }
+
+    fun invokeHitPlayerAction(
+        hgPlayer: HGPlayer,
+        kit: Kit,
+        otherPlayer: ServerPlayer,
+        ignoreCooldown: Boolean = false,
+    ) {
+        if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
+            hitPlayerAction?.invoke(hgPlayer, kit, otherPlayer)
+        } else if (hgPlayer.hasCooldown(kit)) {
+            hgPlayer.serverPlayer?.sendCooldown(kit)
+        }
+    }
+
+    fun invokeHitEntityAction(
+        hgPlayer: HGPlayer,
+        kit: Kit,
+        entity: Entity,
+        ignoreCooldown: Boolean = false,
+    ) {
+        if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
+            hitEntityAction?.invoke(hgPlayer, kit, entity)
         } else if (hgPlayer.hasCooldown(kit)) {
             hgPlayer.serverPlayer?.sendCooldown(kit)
         }

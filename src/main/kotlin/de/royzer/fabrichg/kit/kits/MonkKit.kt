@@ -23,7 +23,7 @@ val monkKit = kit("Monk") {
             clickedPlayer.inventory.setItem(currentIndex, random)
             clickedPlayer.inventory.setItem(randomIndex, current)
             clickedPlayer.sendSystemMessage(literalText {
-                text("monked") { color = TEXT_GRAY }
+                text("You have been monked") { color = TEXT_GRAY }
             })
             hgPlayer.activateCooldown(kit)
         }

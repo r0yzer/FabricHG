@@ -64,7 +64,7 @@ public abstract class ServerPlayerMixin extends Player {
             method = "attack",
             at = @At("HEAD")
     )
-    public void onAttackPlayer(Entity target, CallbackInfo ci) {
+    public void onAttackEntity(Entity target, CallbackInfo ci) {
         OnAttackEntityKt.onAttackEntity(target, (ServerPlayer) (Object) this);
     }
 }
