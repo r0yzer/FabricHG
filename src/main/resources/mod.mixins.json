@@ -29,6 +29,8 @@
     "entity.ProjectileAccessor",
     "kits.AnchorPlayerMixin",
     "kits.PhantomMixin",
-    "server.network.MinecraftServerMixin"
+    "server.network.MinecraftServerMixin",
+    "server.network.ServerGamePacketListenerImplMixin",
+    "server.network.ServerPlayerInteractionManagerMixin"
   ]
 }

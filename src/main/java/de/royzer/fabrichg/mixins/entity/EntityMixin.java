@@ -52,12 +52,15 @@ public abstract class EntityMixin {
     )
     public void onMove(MoverType movementType, Vec3 movement, CallbackInfo ci) {
         if (LobbyPhase.INSTANCE.isStarting()) {
+            Entity entity = ((Entity) (Object) this);
+            if (entity instanceof ServerPlayer serverPlayer) {
+//                if (serverPlayer.onGround()) {
+//                    serverPlayer.connection.send(new ClientboundPlayerPositionPacket(serverPlayer.xOld, serverPlayer.yOld, serverPlayer.zOld, serverPlayer.getYRot(), serverPlayer.getXRot(), RelativeMovement.ALL, 1));
+//                }
+            }
             ci.cancel();
         }
         if (movementType.equals(MoverType.PLAYER)) {
-            if (LobbyPhase.INSTANCE.isStarting()) {
-                ci.cancel();
-            }
             if ((Entity) (Object) (this) instanceof ServerPlayer) {
                 if (!movement.equals(Vec3.ZERO)) {
                     OnMoveKt.onMove((ServerPlayer) (Object) (this));

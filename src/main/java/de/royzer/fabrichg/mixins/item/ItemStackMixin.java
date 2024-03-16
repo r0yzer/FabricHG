@@ -32,7 +32,7 @@ public class ItemStackMixin {
         if (itemStack.getItem().equals(Items.CHEST)) {
             KitSelector.INSTANCE.onClick(user, itemStack, cir, world, hand);
         }
-        if (GamePhaseManager.INSTANCE.getCurrentPhaseType().equals(PhaseType.LOBBY)) {
+        if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
             cir.setReturnValue(InteractionResultHolder.pass(itemStack));
             return;
         }
