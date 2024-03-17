@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Mixin(Main.class)
 public class MainMixin {
@@ -18,6 +19,17 @@ public class MainMixin {
             remap = false
     )
     private static void onStart(String[] args, CallbackInfo ci) throws IOException {
-//        FileUtils.deleteDirectory(new File("world"));
+        Arrays.stream(new File("./world").list()).filter(s -> !s.equalsIgnoreCase("datapacks")).forEach(s -> {
+            File file = new File("./world/" + s);
+            if (file.isDirectory()) {
+                try {
+                    FileUtils.deleteDirectory(file);
+                } catch (IOException e) {
+                }
+            } else {
+                file.delete();
+            }
+        });
+
     }
 }
