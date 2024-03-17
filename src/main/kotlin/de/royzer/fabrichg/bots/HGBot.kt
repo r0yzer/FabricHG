@@ -1,5 +1,8 @@
 package de.royzer.fabrichg.bots
 
+import de.royzer.fabrichg.bots.goals.MoveThroughVillageIfNoTargetGoal
+import de.royzer.fabrichg.bots.goals.RandomLookAroundIfNoTargetGoal
+import de.royzer.fabrichg.bots.goals.WaterAvoidingRandomStrollIfNoTargetGoal
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
@@ -13,6 +16,8 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.goal.ZombieAttackGoal
+import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Zombie
 import net.minecraft.world.item.ItemStack
@@ -23,13 +28,15 @@ import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
+import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
 class HGBot(
     world: Level,
     name: String,
     target: ServerPlayer,
-    private val range: Double = 2.5,
+    private val range: Double = 2.0,
+    val uuid: UUID = UUID.randomUUID()
 ): Zombie(world) {
 
     init {
@@ -48,12 +55,37 @@ class HGBot(
     }
 
     private var soups = 50
+    var lastAttackedByEntity: Entity? = null
 
+    override fun createNavigation(level: Level): PathNavigation {
+        return HGBotPathNavigation(this, level)
+    }
+
+    fun jump() {
+        super.jumpFromGround()
+    }
+
+    override fun registerGoals() {
+        goalSelector.addGoal(2, RandomLookAroundIfNoTargetGoal(this))
+        this.addBehaviourGoals()
+    }
+
+    override fun addBehaviourGoals() {
+        goalSelector.addGoal(4, ZombieAttackGoal(this, 1.0, false))
+        goalSelector.addGoal(1, MoveThroughVillageIfNoTargetGoal(
+            this, 1.25, false, 4
+        ) { this.canBreakDoors() })
+        goalSelector.addGoal(2, WaterAvoidingRandomStrollIfNoTargetGoal(this, 1.25, 0.5f))
+    }
 
     override fun tick() {
         super.tick()
-        if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && (target == null || ((target as? ServerPlayer)?.hgPlayer?.isAlive) == true)) {
-            target = world.getNearestPlayer(this, 40.0)
+        if ((target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive)
+            || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10) {
+            target = null
+        }
+        if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && target == null) {
+            target = world.getNearestPlayer(this, 250.0)
         } else if (GamePhaseManager.currentPhaseType != PhaseType.INGAME) {
             target = null
         }
@@ -80,6 +112,8 @@ class HGBot(
 
     override fun hurt(damageSource: DamageSource, f: Float): Boolean {
         val result = super.hurt(damageSource, f)
+
+        lastAttackedByEntity = damageSource.entity
 
         mcCoroutineTask(true) {
             while (health < 17 && soups > 0) {
@@ -141,6 +175,9 @@ class HGBot(
     }
     override fun isSunSensitive(): Boolean {
         return false
+    }
+    override fun getExperienceReward(): Int {
+        return 0
     }
 
     override fun die(damageSource: DamageSource) {

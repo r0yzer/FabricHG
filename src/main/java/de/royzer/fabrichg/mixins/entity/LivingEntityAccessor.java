@@ -13,6 +13,9 @@ public interface LivingEntityAccessor {
     @Accessor("lastHurtByPlayer")
     Player getAttackingPlayer();
 
+    @Accessor("lastHurtByMob")
+    LivingEntity getAttackingMob();
+
     @Invoker("checkTotemDeathProtection")
     boolean invokeTryUseTotem(DamageSource source);
 }

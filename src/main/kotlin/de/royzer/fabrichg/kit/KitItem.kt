@@ -165,10 +165,11 @@ fun onClickAtEntity(
     clickedEntity: Entity,
     cir: CallbackInfoReturnable<InteractionResult>
 ) {
-    val serverPlayer = clickingPlayer as? ServerPlayer ?: return
-    val hgPlayer = serverPlayer.hgPlayer
-    val mainHandStack = serverPlayer.mainHandItem
-    val offhandStack = serverPlayer.offhandItem
+    val serverPlayer = clickingPlayer as? ServerPlayer
+    val hgBot = clickingPlayer as? ServerPlayer
+    val hgPlayer = serverPlayer?.hgPlayer ?: hgBot?.hgPlayer ?: return
+    val mainHandStack = serverPlayer?.mainHandItem ?: hgBot?.mainHandItem ?: return
+    val offhandStack = serverPlayer?.offhandItem ?: hgBot?.offhandItem ?: return
     if (mainHandStack.isKitItem || offhandStack.isKitItem) {
         hgPlayer.kits.forEach { kit ->
             kit.kitItems.forEach { kitItem ->
@@ -178,7 +179,9 @@ fun onClickAtEntity(
         }
     } else {
         hgPlayer.kits.forEach { kit ->
-            onRightClickEntity(serverPlayer, clickedEntity)
+            if (serverPlayer != null) {
+                onRightClickEntity(serverPlayer.hgPlayer, clickedEntity)
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.data.hgplayer
 
+import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.maxOfflineTime
@@ -8,7 +9,7 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import net.minecraft.server.level.ServerPlayer
-import net.silkmc.silk.core.logging.logInfo
+import net.minecraft.world.entity.Entity
 import java.util.*
 
 class HGPlayer(
@@ -67,3 +68,14 @@ class HGPlayer(
 
 val ServerPlayer.hgPlayer
     get() = PlayerList.addOrGetPlayer(uuid, name.string)
+
+
+val HGBot.hgPlayer
+    get() = PlayerList.addOrGetPlayer(uuid, name.string)
+
+val Entity.hgPlayer: HGPlayer?
+    get() {
+        if (this is HGBot) return this.hgPlayer
+        if (this is ServerPlayer) return this.hgPlayer
+        return null
+    }

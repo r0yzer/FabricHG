@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.game
 
+import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
@@ -8,6 +9,7 @@ import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.GameType
 import java.util.*
 
@@ -36,23 +38,29 @@ object PlayerList {
     }
 
 
-    fun announcePlayerDeath(serverPlayer: ServerPlayer, source: DamageSource, killer: ServerPlayer?) {
+    fun announcePlayerDeath(player: HGPlayer, source: DamageSource, killer: Entity?) {
         val sourceKiller = source.entity
-        val hgPlayer = serverPlayer.hgPlayer
         val otherHGPlayer = killer?.hgPlayer
         broadcastComponent(
             literalText {
                 if (killer == sourceKiller && killer != null) {
-                    text("${serverPlayer.name.string}(${hgPlayer.kits.joinToString { it.name }}) wurde von ${killer.name?.string}" +
-                            "(${otherHGPlayer?.kits?.joinToString { it.name }}) mit ${killer.mainHandItem?.item.toString().uppercase()} getötet")
+                    var killMessage = "getötet"
+                    if (killer is ServerPlayer) {
+                        killMessage = "mit ${killer.mainHandItem?.item.toString().uppercase()} getötet"
+                    }
+                    if (killer is HGBot) {
+                        killMessage = "mit ${killer.mainHandItem?.item.toString().uppercase()} getötet"
+                    }
+                    text("${player.name}(${player.kits.joinToString { it.name }}) wurde von ${killer.name?.string}" +
+                            "(${otherHGPlayer?.kits?.joinToString { it.name }}) $killMessage")
                 } else if (killer != null){
-                    text("${serverPlayer.name.string} wurde von ${killer.name.string} getötet")
+                    text("${player.name} wurde von ${killer.name.string} getötet")
                 } else {
                     when (val cause = source.type().msgId) {
-                        "cactus" -> text("${serverPlayer.name.string} ist an einem Kaktus gestorben")
-                        "mob_attack" -> text("${serverPlayer.name.string} ist an einem Mob gestorben")
-                        "fireball" -> text("${serverPlayer.name.string} ist an einem Feuerball gestorben")
-                        else -> text("${serverPlayer.name.string} ist an ${cause.uppercase()} gestorben")
+                        "cactus" -> text("${player.name} ist an einem Kaktus gestorben")
+                        "mob_attack" -> text("${player.name} ist an einem Mob gestorben")
+                        "fireball" -> text("${player.name} ist an einem Feuerball gestorben")
+                        else -> text("${player.name} ist an ${cause.uppercase()} gestorben")
                     }
                 }
                 color = 0xFFFF55
@@ -60,6 +68,7 @@ object PlayerList {
         )
         announceRemainingPlayers()
     }
+
 
     fun announceRemainingPlayers() {
         broadcastComponent(
@@ -76,3 +85,9 @@ fun ServerPlayer.removeHGPlayer() {
     hgPlayer.status = HGPlayerStatus.SPECTATOR
     setGameMode(GameType.SPECTATOR)
 }
+
+fun HGBot.removeHGPlayer() {
+    hgPlayer.status = HGPlayerStatus.SPECTATOR
+    kill()
+}
+

@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.events
 
+import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
@@ -9,28 +10,50 @@ import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import net.silkmc.silk.core.logging.logInfo
 
 object PlayerDeath {
     init {
         ServerLivingEntityEvents.ALLOW_DEATH.register { serverPlayerEntity, damageSource, amount ->
-            if (serverPlayerEntity !is ServerPlayer) return@register false
-            if ((serverPlayerEntity as? LivingEntityAccessor)?.invokeTryUseTotem(damageSource) == true) {
-                logInfo("${serverPlayerEntity.name.string} hat Totem genutzt")
-                serverPlayerEntity.sendPlayerStatus()
-                return@register false
-            }
-            if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return@register true
-            val killer: ServerPlayer? = (serverPlayerEntity as LivingEntityAccessor).attackingPlayer as? ServerPlayer
-            serverPlayerEntity.hgPlayer.kits.forEach {
-                it.onDisable?.invoke(serverPlayerEntity.hgPlayer, it)
-            }
-            serverPlayerEntity.removeHGPlayer()
-            PlayerList.announcePlayerDeath(serverPlayerEntity, damageSource, killer)
-            val hgPlayer = killer?.hgPlayer ?: return@register true
-            hgPlayer.kills += 1
-
-            return@register true
+            val playerDeath = hgPlayerDeath(serverPlayerEntity, damageSource, amount)
+            val botDeath = hgBotDeath(serverPlayerEntity, damageSource, amount)
+            return@register (playerDeath && botDeath)
         }
+    }
+
+    private fun hgPlayerDeath(serverPlayerEntity: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
+        if (serverPlayerEntity !is ServerPlayer) return false
+        if ((serverPlayerEntity as? LivingEntityAccessor)?.invokeTryUseTotem(damageSource) == true) {
+            logInfo("${serverPlayerEntity.name.string} hat Totem genutzt")
+            serverPlayerEntity.sendPlayerStatus()
+            return false
+        }
+        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
+        val killer: Entity? = (serverPlayerEntity as LivingEntityAccessor).attackingMob
+        serverPlayerEntity.hgPlayer.kits.forEach {
+            it.onDisable?.invoke(serverPlayerEntity.hgPlayer, it)
+        }
+        serverPlayerEntity.removeHGPlayer()
+        PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
+        val hgPlayer = killer?.hgPlayer ?: return true
+        hgPlayer.kills += 1
+
+        return true
+    }
+
+    private fun hgBotDeath(hgBot: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
+        if (hgBot !is HGBot) return false
+        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
+        val killer: Entity? = hgBot.lastAttackedByEntity
+
+        hgBot.removeHGPlayer()
+        PlayerList.announcePlayerDeath(hgBot.hgPlayer, damageSource, killer)
+        val hgPlayer = killer?.hgPlayer ?: return true
+        hgPlayer.kills += 1
+
+        return true
     }
 }

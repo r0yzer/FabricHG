@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.mixins.entity;
 
+import de.royzer.fabrichg.bots.HGBot;
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase;
 import de.royzer.fabrichg.kit.KitItemKt;
 import de.royzer.fabrichg.kit.events.kit.OnMoveKt;
@@ -61,9 +62,11 @@ public abstract class EntityMixin {
             ci.cancel();
         }
         if (movementType.equals(MoverType.PLAYER)) {
-            if ((Entity) (Object) (this) instanceof ServerPlayer) {
+            boolean isServerPlayer = (Entity) (Object) (this) instanceof ServerPlayer;
+            boolean isHgBot = (Entity) (Object) (this) instanceof HGBot;
+            if (isServerPlayer || isHgBot) {
                 if (!movement.equals(Vec3.ZERO)) {
-                    OnMoveKt.onMove((ServerPlayer) (Object) (this));
+                    OnMoveKt.onMove((Entity) (Object) (this));
                 }
             }
         }

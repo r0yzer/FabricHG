@@ -8,8 +8,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.alchemy.PotionUtils
 
 fun onDrink(itemStack: ItemStack, entity: LivingEntity) {
-    if (entity !is ServerPlayer) return
-    val hgPlayer = entity.hgPlayer
+    val hgPlayer = entity.hgPlayer ?: return
     hgPlayer.kits.forEach { kit ->
         kit.kitItems.forEach { kitItem ->
             if (itemStack.isKitItem && PotionUtils.getPotion(kitItem.itemStack) == PotionUtils.getPotion(itemStack)) {
