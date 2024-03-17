@@ -8,10 +8,12 @@ import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potion
+import net.minecraft.world.item.alchemy.PotionUtils
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setPotion
 import net.silkmc.silk.nbt.set
+import kotlin.time.Duration
 
 fun colourToNumber(r: Int, g: Int, b: Int): Int {
     return (r shl 16) + (g shl 8) + b
@@ -66,19 +68,16 @@ fun beerItem(potion: Potion, name: String, beerColor: Int, itemCount: Int = 2): 
     }
 }
 
-val pilsBeerItem = beerItem(pilsPotion, "pils", colourToNumber(236, 144, 1))
-
-val weizenBierItem = beerItem(weizenPotion, "weizen", colourToNumber(240, 150, 20))
-
-val hellesBierItem = beerItem(hellesPotion, "helles", colourToNumber(255, 158, 3))
-
-val starkbierPotionItem = beerItem(starkbierPotion, "starkbier", colourToNumber(158, 43, 0), 1)
+val pilsBeerItem = beerItem(pilsPotion, "PILS", colourToNumber(236, 144, 1))
+val weizenBierItem = beerItem(weizenPotion, "WEIZEN", colourToNumber(240, 150, 20))
+val hellesBierItem = beerItem(hellesPotion, "HELLES", colourToNumber(255, 158, 3))
+val starkbierPotionItem = beerItem(starkbierPotion, "STARKBIER", colourToNumber(158, 43, 0), 1)
 
 val beerKit = kit("Beer") {
 
     kitSelectorItem = weizenBierItem.copy()
 
-    description = "Recieve a few beer potions at the start of the round"
+    description = "Recieve a few beers at the start of the round"
 
     kitItem {
         itemStack = pilsBeerItem.copy()
