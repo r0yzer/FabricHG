@@ -35,11 +35,11 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 
     override fun tick(timer: Int) {
         broadcastComponent(winnerText(winner))
-        if (timer == maxPhaseTime - 1) {
-            GamePhaseManager.server.playerList.players.forEach {
-                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
-            }
-        }
+//        if (timer == maxPhaseTime - 1) {
+//            GamePhaseManager.server.playerList.players.forEach {
+//                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
+//            }
+//        }
         if (timer >= maxPhaseTime) {
             logInfo("Spiel endet")
             logInfo("Sieger: ${winner?.name}, Kills: ${winner?.kills}")

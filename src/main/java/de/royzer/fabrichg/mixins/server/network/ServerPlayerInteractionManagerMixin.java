@@ -6,19 +6,25 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.block.Blocks;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerGameMode.class)
-public class ServerPlayerInteractionManagerMixin {
+abstract public class ServerPlayerInteractionManagerMixin {
+    @Mutable
+    @Final
+    @Shadow
+    protected final ServerPlayer player;
+
+    protected ServerPlayerInteractionManagerMixin(ServerPlayer player) {
+        this.player = player;
+    }
 //    @Inject(
 //            method = "useItem",
 //            at = @At(
@@ -55,6 +61,10 @@ public class ServerPlayerInteractionManagerMixin {
     )
     public void onDestroyBlock(BlockPos pos, ServerboundPlayerActionPacket.Action action, Direction face, int maxBuildHeight, int sequence, CallbackInfo ci) {
         if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
+            ci.cancel();
+        }
+//        ServerPlayerGameMode serverPlayerGameMode = (ServerPlayerGameMode) (Object) this;
+        if (this.player.level().getBlockState(pos).getBlock() == Blocks.HONEY_BLOCK) {
             ci.cancel();
         }
     }
