@@ -10,6 +10,10 @@ import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
+import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.core.logging.logInfo
+import net.silkmc.silk.core.text.literalText
 import java.util.*
 
 class HGPlayer(
@@ -61,6 +65,32 @@ class HGPlayer(
         else canUseKit(kit)
     }
 
+    /**
+     * @param singleKit null wenn die items aller kits gegeben werden sollen sonst das kit
+     */
+    fun giveKitItems(singleKit: Kit? = null) {
+        if (singleKit == null) {
+            kits.forEach { kit ->
+                kit.kitItems.forEach { item ->
+                    serverPlayer?.inventory?.add(item.itemStack.copy().also {
+                        it.setLore(listOf(literalText("Kititem")))
+                        it.setCustomName(kit.name)
+                    })
+                }
+                kit.onEnable?.invoke(this, kit, serverPlayer!!)
+            }
+        } else {
+            singleKit.kitItems.forEach { item ->
+                serverPlayer?.inventory?.add(item.itemStack.copy().also {
+                    it.setLore(listOf(literalText("Kititem")))
+                    it.setCustomName(singleKit.name)
+                })
+            }
+            singleKit.onEnable?.invoke(this, singleKit, serverPlayer!!)
+        }
+
+    }
+
     val isNeo get() = canUseKit(neoKit)
     
     val isAlive get() = status == HGPlayerStatus.ALIVE
@@ -69,13 +99,12 @@ class HGPlayer(
 val ServerPlayer.hgPlayer
     get() = PlayerList.addOrGetPlayer(uuid, name.string)
 
-
 val HGBot.hgPlayer
     get() = PlayerList.addOrGetPlayer(uuid, name.string)
 
-val Entity.hgPlayer: HGPlayer?
-    get() {
-        if (this is HGBot) return this.hgPlayer
-        if (this is ServerPlayer) return this.hgPlayer
-        return null
+val Entity.hgPlayer
+    get() = when (this) {
+        is ServerPlayer -> hgPlayer
+        is HGBot -> hgPlayer
+        else -> null
     }

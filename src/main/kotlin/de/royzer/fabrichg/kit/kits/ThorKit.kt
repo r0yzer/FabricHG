@@ -13,6 +13,8 @@ val thorKit = kit("Thor") {
 
     cooldown = 12.0
 
+    description = "Summon lightning bolts"
+
     kitItem {
         itemStack = kitSelectorItem
         onUseOnBlock { hgPlayer, kit, blockPlaceContext ->

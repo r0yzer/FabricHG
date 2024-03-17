@@ -29,12 +29,7 @@ object InvincibilityPhase : GamePhase() {
                 this?.add(itemStack(Items.COMPASS) {
                     setCustomName { text("Tracker") }
                 })
-                hgPlayer.kits.forEach { kit ->
-                    kit.kitItems.forEach {
-                        hgPlayer.serverPlayer?.inventory?.add(it.itemStack.copy())
-                    }
-                    kit.onEnable?.invoke(hgPlayer, kit, hgPlayer.serverPlayer!!)
-                }
+                hgPlayer.giveKitItems()
 
             }
         }

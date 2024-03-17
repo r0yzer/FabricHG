@@ -15,15 +15,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerGamePacketListenerImpl.class)
 public class ServerGamePacketListenerImplMixin {
 
-    @Inject(
-            method = "handleMovePlayer",
-            at = @At("HEAD")
-    )
-    public void stopMove(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
-        if (LobbyPhase.INSTANCE.isStarting()) {
-//            ServerPlayer serverPlayer = ((ServerGamePacketListenerImpl) (Object) this).getPlayer();
-//            serverPlayer.connection.send(new ClientboundPlayerPositionPacket(0.0, 0.0, 0.0, 0.0f, 0.0f, RelativeMovement.ALL, 1));
-
-        }
-    }
+//    @Inject(
+//            method = "handleMovePlayer",
+//            at = @At("HEAD")
+//    )
+//    public void stopMove(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
+//        if (LobbyPhase.INSTANCE.isStarting()) {
+////            ServerPlayer serverPlayer = ((ServerGamePacketListenerImpl) (Object) this).getPlayer();
+////            serverPlayer.connection.send(new ClientboundPlayerPositionPacket(0.0, 0.0, 0.0, 0.0f, 0.0f, RelativeMovement.ALL, 1));
+//
+//        }
+//    }
 }
