@@ -54,4 +54,7 @@ class KitItemBuilder(val kitItem: KitItem) {
         kitItem.drinkAction = action
     }
 
+    fun onDestroyBlock(action: ((HGPlayer, Kit, BlockPos) -> Unit)?) {
+        kitItem.destroyBlockAction = action
+    }
 }

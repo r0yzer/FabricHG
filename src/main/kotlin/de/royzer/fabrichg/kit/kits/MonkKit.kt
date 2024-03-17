@@ -8,7 +8,7 @@ import net.silkmc.silk.core.text.literalText
 
 val monkKit = kit("Monk") {
     kitSelectorItem = Items.BLAZE_ROD.defaultInstance
-    cooldown = 14.0 / 100
+    cooldown = 14.0
     usableInInvincibility = false
     description = "Switch the item the enemy is currently holding with a random one of their inventory"
 

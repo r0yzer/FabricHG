@@ -34,6 +34,7 @@ class KitItem(
     internal var hitPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
     internal var hitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
     internal var drinkAction: ((HGPlayer, Kit, ItemStack) -> Unit)? = null,
+    internal var destroyBlockAction: ((HGPlayer, Kit, BlockPos) -> Unit)? = null,
 ) {
     fun invokeUseOnBlockAction(
         hgPlayer: HGPlayer,
@@ -121,6 +122,19 @@ class KitItem(
     ) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             drinkAction?.invoke(hgPlayer, kit, itemStack)
+        } else if (hgPlayer.hasCooldown(kit)) {
+            hgPlayer.serverPlayer?.sendCooldown(kit)
+        }
+    }
+
+    fun invokeDestroyBlockAction(
+        hgPlayer: HGPlayer,
+        kit: Kit,
+        pos: BlockPos,
+        ignoreCooldown: Boolean = false
+    ) {
+        if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
+            destroyBlockAction?.invoke(hgPlayer, kit, pos)
         } else if (hgPlayer.hasCooldown(kit)) {
             hgPlayer.serverPlayer?.sendCooldown(kit)
         }

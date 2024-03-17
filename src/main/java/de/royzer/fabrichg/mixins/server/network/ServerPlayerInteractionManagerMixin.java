@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.mixins.server.network;
 
 import de.royzer.fabrichg.game.GamePhaseManager;
+import de.royzer.fabrichg.kit.events.kititem.OnDestroyBlockKt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayerGameMode.class)
 abstract public class ServerPlayerInteractionManagerMixin {
@@ -59,13 +61,25 @@ abstract public class ServerPlayerInteractionManagerMixin {
             ),
             cancellable = true
     )
-    public void onDestroyBlock(BlockPos pos, ServerboundPlayerActionPacket.Action action, Direction face, int maxBuildHeight, int sequence, CallbackInfo ci) {
+    public void onDestroyBlockAction(BlockPos pos, ServerboundPlayerActionPacket.Action action, Direction face, int maxBuildHeight, int sequence, CallbackInfo ci) {
         if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
             ci.cancel();
+            return;
         }
+//        OnDestroyBlockKt.onDestroyBlock(this.player, pos);
 //        ServerPlayerGameMode serverPlayerGameMode = (ServerPlayerGameMode) (Object) this;
         if (this.player.level().getBlockState(pos).getBlock() == Blocks.HONEY_BLOCK) {
             ci.cancel();
         }
+    }
+
+    @Inject(
+            method = "destroyBlock",
+            at = @At(
+                    value = "HEAD"
+            )
+    )
+    public void onDestroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+        OnDestroyBlockKt.onDestroyBlock(this.player, pos);
     }
 }

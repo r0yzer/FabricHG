@@ -71,6 +71,11 @@ object ConnectEvents {
                         }
 
                         else -> {
+                            player.removeAllEffects()
+                            player.health = player.maxHealth
+                            player.inventory.clearContent()
+                            player.foodData.foodLevel = 20
+                            player.setGameMode(GameType.SURVIVAL)
                             PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                             hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
                         }

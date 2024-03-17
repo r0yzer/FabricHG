@@ -74,7 +74,9 @@ class HGPlayer(
                 kit.kitItems.forEach { item ->
                     serverPlayer?.inventory?.add(item.itemStack.copy().also {
                         it.setLore(listOf(literalText("Kititem")))
-                        it.setCustomName(kit.name)
+                        if (!it.hasCustomHoverName()) {
+                            it.setCustomName(kit.name)
+                        }
                     })
                 }
                 kit.onEnable?.invoke(this, kit, serverPlayer!!)
@@ -83,7 +85,9 @@ class HGPlayer(
             singleKit.kitItems.forEach { item ->
                 serverPlayer?.inventory?.add(item.itemStack.copy().also {
                     it.setLore(listOf(literalText("Kititem")))
-                    it.setCustomName(singleKit.name)
+                    if (!it.hasCustomHoverName()) {
+                        it.setCustomName(singleKit.name)
+                    }
                 })
             }
             singleKit.onEnable?.invoke(this, singleKit, serverPlayer!!)

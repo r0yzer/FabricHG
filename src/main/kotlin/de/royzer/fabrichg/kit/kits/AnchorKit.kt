@@ -46,7 +46,8 @@ val anchorKit = kit("Anchor") {
 
 
 fun onAnchorAttack(strength: Double, x: Double, z: Double, ci: CallbackInfo, attackedEntity: LivingEntity) {
-    val attackingEntity = (attackedEntity.combatTracker as CombatTrackerAcessor).entries.lastOrNull()?.source?.entity ?: return
+    val attackingEntity =
+        (attackedEntity.combatTracker as CombatTrackerAcessor).entries.lastOrNull()?.source?.entity ?: return
     if (attackedEntity !is ServerPlayer && attackingEntity !is ServerPlayer) return
 
     if (attackedEntity is ServerPlayer && attackingEntity !is ServerPlayer) {
@@ -77,6 +78,7 @@ fun onAnchorAttack(strength: Double, x: Double, z: Double, ci: CallbackInfo, att
 fun onAnchorAttacks(attackedEntity: LivingEntity, attackingEntity: LivingEntity, ci: CallbackInfo) {
 
 }
+
 fun onAnchorGetsAttacked(attackedEntity: LivingEntity, attackingEntity: LivingEntity, ci: CallbackInfo) {
 
 }
@@ -85,16 +87,18 @@ private fun Entity.applyAnchorKnockback(ci: CallbackInfo) {
     world.playSound(null, posUnder, SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 1f, 1f)
     ci.cancel()
     deltaMovement = Vec3.ZERO
-    modifyVelocity(0,-0.1,0, false)
+    modifyVelocity(0, -0.1, 0, false)
 }
 
 fun onAnchorJoin(serverPlayer: ServerPlayer) {
-    if (Feast.started) {
-        if (serverPlayer.inventory?.armor?.get(2) == anvil.copy()) {
-            serverPlayer.inventory?.armor?.set(2, Items.AIR.defaultInstance)
-        }
-        if (serverPlayer.inventory?.armor?.get(3) == anvil.copy()) {
-            serverPlayer.inventory?.armor?.set(3, Items.AIR.defaultInstance)
+    if (serverPlayer.hgPlayer.hasKit(anchorKit)) {
+        if (Feast.started) {
+            if (serverPlayer.inventory?.armor?.get(2) == anvil.copy()) {
+                serverPlayer.inventory?.armor?.set(2, Items.AIR.defaultInstance)
+            }
+            if (serverPlayer.inventory?.armor?.get(3) == anvil.copy()) {
+                serverPlayer.inventory?.armor?.set(3, Items.AIR.defaultInstance)
+            }
         }
     }
 
