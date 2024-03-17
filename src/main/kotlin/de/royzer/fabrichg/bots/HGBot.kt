@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.bots
 
+import com.mojang.authlib.GameProfile
 import de.royzer.fabrichg.bots.goals.MoveThroughVillageIfNoTargetGoal
 import de.royzer.fabrichg.bots.goals.RandomLookAroundIfNoTargetGoal
 import de.royzer.fabrichg.bots.goals.WaterAvoidingRandomStrollIfNoTargetGoal
@@ -7,6 +8,9 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import kotlinx.coroutines.delay
+import net.fabricmc.fabric.api.entity.FakePlayer
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -37,21 +41,27 @@ class HGBot(
     target: ServerPlayer,
     private val range: Double = 2.0,
     val uuid: UUID = UUID.randomUUID()
-): Zombie(world) {
+) : Zombie(world) {
+
+    private val fakePlayer = FakePlayer.get(world as ServerLevel, GameProfile(uuid, name))
 
     init {
         customName = name.literal
         isCustomNameVisible = true
         setTarget(target)
 
-        setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.STONE_SWORD){})
-        setItemSlot(EquipmentSlot.HEAD, itemStack(Items.PLAYER_HEAD){})
+        setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.STONE_SWORD) {})
+        setItemSlot(EquipmentSlot.HEAD, itemStack(Items.PLAYER_HEAD) {})
         attributes.getInstance(Attributes.FOLLOW_RANGE)?.baseValue = 100.0
         attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = 20.0
         health = 20.0F
         attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = 0.4
         attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 10.0
         attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 4.0
+
+        server?.playerList?.players?.add(fakePlayer)
+        sendPlayerInfoUpdatePacket()
+
     }
 
     private var soups = 50
@@ -81,7 +91,8 @@ class HGBot(
     override fun tick() {
         super.tick()
         if ((target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive)
-            || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10) {
+            || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10
+        ) {
             target = null
         }
         if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && target == null) {
@@ -173,9 +184,11 @@ class HGBot(
     override fun getFallSounds(): Fallsounds {
         return Fallsounds(SoundEvents.PLAYER_SMALL_FALL, SoundEvents.PLAYER_SMALL_FALL)
     }
+
     override fun isSunSensitive(): Boolean {
         return false
     }
+
     override fun getExperienceReward(): Int {
         return 0
     }
@@ -185,6 +198,17 @@ class HGBot(
             setPos(this@HGBot.pos)
             item = ItemStack(Items.MUSHROOM_STEW, 5)
         })
+        server?.playerList?.remove(fakePlayer)
         super.die(damageSource)
+    }
+
+    private fun sendPlayerInfoUpdatePacket() {
+        server?.playerList?.broadcastAll(
+            ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(
+                listOf(
+                    fakePlayer
+                )
+            )
+        )
     }
 }
