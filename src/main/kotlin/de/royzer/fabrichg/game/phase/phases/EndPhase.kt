@@ -9,11 +9,12 @@ import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import net.minecraft.network.chat.Component
-import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.HoverEvent
+import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.silkmc.silk.core.logging.logInfo
+import net.silkmc.silk.core.text.literalText
 
 class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 
@@ -23,18 +24,22 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
         combatloggedPlayers.forEach { (_, u) -> u.cancel() }
         endTime
         GamePhaseManager.resetTimer()
-        winner?.serverPlayer?.abilities?.mayfly = true
-        winner?.serverPlayer?.abilities?.flying = true
-        winner?.serverPlayer?.addEffect(MobEffectInstance(MobEffects.GLOWING, Int.MAX_VALUE, 0, false, false))
+        with(winner?.serverPlayer ?: return) {
+            connection.send(ClientboundPlayerAbilitiesPacket(abilities.also {
+                it.flying = true
+                it.mayfly = true
+            }))
+            addEffect(MobEffectInstance(MobEffects.GLOWING, -1, 0, false, false))
+        }
     }
 
     override fun tick(timer: Int) {
         broadcastComponent(winnerText(winner))
-//        if (timer == maxPhaseTime - 1) {
-//            GamePhaseManager.server.playerList.players.forEach {
-//                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
-//            }
-//        }
+        if (timer == maxPhaseTime - 1) {
+            GamePhaseManager.server.playerList.players.forEach {
+                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
+            }
+        }
         if (timer >= maxPhaseTime) {
             logInfo("Spiel endet")
             logInfo("Sieger: ${winner?.name}, Kills: ${winner?.kills}")
