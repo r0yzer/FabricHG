@@ -1,6 +1,8 @@
 package de.royzer.fabrichg.bots
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.game.phase.PhaseType
 import kotlinx.coroutines.delay
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
@@ -10,15 +12,12 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.ai.attributes.Attribute
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.item.ItemEntity
-import net.minecraft.world.entity.monster.Monster
 import net.minecraft.world.entity.monster.Zombie
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
-import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
@@ -30,7 +29,7 @@ class HGBot(
     world: Level,
     name: String,
     target: ServerPlayer,
-    range: Int = 10,
+    private val range: Double = 2.5,
 ): Zombie(world) {
 
     init {
@@ -41,32 +40,55 @@ class HGBot(
         setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.STONE_SWORD){})
         setItemSlot(EquipmentSlot.HEAD, itemStack(Items.PLAYER_HEAD){})
         attributes.getInstance(Attributes.FOLLOW_RANGE)?.baseValue = 100.0
-        attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = 200.0
-        health = 200.0F
+        attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = 20.0
+        health = 20.0F
         attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = 0.4
         attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 10.0
         attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 4.0
     }
 
+    private var soups = 50
 
 
     override fun tick() {
         super.tick()
-        if (target == null || ((target as? ServerPlayer)?.hgPlayer?.isAlive) == true) {
-            target = world.getNearestPlayer(this, 20.0)
+        if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && (target == null || ((target as? ServerPlayer)?.hgPlayer?.isAlive) == true)) {
+            target = world.getNearestPlayer(this, 40.0)
+        } else if (GamePhaseManager.currentPhaseType != PhaseType.INGAME) {
+            target = null
         }
     }
 
+    override fun isWithinMeleeAttackRange(entity: LivingEntity): Boolean {
+        return this.attackBoundingBox.intersects(entity.boundingBox.inflate(range))
+    }
+
+    private suspend fun soup() {
+        soups--
+        setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.MUSHROOM_STEW) {})
+        delay(85.milliseconds)
+        setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.BOWL) {})
+        world.addFreshEntity(ItemEntity(EntityType.ITEM, level()).apply {
+            setPos(this@HGBot.pos)
+            item = ItemStack(Items.BOWL, 1)
+        })
+        health += 3.5f
+        setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.AIR) {})
+        delay(75.milliseconds)
+        setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.STONE_SWORD) {})
+    }
+
     override fun hurt(damageSource: DamageSource, f: Float): Boolean {
-        if (f > 2) return super.hurt(damageSource, f)
-        mcCoroutineTask(true, delay = 100.milliseconds) {
-            setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.MUSHROOM_STEW){})
-            delay(20.milliseconds)
-            setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.BOWL){})
-            delay(100.milliseconds)
-            setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.STONE_SWORD){})
+        val result = super.hurt(damageSource, f)
+
+        mcCoroutineTask(true) {
+            while (health < 17 && soups > 0) {
+                val soupDelay = if (soups % 8 == 0) 1000 else 125
+                delay(soupDelay.milliseconds)
+                soup()
+            }
         }
-        return super.hurt(damageSource, f)
+        return result
     }
 
 
@@ -113,7 +135,6 @@ class HGBot(
     override fun getSwimHighSpeedSplashSound(): SoundEvent {
         return SoundEvents.PLAYER_SPLASH_HIGH_SPEED
     }
-
 
     override fun getFallSounds(): Fallsounds {
         return Fallsounds(SoundEvents.PLAYER_SMALL_FALL, SoundEvents.PLAYER_SMALL_FALL)
