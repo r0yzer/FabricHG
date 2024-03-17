@@ -8,7 +8,9 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import net.minecraft.server.level.ServerPlayer
-import net.silkmc.silk.core.logging.logInfo
+import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.core.text.literalText
 import java.util.*
 
 class HGPlayer(
@@ -30,8 +32,6 @@ class HGPlayer(
 
     val serverPlayer: ServerPlayer?
         get() {
-//            logInfo("$name wird gegettet, uuid $uuid")
-//            logInfo(GamePhaseManager.server.playerList.getPlayer(uuid)?.name?.string + " abc")
             return GamePhaseManager.server.playerList.getPlayerByName(name)
         }
     val serverPlayerOrException
@@ -60,8 +60,34 @@ class HGPlayer(
         else canUseKit(kit)
     }
 
+    /**
+     * @param singleKit null wenn die items aller kits gegeben werden sollen sonst das kit
+     */
+    fun giveKitItems(singleKit: Kit? = null) {
+        if (singleKit == null) {
+            kits.forEach { kit ->
+                kit.kitItems.forEach { item ->
+                    serverPlayer?.inventory?.add(item.itemStack.copy().also {
+                        it.setLore(listOf(literalText("Kititem")))
+                        it.setCustomName(kit.name)
+                    })
+                }
+                kit.onEnable?.invoke(this, kit, serverPlayer!!)
+            }
+        } else {
+            singleKit.kitItems.forEach { item ->
+                serverPlayer?.inventory?.add(item.itemStack.copy().also {
+                    it.setLore(listOf(literalText("Kititem")))
+                    it.setCustomName(singleKit.name)
+                })
+            }
+            singleKit.onEnable?.invoke(this, singleKit, serverPlayer!!)
+        }
+
+    }
+
     val isNeo get() = canUseKit(neoKit)
-    
+
     val isAlive get() = status == HGPlayerStatus.ALIVE
 }
 

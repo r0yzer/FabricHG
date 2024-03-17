@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.commands
 
+import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
@@ -14,7 +15,10 @@ import net.silkmc.silk.igui.*
 val kitCommand = command("kit") {
     runs {
         val player = source.playerOrException
-        if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit)|| player.hasPermissions(PermissionLevel.OWNER.level)) {
+        if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit) || player.hasPermissions(
+                PermissionLevel.OWNER.level
+            )
+        ) {
             if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
                 if (player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))
                     player.openGui(
@@ -29,19 +33,20 @@ val kitCommand = command("kit") {
         suggestList { kits.map { it.name } }
         runs {
             val player = source.playerOrException
-            if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit) || player.hasPermissions(PermissionLevel.OWNER.level)) {
+            if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit) || player.hasPermissions(
+                    PermissionLevel.OWNER.level
+                )
+            ) {
                 if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY)
                     if (!(player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))) return@runs
                 val kitName = kitArg()
                 val kit = kits.firstOrNull { it.name.equals(kitName, true) }
                 if (kit != null) {
                     if (GamePhaseManager.isIngame) {
-                        kit.onEnable?.invoke(player.hgPlayer, kit, player)
-                        kit.kitItems.forEach { player.inventory.add(it.itemStack.copy()) }
+                        player.hgPlayer.giveKitItems(kit)
                     }
                     player.hgPlayer.kits[0] = kit
-                }
-                else
+                } else
                     player.sendText("Es konnte kein Kit mit dem Namen gefunden werden") { color = 0xFF0000 }
             }
         }
@@ -55,6 +60,20 @@ val kitCommand = command("kit") {
                 }
             }
             color = 0x00FF00
+        }
+    }
+}
+
+val kitinfoCommand = command("kitinfo") {
+    argument<String>("kit") { kitArg ->
+        suggestList { kits.map { it.name } }
+        runs {
+            val kitName = kitArg()
+            val kit = kits.firstOrNull { it.name.equals(kitName, true) }
+            source.player?.sendText {
+                text(kit?.description ?: "Es konnte kein Kit mit dem Namen gefunden werden")
+                color = TEXT_BLUE
+            }
         }
     }
 }

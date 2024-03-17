@@ -55,6 +55,7 @@ fun registerCommands() {
     infoCommand
     listCommand
     kitCommand
+    kitinfoCommand
     feastCommand
     phaseCommand
     gameCommand

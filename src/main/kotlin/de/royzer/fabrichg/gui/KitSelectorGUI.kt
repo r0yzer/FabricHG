@@ -57,8 +57,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
                     }
                 )
                 if (GamePhaseManager.isIngame) {
-                    kit.onEnable?.invoke(hgPlayer, kit, serverPlayerEntity)
-                    kit.kitItems.forEach { serverPlayerEntity.inventory.add(it.itemStack.copy()) }
+                    hgPlayer.giveKitItems(kit)
                 }
                 serverPlayerEntity.closeContainer()
             }
