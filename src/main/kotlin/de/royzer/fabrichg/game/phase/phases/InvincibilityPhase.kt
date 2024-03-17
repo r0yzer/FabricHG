@@ -18,18 +18,14 @@ object InvincibilityPhase : GamePhase() {
     override fun init() {
         GamePhaseManager.resetTimer()
         broadcastComponent(literalText("HG startet") { color = TEXT_BLUE })
-        broadcastComponent(literalText("Tritt gerne dem offiziellen hg.royzer.de Discord bei\n") {
-            color = TEXT_GRAY
-            text("https://discord.gg/bS8JKatZkD") { color = TEXT_BLUE }
-        })
         PlayerList.alivePlayers.forEach { hgPlayer ->
             hgPlayer.serverPlayer?.setGameMode(GameType.SURVIVAL)
             hgPlayer.serverPlayer?.closeContainer()
             hgPlayer.serverPlayer?.removeAllEffects()
             with(hgPlayer.serverPlayer?.inventory) {
                 this?.clearContent()
-                this?.add(itemStack(Items.STONE_SWORD, 1) {})
-                repeat(33) { this?.add(itemStack(Items.MUSHROOM_STEW, 1) {}) }
+//                this?.add(itemStack(Items.STONE_SWORD, 1) {})
+//                repeat(33) { this?.add(itemStack(Items.MUSHROOM_STEW, 1) {}) }
                 this?.add(itemStack(Items.COMPASS) {
                     setCustomName { text("Tracker") }
                 })

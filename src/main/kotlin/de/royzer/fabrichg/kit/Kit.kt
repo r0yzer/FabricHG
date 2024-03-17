@@ -5,10 +5,11 @@ import de.royzer.fabrichg.kit.events.kit.KitEvents
 import de.royzer.fabrichg.kit.kits.*
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Item
+import net.minecraft.world.item.ItemStack
 
 class Kit(val name: String) {
     val kitItems = mutableListOf<KitItem>()
-    var kitSelectorItem: Item? = null
+    var kitSelectorItem: ItemStack? = null
     var cooldown: Double? = null
     var usableInInvincibility = true
     var onDisable: ((HGPlayer, Kit) -> Unit)? = null
@@ -48,4 +49,5 @@ val kits = listOfNotNull(
     snailKit,
     phantomKit,
     thorKit,
+    beerKit
 )

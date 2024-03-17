@@ -10,9 +10,9 @@ import net.minecraft.world.item.Items
 
 class KitBuilder(val kit: Kit) {
     var kitSelectorItem: ItemStack = ItemStack(Items.AIR)
-        get() = kit.kitSelectorItem?.defaultInstance ?: ItemStack(Items.AIR)
+        get() = kit.kitSelectorItem ?: ItemStack(Items.AIR)
         set(value) {
-            kit.kitSelectorItem = value.item
+            kit.kitSelectorItem = value
             field = value
         }
 

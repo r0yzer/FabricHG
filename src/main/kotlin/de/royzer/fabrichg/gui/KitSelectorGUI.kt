@@ -13,7 +13,10 @@ import net.silkmc.silk.igui.observable.toGuiList
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.nbt.set
+import kotlin.time.Duration.Companion.seconds
 
 fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE, "Kits".literal, 1) {
     val hgPlayer = serverPlayerEntity.hgPlayer
@@ -24,7 +27,9 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
             (2 sl 2) rectTo (4 sl 8),
             kits.sortedBy { it.name.first() }.toGuiList(),
             iconGenerator = { kit ->
-                itemStack(kit.kitSelectorItem ?: Items.BARRIER) {
+                itemStack(kit.kitSelectorItem?.item ?: Items.BARRIER) {
+                    tag = kit.kitSelectorItem?.tag
+
                     setCustomName {
                         text(kit.name) {
                             color = if (hgPlayer.hasKit(kit)) 0x00FF00 else 0x00FFFF
