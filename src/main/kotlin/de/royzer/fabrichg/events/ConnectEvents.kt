@@ -103,7 +103,6 @@ object ConnectEvents {
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                             player.setGameMode(GameType.SPECTATOR)
                             player.removeAllEffects()
-                            player.sendText(literalText("nunja gamne schon start") { })
                         }
                     }
                 }
@@ -111,7 +110,7 @@ object ConnectEvents {
                 PhaseType.END -> {
                     player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                     player.setGameMode(GameType.SPECTATOR)
-                    player.sendText(literalText("nunja gamne schon vorbei") { })
+                    player.removeAllEffects()
                 }
             }
 

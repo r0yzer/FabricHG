@@ -22,7 +22,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
     val endTime by lazy { GamePhaseManager.timer.get() }
 
     override fun init() {
-        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: END"
+        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A74END"
         combatloggedPlayers.forEach { (_, u) -> u.cancel() }
         endTime
         GamePhaseManager.resetTimer()

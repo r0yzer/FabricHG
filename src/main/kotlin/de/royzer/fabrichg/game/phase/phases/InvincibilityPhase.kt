@@ -17,7 +17,7 @@ import net.minecraft.world.level.GameType
 
 object InvincibilityPhase : GamePhase() {
     override fun init() {
-        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: INVINCIBILITY"
+        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A7aINVINCIBILITY"
         GamePhaseManager.resetTimer()
         broadcastComponent(literalText("HG startet") { color = TEXT_BLUE })
         PlayerList.alivePlayers.forEach { hgPlayer ->

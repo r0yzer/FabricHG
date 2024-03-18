@@ -24,7 +24,7 @@ object IngamePhase : GamePhase() {
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
-        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: INGAME"
+        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A7eINGAME"
         logInfo("IngamePhase startet")
         GamePhaseManager.server.isPvpAllowed = true
         PlayerList.alivePlayers.forEach { hgPlayer ->

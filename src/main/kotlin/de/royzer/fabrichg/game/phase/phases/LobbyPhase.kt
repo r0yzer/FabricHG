@@ -24,7 +24,7 @@ object LobbyPhase : GamePhase() {
 
     override fun init() {
         GamePhaseManager.server.isPvpAllowed = false
-        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: LOBBY"
+        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A72LOBBY"
     }
 
     override fun tick(timer: Int) {
