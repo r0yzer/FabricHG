@@ -8,11 +8,11 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
+import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setLore
-import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.text.literalText
 import java.util.*
 
@@ -34,11 +34,7 @@ class HGPlayer(
     var kitsDisabled = false
 
     val serverPlayer: ServerPlayer?
-        get() {
-//            logInfo("$name wird gegettet, uuid $uuid")
-//            logInfo(GamePhaseManager.server.playerList.getPlayer(uuid)?.name?.string + " abc")
-            return GamePhaseManager.server.playerList.getPlayerByName(name)
-        }
+        get() = GamePhaseManager.server.playerList.getPlayerByName(name)
     val serverPlayerOrException
         get() = GamePhaseManager.server.playerList.getPlayer(uuid) ?: error("HGPlayer has no ServerPlayer")
 
@@ -98,6 +94,13 @@ class HGPlayer(
     val isNeo get() = canUseKit(neoKit)
     
     val isAlive get() = status == HGPlayerStatus.ALIVE
+
+    // vielleicht noch gucken dass nur player zählen
+    val inFight: Boolean get() {
+        val combatTracker = serverPlayer?.combatTracker ?: return false
+        val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
+        return lastCombatEntry?.source?.entity is ServerPlayer
+    }
 }
 
 val ServerPlayer.hgPlayer

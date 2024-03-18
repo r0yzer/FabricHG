@@ -3,6 +3,7 @@ package de.royzer.fabrichg.game.phase.phases
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.game.MOTD_STRING
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
@@ -23,6 +24,7 @@ object LobbyPhase : GamePhase() {
 
     override fun init() {
         GamePhaseManager.server.isPvpAllowed = false
+        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: LOBBY"
     }
 
     override fun tick(timer: Int) {

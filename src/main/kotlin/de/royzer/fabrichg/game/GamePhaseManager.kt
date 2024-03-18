@@ -11,6 +11,8 @@ import net.silkmc.silk.core.task.mcCoroutineTask
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
 
+const val MOTD_STRING = "FABRIC HG 1.20.4 #1 1.20.4 HG SERVER"
+
 object GamePhaseManager {
     lateinit var server: DedicatedServer
     val timer = AtomicInteger()

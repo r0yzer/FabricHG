@@ -3,6 +3,7 @@ package de.royzer.fabrichg.game.phase.phases
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.game.MOTD_STRING
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
@@ -16,6 +17,7 @@ import net.minecraft.world.level.GameType
 
 object InvincibilityPhase : GamePhase() {
     override fun init() {
+        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: INVINCIBILITY"
         GamePhaseManager.resetTimer()
         broadcastComponent(literalText("HG startet") { color = TEXT_BLUE })
         PlayerList.alivePlayers.forEach { hgPlayer ->

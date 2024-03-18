@@ -5,6 +5,7 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.game.MOTD_STRING
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
@@ -23,6 +24,7 @@ object IngamePhase : GamePhase() {
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
+        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: INGAME"
         logInfo("IngamePhase startet")
         GamePhaseManager.server.isPvpAllowed = true
         PlayerList.alivePlayers.forEach { hgPlayer ->
