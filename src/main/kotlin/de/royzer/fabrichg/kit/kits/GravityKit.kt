@@ -12,6 +12,8 @@ val gravityKit = kit("Gravity") {
 
     kitSelectorItem = Items.PURPLE_GLAZED_TERRACOTTA.defaultInstance
 
+    description = "Send yourself or others in the sky"
+
     kitItem {
         itemStack = kitSelectorItem
         onClick { hgPlayer, _ ->
