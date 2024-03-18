@@ -8,6 +8,8 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.kit.kits.surpriseKit
+import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.scoreboard.formattedTime
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.item.setCustomName
@@ -24,6 +26,10 @@ object InvincibilityPhase : GamePhase() {
             hgPlayer.serverPlayer?.setGameMode(GameType.SURVIVAL)
             hgPlayer.serverPlayer?.closeContainer()
             hgPlayer.serverPlayer?.removeAllEffects()
+            if (hgPlayer.hasKit(surpriseKit)) {
+                hgPlayer.kits.remove(surpriseKit)
+                hgPlayer.kits.add(randomKit())
+            }
             with(hgPlayer.serverPlayer?.inventory) {
                 this?.clearContent()
 //                this?.add(itemStack(Items.STONE_SWORD, 1) {})
