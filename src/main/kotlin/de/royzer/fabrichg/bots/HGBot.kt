@@ -90,6 +90,7 @@ class HGBot(
 
     override fun tick() {
         super.tick()
+        fakePlayer.setPos(pos)
         if ((target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive)
             || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10
         ) {
