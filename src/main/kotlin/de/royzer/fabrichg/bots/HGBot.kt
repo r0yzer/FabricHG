@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.bots
 
 import com.mojang.authlib.GameProfile
+import de.royzer.fabrichg.bots.goals.HGBotAttackGoal
 import de.royzer.fabrichg.bots.goals.MoveThroughVillageIfNoTargetGoal
 import de.royzer.fabrichg.bots.goals.RandomLookAroundIfNoTargetGoal
 import de.royzer.fabrichg.bots.goals.WaterAvoidingRandomStrollIfNoTargetGoal
@@ -81,7 +82,7 @@ class HGBot(
     }
 
     override fun addBehaviourGoals() {
-        goalSelector.addGoal(4, ZombieAttackGoal(this, 1.0, false))
+        goalSelector.addGoal(4, HGBotAttackGoal(this, 1.0, true))
         goalSelector.addGoal(1, MoveThroughVillageIfNoTargetGoal(
             this, 1.25, false, 4
         ) { this.canBreakDoors() })
@@ -90,6 +91,7 @@ class HGBot(
 
     override fun tick() {
         super.tick()
+        if (!isAlive) return
         fakePlayer.setPos(pos)
         if ((target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive)
             || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10
