@@ -49,7 +49,7 @@ object PlayerDeath {
         if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
         val killer: Entity? = hgBot.lastAttackedByEntity
 
-        hgBot.removeHGPlayer()
+        hgBot.die(damageSource)
         PlayerList.announcePlayerDeath(hgBot.hgPlayer, damageSource, killer)
         val hgPlayer = killer?.hgPlayer ?: return true
         hgPlayer.kills += 1
