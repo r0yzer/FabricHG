@@ -101,6 +101,10 @@ class HGPlayer(
         val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
         return lastCombatEntry?.source?.entity is ServerPlayer
     }
+
+    override fun toString(): String {
+        return "HGPlayer ${this.name}, Kits: [${kits.joinToString()}]"
+    }
 }
 
 val ServerPlayer.hgPlayer
