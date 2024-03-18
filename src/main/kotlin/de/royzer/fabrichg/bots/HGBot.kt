@@ -5,7 +5,9 @@ import de.royzer.fabrichg.bots.goals.HGBotAttackGoal
 import de.royzer.fabrichg.bots.goals.MoveThroughVillageIfNoTargetGoal
 import de.royzer.fabrichg.bots.goals.RandomLookAroundIfNoTargetGoal
 import de.royzer.fabrichg.bots.goals.WaterAvoidingRandomStrollIfNoTargetGoal
+import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
@@ -25,6 +27,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Zombie
+import net.minecraft.world.item.ArmorItem
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
@@ -53,7 +57,7 @@ class HGBot(
         isCustomNameVisible = true
         setTarget(target)
 
-        setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.STONE_SWORD) {})
+        setItemSlot(EquipmentSlot.MAINHAND, sword.defaultInstance)
         setItemSlot(EquipmentSlot.HEAD, itemStack(Items.PLAYER_HEAD) {})
         attributes.getInstance(Attributes.FOLLOW_RANGE)?.baseValue = 100.0
         attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = 20.0
@@ -69,6 +73,41 @@ class HGBot(
 
     private var soups = 50
     var lastAttackedByEntity: Entity? = null
+
+    private var kills = 0
+    val armorSlots = EquipmentSlot.entries.filter { it.isArmor }
+
+    val sword: Item
+        get() {
+            return if (Feast.started) {
+                if (kills == 0) Items.IRON_SWORD
+                else Items.DIAMOND_SWORD
+            } else {
+                if (kills > 2) Items.IRON_SWORD
+                else Items.STONE_SWORD
+            }
+        }
+
+    val air get() = Items.AIR.defaultInstance
+
+    val armor: List<ItemStack>
+        get() {
+            return if (Feast.started) {
+                if (kills == 0) listOf(air, Items.IRON_CHESTPLATE.defaultInstance, air, air)
+                if (kills == 2) listOf(Items.IRON_HELMET.defaultInstance, air, Items.IRON_LEGGINGS.defaultInstance, air)
+                if (kills == 3) listOf(Items.IRON_HELMET.defaultInstance, Items.IRON_CHESTPLATE.defaultInstance, air, air)
+                if (kills == 4) listOf(Items.DIAMOND_HELMET.defaultInstance, air, Items.DIAMOND_LEGGINGS.defaultInstance, air)
+                else listOf(air, Items.DIAMOND_CHESTPLATE.defaultInstance, Items.DIAMOND_LEGGINGS.defaultInstance, air)
+            } else {
+                if (kills > 2) listOf(Items.IRON_CHESTPLATE.defaultInstance)
+                else listOf()
+            }
+        }
+
+    fun kill(player: HGPlayer) {
+        soups += player.kills * 2
+        kills += 1
+    }
 
     override fun createNavigation(level: Level): PathNavigation {
         return HGBotPathNavigation(this, level)
@@ -94,7 +133,17 @@ class HGBot(
     override fun tick() {
         super.tick()
         if (!isAlive) return
+
         fakePlayer.setPos(pos)
+
+        /*armor.forEachIndexed { index, armorPiece ->
+            setItemSlot(armorSlots[index], armorPiece)
+        }*/ // nicht sichtbar
+
+        if (getItemBySlot(EquipmentSlot.MAINHAND).item != sword && getItemBySlot(EquipmentSlot.MAINHAND).displayName.string.contains("sword", true)) {
+            setItemSlot(EquipmentSlot.MAINHAND, sword.defaultInstance)
+        }
+
         if ((target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive)
             || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10
         ) {
@@ -123,7 +172,7 @@ class HGBot(
         health += 3.5f
         setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.AIR) {})
         delay(75.milliseconds)
-        setItemSlot(EquipmentSlot.MAINHAND, itemStack(Items.STONE_SWORD) {})
+        setItemSlot(EquipmentSlot.MAINHAND, sword.defaultInstance)
     }
 
     override fun hurt(damageSource: DamageSource, f: Float): Boolean {
@@ -206,6 +255,7 @@ class HGBot(
         repeat(soups) {
             spawnAtLocation(Items.MUSHROOM_STEW.defaultInstance)
         }
+        spawnAtLocation(sword.defaultInstance)
     }
 
     override fun die(damageSource: DamageSource) {

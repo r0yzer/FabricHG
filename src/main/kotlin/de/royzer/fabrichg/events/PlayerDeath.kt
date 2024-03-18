@@ -33,6 +33,9 @@ object PlayerDeath {
         }
         if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
         val killer: Entity? = (serverPlayerEntity as LivingEntityAccessor).attackingMob
+        if (killer is HGBot) {
+            killer.kill(serverPlayerEntity.hgPlayer)
+        }
         serverPlayerEntity.hgPlayer.kits.forEach {
             it.onDisable?.invoke(serverPlayerEntity.hgPlayer, it)
         }
