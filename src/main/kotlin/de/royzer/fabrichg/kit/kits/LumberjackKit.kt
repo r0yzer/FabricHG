@@ -4,13 +4,15 @@ import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.core.BlockPos
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
 import net.silkmc.silk.core.entity.world
 
 
 val lumberjackKit = kit("Lumberjack") {
-    kitSelectorItem = Items.WOODEN_AXE.defaultInstance
-
+    kitSelectorItem = Items.WOODEN_AXE.defaultInstance.also {
+        it.enchant(Enchantments.UNBREAKING, 3)
+    }
     description = "Chop down trees"
 
     cooldown = 8.0
