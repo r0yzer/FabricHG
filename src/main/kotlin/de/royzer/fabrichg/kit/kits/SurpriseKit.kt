@@ -5,4 +5,6 @@ import net.minecraft.world.item.Items
 
 val surpriseKit = kit("Surprise") {
     kitSelectorItem = Items.PUFFERFISH.defaultInstance
+
+    description = "Get a random kit at start"
 }
