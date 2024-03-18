@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.math.geometry.produceFilledCirclePositions
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
+import java.time.Instant
 import java.util.*
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -27,6 +28,7 @@ object Feast {
 
     var feastJob: Job? = null
     var feastCenter: BlockPos = BlockPos.ZERO
+    var feastTimestamp: Instant? = null
 
     private var radius = 25
 
@@ -34,6 +36,7 @@ object Feast {
         server.playerList.players.forEach { it.sendPlayerStatus() }
         started = true
         feastCenter = getRandomHighestPos(150)
+        feastTimestamp = Instant.now().plusSeconds(timeLeft.toLong())
 
         PlayerList.players.forEach { e ->
             e.value.kits.forEach {

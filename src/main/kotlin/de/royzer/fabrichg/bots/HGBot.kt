@@ -1,10 +1,7 @@
 package de.royzer.fabrichg.bots
 
 import com.mojang.authlib.GameProfile
-import de.royzer.fabrichg.bots.goals.HGBotAttackGoal
-import de.royzer.fabrichg.bots.goals.MoveThroughVillageIfNoTargetGoal
-import de.royzer.fabrichg.bots.goals.RandomLookAroundIfNoTargetGoal
-import de.royzer.fabrichg.bots.goals.WaterAvoidingRandomStrollIfNoTargetGoal
+import de.royzer.fabrichg.bots.goals.*
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.feast.Feast
@@ -37,6 +34,7 @@ import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
+import java.time.Instant
 import java.util.*
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
@@ -128,10 +126,10 @@ class HGBot(
             this, 1.25, false, 4
         ) { this.canBreakDoors() })
         goalSelector.addGoal(2, WaterAvoidingRandomStrollIfNoTargetGoal(this, 1.25, 0.5f))
+        goalSelector.addGoal(5, HGBotWalkTowardsFeastIfNoTargetGoal(this))
     }
 
     override fun tick() {
-        super.tick()
         if (!isAlive) return
 
         fakePlayer.setPos(pos)
@@ -150,10 +148,13 @@ class HGBot(
             target = null
         }
         if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && target == null) {
-            target = world.getNearestPlayer(this, 250.0)
+            val distance = if (shouldWalkToFeast()) 45.0 else 250.0
+            target = world.getNearestPlayer(this, distance)
         } else if (GamePhaseManager.currentPhaseType != PhaseType.INGAME) {
             target = null
         }
+
+        super.tick()
     }
 
     override fun isWithinMeleeAttackRange(entity: LivingEntity): Boolean {
@@ -270,6 +271,21 @@ class HGBot(
         mcCoroutineTask(delay=(Random.nextDouble()*5).seconds) {
             server?.playerList?.remove(fakePlayer)
         }
+    }
+
+    override fun shouldDespawnInPeaceful(): Boolean {
+        return false
+    }
+
+    override fun checkDespawn() {
+    }
+
+    fun shouldWalkToFeast(): Boolean {
+        if (target != null) return false
+        if (!Feast.started) return false
+        if ((Instant.now().toEpochMilli() - (Feast.feastTimestamp?.toEpochMilli() ?: Long.MAX_VALUE)) > 1000 * 60) return false
+
+        return true
     }
 
     private fun sendPlayerInfoUpdatePacket() {
