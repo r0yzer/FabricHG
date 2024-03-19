@@ -11,4 +11,10 @@ class HGBotAttackGoal(val hgBot: HGBot, speedModifier: Double, followingTargetEv
     override fun adjustedTickDelay(adjustment: Int): Int {
         return (if (this.requiresUpdateEveryTick()) adjustment else reducedTickDelay(adjustment)) / 2
     }
+
+    override fun tick() {
+        if (hgBot.target != null) hgBot.tracking = !hgBot.hasLineOfSight(hgBot.target!!)
+        else hgBot.tracking = false
+        super.tick()
+    }
 }

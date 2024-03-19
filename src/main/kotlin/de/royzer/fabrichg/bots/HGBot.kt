@@ -24,11 +24,13 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Zombie
-import net.minecraft.world.item.ArmorItem
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.HitResult
+import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
@@ -88,6 +90,8 @@ class HGBot(
 
     val air get() = Items.AIR.defaultInstance
 
+    var tracking = false
+
     val armor: List<ItemStack>
         get() {
             return if (Feast.started) {
@@ -138,12 +142,21 @@ class HGBot(
             setItemSlot(armorSlots[index], armorPiece)
         }*/ // nicht sichtbar
 
-        if (getItemBySlot(EquipmentSlot.MAINHAND).item != sword && getItemBySlot(EquipmentSlot.MAINHAND).displayName.string.contains("sword", true)) {
+        if (
+            !tracking &&
+            mainHandItem.item != sword &&
+            mainHandItem.item != Items.MUSHROOM_STEW
+        ) {
             setItemSlot(EquipmentSlot.MAINHAND, sword.defaultInstance)
         }
 
-        if ((target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive)
-            || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10
+        if (tracking && mainHandItem.item != Items.MUSHROOM_STEW) {
+            setItemSlot(EquipmentSlot.MAINHAND, Items.COMPASS.defaultInstance)
+        }
+
+        if (
+            (target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive) ||
+            (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10
         ) {
             target = null
         }
@@ -286,6 +299,20 @@ class HGBot(
         if ((Instant.now().toEpochMilli() - (Feast.feastTimestamp?.toEpochMilli() ?: Long.MAX_VALUE)) > 1000 * 60) return false
 
         return true
+    }
+
+    fun hasLineOfSight(position: Vec3): Boolean {
+        val vec3 = this.pos
+        return if (position.distanceTo(vec3) > 128.0) {
+            false
+        } else {
+            level().clip(
+                ClipContext(
+                    vec3, position, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE,
+                    this
+                )
+            ).type == HitResult.Type.MISS
+        }
     }
 
     private fun sendPlayerInfoUpdatePacket() {
