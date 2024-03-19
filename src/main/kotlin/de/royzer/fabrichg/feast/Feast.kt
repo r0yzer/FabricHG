@@ -35,7 +35,7 @@ import kotlin.time.Duration.Companion.milliseconds
 // TODO
 object Feast {
     var started = false
-    var timeLeft = 20
+    var timeLeft = 300
 
     var feastJob: Job? = null
     var feastCenter: BlockPos = BlockPos.ZERO
