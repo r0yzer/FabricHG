@@ -55,6 +55,7 @@ val kits = listOfNotNull(
     lumberjackKit,
     surpriseKit,
     perfectKit,
+    gamblerKit
 )
 
 fun randomKit() = kits.filter { it != surpriseKit && it != noneKit }.random()

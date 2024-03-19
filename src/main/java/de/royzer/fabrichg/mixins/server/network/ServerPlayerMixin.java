@@ -53,12 +53,12 @@ public abstract class ServerPlayerMixin extends Player {
         }
     }
     @Inject(
-            method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
+            method = "drop(Z)Z",
             at = @At(value = "HEAD", ordinal = 0),
             cancellable = true
     )
-    public void onDropSelectedItem(ItemStack itemStack, boolean bl, boolean bl2, CallbackInfoReturnable<ItemEntity> cir) {
-        ServerPlayerEntityMixinKt.INSTANCE.onDropSelectedItem(bl, cir, (ServerPlayer) (Object) this);
+    public void onDropSelectedItem(boolean dropStack, CallbackInfoReturnable<Boolean> cir) {
+        ServerPlayerEntityMixinKt.INSTANCE.onDropSelectedItem(dropStack, cir, (ServerPlayer) (Object) this);
     }
     @Inject(
             method = "attack",
