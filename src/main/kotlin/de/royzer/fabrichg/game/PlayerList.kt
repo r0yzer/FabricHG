@@ -60,6 +60,7 @@ object PlayerList {
                         "cactus" -> text("${player.name} ist an einem Kaktus gestorben")
                         "mob_attack" -> text("${player.name} ist an einem Mob gestorben")
                         "fireball" -> text("${player.name} ist an einem Feuerball gestorben")
+                        "generickill" -> text("${player.name} wurde getötet")
                         else -> text("${player.name} ist an ${cause.uppercase()} gestorben")
                     }
                 }

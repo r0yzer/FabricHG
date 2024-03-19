@@ -129,7 +129,6 @@ object Feast {
                     val slot = Random.nextInt(27)
                     val loot = feastLoot.get() ?: return@repeat
                     val amount = Random.nextInt(1, loot.maxAmount + 1)
-                    println("kiste $chestLocation slot $slot item ${loot.item.item} amount $amount")
                     blockEntity.setItem(slot, loot.item.copy().also { it.count = amount })
                 }
             }

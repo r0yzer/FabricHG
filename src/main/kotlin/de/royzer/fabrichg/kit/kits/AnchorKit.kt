@@ -20,7 +20,7 @@ import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
-val anvil = itemStack(Items.ANVIL) {
+val anchorAnvil = itemStack(Items.ANVIL) {
     enchant(Enchantments.BINDING_CURSE, 1)
     count = 1
 }
@@ -31,8 +31,8 @@ val anchorKit = kit("Anchor") {
 
     onEnable { hgPlayer, kit, serverPlayer ->
         if (!Feast.started) {
-            serverPlayer.inventory?.armor?.set(2, anvil.copy())
-            serverPlayer.inventory?.armor?.set(3, anvil.copy())
+            serverPlayer.inventory?.armor?.set(2, anchorAnvil.copy())
+            serverPlayer.inventory?.armor?.set(3, anchorAnvil.copy())
         }
     }
 
@@ -93,10 +93,10 @@ private fun Entity.applyAnchorKnockback(ci: CallbackInfo) {
 fun onAnchorJoin(serverPlayer: ServerPlayer) {
     if (serverPlayer.hgPlayer.hasKit(anchorKit)) {
         if (Feast.started) {
-            if (serverPlayer.inventory?.armor?.get(2) == anvil.copy()) {
+            if (serverPlayer.inventory?.armor?.get(2) == anchorAnvil.copy()) {
                 serverPlayer.inventory?.armor?.set(2, Items.AIR.defaultInstance)
             }
-            if (serverPlayer.inventory?.armor?.get(3) == anvil.copy()) {
+            if (serverPlayer.inventory?.armor?.get(3) == anchorAnvil.copy()) {
                 serverPlayer.inventory?.armor?.set(3, Items.AIR.defaultInstance)
             }
         }

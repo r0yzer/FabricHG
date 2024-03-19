@@ -24,7 +24,7 @@ val beeKit = kit("Bee") {
         itemStack = kitSelectorItem
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
             val world = clickedPlayer.world
-            repeat(3) {
+            repeat(4) {
                 val bee = Bee(EntityType.BEE, world)
                 bee.target = clickedPlayer
                 bee.setPos(clickedPlayer.eyePosition)

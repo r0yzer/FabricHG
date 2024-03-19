@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 const val SOUP_HEAL = 7F
 
 object SoupHealingKt {
-    fun onPotentialSoupUse (
+    fun onPotentialSoupUse(
         player: Player, item: Item,
         cir: CallbackInfoReturnable<InteractionResultHolder<ItemStack>>,
         world: Level, hand: InteractionHand
@@ -26,7 +26,9 @@ object SoupHealingKt {
 
         if (player.health < player.maxHealth) {
             player.hgPlayer?.kits?.forEach {
-                it.events.soupEatAction?.invoke(player.hgPlayer!!) // only on heal soups not hunger soups
+                if (player.hgPlayer!!.canUseKit(it)) {
+                    it.events.soupEatAction?.invoke(player.hgPlayer!!) // only on heal soups not hunger soups
+                }
             }
             player.heal(SOUP_HEAL)
             consumedSoup = true

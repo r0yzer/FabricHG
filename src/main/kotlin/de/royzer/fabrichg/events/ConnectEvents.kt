@@ -6,6 +6,7 @@ import de.royzer.fabrichg.game.*
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.phase.phases.tracker
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.onAnchorJoin
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
@@ -77,6 +78,7 @@ object ConnectEvents {
                             player.foodData.foodLevel = 20
                             player.setGameMode(GameType.SURVIVAL)
                             PlayerList.addOrGetPlayer(player.uuid, player.name.string)
+                            player.inventory.add(tracker)
                             hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
                         }
                     }

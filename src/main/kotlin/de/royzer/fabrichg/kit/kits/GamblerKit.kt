@@ -56,6 +56,13 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     collection.add(GamblerAction("You won a iron ingot") {
         it.inventory.add(itemStack(Items.IRON_INGOT, 1) {})
     }, 0.3)
+    collection.add(GamblerAction("You won wood") {
+        it.inventory.add(itemStack(Items.OAK_PLANKS, 32) {})
+    }, 0.8)
+    collection.add(GamblerAction("Coco farm") {
+        it.inventory.add(itemStack(Items.JUNGLE_LOG, 3) {})
+        it.inventory.add(itemStack(Items.COCOA_BEANS, 6) {})
+    }, 0.2)
     collection.add(GamblerAction("You won strength") {
         it.addEffect(MobEffectInstance(MobEffects.DAMAGE_BOOST, 20 * 15))
     }, 0.5)
@@ -90,7 +97,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         it.addEffect(MobEffectInstance(MobEffects.POISON, 20 * 10))
     }, 1.0)
     collection.add(GamblerAction("You won levitation") {
-        it.addEffect(MobEffectInstance(MobEffects.POISON, 20 * 7))
+        it.addEffect(MobEffectInstance(MobEffects.LEVITATION, 20 * 10))
     }, 1.0)
     collection.add(GamblerAction("You won some wheat") {
         it.inventory.add(itemStack(Items.WHEAT, 13) {})
@@ -116,6 +123,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
     collection.add(GamblerAction("Time to read") {
         it.world.setBlockAndUpdate(it.blockPos, Blocks.LECTERN.defaultBlockState())
     }, 0.35)
+
 }
 
 
