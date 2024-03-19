@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
+import net.minecraft.core.BlockPos
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.GameRules
@@ -35,6 +36,7 @@ fun initServer() {
         it.overworld().dayTime = 0L
         it.gameRules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, it)
         it.gameRules.getRule(GameRules.RULE_DAYLIGHT).set(false, it)
+        it.overworld().setDefaultSpawnPos(BlockPos.ZERO, 0f)
     }
 
 //    val moreMushroomsFeature = MoreMushroomsFeature(DefaultFeatureConfig.CODEC)

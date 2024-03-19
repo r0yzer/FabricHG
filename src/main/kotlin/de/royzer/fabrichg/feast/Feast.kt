@@ -4,27 +4,38 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
+import de.royzer.fabrichg.game.phase.phases.tracker
 import de.royzer.fabrichg.scoreboard.formattedTime
 import de.royzer.fabrichg.sendPlayerStatus
 import de.royzer.fabrichg.server
+import de.royzer.fabrichg.util.WeightedCollection
 import de.royzer.fabrichg.util.getRandomHighestPos
 import kotlinx.coroutines.Job
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
+import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.alchemy.Potions
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.entity.BlockEntity
+import net.minecraft.world.level.block.entity.ChestBlockEntity
+import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.item.setPotion
 import net.silkmc.silk.core.math.geometry.produceFilledCirclePositions
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
 import java.time.Instant
-import java.util.*
+import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
+
 
 // TODO
 object Feast {
     var started = false
-    var timeLeft = 300
+    var timeLeft = 20
 
     var feastJob: Job? = null
     var feastCenter: BlockPos = BlockPos.ZERO
@@ -33,6 +44,7 @@ object Feast {
     private var radius = 25
 
     fun start() {
+        feastStrengthPotion // sonst ist null oder so
         server.playerList.players.forEach { it.sendPlayerStatus() }
         started = true
         feastCenter = getRandomHighestPos(150)
@@ -81,34 +93,77 @@ object Feast {
     }
 
     fun spawn() {
+        val world = server.overworld()
 
         server.playerList.players.forEach {
+            it.connection.send(ClientboundSoundPacket(SoundEvents.RAID_HORN, SoundSource.MASTER, it.x, it.y, it.z, 1f, 1f, Random.nextLong()))
             it.playSound(SoundEvents.RAID_HORN.value(), 1.0f, 1.0f)
         }
 
-        server.overworld().setBlock(
+        world.setBlock(
             feastCenter.subtract(Vec3i(0, -1, 0)),
             Blocks.ENCHANTING_TABLE.defaultBlockState(),
             3
         )
-        val chestLocations: Array<BlockPos?> = arrayOfNulls(12)
+        val chestLocations: MutableList<BlockPos> = mutableListOf()
 
-        chestLocations[0] = feastCenter.subtract(Vec3i(1, -1, 1))
-        chestLocations[1] = feastCenter.subtract(Vec3i(-1, -1, 1))
-        chestLocations[2] = feastCenter.subtract(Vec3i(-1, -1, -1))
-        chestLocations[3] = feastCenter.subtract(Vec3i(1, -1, -1))
-        chestLocations[4] = feastCenter.subtract(Vec3i(2, -1, 2))
-        chestLocations[5] = feastCenter.subtract(Vec3i(0, -1, 2))
-        chestLocations[6] = feastCenter.subtract(Vec3i(-2, -1, 2))
-        chestLocations[7] = feastCenter.subtract(Vec3i(2, -1, 0))
-        chestLocations[8] = feastCenter.subtract(Vec3i(-2, -1, 0))
-        chestLocations[9] = feastCenter.subtract(Vec3i(2, -1, -2))
-        chestLocations[10] = feastCenter.subtract(Vec3i(0, -1, -2))
-        chestLocations[11] = feastCenter.subtract(Vec3i(-2, -1, -2))
+        chestLocations.add(feastCenter.subtract(Vec3i(1, -1, 1)))
+        chestLocations.add(feastCenter.subtract(Vec3i(-1, -1, 1)))
+        chestLocations.add(feastCenter.subtract(Vec3i(-1, -1, -1)))
+        chestLocations.add(feastCenter.subtract(Vec3i(1, -1, -1)))
+        chestLocations.add(feastCenter.subtract(Vec3i(2, -1, 2)))
+        chestLocations.add(feastCenter.subtract(Vec3i(0, -1, 2)))
+        chestLocations.add(feastCenter.subtract(Vec3i(-2, -1, 2)))
+        chestLocations.add(feastCenter.subtract(Vec3i(2, -1, 0)))
+        chestLocations.add(feastCenter.subtract(Vec3i(-2, -1, 0)))
+        chestLocations.add(feastCenter.subtract(Vec3i(2, -1, -2)))
+        chestLocations.add(feastCenter.subtract(Vec3i(0, -1, -2)))
+        chestLocations.add(feastCenter.subtract(Vec3i(-2, -1, -2)))
 
-        Arrays.stream(chestLocations).forEach { chestLocation ->
-            server.overworld().setBlockAndUpdate(chestLocation!!, Blocks.CHEST.defaultBlockState())
+        chestLocations.forEach {chestLocation ->
+            world.setBlockAndUpdate(chestLocation, Blocks.CHEST.defaultBlockState())
+            val blockEntity: BlockEntity = world.getBlockEntity(chestLocation) ?: return
+
+            if (blockEntity is ChestBlockEntity) {
+                repeat(8) {
+                    val slot = Random.nextInt(27)
+                    val loot = feastLoot.get() ?: return@repeat
+                    val amount = Random.nextInt(1, loot.maxAmount + 1)
+                    println("kiste $chestLocation slot $slot item ${loot.item.item} amount $amount")
+                    blockEntity.setItem(slot, loot.item.copy().also { it.count = amount })
+                }
+            }
         }
 
     }
 }
+
+private val feastStrengthPotion = itemStack(Items.SPLASH_POTION) {
+    setPotion(Potions.STRENGTH)
+    count = 1
+}
+
+private val feastLoot = WeightedCollection<FeastLoot>().also {
+    it.add(FeastLoot(Items.DIAMOND_HELMET.defaultInstance, 1), 1.0)
+    it.add(FeastLoot(Items.DIAMOND_LEGGINGS.defaultInstance, 1), 1.0)
+    it.add(FeastLoot(Items.DIAMOND_CHESTPLATE.defaultInstance, 1), 1.0)
+    it.add(FeastLoot(Items.DIAMOND_BOOTS.defaultInstance, 1), 1.0)
+    it.add(FeastLoot(Items.DIAMOND_SWORD.defaultInstance, 1), 1.0)
+    it.add(FeastLoot(feastStrengthPotion, 1), 0.3)
+    it.add(FeastLoot(tracker, 1), 0.5)
+    it.add(FeastLoot(Items.COBWEB.defaultInstance, 5), 2.0)
+    it.add(FeastLoot(Items.BOW.defaultInstance, 1), 1.5)
+    it.add(FeastLoot(Items.ENDER_PEARL.defaultInstance, 4), 1.5)
+    it.add(FeastLoot(Items.ARROW.defaultInstance, 8), 3.0)
+    it.add(FeastLoot(Items.COOKED_MUTTON.defaultInstance, 6), 2.0)
+    it.add(FeastLoot(Items.MUSHROOM_STEW.defaultInstance, 8), 2.5)
+    it.add(FeastLoot(Items.EXPERIENCE_BOTTLE.defaultInstance, 3), 1.5)
+}
+
+
+
+
+private data class FeastLoot(
+    val item: ItemStack,
+    val maxAmount: Int,
+)

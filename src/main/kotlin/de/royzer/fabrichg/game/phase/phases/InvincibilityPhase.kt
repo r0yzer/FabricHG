@@ -34,9 +34,7 @@ object InvincibilityPhase : GamePhase() {
                 this?.clearContent()
 //                this?.add(itemStack(Items.STONE_SWORD, 1) {})
 //                repeat(33) { this?.add(itemStack(Items.MUSHROOM_STEW, 1) {}) }
-                this?.add(itemStack(Items.COMPASS) {
-                    setCustomName { text("Tracker") }
-                })
+                this?.add(tracker)
                 hgPlayer.giveKitItems()
 
             }
@@ -58,4 +56,8 @@ object InvincibilityPhase : GamePhase() {
     override val phaseType = PhaseType.INVINCIBILITY
     override val maxPhaseTime = 120 * 1
     override val nextPhase = IngamePhase
+}
+
+val tracker = itemStack(Items.COMPASS) {
+    setCustomName { text("Tracker") }
 }
