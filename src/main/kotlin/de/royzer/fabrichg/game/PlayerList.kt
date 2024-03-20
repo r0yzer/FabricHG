@@ -24,7 +24,7 @@ object PlayerList {
         get() = if (GamePhaseManager.currentPhaseType == PhaseType.INGAME || GamePhaseManager.currentPhaseType == PhaseType.END) IngamePhase.maxPlayers else alivePlayers.size
 
     fun addOrGetPlayer(uuid: UUID, name: String): HGPlayer {
-        return players.computeIfAbsent(uuid) {
+        return players.getOrPut(uuid) {
             HGPlayer(uuid, name)
         }
     }

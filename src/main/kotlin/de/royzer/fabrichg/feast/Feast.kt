@@ -50,12 +50,15 @@ object Feast {
         feastCenter = getRandomHighestPos(150)
         feastTimestamp = Instant.now().plusSeconds(timeLeft.toLong())
 
+        server.playerList.players.forEach {
+            it.playNotifySound(SoundEvents.RAID_HORN.value(), SoundSource.MASTER, 1.0f, 1.0f)
+        }
+
         PlayerList.players.forEach { e ->
             e.value.kits.forEach {
                 if (it.name == "Anchor") {
                     e.value.serverPlayer?.inventory?.armor?.set(2, Items.AIR.defaultInstance)
                     e.value.serverPlayer?.inventory?.armor?.set(3, Items.AIR.defaultInstance)
-
                 }
             }
         }
@@ -94,11 +97,6 @@ object Feast {
 
     fun spawn() {
         val world = server.overworld()
-
-        server.playerList.players.forEach {
-            it.connection.send(ClientboundSoundPacket(SoundEvents.RAID_HORN, SoundSource.MASTER, it.x, it.y, it.z, 1f, 1f, Random.nextLong()))
-            it.playSound(SoundEvents.RAID_HORN.value(), 1.0f, 1.0f)
-        }
 
         world.setBlock(
             feastCenter.subtract(Vec3i(0, -1, 0)),
@@ -157,6 +155,7 @@ private val feastLoot = WeightedCollection<FeastLoot>().also {
     it.add(FeastLoot(Items.COOKED_MUTTON.defaultInstance, 6), 2.0)
     it.add(FeastLoot(Items.MUSHROOM_STEW.defaultInstance, 8), 2.5)
     it.add(FeastLoot(Items.EXPERIENCE_BOTTLE.defaultInstance, 3), 1.5)
+    it.add(FeastLoot(Items.LAPIS_LAZULI.defaultInstance, 12), 2.0)
 }
 
 

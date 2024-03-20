@@ -6,6 +6,7 @@ import net.silkmc.silk.core.entity.pos
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.entity.blockPos
@@ -28,7 +29,7 @@ val blinkKit = kit("Blink") {
                 newPos.x, newPos.y, newPos.z
             )
             player.level().setBlockAndUpdate(BlockPos(player.blockPos.subtract(Vec3i(0,1,0))), Blocks.OAK_LEAVES.defaultBlockState())
-            player.playSound(SoundEvents.FIREWORK_ROCKET_LAUNCH, 100F, 100F)
+            player.playNotifySound(SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.MASTER, 100F, 100F)
         }
     }
 }

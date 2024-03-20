@@ -19,6 +19,9 @@ public class MainMixin {
             remap = false
     )
     private static void onStart(String[] args, CallbackInfo ci) throws IOException {
+        if (System.getProperty("os.name").contains("Windows")) {
+            return;
+        }
         Arrays.stream(new File("./world").list()).filter(s -> !s.equalsIgnoreCase("datapacks")).forEach(s -> {
             File file = new File("./world/" + s);
             if (file.isDirectory()) {
