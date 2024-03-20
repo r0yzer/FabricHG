@@ -27,32 +27,6 @@ abstract public class ServerPlayerInteractionManagerMixin {
     protected ServerPlayerInteractionManagerMixin(ServerPlayer player) {
         this.player = player;
     }
-//    @Inject(
-//            method = "useItem",
-//            at = @At(
-//                    value = "RETURN"
-//            ),
-//            cancellable = true
-//    )
-//    public void onUse(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-//        System.out.println("hod");
-//        if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
-//            cir.setReturnValue(InteractionResult.FAIL);
-//        }
-//    }
-//    @Inject(
-//            method = "useItemOn",
-//            at = @At(
-//                    value = "RETURN"
-//            ),
-//            cancellable = true
-//    )
-//    public void onUseOn(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> cir) {
-//        System.out.println("hod22");
-//        if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
-//            cir.setReturnValue(InteractionResult.FAIL);
-//        }
-//    }
 
     @Inject(
             method = "handleBlockBreakAction",

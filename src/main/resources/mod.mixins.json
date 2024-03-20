@@ -8,9 +8,7 @@
     "entity.HungerManagerMixin",
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
-    "entity.PlayerEntityMixin",
     "entity.ai.goal.CreeperIgniteGoalMixin",
-    "entity.ai.goal.FollowTargetGoalMixin",
     "item.BlockItemMixin",
     "item.ItemStackMixin",
     "item.PotionMixin",
@@ -27,7 +25,6 @@
     "kits.AnchorPlayerMixin",
     "kits.PhantomMixin",
     "server.network.MinecraftServerMixin",
-    "server.network.ServerGamePacketListenerImplMixin",
     "server.network.ServerPlayerInteractionManagerMixin"
   ],
   "injectors": {
