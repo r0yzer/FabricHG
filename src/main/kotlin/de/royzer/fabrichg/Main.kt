@@ -52,6 +52,7 @@ fun registerCommands() {
     gameCommand
     hgbotCommand
     spawnCommand
+    minifeastCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

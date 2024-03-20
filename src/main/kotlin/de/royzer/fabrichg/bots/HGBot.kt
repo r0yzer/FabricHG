@@ -273,10 +273,6 @@ class HGBot(
     }
 
     override fun die(damageSource: DamageSource) {
-        world.addFreshEntity(ItemEntity(EntityType.ITEM, level()).apply {
-            setPos(this@HGBot.pos)
-            item = ItemStack(Items.MUSHROOM_STEW, soups)
-        })
         super.die(damageSource)
         remove(RemovalReason.KILLED)
         removeHGPlayer()

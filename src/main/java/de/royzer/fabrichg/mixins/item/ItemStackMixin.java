@@ -1,7 +1,7 @@
 package de.royzer.fabrichg.mixins.item;
 
+import de.royzer.fabrichg.feast.MinifeastKt;
 import de.royzer.fabrichg.game.GamePhaseManager;
-import de.royzer.fabrichg.game.phase.PhaseType;
 import de.royzer.fabrichg.kit.KitItemKt;
 import de.royzer.fabrichg.mixinskt.KitSelector;
 import de.royzer.fabrichg.mixinskt.SoupHealingKt;
@@ -31,6 +31,7 @@ public class ItemStackMixin {
         KitItemKt.onClick(user, itemStack, cir);
         if (itemStack.getItem().equals(Items.CHEST)) {
             KitSelector.INSTANCE.onClick(user, itemStack, cir, world, hand);
+            MinifeastKt.clickGift(itemStack, user);
         }
         if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
             cir.setReturnValue(InteractionResultHolder.pass(itemStack));

@@ -140,7 +140,7 @@ private val feastStrengthPotion = itemStack(Items.SPLASH_POTION) {
     count = 1
 }
 
-private val feastLoot = WeightedCollection<FeastLoot>().also {
+val feastLoot = WeightedCollection<FeastLoot>().also {
     it.add(FeastLoot(Items.DIAMOND_HELMET.defaultInstance, 1), 1.0)
     it.add(FeastLoot(Items.DIAMOND_LEGGINGS.defaultInstance, 1), 1.0)
     it.add(FeastLoot(Items.DIAMOND_CHESTPLATE.defaultInstance, 1), 1.0)
@@ -161,7 +161,7 @@ private val feastLoot = WeightedCollection<FeastLoot>().also {
 
 
 
-private data class FeastLoot(
+data class FeastLoot(
     val item: ItemStack,
     val maxAmount: Int,
 )
