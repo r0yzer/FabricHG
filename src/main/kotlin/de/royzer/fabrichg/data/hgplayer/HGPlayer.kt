@@ -9,6 +9,7 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
+import de.royzer.fabrichg.util.forceGiveItem
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.silkmc.silk.core.item.setCustomName
@@ -68,7 +69,7 @@ class HGPlayer(
         if (singleKit == null) {
             kits.forEach { kit ->
                 kit.kitItems.forEach { item ->
-                    serverPlayer?.inventory?.add(item.itemStack.copy().also {
+                    serverPlayer?.forceGiveItem(item.itemStack.copy().also {
                         it.setLore(listOf(literalText("Kititem")))
                         if (!it.hasCustomHoverName()) {
                             it.setCustomName(kit.name)
@@ -79,7 +80,7 @@ class HGPlayer(
             }
         } else {
             singleKit.kitItems.forEach { item ->
-                serverPlayer?.inventory?.add(item.itemStack.copy().also {
+                serverPlayer?.forceGiveItem(item.itemStack.copy().also {
                     it.setLore(listOf(literalText("Kititem")))
                     if (!it.hasCustomHoverName()) {
                         it.setCustomName(singleKit.name)

@@ -8,13 +8,16 @@ val feastCommand = command("feast") {
         requiresPermissionLevel(4)
 
         runs {
-            Feast.start()
+            if (!Feast.started)
+                Feast.start()
         }
 
         argument<Int>("time") { timeLeft ->
             runs {
-                Feast.timeLeft = timeLeft()
-                Feast.start()
+                if (!Feast.started) {
+                    Feast.timeLeft = timeLeft()
+                    Feast.start()
+                }
             }
         }
     }

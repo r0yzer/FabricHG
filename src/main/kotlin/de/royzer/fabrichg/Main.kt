@@ -39,17 +39,6 @@ fun initServer() {
         it.overworld().setDefaultSpawnPos(BlockPos.ZERO, 0f)
     }
 
-//    val moreMushroomsFeature = MoreMushroomsFeature(DefaultFeatureConfig.CODEC)
-//    Registry.register(Registry.FEATURE, "more_mushrooms".hgId, moreMushroomsFeature)
-
-//    val moreMushrooms = moreMushroomsFeature.configure(DefaultFeatureConfig())
-//        .decorate(Decorator.HEIGHTMAP.configure(HeightmapDecoratorConfig(Heightmap.Type.WORLD_SURFACE)))
-//        .spreadHorizontally()
-//
-//    val moreMushroomsKey = RegistryKey.of(Registry.CONFIGURED_FEATURE_KEY, "configured_more_mushrooms".hgId)
-//    Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, moreMushroomsKey.value, moreMushrooms)
-
-//    BiomeModifications.addFeature(BiomeSelectors.all(), GenerationStep.Feature.SURFACE_STRUCTURES, moreMushroomsKey)
 }
 
 fun registerCommands() {

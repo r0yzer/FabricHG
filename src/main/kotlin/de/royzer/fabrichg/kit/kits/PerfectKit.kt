@@ -2,7 +2,9 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.mixinskt.SOUP_HEAL
+import de.royzer.fabrichg.util.giveOrDropItem
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack
@@ -11,6 +13,8 @@ import kotlin.math.sqrt
 
 val perfectKit = kit("Perfect") {
     kitSelectorItem = Items.BEACON.defaultInstance
+
+    description = "Get rewarded for not presouping"
 
     val streakKey = "perfectStreak"
 
@@ -30,14 +34,14 @@ val perfectKit = kit("Perfect") {
                     val soupsToBeAdded =
                         round(sqrt((streak / soupsForReward).toDouble() * 1.3)).toInt() + 1 // round(sqrt(x*1.3))+1 auf https://www.geogebra.org/calculator
                     repeat(soupsToBeAdded) {
-                        serverPlayer.inventory.add(itemStack(Items.RABBIT_STEW) {})
-                        serverPlayer.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP)
+                        serverPlayer.giveOrDropItem(itemStack(Items.RABBIT_STEW) {})
+                        serverPlayer.playNotifySound(SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.MASTER,1f, 1f)
                     }
                 }
 
             } else {
                 if (streak > 1) {
-                    serverPlayer.playSound(SoundEvents.DONKEY_HURT)
+                    serverPlayer.playNotifySound(SoundEvents.DONKEY_DEATH, SoundSource.MASTER,1f, 1f)
                 }
                 hgPlayer.playerData[streakKey] = 0
             }

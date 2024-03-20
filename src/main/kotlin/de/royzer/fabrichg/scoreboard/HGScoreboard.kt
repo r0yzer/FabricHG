@@ -1,16 +1,14 @@
 package de.royzer.fabrichg.scoreboard
 
+import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.EndPhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
-import net.minecraft.network.chat.MutableComponent
-import net.silkmc.silk.core.text.literalText
-import net.silkmc.silk.game.sideboard.showSideboard
-import net.silkmc.silk.game.sideboard.sideboard
 import net.minecraft.server.level.ServerPlayer
-import net.silkmc.silk.core.text.LiteralTextBuilder
+import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.game.sideboard.sideboard
 import kotlin.time.Duration.Companion.milliseconds
 
 fun ServerPlayer.showScoreboard() {
@@ -28,9 +26,14 @@ fun ServerPlayer.showScoreboard() {
         emptyLine()
         updatingLine(1000.milliseconds) { literalText("Kills: ${hgPlayer.kills}") { color = 0x0032FF } }
         updatingLine(1000.milliseconds) {
-            literalText("Kit(s): ${hgPlayer.kits.joinToString { it.name }}") {
-                color = 0x00FFFF
-                strikethrough = hgPlayer.kitsDisabled
+            when (hgPlayer.status) {
+                HGPlayerStatus.ALIVE ->  literalText("Kit(s): ${hgPlayer.kits.joinToString { it.name }}") {
+                    color = 0x00FFFF
+                    strikethrough = hgPlayer.kitsDisabled
+                }
+                else -> {
+                    literalText()
+                }
             }
         }
         line(literalText("") { })
