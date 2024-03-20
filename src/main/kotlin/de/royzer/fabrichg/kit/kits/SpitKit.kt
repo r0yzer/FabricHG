@@ -11,12 +11,13 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.phys.EntityHitResult
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
-import kotlin.random.Random
 
 val spitKit = kit("Spit") {
     kitSelectorItem = Items.GHAST_TEAR.defaultInstance
 
-    cooldown = 8.0 / 10
+    cooldown = 8.0
+
+    description = "Spit in the soups of your enemies"
 
     kitItem {
         itemStack = kitSelectorItem
