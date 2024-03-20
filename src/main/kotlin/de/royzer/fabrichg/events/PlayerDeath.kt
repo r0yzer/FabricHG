@@ -48,7 +48,7 @@ object PlayerDeath {
         return true
     }
 
-    private fun hgBotDeath(hgBot: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
+    fun hgBotDeath(hgBot: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
         if (hgBot !is HGBot) return false
         if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
         val killer: Entity? = hgBot.lastAttackedByEntity

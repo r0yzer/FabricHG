@@ -2,6 +2,7 @@ package de.royzer.fabrichg.bots
 
 import com.mojang.authlib.GameProfile
 import de.royzer.fabrichg.bots.goals.*
+import de.royzer.fabrichg.bots.player.HGBotFakePlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.feast.Feast
@@ -9,17 +10,12 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import kotlinx.coroutines.delay
-import net.fabricmc.fabric.api.entity.FakePlayer
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.item.ItemEntity
@@ -37,23 +33,21 @@ import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.time.Instant
-import java.util.*
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 class HGBot(
     world: Level,
-    name: String,
+    val hgName: String,
     target: ServerPlayer,
-    private val range: Double = 2.0,
-    val uuid: UUID = UUID.randomUUID()
+    private val range: Double = 2.0
 ) : Zombie(world) {
 
-    val fakePlayer = FakePlayer.get(world as ServerLevel, GameProfile(uuid, name))
+    val fakePlayer = HGBotFakePlayer(this)
 
     init {
-        customName = name.literal
+        customName = hgName.literal
         isCustomNameVisible = true
         setTarget(target)
 
@@ -321,3 +315,4 @@ class HGBot(
         )
     }
 }
+
