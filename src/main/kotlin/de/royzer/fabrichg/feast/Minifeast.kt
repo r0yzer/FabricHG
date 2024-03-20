@@ -222,7 +222,7 @@ private val miniFeastLoot = WeightedCollection<MiniFeastLoot>().also {
     it.add(MiniFeastLoot(minifeastPoisonPoion.copy(), 1), 1.0)
     it.add(MiniFeastLoot(minifeastSlownessPoion.copy(), 1), 1.0)
     it.add(MiniFeastLoot(minifeastSwiftnessPoion.copy(), 1), 1.0)
-    it.add(MiniFeastLoot(feastItemGift.copy(), 2), 10.25)
+    it.add(MiniFeastLoot(feastItemGift.copy(), 2), 0.25)
     // it.add(MiniFeastLoot(kitItemGift.copy(), 1), 3.0)
 }
 
