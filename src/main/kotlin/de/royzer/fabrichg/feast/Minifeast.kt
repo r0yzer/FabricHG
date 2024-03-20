@@ -141,7 +141,6 @@ private fun clickFeastItemGift(itemStack: ItemStack, player: Player) {
         val loot = feastLoot.get() ?: return
         val amount = Random.nextInt(1, loot.maxAmount + 1)
         player.inventory.removeItem(itemStack)
-        player.sendSystemMessage("${player.inventoryValue()}".literal)
 
         player.forceGiveItem(loot.item.copy().also { it.count = amount })
         player.sendSystemMessage(loot.item.displayName)

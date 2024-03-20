@@ -28,8 +28,8 @@ object IngamePhase : GamePhase() {
 
     private const val feastStartTime = 600
 
-    private const val minifeastStartTime = 0
-    private const val minifeastEndTime = 100
+    private const val minifeastStartTime = 300
+    private const val minifeastEndTime = 550
     private var minifeasts by Delegates.notNull<Int>()
     private lateinit var minifeastStartTimes: List<Int>
 

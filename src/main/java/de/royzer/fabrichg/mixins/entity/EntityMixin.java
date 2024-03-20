@@ -35,16 +35,16 @@ public abstract class EntityMixin {
     }
 
 
-    @Inject(
-            method = "moveTo(DDDFF)V",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    public void onMoveTo(double d, double e, double f, float g, float h, CallbackInfo ci) {
-        if (LobbyPhase.INSTANCE.isStarting()) {
-            ci.cancel();
-        }
-    }
+//    @Inject(
+//            method = "moveTo(DDDFF)V",
+//            at = @At("HEAD"),
+//            cancellable = true
+//    )
+//    public void onMoveTo(double d, double e, double f, float g, float h, CallbackInfo ci) {
+//        if (LobbyPhase.INSTANCE.isStarting()) {
+//            ci.cancel();
+//        }
+//    }
 
     @Inject(
             method = "move",
@@ -52,15 +52,15 @@ public abstract class EntityMixin {
             cancellable = true
     )
     public void onMove(MoverType movementType, Vec3 movement, CallbackInfo ci) {
-        if (LobbyPhase.INSTANCE.isStarting()) {
-            Entity entity = ((Entity) (Object) this);
-            if (entity instanceof ServerPlayer serverPlayer) {
-//                if (serverPlayer.onGround()) {
-//                    serverPlayer.connection.send(new ClientboundPlayerPositionPacket(serverPlayer.xOld, serverPlayer.yOld, serverPlayer.zOld, serverPlayer.getYRot(), serverPlayer.getXRot(), RelativeMovement.ALL, 1));
-//                }
-            }
-            ci.cancel();
-        }
+//        if (LobbyPhase.INSTANCE.isStarting()) {
+//            Entity entity = ((Entity) (Object) this);
+//            if (entity instanceof ServerPlayer serverPlayer) {
+////                if (serverPlayer.onGround()) {
+////                    serverPlayer.connection.send(new ClientboundPlayerPositionPacket(serverPlayer.xOld, serverPlayer.yOld, serverPlayer.zOld, serverPlayer.getYRot(), serverPlayer.getXRot(), RelativeMovement.ALL, 1));
+////                }
+//            }
+//            ci.cancel();
+//        }
         if (movementType.equals(MoverType.PLAYER)) {
             boolean isServerPlayer = (Entity) (Object) (this) instanceof ServerPlayer;
             boolean isHgBot = (Entity) (Object) (this) instanceof HGBot;

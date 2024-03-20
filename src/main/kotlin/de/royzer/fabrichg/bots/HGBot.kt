@@ -1,6 +1,5 @@
 package de.royzer.fabrichg.bots
 
-import com.mojang.authlib.GameProfile
 import de.royzer.fabrichg.bots.goals.*
 import de.royzer.fabrichg.bots.player.HGBotFakePlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
@@ -41,7 +40,7 @@ class HGBot(
     world: Level,
     val hgName: String,
     target: ServerPlayer,
-    private val range: Double = 2.0
+    private val range: Double = 1.5
 ) : Zombie(world) {
 
     val fakePlayer = HGBotFakePlayer(this)
@@ -56,9 +55,9 @@ class HGBot(
         attributes.getInstance(Attributes.FOLLOW_RANGE)?.baseValue = 100.0
         attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = 20.0
         health = 20.0F
-        attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = 0.4
+        attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = 0.3
         attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 10.0
-        attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 4.0
+        attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 2.5
 
         server?.playerList?.players?.add(fakePlayer)
         sendPlayerInfoUpdatePacket()

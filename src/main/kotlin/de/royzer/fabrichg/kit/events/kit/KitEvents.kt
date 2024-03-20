@@ -14,4 +14,5 @@ class KitEvents(
     var rightClickEntityAction: ((HGPlayer, Kit, clickedEntity: Entity) -> Unit)? = null,
     var drinkAction: ((HGPlayer, ItemStack) -> Unit)? = null,
     var soupEatAction: ((HGPlayer) -> Unit)? = null,
+    var killPlayerAction: ((HGPlayer, ServerPlayer) -> Unit)? = null,
 )

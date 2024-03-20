@@ -22,8 +22,10 @@ class KitEventsBuilder(val kit: Kit) {
     fun onDrink(action: (HGPlayer, ItemStack) -> Unit) {
         kit.events.drinkAction = action
     }
-
     fun onSoupEat(action: (HGPlayer) -> Unit) {
         kit.events.soupEatAction = action
+    }
+    fun onKillPlayer(action: (HGPlayer, ServerPlayer) -> Unit) {
+        kit.events.killPlayerAction = action
     }
 }
