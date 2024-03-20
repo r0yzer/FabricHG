@@ -20,18 +20,20 @@
     "kits.NeoMixin",
     "kits.SwitcherMixin",
     "server.network.ServerPlayerMixin",
-    "world.CombatTrackerAcessor"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  },
-  "mixins": [
+    "world.CombatTrackerAcessor",
     "entity.EntityAcessor",
+    "entity.LlamaSpitMixin",
     "entity.ProjectileAccessor",
     "kits.AnchorPlayerMixin",
     "kits.PhantomMixin",
     "server.network.MinecraftServerMixin",
     "server.network.ServerGamePacketListenerImplMixin",
     "server.network.ServerPlayerInteractionManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+
   ]
 }

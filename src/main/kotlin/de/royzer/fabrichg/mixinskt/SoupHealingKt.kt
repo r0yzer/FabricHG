@@ -30,7 +30,7 @@ object SoupHealingKt {
                     it.events.soupEatAction?.invoke(player.hgPlayer!!) // only on heal soups not hunger soups
                 }
             }
-            player.heal(SOUP_HEAL)
+            player.heal(item.restoredHealth)
             consumedSoup = true
         } else if (foodData.needsFood()) {
             foodData.foodLevel += item.restoredFood
@@ -45,7 +45,17 @@ object SoupHealingKt {
             Items.MUSHROOM_STEW -> true
             Items.BEETROOT_SOUP -> true
             Items.RABBIT_STEW -> true
+            Items.SUSPICIOUS_STEW -> true
             else -> false
+        }
+
+    private val Item.restoredHealth: Float
+        get() = when (this) {
+            Items.MUSHROOM_STEW -> 7.0f
+            Items.BEETROOT_SOUP -> 7.0f
+            Items.RABBIT_STEW -> 8.0f // used in perfect kit
+            Items.SUSPICIOUS_STEW -> 2.0f
+            else -> 0f
         }
 
     private val Item.restoredFood: Int
