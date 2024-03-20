@@ -58,6 +58,6 @@ object InvincibilityPhase : GamePhase() {
     override val nextPhase = IngamePhase
 }
 
-val tracker = itemStack(Items.COMPASS) {
+val tracker get() = itemStack(Items.COMPASS) {
     setCustomName { text("Tracker") }
 }
