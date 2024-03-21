@@ -10,7 +10,7 @@ import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 
 val hgbotCommand = command("hgbot") {
-    requiresPermissionLevel(4)
+    requiresPermissionLevel(1)
     argument("name") { name ->
         runs {
             val botname = name()

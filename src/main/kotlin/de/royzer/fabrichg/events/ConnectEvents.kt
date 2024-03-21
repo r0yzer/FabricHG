@@ -49,7 +49,7 @@ object ConnectEvents {
                     player.health = player.maxHealth
                     player.inventory.clearContent()
                     player.inventory.add(kitSelector)
-                    if (player.hasPermissions(2)) {
+                    if (player.hasPermissions(1)) {
                         player.inventory.setItem(8, gameSettingsItem)
                     }
 

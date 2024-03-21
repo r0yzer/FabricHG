@@ -39,6 +39,12 @@ object IngamePhase : GamePhase() {
     override fun init() {
         GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A7eINGAME"
         logInfo("IngamePhase startet")
+        broadcastComponent(
+            literalText {
+                text("The invincibility is over")
+                color = TEXT_BLUE
+            }
+        )
         GamePhaseManager.server.isPvpAllowed = true
         minifeasts = ((minifeastEndTime - minifeastStartTime) / 150 - 5 + lerp(
             0.5f,
