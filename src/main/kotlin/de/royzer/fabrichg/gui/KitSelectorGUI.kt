@@ -1,20 +1,18 @@
 package de.royzer.fabrichg.gui
 
-import de.royzer.fabrichg.TEXT_BLUE
-import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.kit.kits
-import net.silkmc.silk.core.item.itemStack
-import net.silkmc.silk.core.item.setCustomName
-import net.silkmc.silk.core.text.literal
-import net.silkmc.silk.igui.*
-import net.silkmc.silk.igui.observable.toGuiList
+import de.royzer.fabrichg.settings.GameSettings
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
+import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.kotlin.ticks
+import net.silkmc.silk.core.text.literal
 import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.igui.*
+import net.silkmc.silk.igui.observable.toGuiList
 
 fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE, "Kits".literal, 1) {
     val hgPlayer = serverPlayerEntity.hgPlayer
@@ -23,7 +21,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
 
         val compound = compound(
             (2 sl 2) rectTo (4 sl 8),
-            kits.sortedBy { it.name.first() }.toGuiList(),
+            kits.sortedBy { it.name.first() }.filterNot { GameSettings.disabledKits.contains(it) }.toGuiList(),
             iconGenerator = { kit ->
                 itemStack(kit.kitSelectorItem?.item ?: Items.BARRIER) {
                     tag = kit.kitSelectorItem?.tag
@@ -47,16 +45,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
                 }
             },
             onClick = { _, kit ->
-                hgPlayer.kits[0] = kit
-                serverPlayerEntity.sendSystemMessage(
-                    literalText {
-                        text("You are now ") { color = TEXT_GRAY }
-                        text(kit.name) { color = TEXT_BLUE }
-                    }
-                )
-                if (GamePhaseManager.isIngame) {
-                    hgPlayer.giveKitItems(kit)
-                }
+                hgPlayer.addKit(kit)
                 serverPlayerEntity.closeContainer()
             }
         )

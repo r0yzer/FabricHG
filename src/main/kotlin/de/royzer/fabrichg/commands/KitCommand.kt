@@ -42,12 +42,10 @@ val kitCommand = command("kit") {
                 val kitName = kitArg()
                 val kit = kits.firstOrNull { it.name.equals(kitName, true) }
                 if (kit != null) {
-                    if (GamePhaseManager.isIngame) {
-                        player.hgPlayer.giveKitItems(kit)
-                    }
-                    player.hgPlayer.kits[0] = kit
-                } else
+                    player.hgPlayer.addKit(kit)
+                } else {
                     player.sendText("Es konnte kein Kit mit dem Namen gefunden werden") { color = 0xFF0000 }
+                }
             }
         }
     }

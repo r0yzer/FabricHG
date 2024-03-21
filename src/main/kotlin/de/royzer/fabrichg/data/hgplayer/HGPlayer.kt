@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.data.hgplayer
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
@@ -9,12 +11,14 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
+import de.royzer.fabrichg.settings.GameSettings
 import de.royzer.fabrichg.util.forceGiveItem
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.core.text.sendText
 import java.util.*
 
 class HGPlayer(
@@ -90,6 +94,28 @@ class HGPlayer(
             singleKit.onEnable?.invoke(this, singleKit, serverPlayer!!)
         }
 
+    }
+
+    fun addKit(kit: Kit) {
+        if (GameSettings.disabledKits.contains(kit)) {
+            this.serverPlayer?.sendText {
+                text("This kit is disabled")
+                color = TEXT_GRAY
+                bold = true
+            }
+            return
+        }
+        this.kits.clear() // solange nur 1 kit
+        this.kits.add(kit)
+        this.serverPlayer?.sendSystemMessage(
+            literalText {
+                text("You are now ") { color = TEXT_GRAY }
+                text(kit.name) { color = TEXT_BLUE }
+            }
+        )
+        if (GamePhaseManager.isIngame) {
+            this.giveKitItems(kit)
+        }
     }
 
     val isNeo get() = canUseKit(neoKit)

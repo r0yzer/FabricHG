@@ -19,7 +19,6 @@ object KitSelector {
         world: Level,
         hand: InteractionHand
     ) {
-        println(stack.displayName.string)
         if (stack.displayName.string == "[Kit Selector]") {
             val player = playerEntity as? ServerPlayer ?: return
             player.openGui(kitSelectorGUI(player), 1)
