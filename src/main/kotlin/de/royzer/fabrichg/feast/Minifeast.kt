@@ -25,8 +25,8 @@ import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.item.setPotion
 import net.silkmc.silk.core.math.geometry.produceFilledCirclePositions
-import net.silkmc.silk.core.text.literal
 import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.core.text.sendText
 import kotlin.math.roundToInt
 import kotlin.random.Random
 
@@ -105,13 +105,16 @@ class Minifeast(
         PlayerList.players.forEach { (_, hgPlayer) ->
             val value = hgPlayer.serverPlayer?.inventoryValue() ?: 0.0
             val range = when {
-                value < 5 -> 10
-                value < 10 -> 25
-                value < 25 -> 50
-                value < 50 -> 100
+                value < 5 -> 50
+                value < 10 -> 75
+                value < 25 -> 100
+                value < 50 -> 150
                 else -> -1
             }
-            if (range == -1) hgPlayer.serverPlayer?.sendSystemMessage("A mini feast appeared, but you are too rich".literal)
+            if (range == -1) hgPlayer.serverPlayer?.sendText {
+                text("A mini feast appeared, but you are too rich")
+                color = TEXT_BLUE
+            }
             else {
                 val xStart = (miniFeastPos.x - Random.nextDouble(value + range)).roundToInt()
                 val xEnd = (miniFeastPos.x + Random.nextDouble(value + range)).roundToInt()
@@ -119,9 +122,18 @@ class Minifeast(
                 val zStart = (miniFeastPos.z - Random.nextDouble(value + range)).roundToInt()
                 val zEnd = (miniFeastPos.z + Random.nextDouble(value + range)).roundToInt()
 
-                hgPlayer.serverPlayer?.sendSystemMessage(literalText("A mini feast appeared between x $xStart and $xEnd and z $zStart and $zEnd") {
+                hgPlayer.serverPlayer?.sendText {
+                    text("A mini feast appeared between x: ")
+                    text("$xStart") { bold = true }
+                    text(" and ")
+                    text("$xEnd") { bold = true }
+                    text(" and z: ")
+                    text("$zStart") { bold = true }
+                    text(" and ")
+                    text("$zEnd") { bold = true }
                     color = TEXT_BLUE
-                })
+                }
+
             }
         }
     }

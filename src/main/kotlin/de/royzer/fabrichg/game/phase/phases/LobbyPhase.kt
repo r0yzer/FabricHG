@@ -80,8 +80,3 @@ object LobbyPhase : GamePhase() {
         }
     }
 }
-
-fun ServerPlayer.freeze() {
-    this.addEffect(MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 15 * 20, 255, false, false))
-    this.addEffect(MobEffectInstance(MobEffects.JUMP, 15 * 20, 255, false, false))
-}
