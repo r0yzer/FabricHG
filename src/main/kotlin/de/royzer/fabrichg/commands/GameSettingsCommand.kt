@@ -10,10 +10,10 @@ import net.silkmc.silk.igui.openGui
 
 val gameSettingsCommand = command("gamesettings") {
     requiresPermissionLevel(4)
-    requires {
-        GamePhaseManager.currentPhaseType == PhaseType.LOBBY
-    }
     runs {
+        requires {
+            GamePhaseManager.currentPhaseType == PhaseType.LOBBY
+        }
         val player = source.player ?: return@runs
         player.openGui(gameSettingsGUI(player), 1)
     }

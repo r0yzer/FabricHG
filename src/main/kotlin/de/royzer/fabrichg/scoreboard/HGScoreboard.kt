@@ -16,9 +16,9 @@ fun ServerPlayer.showScoreboard() {
     sideboard(
         literalText("Fabric HG") { color = 0xFF00C8 }
     ) {
-        updatingLine(1000.milliseconds) {
-            when (GamePhaseManager.currentPhaseType) {
-                PhaseType.LOBBY -> literalText("Start in: ${(LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()).formattedTime}")
+        updatingLine(100.milliseconds) {
+            when (GamePhaseManager.currentPhaseType) {              // rr keine ahnung warum man hier 1 dazurechnen muss
+                PhaseType.LOBBY -> literalText("Start in: ${(1 + LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()).formattedTime}")
                 PhaseType.END -> literalText("Zeit: ${(GamePhaseManager.currentPhase as EndPhase).endTime.formattedTime}")
                 else -> literalText("Zeit: ${(GamePhaseManager.timer.get()).formattedTime}")
             }

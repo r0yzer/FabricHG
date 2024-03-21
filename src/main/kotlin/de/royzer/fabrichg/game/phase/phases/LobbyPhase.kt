@@ -10,10 +10,14 @@ import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.scoreboard.formattedTime
 import de.royzer.fabrichg.util.getRandomHighestPos
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
+import net.silkmc.silk.core.kotlin.ticks
+import net.silkmc.silk.core.task.mcCoroutineScope
 
 object LobbyPhase : GamePhase() {
     override val phaseType = PhaseType.LOBBY
@@ -39,8 +43,20 @@ object LobbyPhase : GamePhase() {
                         it.serverPlayer?.teleportTo(
                             pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble()
                         )
-//                        it.serverPlayer?.freeze()
+                        mcCoroutineScope.launch {
+                            while (isStarting) {
+                                it.serverPlayer?.teleportTo(
+                                    pos.x.toDouble(), pos.y.toDouble(), pos.z.toDouble()
+                                )
+                                delay(1.ticks)
+                            }
+                        }
                     }
+                    broadcastComponent(literalText("Das Spiel start in ") {
+                        color = TEXT_GRAY
+                        text(timeLeft.formattedTime) { color = TEXT_BLUE }
+                        text(" Minuten")
+                    })
                 }
                 180, 120, 60, 30, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText("Das Spiel start in ") {
                     color = TEXT_GRAY

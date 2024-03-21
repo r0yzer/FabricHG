@@ -154,12 +154,9 @@ val feastLoot = WeightedCollection<FeastLoot>().also {
     it.add(FeastLoot(Items.ARROW.defaultInstance, 8), 3.0)
     it.add(FeastLoot(Items.COOKED_MUTTON.defaultInstance, 6), 2.0)
     it.add(FeastLoot(Items.MUSHROOM_STEW.defaultInstance, 8), 2.5)
-    it.add(FeastLoot(Items.EXPERIENCE_BOTTLE.defaultInstance, 3), 1.5)
+    it.add(FeastLoot(Items.EXPERIENCE_BOTTLE.defaultInstance, 3), 2.0)
     it.add(FeastLoot(Items.LAPIS_LAZULI.defaultInstance, 12), 2.0)
 }
-
-
-
 
 data class FeastLoot(
     val item: ItemStack,

@@ -147,6 +147,7 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         color = TEXT_GRAY
                     }
                 }
+                kitGuiList.mutate {}
             })
             button(1 sl 9, Items.RED_WOOL.defaultInstance.also {
                 it.setCustomName {
@@ -166,6 +167,7 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         color = TEXT_GRAY
                     }
                 }
+                kitGuiList.mutate {}
             })
 
             compoundScrollBackwards(6 sl 5, Items.RED_STAINED_GLASS_PANE.guiIcon, compound, speed = 5.ticks)
