@@ -29,9 +29,14 @@ public class ItemStackMixin {
     public void onUse(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
         ItemStack itemStack = (ItemStack) (Object) this;
         KitItemKt.onClick(user, itemStack, cir);
-        if (itemStack.getItem().equals(Items.CHEST)) {
-            KitSelector.INSTANCE.onClick(user, itemStack, cir, world, hand);
-            MinifeastKt.clickGift(itemStack, user);
+        if (GamePhaseManager.INSTANCE.isNotStarted()) {
+            if (itemStack.getItem().equals(Items.CHEST)) {
+                KitSelector.INSTANCE.onClick(user, itemStack, cir, world, hand);
+                MinifeastKt.clickGift(itemStack, user);
+            }
+            if (itemStack.getItem().equals(Items.COMPARATOR)) {
+                KitSelector.INSTANCE.onClickCompatator(user, itemStack, cir, world, hand);
+            }
         }
         if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
             cir.setReturnValue(InteractionResultHolder.pass(itemStack));

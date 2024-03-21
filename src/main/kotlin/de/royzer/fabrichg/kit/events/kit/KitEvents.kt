@@ -15,4 +15,5 @@ class KitEvents(
     var drinkAction: ((HGPlayer, ItemStack) -> Unit)? = null,
     var soupEatAction: ((HGPlayer) -> Unit)? = null,
     var killPlayerAction: ((HGPlayer, ServerPlayer) -> Unit)? = null,
+    var sneakAction: ((HGPlayer, Kit) -> Unit)? = null
 )

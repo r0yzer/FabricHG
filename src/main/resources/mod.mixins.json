@@ -25,7 +25,8 @@
     "server.network.MinecraftServerMixin",
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
-    "world.CombatTrackerAcessor"
+    "world.CombatTrackerAcessor",
+    "entity.PlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

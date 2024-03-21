@@ -11,11 +11,9 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.kits.surpriseKit
 import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.scoreboard.formattedTime
-import net.silkmc.silk.core.item.itemStack
-import net.silkmc.silk.core.item.setCustomName
-import net.silkmc.silk.core.text.literalText
-import net.minecraft.world.item.Items
+import de.royzer.fabrichg.util.tracker
 import net.minecraft.world.level.GameType
+import net.silkmc.silk.core.text.literalText
 
 object InvincibilityPhase : GamePhase() {
     override fun init() {
@@ -56,8 +54,4 @@ object InvincibilityPhase : GamePhase() {
     override val phaseType = PhaseType.INVINCIBILITY
     override val maxPhaseTime = 120 * 1
     override val nextPhase = IngamePhase
-}
-
-val tracker get() = itemStack(Items.COMPASS) {
-    setCustomName { text("Tracker") }
 }

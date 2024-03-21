@@ -6,29 +6,22 @@ import de.royzer.fabrichg.game.*
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.game.phase.phases.tracker
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.onAnchorJoin
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.scoreboard.showScoreboard
-import kotlinx.coroutines.delay
+import de.royzer.fabrichg.util.gameSettingsItem
+import de.royzer.fabrichg.util.kitSelector
+import de.royzer.fabrichg.util.tracker
 import kotlinx.coroutines.job
-import kotlinx.coroutines.launch
-import net.silkmc.silk.core.item.itemStack
-import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.text.literalText
-import net.silkmc.silk.core.text.sendText
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.ai.attributes.Attributes
-import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameType
-import net.silkmc.silk.core.annotations.DelicateSilkApi
 import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.logging.logInfo
-import net.silkmc.silk.core.task.silkCoroutineScope
 
-@OptIn(DelicateSilkApi::class)
 object ConnectEvents {
     init {
         ServerPlayConnectionEvents.JOIN.register { handler, sender, server ->
@@ -55,9 +48,11 @@ object ConnectEvents {
                     player.removeAllEffects()
                     player.health = player.maxHealth
                     player.inventory.clearContent()
-                    player.inventory.add(itemStack(Items.CHEST) {
-                        setCustomName { text("Kit Selector") }
-                    })
+                    player.inventory.add(kitSelector)
+                    if (player.hasPermissions(2)) {
+                        player.inventory.setItem(8, gameSettingsItem)
+                    }
+
                     player.foodData.foodLevel = 20
                     player.setGameMode(GameType.ADVENTURE)
 //                    if (LobbyPhase.isStarting) player.freeze()

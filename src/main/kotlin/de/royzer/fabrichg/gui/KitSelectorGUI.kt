@@ -13,10 +13,8 @@ import net.silkmc.silk.igui.observable.toGuiList
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.setLore
-import net.silkmc.silk.core.task.mcCoroutineTask
+import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.text.literalText
-import net.silkmc.silk.nbt.set
-import kotlin.time.Duration.Companion.seconds
 
 fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE, "Kits".literal, 1) {
     val hgPlayer = serverPlayerEntity.hgPlayer
@@ -63,7 +61,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
             }
         )
 
-        compoundScrollBackwards(5 sl 5, Items.RED_STAINED_GLASS_PANE.guiIcon, compound)
-        compoundScrollForwards(1 sl 5, Items.GREEN_STAINED_GLASS_PANE.guiIcon, compound)
+        compoundScrollBackwards(5 sl 5, Items.RED_STAINED_GLASS_PANE.guiIcon, compound, speed = 3.ticks)
+        compoundScrollForwards(1 sl 5, Items.GREEN_STAINED_GLASS_PANE.guiIcon, compound, speed = 3.ticks)
     }
 }

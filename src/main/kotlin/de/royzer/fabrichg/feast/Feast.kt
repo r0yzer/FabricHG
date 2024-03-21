@@ -4,12 +4,12 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
-import de.royzer.fabrichg.game.phase.phases.tracker
 import de.royzer.fabrichg.scoreboard.formattedTime
 import de.royzer.fabrichg.sendPlayerStatus
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.util.WeightedCollection
 import de.royzer.fabrichg.util.getRandomHighestPos
+import de.royzer.fabrichg.util.tracker
 import kotlinx.coroutines.Job
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i

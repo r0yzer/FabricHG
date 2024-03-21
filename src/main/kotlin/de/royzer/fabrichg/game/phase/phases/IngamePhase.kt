@@ -11,6 +11,7 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.settings.GameSettings
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
 import net.silkmc.silk.core.logging.logInfo
@@ -44,7 +45,7 @@ object IngamePhase : GamePhase() {
             2f,
             min(2f, PlayerList.alivePlayers.size.toFloat()/20) + min(5, PlayerList.alivePlayers.size/3)
         )).toInt()
-        minifeastStartTimes = List(max(1, minifeasts)) { Random.nextInt(minifeastStartTime, minifeastEndTime) }
+        minifeastStartTimes = if (GameSettings.minifeastEnabled) List(max(1, minifeasts)) { Random.nextInt(minifeastStartTime, minifeastEndTime) } else listOf()
         PlayerList.alivePlayers.forEach { hgPlayer ->
             hgPlayer.serverPlayer?.closeContainer()
         }
