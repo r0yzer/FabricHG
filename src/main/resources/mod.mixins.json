@@ -10,6 +10,7 @@
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
     "entity.LlamaSpitMixin",
+    "entity.PlayerMixin",
     "entity.ProjectileAccessor",
     "entity.ai.goal.CreeperIgniteGoalMixin",
     "item.BlockItemMixin",
@@ -26,7 +27,7 @@
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
     "world.CombatTrackerAcessor",
-    "entity.PlayerMixin"
+    "entity.MushroomCowMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -7,7 +7,7 @@ import de.royzer.fabrichg.kit.kits.noneKit
 
 object GameSettings {
     var minifeastEnabled = true
-
+    var mushroomCowNerf = true
     val disabledKits = mutableListOf<Kit>()
     fun disableKit(kit: Kit) {
         disabledKits.add(kit)
@@ -21,6 +21,7 @@ object GameSettings {
 
     override fun toString(): String {
         return "Minifeast enabled: $minifeastEnabled\n" +
+                "Mushroom cow nerf enabled: $mushroomCowNerf\n" +
                 "Disabled kits: ${disabledKits.joinToString()}\n"
     }
 }

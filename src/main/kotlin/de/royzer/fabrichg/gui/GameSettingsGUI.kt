@@ -29,6 +29,7 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
     return igui(GuiType.NINE_BY_SIX, "Game settings".literal, 1) {
         page(1) {
             val minifeastStatus = GuiProperty(GameSettings.minifeastEnabled)
+            val cowStatus = GuiProperty(GameSettings.mushroomCowNerf)
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
             button(5 sl 2, minifeastStatus.guiIcon { enabled ->
                 itemStack(Items.ENCHANTING_TABLE) {
@@ -36,7 +37,7 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         text("Minifeasts: ")
                         text(if (enabled) "enabled" else "disabled") {
                             color = if (enabled) 0x00FF00 else 0xFF0000
-                            bold = enabled
+                            bold = true
                         }
                         italic = false
                         color = TEXT_GRAY
@@ -46,7 +47,23 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 GameSettings.minifeastEnabled = !GameSettings.minifeastEnabled
                 minifeastStatus.set(GameSettings.minifeastEnabled)
             })
-            changePageByKey(5 sl 3, Items.CHEST.defaultInstance.also {
+            button(5 sl 3, cowStatus.guiIcon { enabled ->
+                itemStack(Items.RED_MUSHROOM) {
+                    this.setCustomName {
+                        text("Mushroom cow nerf: ")
+                        text(if (enabled) "enabled" else "disabled") {
+                            color = if (enabled) 0x00FF00 else 0xFF0000
+                            bold = true
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                GameSettings.mushroomCowNerf = !GameSettings.mushroomCowNerf
+                cowStatus.set(GameSettings.mushroomCowNerf)
+            })
+            changePageByKey(5 sl 4, Items.CHEST.defaultInstance.also {
                 it.setCustomName {
                     text("Kits") {
                         bold = true
