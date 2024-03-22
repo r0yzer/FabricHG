@@ -1,7 +1,6 @@
-package de.royzer.fabrichg.kit.events.kit
+package de.royzer.fabrichg.kit.events.kit.invoker
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.kit.isKitItem
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -13,9 +12,13 @@ fun onAttackEntity(target: Entity, entity: LivingEntity) {
     hgPlayer.kits.forEach { kit ->
         kit.kitItems.forEach { kitItem ->
             if (kitItem.itemStack.item == item.item || offhandItem.item == kitItem.itemStack.item) {
-                kitItem.invokeHitEntityAction(hgPlayer, kit, target)
+                kitItem.invokeKitItemAction(hgPlayer, kit) {
+                    kitItem.hitEntityAction?.invoke(hgPlayer, kit, entity)
+                }
                 if (target is ServerPlayer) {
-                    kitItem.invokeHitPlayerAction(hgPlayer, kit, target)
+                    kitItem.invokeKitItemAction(hgPlayer, kit) {
+                        kitItem.hitPlayerAction?.invoke(hgPlayer, kit, target)
+                    }
                 }
             }
         }

@@ -3,7 +3,7 @@ package de.royzer.fabrichg.mixinskt
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.kit.isKitItem
+import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import de.royzer.fabrichg.kit.kits.evokerOnDamage
 import de.royzer.fabrichg.sendPlayerStatus
 import net.minecraft.server.level.ServerPlayer

@@ -35,7 +35,7 @@ import kotlin.time.Duration.Companion.seconds
 val gamblerKit = kit("Gambler") {
     kitSelectorItem = Items.OAK_BUTTON.defaultInstance
 
-    cooldown = 30.0 / 10
+    cooldown = 30.0
 
     description = "Test your luck"
 

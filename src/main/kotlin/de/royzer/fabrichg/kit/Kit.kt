@@ -2,9 +2,9 @@ package de.royzer.fabrichg.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.events.kit.KitEvents
+import de.royzer.fabrichg.kit.events.kititem.KitItem
 import de.royzer.fabrichg.kit.kits.*
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 
 class Kit(val name: String) {

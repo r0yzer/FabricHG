@@ -1,7 +1,8 @@
 package de.royzer.fabrichg.mixins.item;
 
 import de.royzer.fabrichg.game.GamePhaseManager;
-import de.royzer.fabrichg.kit.KitItemKt;
+import de.royzer.fabrichg.kit.events.kititem.KitItemKt;
+import de.royzer.fabrichg.kit.events.kititem.invoker.KitItemOnPlaceKt;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -21,6 +22,6 @@ public class BlockItemMixin {
         if (GamePhaseManager.INSTANCE.isBuildingForbidden()) {
             cir.setReturnValue(InteractionResult.PASS);
         }
-        KitItemKt.onPlace(context, cir);
+        KitItemOnPlaceKt.onPlace(context, cir);
     }
 }

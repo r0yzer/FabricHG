@@ -1,6 +1,7 @@
-package de.royzer.fabrichg.kit
+package de.royzer.fabrichg.kit.events.kititem
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.kit.Kit
 import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand

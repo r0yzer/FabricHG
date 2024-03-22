@@ -1,9 +1,9 @@
 package de.royzer.fabrichg.mixins.entity;
 
 import de.royzer.fabrichg.bots.HGBot;
-import de.royzer.fabrichg.game.phase.phases.LobbyPhase;
-import de.royzer.fabrichg.kit.KitItemKt;
-import de.royzer.fabrichg.kit.events.kit.OnMoveKt;
+import de.royzer.fabrichg.kit.events.kit.invoker.OnMoveKt;
+import de.royzer.fabrichg.kit.events.kititem.KitItemKt;
+import de.royzer.fabrichg.kit.events.kititem.invoker.KitItemOnClickAtEntityKt;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,36 +31,14 @@ public abstract class EntityMixin {
             at = @At("HEAD")
     )
     public void onInteract(Player clickingPlayer, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        KitItemKt.onClickAtEntity(clickingPlayer, hand, (Entity) (Object) this, cir);
+        KitItemOnClickAtEntityKt.onClickAtEntity(clickingPlayer, hand, (Entity) (Object) this, cir);
     }
-
-
-//    @Inject(
-//            method = "moveTo(DDDFF)V",
-//            at = @At("HEAD"),
-//            cancellable = true
-//    )
-//    public void onMoveTo(double d, double e, double f, float g, float h, CallbackInfo ci) {
-//        if (LobbyPhase.INSTANCE.isStarting()) {
-//            ci.cancel();
-//        }
-//    }
 
     @Inject(
             method = "move",
-            at = @At("HEAD"),
-            cancellable = true
+            at = @At("HEAD")
     )
     public void onMove(MoverType movementType, Vec3 movement, CallbackInfo ci) {
-//        if (LobbyPhase.INSTANCE.isStarting()) {
-//            Entity entity = ((Entity) (Object) this);
-//            if (entity instanceof ServerPlayer serverPlayer) {
-////                if (serverPlayer.onGround()) {
-////                    serverPlayer.connection.send(new ClientboundPlayerPositionPacket(serverPlayer.xOld, serverPlayer.yOld, serverPlayer.zOld, serverPlayer.getYRot(), serverPlayer.getXRot(), RelativeMovement.ALL, 1));
-////                }
-//            }
-//            ci.cancel();
-//        }
         if (movementType.equals(MoverType.PLAYER)) {
             boolean isServerPlayer = (Entity) (Object) (this) instanceof ServerPlayer;
             boolean isHgBot = (Entity) (Object) (this) instanceof HGBot;

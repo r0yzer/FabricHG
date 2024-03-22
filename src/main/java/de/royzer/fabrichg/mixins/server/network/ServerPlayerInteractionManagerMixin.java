@@ -1,7 +1,7 @@
 package de.royzer.fabrichg.mixins.server.network;
 
 import de.royzer.fabrichg.game.GamePhaseManager;
-import de.royzer.fabrichg.kit.events.kititem.OnDestroyBlockKt;
+import de.royzer.fabrichg.kit.events.kititem.invoker.KitItemOnDestroyBlockKt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
@@ -54,6 +54,6 @@ abstract public class ServerPlayerInteractionManagerMixin {
             )
     )
     public void onDestroyBlock(BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        OnDestroyBlockKt.onDestroyBlock(this.player, pos);
+        KitItemOnDestroyBlockKt.onDestroyBlock(this.player, pos);
     }
 }

@@ -1,7 +1,6 @@
-package de.royzer.fabrichg.kit.events.kit
+package de.royzer.fabrichg.kit.events.kit.invoker
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 
 

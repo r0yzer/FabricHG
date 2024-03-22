@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.kit.events.kit
+package de.royzer.fabrichg.kit.events.kit.invoker
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
