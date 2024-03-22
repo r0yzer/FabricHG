@@ -15,6 +15,10 @@ class HGBotFakePlayer(private val hgBot: HGBot) : FakePlayer(hgBot.world as Serv
         super.teleportTo(x, y, z)
     }
 
+    override fun allowsListing(): Boolean {
+        return true
+    }
+
     // tp command
     override fun teleportTo(
         level: ServerLevel,
