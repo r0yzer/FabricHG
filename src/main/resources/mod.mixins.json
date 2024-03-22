@@ -26,6 +26,7 @@
     "server.network.MinecraftServerMixin",
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
+    "server.network.ServerStatusMixin",
     "world.CombatTrackerAcessor",
     "entity.MushroomCowMixin"
   ],
