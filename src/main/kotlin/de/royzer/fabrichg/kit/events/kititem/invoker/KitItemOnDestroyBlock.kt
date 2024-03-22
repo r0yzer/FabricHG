@@ -14,20 +14,7 @@ fun onDestroyBlock(serverPlayer: ServerPlayer, pos: BlockPos) {
                 kitItem.invokeKitItemAction(hgPlayer, kit) {
                     kitItem.destroyBlockAction?.invoke(hgPlayer, kit, pos)
                 }
-//                kitItem.invokeDestroyBlockAction(hgPlayer, kit, pos)
             }
         }
     }
 }
-
-//private fun KitItem.invokeDestroyBlockAction(
-//    hgPlayer: HGPlayer,
-//    kit: Kit,
-//    pos: BlockPos,
-//    ignoreCooldown: Boolean = false
-//) {
-//    if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
-//    } else if (hgPlayer.hasCooldown(kit)) {
-//        hgPlayer.serverPlayer?.sendCooldown(kit)
-//    }
-//}
