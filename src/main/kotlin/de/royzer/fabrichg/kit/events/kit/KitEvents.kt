@@ -4,10 +4,11 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
-import de.royzer.fabrichg.kit.events.kititem.KitItem
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.phys.EntityHitResult
 
 
 class KitEvents(
@@ -18,7 +19,9 @@ class KitEvents(
     var drinkAction: ((HGPlayer, ItemStack) -> Unit)? = null,
     var soupEatAction: ((HGPlayer) -> Unit)? = null,
     var killPlayerAction: ((HGPlayer, ServerPlayer) -> Unit)? = null,
-    var sneakAction: ((HGPlayer, Kit) -> Unit)? = null
+    var sneakAction: ((HGPlayer, Kit) -> Unit)? = null,
+    var projectileHitByAction: ((entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
+    var projectileHitAction: ((entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
 )
 
 fun HGPlayer.invokeKitAction(kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {

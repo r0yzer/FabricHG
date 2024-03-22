@@ -1,17 +1,15 @@
-package de.royzer.fabrichg.mixins.kits;
+package de.royzer.fabrichg.mixins.entity;
 
-import de.royzer.fabrichg.kit.kits.NeoKitKt;
+import de.royzer.fabrichg.kit.events.kit.invoker.OnProjectileHitKt;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.EntityHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
 @Mixin(Projectile.class)
-public class NeoMixin {
+public class ProjectileMixin {
 
     @Redirect(
             method = "onHit",
@@ -21,6 +19,6 @@ public class NeoMixin {
             )
     )
     public void onHit(Projectile instance, EntityHitResult entityHitResult) {
-        NeoKitKt.neoOnProjectileHit(entityHitResult, instance);
+        OnProjectileHitKt.onProjectileHit(entityHitResult, instance);
     }
 }

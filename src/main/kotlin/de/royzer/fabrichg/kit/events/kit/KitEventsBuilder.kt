@@ -4,7 +4,9 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.Kit
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.phys.EntityHitResult
 
 class KitEventsBuilder(val kit: Kit) {
     fun onHitPlayer(action: (HGPlayer, Kit, ServerPlayer) -> Unit) {
@@ -37,5 +39,13 @@ class KitEventsBuilder(val kit: Kit) {
 
     fun onSneak(action: (HGPlayer, Kit) -> Unit) {
         kit.events.sneakAction = action
+    }
+
+    fun onHitByProjectile(action: (entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit) {
+        kit.events.projectileHitByAction = action
+    }
+
+    fun onHitProjectile(action: (entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit) {
+        kit.events.projectileHitAction = action
     }
 }
