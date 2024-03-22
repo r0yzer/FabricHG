@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.game
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
@@ -11,6 +13,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.level.GameType
+import net.silkmc.silk.core.text.sendText
 import java.util.*
 
 object PlayerList {
@@ -85,6 +88,16 @@ object PlayerList {
 fun ServerPlayer.removeHGPlayer() {
     hgPlayer.status = HGPlayerStatus.SPECTATOR
     setGameMode(GameType.SPECTATOR)
+    sendText {
+        text("Use the ")
+        text("/game ") {
+            bold = true
+            color = TEXT_BLUE
+        }
+        text("command to get information about this round")
+        italic = false
+        color = TEXT_GRAY
+    }
 }
 
 fun HGBot.removeHGPlayer() {

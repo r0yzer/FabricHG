@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.events
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.*
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.level.GameType
 import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.logging.logInfo
+import net.silkmc.silk.core.text.sendText
 
 object ConnectEvents {
     init {
@@ -94,6 +97,16 @@ object ConnectEvents {
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                             player.setGameMode(GameType.SPECTATOR)
                             player.removeAllEffects()
+                            player.sendText {
+                                text("Use the ")
+                                text("/game ") {
+                                    bold = true
+                                    color = TEXT_BLUE
+                                }
+                                text("command to get information about this round")
+                                italic = false
+                                color = TEXT_GRAY
+                            }
                         }
 
                         HGPlayerStatus.SPECTATOR -> {

@@ -13,6 +13,7 @@ import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.settings.GameSettings
 import de.royzer.fabrichg.util.forceGiveItem
+import net.fabricmc.fabric.api.entity.FakePlayer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.silkmc.silk.core.item.setCustomName
@@ -128,6 +129,8 @@ class HGPlayer(
         val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
         return lastCombatEntry?.source?.entity is ServerPlayer
     }
+
+    val isBot get() = this.serverPlayer is FakePlayer
 
     override fun toString(): String {
         return "HGPlayer ${this.name}, Kits: [${kits.joinToString()}]"
