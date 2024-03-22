@@ -1,7 +1,7 @@
 package de.royzer.fabrichg.mixins.kits;
 
 import de.royzer.fabrichg.kit.events.kititem.KitItemKt;
-import de.royzer.fabrichg.kit.events.kititem.invoker.KitItemOnClickKt;
+import de.royzer.fabrichg.kit.events.kititem.invoker.OnClickKitItemKt;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.FireworkRocketItem;
 import net.minecraft.world.item.context.UseOnContext;
@@ -18,7 +18,7 @@ public class KangarooMixin {
             cancellable = true)
     public void onUseBlock(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir) {
         if (KitItemKt.isKitItem(context.getItemInHand())) {
-            KitItemOnClickKt.onClick(context.getPlayer(), context.getItemInHand());
+            OnClickKitItemKt.onClick(context.getPlayer(), context.getItemInHand());
             cir.setReturnValue(InteractionResult.SUCCESS);
         }
     }

@@ -2,9 +2,8 @@ package de.royzer.fabrichg.mixins.item;
 
 import de.royzer.fabrichg.feast.MinifeastKt;
 import de.royzer.fabrichg.game.GamePhaseManager;
-import de.royzer.fabrichg.kit.events.kititem.KitItemKt;
-import de.royzer.fabrichg.kit.events.kititem.invoker.KitItemOnClickKt;
-import de.royzer.fabrichg.kit.events.kititem.invoker.KitItemOnUseOnBlockKt;
+import de.royzer.fabrichg.kit.events.kititem.invoker.OnClickKitItemKt;
+import de.royzer.fabrichg.kit.events.kititem.invoker.OnUseKitItemOnBlockKt;
 import de.royzer.fabrichg.mixinskt.KitSelector;
 import de.royzer.fabrichg.mixinskt.SoupHealingKt;
 import de.royzer.fabrichg.mixinskt.Tracker;
@@ -30,7 +29,7 @@ public class ItemStackMixin {
     )
     public void onUse(Level world, Player user, InteractionHand hand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
         ItemStack itemStack = (ItemStack) (Object) this;
-        KitItemOnClickKt.onClick(user, itemStack, cir);
+        OnClickKitItemKt.onClick(user, itemStack, cir);
         if (GamePhaseManager.INSTANCE.isNotStarted()) {
             if (itemStack.getItem().equals(Items.CHEST)) {
                 KitSelector.INSTANCE.onClick(user, itemStack, cir, world, hand);
@@ -57,6 +56,6 @@ public class ItemStackMixin {
             at = @At("HEAD")
     )
     public void useOnBlock(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir){
-        KitItemOnUseOnBlockKt.onUseOnBlock(context.getPlayer(), context);
+        OnUseKitItemOnBlockKt.onUseOnBlock(context.getPlayer(), context);
     }
 }

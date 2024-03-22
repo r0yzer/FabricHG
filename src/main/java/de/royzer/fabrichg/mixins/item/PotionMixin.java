@@ -1,6 +1,6 @@
 package de.royzer.fabrichg.mixins.item;
 
-import de.royzer.fabrichg.kit.events.kititem.invoker.KitItemOnDrinkKt;
+import de.royzer.fabrichg.kit.events.kititem.invoker.OnDrinkKitItemKt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
@@ -17,6 +17,6 @@ public class PotionMixin {
             at = @At("HEAD")
     )
     public void finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity, CallbackInfoReturnable<ItemStack> cir) {
-        KitItemOnDrinkKt.onDrink(stack, livingEntity);
+        OnDrinkKitItemKt.onDrink(stack, livingEntity);
     }
 }

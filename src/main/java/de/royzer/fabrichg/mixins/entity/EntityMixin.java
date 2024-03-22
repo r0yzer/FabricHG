@@ -2,8 +2,7 @@ package de.royzer.fabrichg.mixins.entity;
 
 import de.royzer.fabrichg.bots.HGBot;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnMoveKt;
-import de.royzer.fabrichg.kit.events.kititem.KitItemKt;
-import de.royzer.fabrichg.kit.events.kititem.invoker.KitItemOnClickAtEntityKt;
+import de.royzer.fabrichg.kit.events.kititem.invoker.OnClickAtEntityWithKitItemKt;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,7 +30,7 @@ public abstract class EntityMixin {
             at = @At("HEAD")
     )
     public void onInteract(Player clickingPlayer, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        KitItemOnClickAtEntityKt.onClickAtEntity(clickingPlayer, hand, (Entity) (Object) this, cir);
+        OnClickAtEntityWithKitItemKt.onClickAtEntity(clickingPlayer, hand, (Entity) (Object) this, cir);
     }
 
     @Inject(
