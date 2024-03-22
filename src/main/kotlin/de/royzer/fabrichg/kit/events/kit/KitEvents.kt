@@ -21,12 +21,12 @@ class KitEvents(
     var sneakAction: ((HGPlayer, Kit) -> Unit)? = null
 )
 
-fun Kit.invokeKitAction(hgPlayer: HGPlayer, kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {
-    if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
+fun HGPlayer.invokeKitAction(kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {
+    if (this.canUseKit(kit, ignoreCooldown)) {
         action.invoke()
-    } else if (hgPlayer.hasCooldown(kit)) {
+    } else if (this.hasCooldown(kit)) {
         if (sendCooldown) {
-            hgPlayer.serverPlayer?.sendCooldown(kit)
+            this.serverPlayer?.sendCooldown(kit)
         }
     }
 }

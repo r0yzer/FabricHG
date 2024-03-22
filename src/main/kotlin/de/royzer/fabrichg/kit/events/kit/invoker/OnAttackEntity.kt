@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.events.kit.invoker
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.events.kit.invokeKitAction
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -22,7 +23,7 @@ fun onAttackEntity(target: Entity, entity: LivingEntity) {
                 }
             }
         }
-        if (hgPlayer.canUseKit(kit)) {
+        hgPlayer.invokeKitAction(kit, sendCooldown = false) {
             kit.events.hitEntityAction?.invoke(hgPlayer, kit, target)
             if (target is ServerPlayer) {
                 kit.events.hitPlayerAction?.invoke(hgPlayer, kit, target)
