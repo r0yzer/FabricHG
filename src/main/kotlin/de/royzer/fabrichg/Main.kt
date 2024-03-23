@@ -33,6 +33,7 @@ fun initServer() {
 
     ServerLifecycleEvents.SERVER_STARTED.register {
         GamePhaseManager.enable(it as DedicatedServer)
+        ConfigManager
         registerCommands()
         it.overworld().dayTime = 0L
         it.gameRules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, it)
@@ -41,8 +42,6 @@ fun initServer() {
         it.gameRules.getRule(GameRules.RULE_DO_PATROL_SPAWNING).set(false, it)
         it.overworld().setDefaultSpawnPos(BlockPos.ZERO, 0f)
     }
-
-    ConfigManager
 }
 
 fun registerCommands() {
