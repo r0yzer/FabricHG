@@ -5,6 +5,8 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.projectile.Snowball
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.enchantment.FrostWalkerEnchantment
+import net.silkmc.silk.core.entity.blockPos
+import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.posUnder
 import net.silkmc.silk.core.item.itemStack
 
@@ -19,7 +21,7 @@ val frozenKit = kit("Frozen") {
     kitEvents {
         onMove { hgPlayer, _ ->
             hgPlayer.serverPlayer?.let {
-                FrostWalkerEnchantment.onEntityMoved(it, it.level(), it.posUnder, 3)
+                FrostWalkerEnchantment.onEntityMoved(it, it.level(), it.blockPos, 3)
             }
         }
 
