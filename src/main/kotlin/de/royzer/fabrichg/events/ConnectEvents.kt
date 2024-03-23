@@ -105,7 +105,7 @@ object ConnectEvents {
                             player.removeAllEffects()
                             player.sendText {
                                 text("Use the ")
-                                text("/game ") {
+                                text("/info ") {
                                     bold = true
                                     color = TEXT_BLUE
                                 }

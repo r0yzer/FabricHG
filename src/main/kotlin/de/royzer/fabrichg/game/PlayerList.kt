@@ -90,7 +90,7 @@ fun ServerPlayer.removeHGPlayer() {
     setGameMode(GameType.SPECTATOR)
     sendText {
         text("Use the ")
-        text("/game ") {
+        text("/info ") {
             bold = true
             color = TEXT_BLUE
         }
