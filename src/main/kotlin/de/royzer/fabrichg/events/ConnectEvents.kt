@@ -4,25 +4,31 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.game.*
+import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.onAnchorJoin
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
-import de.royzer.fabrichg.scoreboard.showScoreboard
+import de.royzer.fabrichg.scoreboard.hgScoreboard
 import de.royzer.fabrichg.util.gameSettingsItem
 import de.royzer.fabrichg.util.kitSelector
 import de.royzer.fabrichg.util.tracker
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.job
-import net.silkmc.silk.core.text.literalText
+import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.level.GameType
 import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.logging.logInfo
+import net.silkmc.silk.core.task.mcCoroutineScope
+import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 
 object ConnectEvents {
@@ -36,10 +42,10 @@ object ConnectEvents {
             logInfo("${player.name.string} joint in ${gamePhase.name} mit Status ${hgPlayer.status}")
 
 
-//            silkCoroutineScope.launch {
-//                delay(200)
-                player.showScoreboard()
-//            }
+            mcCoroutineScope.launch {
+                delay(200)
+                player.hgScoreboard.displayToPlayer(player)
+            }
 
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
 

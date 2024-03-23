@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.server.level.ServerPlayer
@@ -43,6 +44,8 @@ fun onSpitHit(result: EntityHitResult, spitEntity: LlamaSpit) {
     spits.remove(spitEntity)
     result.entity.hurt(spitter.damageSources().playerAttack(spitter), 1f)
     val hitted = result.entity as? ServerPlayer ?: return
+
+    if (hitted.hgPlayer.isNeo) return
 
     if (!hitted.inventory.hasAnyOf(setOf(Items.MUSHROOM_STEW))) {
         return

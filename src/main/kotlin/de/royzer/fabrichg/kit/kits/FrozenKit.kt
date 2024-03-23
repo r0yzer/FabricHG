@@ -8,9 +8,9 @@ import net.minecraft.world.item.enchantment.FrostWalkerEnchantment
 import net.silkmc.silk.core.entity.posUnder
 import net.silkmc.silk.core.item.itemStack
 
-val frostKit = kit("frost") {
+val frozenKit = kit("Frozen") {
     kitSelectorItem = Items.PACKED_ICE.defaultInstance
-    description = "Your feet are freezing"
+    description = "Freeze water and enemies"
 
     kitItem {
         itemStack = itemStack(Items.SNOWBALL) { count = 16 }

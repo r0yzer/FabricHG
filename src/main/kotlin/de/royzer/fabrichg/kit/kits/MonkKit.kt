@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.world.item.Items
@@ -16,6 +17,7 @@ val monkKit = kit("Monk") {
         itemStack = kitSelectorItem
 
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
+            if (clickedPlayer.hgPlayer.isNeo) return@onClickAtPlayer
             val current = clickedPlayer.mainHandItem
             val currentIndex = clickedPlayer.inventory.items.indexOf(current)
             val random = clickedPlayer.inventory.items.random()

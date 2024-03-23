@@ -63,7 +63,7 @@ object Feast {
             }
         }
 
-        repeat(10) { i ->
+        repeat(30) { i ->
             feastCenter.produceFilledCirclePositions(radius) {
                 server.overworld().setBlockAndUpdate(BlockPos(it.x, it.y + i, it.z), Blocks.AIR.defaultBlockState())
             }
