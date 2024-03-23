@@ -10,10 +10,11 @@
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
     "entity.LlamaSpitMixin",
+    "entity.MushroomCowMixin",
     "entity.PlayerMixin",
     "entity.ProjectileAccessor",
-    "entity.ai.goal.CreeperIgniteGoalMixin",
     "entity.ProjectileMixin",
+    "entity.ai.goal.CreeperIgniteGoalMixin",
     "item.BlockItemMixin",
     "item.ItemStackMixin",
     "item.PotionMixin",
@@ -26,10 +27,12 @@
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
     "server.network.ServerStatusMixin",
-    "world.CombatTrackerAcessor",
-    "entity.MushroomCowMixin"
+    "world.CombatTrackerAcessor"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "kits.BeamMixin"
+  ]
 }

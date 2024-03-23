@@ -56,6 +56,7 @@ fun registerCommands() {
     spawnCommand
     minifeastCommand
     gameSettingsCommand
+    cooldownCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

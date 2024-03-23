@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
 
-private val cooldownMap = HashMap<Cooldown, Double>()
+val cooldownMap = HashMap<Cooldown, Double>()
 private val cooldownCoroutineScope = CoroutineScope(Dispatchers.IO)
 
 fun HGPlayer.activateCooldown(kit: Kit) {

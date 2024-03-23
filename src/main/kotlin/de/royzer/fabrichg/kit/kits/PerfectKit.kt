@@ -32,7 +32,7 @@ val perfectKit = kit("Perfect") {
                 hgPlayer.playerData[streakKey] = streak + 1
                 if ((streak + 1) % soupsForReward == 0) {
                     val soupsToBeAdded =
-                        round(sqrt((streak / soupsForReward).toDouble() * 1.3)).toInt() + 1 // round(sqrt(x*1.3))+1 auf https://www.geogebra.org/calculator
+                        round(sqrt(((streak + 1) / soupsForReward).toDouble() * 0.8)).toInt() + 1 // round(sqrt(x*0.8))+1 auf https://www.geogebra.org/calculator
                     repeat(soupsToBeAdded) {
                         serverPlayer.giveOrDropItem(itemStack(Items.RABBIT_STEW) {})
                         serverPlayer.playNotifySound(SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.MASTER,1f, 1f)
