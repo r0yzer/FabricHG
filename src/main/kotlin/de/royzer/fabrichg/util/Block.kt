@@ -24,3 +24,5 @@ fun BlockPos.toHighestPos(): BlockPos {
 }
 
 fun BlockPos.toVec3(): Vec3 = Vec3(x.toDouble(), y.toDouble(), z.toDouble())
+
+fun BlockPos.higherBy(height: Int) = BlockPos(x, y + height, z)
