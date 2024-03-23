@@ -21,7 +21,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
 
         val compound = compound(
             (2 sl 2) rectTo (4 sl 8),
-            kits.sortedBy { it.name.first() }.filterNot { GameSettings.disabledKits.contains(it) }.toGuiList(),
+            kits.sortedBy { it.name.first() }.filter { it.enabled }.toGuiList(),
             iconGenerator = { kit ->
                 itemStack(kit.kitSelectorItem?.item ?: Items.BARRIER) {
                     tag = kit.kitSelectorItem?.tag

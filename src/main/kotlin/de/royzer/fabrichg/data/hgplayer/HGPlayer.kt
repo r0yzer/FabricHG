@@ -98,7 +98,7 @@ class HGPlayer(
     }
 
     fun addKit(kit: Kit) {
-        if (GameSettings.disabledKits.contains(kit)) {
+        if (!kit.enabled) {
             this.serverPlayer?.sendText {
                 text("This kit is disabled")
                 color = TEXT_GRAY
