@@ -16,12 +16,13 @@ class KitEvents(
     var hitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
     var moveAction: ((HGPlayer, Kit) -> Unit)? = null,
     var rightClickEntityAction: ((HGPlayer, Kit, clickedEntity: Entity) -> Unit)? = null,
-    var drinkAction: ((HGPlayer, ItemStack) -> Unit)? = null,
-    var soupEatAction: ((HGPlayer) -> Unit)? = null,
-    var killPlayerAction: ((HGPlayer, ServerPlayer) -> Unit)? = null,
+    var drinkAction: ((HGPlayer, Kit, ItemStack) -> Unit)? = null,
+    var soupEatAction: ((HGPlayer, Kit) -> Unit)? = null,
+    var killPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
     var sneakAction: ((HGPlayer, Kit) -> Unit)? = null,
-    var projectileHitByAction: ((entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
-    var projectileHitAction: ((entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
+    var projectileHitByAction: ((hgPlayer: HGPlayer, kit: Kit, entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
+    var projectileHitAction: ((hgPlayer: HGPlayer, kit: Kit, entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
+    var tickAction: ((hgPlayer: HGPlayer, kit: Kit) -> Unit)? = null, // should ignore cooldown (only for checking things like in pnatom)
 )
 
 fun HGPlayer.invokeKitAction(kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {

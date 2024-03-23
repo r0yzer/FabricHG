@@ -24,7 +24,7 @@ val poseidonKit = kit("Poseidon") {
     }
 
     kitEvents {
-        onKillPlayer { hgPlayer, killed ->
+        onKillPlayer { hgPlayer, kit, killed ->
             mcCoroutineTask(delay = 1.seconds, howOften = 10L) {
                 hgPlayer.serverPlayer?.world?.setRainLevel(1.0f)
                 hgPlayer.serverPlayer?.world?.setThunderLevel(1.0f)

@@ -118,7 +118,7 @@ val beerKit = kit("Beer") {
     }
 
     kitEvents {
-        onDrink { hgPlayer, itemStack ->
+        onDrink { hgPlayer, kit, itemStack ->
             val potion = PotionUtils.getPotion(itemStack)
             var numBierschiss: Long = 0
             var bierschisssDuration: Duration = 0.seconds

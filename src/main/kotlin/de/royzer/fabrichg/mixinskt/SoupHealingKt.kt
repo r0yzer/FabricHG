@@ -27,7 +27,7 @@ object SoupHealingKt {
         if (player.health < player.maxHealth) {
             player.hgPlayer?.kits?.forEach {
                 if (player.hgPlayer!!.canUseKit(it)) {
-                    it.events.soupEatAction?.invoke(player.hgPlayer!!) // only on heal soups not hunger soups
+                    it.events.soupEatAction?.invoke(player.hgPlayer!!, it) // only on heal soups not hunger soups
                 }
             }
             player.heal(item.restoredHealth)

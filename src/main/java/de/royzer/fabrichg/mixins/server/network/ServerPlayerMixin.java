@@ -2,6 +2,7 @@ package de.royzer.fabrichg.mixins.server.network;
 
 import com.mojang.authlib.GameProfile;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
+import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -65,5 +66,13 @@ public abstract class ServerPlayerMixin extends Player {
     )
     public void onAttackEntity(Entity target, CallbackInfo ci) {
         OnAttackEntityKt.onAttackEntity(target, this);
+    }
+
+    @Inject(
+            method = "tick",
+            at = @At("HEAD")
+    )
+    public void onTick(CallbackInfo ci) {
+        OnTickKt.onTick((ServerPlayer) (Object) this);
     }
 }

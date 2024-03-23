@@ -17,7 +17,7 @@ fun onDrink(itemStack: ItemStack, entity: LivingEntity) {
             }
         }
         if (hgPlayer.canUseKit(kit)) {
-            kit.events.drinkAction?.invoke(hgPlayer, itemStack)
+            kit.events.drinkAction?.invoke(hgPlayer, kit, itemStack)
         }
     }
 }

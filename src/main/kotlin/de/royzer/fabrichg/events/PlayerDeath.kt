@@ -44,7 +44,7 @@ object PlayerDeath {
         val hgPlayer = killer?.hgPlayer ?: return true
         hgPlayer.kits.forEach {
             if (hgPlayer.canUseKit(it, true)) {
-                it.events.killPlayerAction?.invoke(hgPlayer, serverPlayerEntity)
+                it.events.killPlayerAction?.invoke(hgPlayer, it, serverPlayerEntity)
             }
         }
         hgPlayer.kills += 1

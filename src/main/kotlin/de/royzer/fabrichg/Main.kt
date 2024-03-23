@@ -36,6 +36,8 @@ fun initServer() {
         it.overworld().dayTime = 0L
         it.gameRules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, it)
         it.gameRules.getRule(GameRules.RULE_DAYLIGHT).set(false, it)
+        it.gameRules.getRule(GameRules.RULE_DO_TRADER_SPAWNING).set(false, it)
+        it.gameRules.getRule(GameRules.RULE_DO_PATROL_SPAWNING).set(false, it)
         it.overworld().setDefaultSpawnPos(BlockPos.ZERO, 0f)
     }
 

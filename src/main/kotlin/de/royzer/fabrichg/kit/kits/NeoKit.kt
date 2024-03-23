@@ -15,7 +15,7 @@ val neoKit: Kit = kit("Neo") {
     description = "Block enemy kits and projectiles"
 
     kitEvents {
-        onHitByProjectile { entityHitResult, projectileEntity ->
+        onHitByProjectile { hgPlayer, kit, entityHitResult, projectileEntity ->
             if (entityHitResult.entity?.hgPlayer?.isNeo == true) {
                 projectileEntity.teleportTo(187.0, -50.0, 510.0) // out of map
                 projectileEntity.remove(Entity.RemovalReason.KILLED)

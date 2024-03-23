@@ -18,7 +18,7 @@ val switcherKit: Kit = kit("Switcher") {
     }
 
     kitEvents {
-        onHitProjectile { entityHitResult, projectileEntity ->
+        onHitProjectile { hgPlayer, kit, entityHitResult, projectileEntity ->
             if (projectileEntity !is Snowball) return@onHitProjectile;
 
             val owner = projectileEntity.owner as? ServerPlayer ?: return@onHitProjectile

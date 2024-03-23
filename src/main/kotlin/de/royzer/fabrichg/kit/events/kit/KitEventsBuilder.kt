@@ -25,15 +25,15 @@ class KitEventsBuilder(val kit: Kit) {
         kit.events.rightClickEntityAction = action
     }
 
-    fun onDrink(action: (HGPlayer, ItemStack) -> Unit) {
+    fun onDrink(action: (HGPlayer, Kit, ItemStack) -> Unit) {
         kit.events.drinkAction = action
     }
 
-    fun onSoupEat(action: (HGPlayer) -> Unit) {
+    fun onSoupEat(action: (HGPlayer, Kit) -> Unit) {
         kit.events.soupEatAction = action
     }
 
-    fun onKillPlayer(action: (HGPlayer, ServerPlayer) -> Unit) {
+    fun onKillPlayer(action: (HGPlayer, Kit, killed: ServerPlayer) -> Unit) {
         kit.events.killPlayerAction = action
     }
 
@@ -41,11 +41,15 @@ class KitEventsBuilder(val kit: Kit) {
         kit.events.sneakAction = action
     }
 
-    fun onHitByProjectile(action: (entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit) {
+    fun onHitByProjectile(action: (hgPlayer: HGPlayer, kit: Kit, entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit) {
         kit.events.projectileHitByAction = action
     }
 
-    fun onHitProjectile(action: (entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit) {
+    fun onHitProjectile(action: (hgPlayer: HGPlayer, kit: Kit, entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit) {
         kit.events.projectileHitAction = action
+    }
+
+    fun onTick(action: (HGPlayer, Kit) -> Unit) {
+        kit.events.tickAction = action
     }
 }

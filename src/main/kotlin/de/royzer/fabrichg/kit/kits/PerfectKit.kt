@@ -21,7 +21,7 @@ val perfectKit = kit("Perfect") {
     val soupsForReward = 7
 
     kitEvents {
-        onSoupEat { hgPlayer ->
+        onSoupEat { hgPlayer, kit ->
             val serverPlayer = hgPlayer.serverPlayer ?: return@onSoupEat
             val streak = hgPlayer.getPlayerData<Int>(streakKey) ?: 0
 

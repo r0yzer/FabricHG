@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
+import de.royzer.fabrichg.kit.events.kit.invoker.onTick
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
@@ -26,7 +27,7 @@ val phantomKit = kit("Phantom") {
 
         onClick { hgPlayer, kit ->
             val inFight = hgPlayer.inFight
-            hgPlayer.serverPlayer?.modifyVelocity(0, if (inFight) 1 else 3,0, true)
+            hgPlayer.serverPlayer?.modifyVelocity(0, if (inFight) 0.75 else 2.5,0, true)
 
             if (inFight) {
                 hgPlayer.serverPlayer?.sendText {
@@ -45,14 +46,17 @@ val phantomKit = kit("Phantom") {
         }
     }
 
+    kitEvents {
+        onTick { hgPlayer, kit ->
+            val player = hgPlayer.serverPlayer ?: return@onTick
+            if (player.onGround()) {
+                player.hgPlayer.playerData[flyingKey] = false
+            }
+        }
+    }
+
 }
 
 fun shouldGlide(player: ServerPlayer): Boolean {
     return player.hgPlayer.getPlayerData<Boolean>(flyingKey) == true
-}
-
-fun stopGlide(player: ServerPlayer) {
-    if (player.onGround()) {
-        player.hgPlayer.playerData[flyingKey] = false
-    }
 }

@@ -32,14 +32,4 @@ abstract public class PhantomMixin extends Entity {
             this.setSharedFlag(i, s);
         }
     }
-
-    @Inject(
-            method = "tick",
-            at = @At("HEAD")
-    )
-    public void stopGlide(CallbackInfo ci) {
-        if ((LivingEntity) (Object) this instanceof ServerPlayer serverPlayer) {
-            PhantomKitKt.stopGlide(serverPlayer);
-        }
-    }
 }
