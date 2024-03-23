@@ -34,6 +34,7 @@ dependencies {
     modImplementation("net.silkmc:silk-nbt:$silkVersion")
     modImplementation("net.silkmc:silk-network:$silkVersion")
     modImplementation("net.silkmc:silk-game:$silkVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }
 
 loom {

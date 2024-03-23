@@ -29,6 +29,13 @@ class KitBuilder(val kit: Kit) {
             field = value
         }
 
+    var maxUses: Int? = null
+        get() = kit.maxUses
+        set(value) {
+            kit.maxUses = value
+            field = value
+        }
+
     /**
      * Sets the kit description
      * defaults to empty string
