@@ -29,9 +29,8 @@ fun onClickAtEntity(
                         if (clickedEntity is ServerPlayer) {
                             kitItem.clickAtPlayerAction?.invoke(hgPlayer, kit, clickedEntity, hand)
                         }
-                        else {
-                            kitItem.clickAtEntityAction?.invoke(hgPlayer, kit, clickedEntity, hand)
-                        }
+                        kitItem.clickAtEntityAction?.invoke(hgPlayer, kit, clickedEntity, hand)
+
                     }
 //                    kitItem.invokeClickAtEntityAction(hgPlayer, kit, clickedEntity, hand)
                 }

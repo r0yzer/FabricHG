@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.PointedDripstoneBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.DripstoneThickness
 import net.silkmc.silk.core.entity.world
+import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
-import kotlin.time.Duration.Companion.milliseconds
 
 fun createPointedDripstone(direction: Direction, dripstoneThickness: DripstoneThickness): BlockState {
     val dripstone = Blocks.POINTED_DRIPSTONE.defaultBlockState()
@@ -41,11 +41,12 @@ val dripstoneKit = kit("Dripstone") {
 
             hgPlayer.activateCooldown(kit)
 
-            mcCoroutineTask(howOften = 35L, period = 175.milliseconds) {
+            mcCoroutineTask(howOften = 35L, period = 5.ticks) {
                 if (!entity.isAlive) {
                     this.coroutineContext.cancel()
                     return@mcCoroutineTask
                 }
+                Items.POINTED_DRIPSTONE
                 val dripstoneHeight = 15
                 val overPos = entity.onPos.higherBy(dripstoneHeight + 1)
                 val blockMap = createDripstonePosMap(entity.onPos, dripstoneHeight)

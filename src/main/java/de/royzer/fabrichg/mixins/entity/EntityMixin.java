@@ -8,7 +8,10 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -46,6 +49,16 @@ public abstract class EntityMixin {
                     OnMoveKt.onMove((Entity) (Object) (this));
                 }
             }
+        }
+    }
+
+    @Inject(
+            method = "spawnAtLocation(Lnet/minecraft/world/item/ItemStack;F)Lnet/minecraft/world/entity/item/ItemEntity;",
+            at = @At("HEAD"),
+            cancellable = true)
+    public void dripstoneSpawn(ItemStack stack, float offsetY, CallbackInfoReturnable<ItemEntity> cir) {
+        if (stack.getItem().equals(Items.POINTED_DRIPSTONE)) {
+            cir.setReturnValue(null);
         }
     }
 }
