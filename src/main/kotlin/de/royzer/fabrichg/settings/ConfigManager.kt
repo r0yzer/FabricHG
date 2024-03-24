@@ -1,23 +1,23 @@
 package de.royzer.fabrichg.settings
 
 import de.royzer.fabrichg.kit.kits
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import net.silkmc.silk.core.task.mcCoroutineTask
 import java.io.File
 
-/**
- * @author : Hotkeyyy
- * @since : 23.03.2024, Sa.
- **/
 object ConfigManager {
 
     private val kitConfigs = HashMap<String, KitConfigData>()
 
     private val configDirectory = File("config")
     private val kitConfigFile = File(configDirectory, "kitconfig.json")
-    private val json = Json { }
+    private val json = Json {
+        prettyPrint = true
+    }
 
     init {
         if (!kitConfigFile.exists()) {
@@ -45,9 +45,9 @@ object ConfigManager {
                 kitConfigs[it.name] = KitConfigData(
                     it.name,
                     it.enabled,
-                    it.cooldown,
                     true,
-                    it.maxUses
+                    it.cooldown,
+                    it.maxUses,
                 )
             }
             updateConfigFile()
@@ -56,8 +56,8 @@ object ConfigManager {
 
      fun updateKit(name: String){
         val kit = kits.first { it.name == name }
-        kitConfigs[name] = KitConfigData(name, kit.enabled, kit.cooldown, kit.usableInInvincibility, kit.maxUses)
-        updateConfigFile()
+        kitConfigs[name] = KitConfigData(name, kit.enabled, kit.usableInInvincibility, kit.cooldown, kit.maxUses)
+//        updateConfigFile() anstattdessen button der das macht?
     }
 
     private fun updateConfigFile() =
@@ -65,10 +65,13 @@ object ConfigManager {
 }
 
 @Serializable
-data class KitConfigData(
+data class KitConfigData @OptIn(ExperimentalSerializationApi::class) constructor(
+    @EncodeDefault
     val name: String,
+    @EncodeDefault
     val enabled: Boolean = true,
-    val cooldown: Double? = null,
+    @EncodeDefault
     val usableInInvincibility: Boolean = true,
+    val cooldown: Double? = null,
     val maxUses: Int? = null
 )

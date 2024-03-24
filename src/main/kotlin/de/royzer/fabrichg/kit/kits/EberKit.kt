@@ -43,20 +43,23 @@ class Eber(level: Level, val owner: HGPlayer) : Hoglin(EntityType.HOGLIN, level)
 
     override fun tick() {
         target = eberTarget
-
         super.tick()
     }
 
     override fun doHurtTarget(target: Entity): Boolean {
-        target.modifyVelocity(Vec3(0.0, 2.0, 0.0))
-        return super.doHurtTarget(target)
+        val result = super.doHurtTarget(target)
+        target.modifyVelocity(Vec3(0.0, 1.0, 0.0))
+        return result
     }
 }
 
-val eberKey = "eberlist"
+const val eberKey = "eberlist"
 
 val eberKit = kit("Eber") {
+
     kitSelectorItem = Items.NETHERITE_INGOT.defaultInstance
+
+    cooldown = 35.0
 
     kitItem {
         itemStack = kitSelectorItem.copy()
@@ -73,6 +76,7 @@ val eberKit = kit("Eber") {
         }
     }
 
+    // TODO auch ohne cooldown
     kitEvents {
         onHitEntity { hgPlayer, kit, entity ->
             if (entity !is LivingEntity) return@onHitEntity

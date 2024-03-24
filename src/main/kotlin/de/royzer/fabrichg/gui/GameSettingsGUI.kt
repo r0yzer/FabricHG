@@ -6,6 +6,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.GamePhaseManager.currentPhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.kit.kits
+import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.settings.GameSettings
 import net.minecraft.server.level.ServerPlayer
@@ -150,7 +151,7 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 }
             }.guiIcon, onClick = {
 
-                kits.filter { it.name != "None" }.forEach { it.enabled = false }
+                kits.filter { it != noneKit }.forEach { it.enabled = false }
 
                 serverPlayer.sendText {
                     text("All kits") {
@@ -334,8 +335,6 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         when (event.type) {
                             PICKUP -> {
                                 newCooldown += 0.5
-
-
                             }
 
                             SHIFT_CLICK -> {
