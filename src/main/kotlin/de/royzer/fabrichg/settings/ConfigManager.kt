@@ -31,7 +31,7 @@ object ConfigManager {
 
         if (!gameConfigFile.exists()) {
             gameConfigFile.createNewFile()
-            gameConfigFile.writeText(json.encodeToString(GameSettings))
+            gameConfigFile.writeText(json.encodeToString(gameSettings))
         }
 
         json.decodeFromString<List<KitConfigData>>(kitConfigFile.readText()).forEach {
