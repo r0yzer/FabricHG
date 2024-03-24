@@ -18,8 +18,8 @@ val kitSelector get() = itemStack(Items.CHEST) {
     } }
 }
 
-fun kitSelector(index: Int) = if (index == 1) kitSelector else itemStack(Items.CHEST) {
-    setCustomName { text("Kit Selector $index") {
+fun kitSelector(index: Int) = if (index == 0) kitSelector else itemStack(Items.CHEST) {
+    setCustomName { text("Kit Selector ${index + 1}") {
         bold = true
         italic = false
     } }

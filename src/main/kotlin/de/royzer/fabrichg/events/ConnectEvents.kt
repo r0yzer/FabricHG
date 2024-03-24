@@ -3,6 +3,7 @@ package de.royzer.fabrichg.events
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
+import de.royzer.fabrichg.data.hgplayer.giveKitSelectors
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
@@ -51,15 +52,14 @@ object ConnectEvents {
             Database.initPlayer(player)
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
 
-            if (hgPlayer.kits.isEmpty())
-                hgPlayer.kits.add(noneKit)
+            hgPlayer.fillKits()
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
                     player.removeAllEffects()
                     player.health = player.maxHealth
                     player.inventory.clearContent()
-                    player.inventory.add(kitSelector)
+                    player.giveKitSelectors()
                     if (player.hasPermissions(1)) {
                         player.inventory.setItem(8, gameSettingsItem)
                     }

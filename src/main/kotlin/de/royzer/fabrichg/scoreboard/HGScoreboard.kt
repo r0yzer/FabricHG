@@ -28,15 +28,10 @@ fun ServerPlayer.showScoreboard() {
         emptyLine()
         updatingLine(1000.milliseconds) { literalText("Kills: ${hgPlayer.kills}") { color = 0x0032FF } }
         updatingLine(1000.milliseconds) {
-            when (hgPlayer.status) {
-                HGPlayerStatus.ALIVE ->  literalText("Kit(s): ${hgPlayer.kits.joinToString { it.name }}") {
+            literalText("Kit(s): ${hgPlayer.kits.joinToString { it.name }}") {
                     color = 0x00FFFF
                     strikethrough = hgPlayer.kitsDisabled
                 }
-                else -> {
-                    literalText()
-                }
-            }
         }
         line(literalText("") { })
         line(literalText("Spieler:") {

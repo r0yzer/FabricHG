@@ -51,7 +51,7 @@ object PlayerDeath {
         hgPlayer.kills += 1
         hgPlayer.updateStats(1)
         serverPlayerEntity.hgPlayer.updateStats(deaths = 1)
-        serverPlayerEntity.hgPlayer.kits.clear()
+//        serverPlayerEntity.hgPlayer.kits.clear()
 
         return true
     }

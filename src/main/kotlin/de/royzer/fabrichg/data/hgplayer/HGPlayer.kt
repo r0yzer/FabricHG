@@ -10,6 +10,7 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
+import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.stats.Database
@@ -114,7 +115,6 @@ class HGPlayer(
             }
             return
         }
-        this.kits.clear() // solange nur 1 kit
         this.kits.add(kit)
         this.serverPlayer?.sendSystemMessage(
             literalText {
@@ -124,6 +124,43 @@ class HGPlayer(
         )
         if (GamePhaseManager.isIngame) {
             this.giveKitItems(kit)
+        }
+    }
+
+    fun setKit(kit: Kit, index: Int) {
+        if (kits.contains(kit)) {
+            this.serverPlayer?.sendText {
+                text("You already have this kit")
+                color = TEXT_GRAY
+                bold = true
+            }
+            return
+        }
+        if (!kit.enabled) {
+            this.serverPlayer?.sendText {
+                text("This kit is disabled")
+                color = TEXT_GRAY
+                bold = true
+            }
+            return
+        }
+        this.kits[index] = kit
+        this.serverPlayer?.sendSystemMessage(
+            literalText {
+                text("You are now ") { color = TEXT_GRAY }
+                text(kit.name) { color = TEXT_BLUE }
+            }
+        )
+        if (GamePhaseManager.isIngame) {
+            this.giveKitItems(kit)
+        }
+    }
+
+    fun fillKits() {
+        repeat(ConfigManager.gameSettings.kitAmount) {
+            if (kits.getOrNull(it) == null) {
+                kits.add(noneKit)
+            }
         }
     }
 
@@ -175,3 +212,10 @@ val Entity.hgPlayer
         is HGBot -> hgPlayer
         else -> null
     }
+
+fun ServerPlayer.giveKitSelectors() {
+    val kitAmounts = ConfigManager.gameSettings.kitAmount
+    repeat(kitAmounts) {
+        this.inventory?.setItem(it, kitSelector(it ))
+    }
+}
