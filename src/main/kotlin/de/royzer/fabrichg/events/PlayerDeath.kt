@@ -8,6 +8,7 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
+import de.royzer.fabrichg.stats.Database
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
@@ -48,6 +49,8 @@ object PlayerDeath {
             }
         }
         hgPlayer.kills += 1
+        hgPlayer.updateStats(1)
+        serverPlayerEntity.hgPlayer.updateStats(deaths = 1)
         serverPlayerEntity.hgPlayer.kits.clear()
 
         return true
@@ -62,6 +65,7 @@ object PlayerDeath {
         PlayerList.announcePlayerDeath(hgBot.hgPlayer, damageSource, killer)
         val hgPlayer = killer?.hgPlayer ?: return true
         hgPlayer.kills += 1
+        hgPlayer.updateStats(1)
 
         return true
     }
