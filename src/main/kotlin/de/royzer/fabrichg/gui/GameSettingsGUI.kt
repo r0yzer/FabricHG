@@ -8,7 +8,6 @@ import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.settings.ConfigManager
-import de.royzer.fabrichg.settings.GameSettings
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack
@@ -28,11 +27,15 @@ import net.silkmc.silk.igui.observable.toMutableGuiList
 
 private val kitGuiList = kits.sortedBy { it.name.first() }.toMutableGuiList()
 
+private const val MAX_KITS = 4
+
 fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
+    val gameSettings = ConfigManager.gameSettings
     return igui(GuiType.NINE_BY_SIX, "Game settings".literal, 1) {
         page(1) {
-            val minifeastStatus = GuiProperty(GameSettings.minifeastEnabled)
-            val cowStatus = GuiProperty(GameSettings.mushroomCowNerf)
+            val minifeastStatus = GuiProperty(gameSettings.minifeastEnabled)
+            val cowStatus = GuiProperty(gameSettings.mushroomCowNerf)
+            val kitAmountStatus = GuiProperty(gameSettings.kitAmount)
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
             button(5 sl 2, minifeastStatus.guiIcon { enabled ->
                 itemStack(Items.ENCHANTING_TABLE) {
@@ -47,8 +50,8 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }
             }, onClick = {
-                GameSettings.minifeastEnabled = !GameSettings.minifeastEnabled
-                minifeastStatus.set(GameSettings.minifeastEnabled)
+                gameSettings.minifeastEnabled = !gameSettings.minifeastEnabled
+                minifeastStatus.set(gameSettings.minifeastEnabled)
             })
             button(5 sl 3, cowStatus.guiIcon { enabled ->
                 itemStack(Items.RED_MUSHROOM) {
@@ -63,10 +66,36 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }
             }, onClick = {
-                GameSettings.mushroomCowNerf = !GameSettings.mushroomCowNerf
-                cowStatus.set(GameSettings.mushroomCowNerf)
+                gameSettings.mushroomCowNerf = !gameSettings.mushroomCowNerf
+                cowStatus.set(gameSettings.mushroomCowNerf)
             })
-            changePageByKey(5 sl 4, Items.CHEST.defaultInstance.also {
+            button(5 sl 4, kitAmountStatus.guiIcon { amount ->
+                itemStack(Items.TRAPPED_CHEST) {
+                    this.setCustomName {
+                        text("Kit amount: ")
+                        text(amount.toString()) {
+                            bold = true
+                            color = TEXT_BLUE
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                if (it.type == SHIFT_CLICK) {
+                    if (gameSettings.kitAmount <= 1) {
+                        return@button
+                    }
+                    gameSettings.kitAmount -= 1
+                } else if (it.type == PICKUP) {
+                    if (gameSettings.kitAmount >= MAX_KITS) {
+                        return@button
+                    }
+                    gameSettings.kitAmount += 1
+                }
+                kitAmountStatus.set(gameSettings.kitAmount)
+            })
+            changePageByKey(5 sl 5, Items.CHEST.defaultInstance.also {
                 it.setCustomName {
                     text("Kits") {
                         bold = true

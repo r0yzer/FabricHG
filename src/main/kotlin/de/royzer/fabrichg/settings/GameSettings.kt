@@ -1,12 +1,16 @@
 package de.royzer.fabrichg.settings
 
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
 
-object GameSettings {
-    var minifeastEnabled = true
-    var mushroomCowNerf = true
 
-    override fun toString(): String {
-        return "Minifeast enabled: $minifeastEnabled\n" +
-                "Mushroom cow nerf enabled: $mushroomCowNerf\n"
-    }
-}
+@Serializable
+data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
+    @EncodeDefault
+    var minifeastEnabled: Boolean = true,
+    @EncodeDefault
+    var mushroomCowNerf: Boolean = true,
+    @EncodeDefault
+    var kitAmount: Int = 1,
+)
