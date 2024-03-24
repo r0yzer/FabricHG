@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.mixins.server.level;
 
 import de.royzer.fabrichg.game.GamePhaseManager;
+import net.minecraft.Util;
 import net.minecraft.server.level.progress.LoggerChunkProgressListener;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkStatus;
@@ -66,6 +67,8 @@ class LoggerChunkProgressListenerMixin {
         return 0;
     }
 
+    @Shadow private long nextTickTime;
+
 
     @Unique
     public float lerp(float start, float end, float progress) {
@@ -79,7 +82,7 @@ class LoggerChunkProgressListenerMixin {
     )
     public void changeMotd(ChunkPos chunkPosition, ChunkStatus newStatus, CallbackInfo ci) {
         int progress = this.getProgress();
-        if (progress > 100) return;
+        if (progress > 100 || Util.getMillis() > this.nextTickTime) return;
         int r = (int) lerp(0, 255, ((float) 100-progress) / 100);
         int g = (int) lerp(0, 255, ((float) progress) / 100);
         int b = 0;
