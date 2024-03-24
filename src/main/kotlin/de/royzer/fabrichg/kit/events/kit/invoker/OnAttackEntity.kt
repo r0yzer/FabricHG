@@ -23,8 +23,13 @@ fun onAttackEntity(target: Entity, entity: LivingEntity) {
                 }
             }
         }
-        hgPlayer.invokeKitAction(kit, sendCooldown = false) {
+        // TODO das muss nochmal besser werden wenn mehr kits als das eber kit das machen wollen
+        val ignoreEntityCooldown = kit.events.noCooldownActions.contains<Any?>(kit.events.hitEntityAction)
+        hgPlayer.invokeKitAction(kit, sendCooldown = false, ignoreCooldown = ignoreEntityCooldown) {
             kit.events.hitEntityAction?.invoke(hgPlayer, kit, target)
+        }
+        val ignorePlayerCooldown = kit.events.noCooldownActions.contains<Any?>(kit.events.hitPlayerAction)
+        hgPlayer.invokeKitAction(kit, sendCooldown = false, ignoreCooldown = ignorePlayerCooldown) {
             if (target is ServerPlayer) {
                 kit.events.hitPlayerAction?.invoke(hgPlayer, kit, target)
             }

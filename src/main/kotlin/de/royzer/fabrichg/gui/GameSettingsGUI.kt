@@ -71,6 +71,7 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     text("Kits") {
                         bold = true
                         italic = false
+                        color = TEXT_GRAY
                     }
                 }
             }.guiIcon, "Kits")
@@ -168,19 +169,20 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
 
             button(1 sl 1, Items.COMMAND_BLOCK.defaultInstance.also {
                 it.setCustomName {
-                    text("save config") {
+                    text("Save config") {
                         color = 0xE1A4FF
                     }
+                    italic = false
                 }
             }.guiIcon) {
                 ConfigManager.updateConfigFile()
-                it.player.sendSystemMessage(
+                it.player.sendText {
                     literalText {
                         text("Config saved") {
                             color = 0x00FF00
                         }
                     }
-                )
+                }
             }
 
             compoundScrollBackwards(6 sl 5, Items.RED_STAINED_GLASS_PANE.guiIcon, compound, speed = 5.ticks)
@@ -205,13 +207,19 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }.guiIcon, "Kits")
 
+                // kit enabled?
                 button(5 sl 2, isEnabledProp.guiIcon { isEnabled ->
                     val icon = if (isEnabled) Items.GREEN_WOOL else Items.RED_WOOL
                     itemStack(icon, builder = {
                         this.setCustomName {
+                            text("Enabled: ") {
+                                color = TEXT_GRAY
+                            }
                             text(isEnabled.toString()) {
                                 color = if (isEnabled) 0x00FF00 else 0xFF0000
+                                bold = true
                             }
+                            italic = false
                         }
                     })
                 }) { _ ->
@@ -222,14 +230,19 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     kitGuiList.mutate { }
                 }
 
+                // usable in invincibility
                 button(5 sl 3, usableInInvincibilityProp.guiIcon { usableInInvincibility ->
                     val icon = if (usableInInvincibility) Items.GREEN_WOOL else Items.RED_WOOL
                     itemStack(icon, builder = {
                         this.setCustomName {
-                            text("Can be used in Invincibility: ")
+                            text("Useable in in invincibility: ") {
+                                color = TEXT_GRAY
+                            }
                             text(usableInInvincibility.toString()) {
                                 color = if (usableInInvincibility) 0x00FF00 else 0xFF0000
+                                bold = true
                             }
+                            italic = false
                         }
                     })
                 }) { _ ->
@@ -245,10 +258,13 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         val icon = Items.DIAMOND_SWORD
                         itemStack(icon, builder = {
                             this.setCustomName {
-                                text("maxUses: ")
+                                text("Max amount of uses before cooldown: ") {
+                                    color = TEXT_GRAY
+                                }
                                 text(maxUses.toString()) {
                                     color = 0xFFB125
                                 }
+                                italic = false
                             }
                         })
                     }) {
@@ -256,16 +272,18 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
 
                     button(3 sl 4, maxUsesProp.guiIcon {
-                        val icon = Items.GRAY_WOOL
+                        val icon = Items.STONE_BUTTON
                         itemStack(icon, builder = {
                             this.setCustomName {
-                                text("-")
-
+                                text("-") {
+                                    color = 0xFF0000
+                                }
+                                italic = false
+                                bold = true
                             }
                         })
                     }) {
                         var newUses = maxUsesProp.get()?.minus(1)!!
-
                         if (newUses < 0) newUses = 0
                         kit.maxUses = newUses
                         maxUsesProp.set(newUses)
@@ -274,18 +292,18 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
 
                     button(3 sl 6, maxUsesProp.guiIcon {
-                        val icon = Items.GRAY_WOOL
+                        val icon = Items.OAK_BUTTON
                         itemStack(icon, builder = {
                             this.setCustomName {
                                 text("+") {
                                     color = 0x00FF00
                                 }
+                                italic = false
+                                bold = true
                             }
                         })
                     }) {
                         val newUses = maxUsesProp.get()!!.plus(1)
-
-
                         kit.maxUses = newUses
                         maxUsesProp.set(newUses)
                         ConfigManager.updateKit(kit.name)
@@ -294,26 +312,35 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 }
 
 
+                // cooldown button
                 if (kit.cooldown != null) {
                     button(2 sl 5, cooldownProp.guiIcon {
                         val icon = Items.CLOCK
                         itemStack(icon, builder = {
                             this.setCustomName {
-                                text("Cooldown: ")
+                                text("Cooldown: ") {
+                                    color = TEXT_GRAY
+                                }
                                 text(kit.cooldown.toString()) {
                                     color = 0xFFB125
                                 }
+                                italic = false
                             }
                         })
                     }) {
 
                     }
 
+                    // cooldown minus button
                     button(2 sl 4, cooldownProp.guiIcon { cooldown ->
-                        val icon = Items.GRAY_WOOL
+                        val icon = Items.STONE_BUTTON
                         itemStack(icon, builder = {
                             this.setCustomName {
-                                text("-")
+                                text("-") {
+                                    color = 0xFF0000
+                                }
+                                italic = false
+                                bold = true
                             }
                         })
                     }) { event ->
@@ -321,8 +348,6 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         when (event.type) {
                             PICKUP -> {
                                 newCooldown -= 0.5
-
-
                             }
 
                             SHIFT_CLICK -> {
@@ -338,14 +363,16 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         kitGuiList.mutate { }
                     }
 
+                    // cooldown add button
                     button(2 sl 6, cooldownProp.guiIcon {
-                        val icon = Items.GRAY_WOOL
+                        val icon = Items.OAK_BUTTON
                         itemStack(icon, builder = {
                             this.setCustomName {
-
                                 text("+") {
                                     color = 0x00FF00
                                 }
+                                italic = false
+                                bold = true
                             }
                         })
                     }) { event ->
