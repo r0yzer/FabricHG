@@ -4,7 +4,6 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.MOTD_STRING
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.phase.GamePhase
@@ -22,7 +21,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
     val endTime by lazy { GamePhaseManager.timer.get() }
 
     override fun init() {
-        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A74END"
+        GamePhaseManager.server.motd = "${GamePhaseManager.MOTD_STRING}\nCURRENT GAME PHASE: \u00A74END"
         combatloggedPlayers.forEach { (_, u) -> u.cancel() }
         endTime
         GamePhaseManager.resetTimer()

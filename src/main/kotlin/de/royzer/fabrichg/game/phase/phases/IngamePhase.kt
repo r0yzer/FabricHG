@@ -6,7 +6,6 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.feast.Minifeast
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.MOTD_STRING
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
@@ -37,7 +36,7 @@ object IngamePhase : GamePhase() {
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
-        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A7eINGAME"
+        GamePhaseManager.server.motd = "${GamePhaseManager.MOTD_STRING}\nCURRENT GAME PHASE: \u00A7eINGAME"
         logInfo("IngamePhase startet")
         broadcastComponent(
             literalText {
