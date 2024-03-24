@@ -8,7 +8,6 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
-import de.royzer.fabrichg.stats.Database
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource

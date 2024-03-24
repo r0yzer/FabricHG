@@ -12,14 +12,10 @@ import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
-import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.onAnchorJoin
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.scoreboard.showScoreboard
-import de.royzer.fabrichg.stats.Database
-import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.util.gameSettingsItem
-import de.royzer.fabrichg.util.kitSelector
 import de.royzer.fabrichg.util.tracker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.job
@@ -49,7 +45,7 @@ object ConnectEvents {
                 delay(200)
                 player.showScoreboard()
             }
-            Database.initPlayer(player)
+            //Database.initPlayer(player)
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
 
             hgPlayer.fillKits()

@@ -13,7 +13,6 @@ import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.settings.ConfigManager
-import de.royzer.fabrichg.stats.Database
 import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.kitSelector
@@ -37,7 +36,7 @@ class HGPlayer(
     var stats: Stats = Stats(uuid.toString())
         set(value) {
             field = value
-            Database.updateOrCreateStats(value)
+            //  Database.updateOrCreateStats(value)
         }
 
     val playerData = mutableMapOf<String, Any?>()
@@ -216,6 +215,6 @@ val Entity.hgPlayer
 fun ServerPlayer.giveKitSelectors() {
     val kitAmounts = ConfigManager.gameSettings.kitAmount
     repeat(kitAmounts) {
-        this.inventory?.setItem(it, kitSelector(it ))
+        this.inventory?.setItem(it, kitSelector(it))
     }
 }
