@@ -11,9 +11,9 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
+import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.stats.Database
 import de.royzer.fabrichg.stats.Stats
-import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.kitSelector
 import net.fabricmc.fabric.api.entity.FakePlayer
@@ -148,6 +148,7 @@ class HGPlayer(
             deaths = this.stats.deaths + deaths,
             wins = this.stats.wins + wins
         )
+    }
 
     fun giveKitSelectors() {
         val kits = ConfigManager.gameSettings.kitAmount
