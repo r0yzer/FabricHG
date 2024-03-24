@@ -8,6 +8,7 @@ import de.royzer.fabrichg.gui.kitSelectorGUI
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.kits.backupKit
 import de.royzer.fabrichg.kit.kits.noneKit
+import de.royzer.fabrichg.settings.ConfigManager
 import net.silkmc.silk.commands.*
 import net.silkmc.silk.core.text.sendText
 import net.silkmc.silk.igui.*
@@ -24,7 +25,7 @@ val kitCommand = command("kit") {
             if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
                 if (player.hgPlayer.kits[index] == backupKit || player.hgPlayer.kits[index] == noneKit)
                     player.openGui(
-                        kitSelectorGUI(player, index), 1
+                        kitSelectorGUI(player, index + 1), 1
                     )
             } else player.openGui(
                 kitSelectorGUI(player, index + 1), 1
@@ -34,6 +35,10 @@ val kitCommand = command("kit") {
     argument<Int>("index") { _index ->
         runs {
             val index = _index() - 1
+
+            if (index >= ConfigManager.gameSettings.kitAmount) {
+                return@runs
+            }
 
             val player = source.playerOrException
             if (GamePhaseManager.isNotStarted || player.hgPlayer.kits[index] == backupKit || player.hasPermissions(
