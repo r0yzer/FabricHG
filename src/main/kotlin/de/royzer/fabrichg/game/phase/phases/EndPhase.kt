@@ -3,6 +3,7 @@ package de.royzer.fabrichg.game.phase.phases
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.MOTD_STRING
 import de.royzer.fabrichg.game.broadcastComponent
@@ -33,6 +34,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
             }))
             addEffect(MobEffectInstance(MobEffects.GLOWING, -1, 0, false, false))
         }
+        winner.updateStats(wins = 1)
     }
 
     override fun tick(timer: Int) {

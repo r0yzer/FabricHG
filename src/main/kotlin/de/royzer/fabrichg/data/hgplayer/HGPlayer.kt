@@ -11,7 +11,8 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
-import de.royzer.fabrichg.settings.GameSettings
+import de.royzer.fabrichg.stats.Database
+import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.util.forceGiveItem
 import net.fabricmc.fabric.api.entity.FakePlayer
 import net.minecraft.server.level.ServerPlayer
@@ -30,6 +31,11 @@ class HGPlayer(
     var kills: Int = 0
     var offlineTime = maxOfflineTime
     val kits = mutableListOf<Kit>()
+    var stats: Stats = Stats(uuid.toString())
+        set(value) {
+            field = value
+            Database.updateOrCreateStats(value)
+        }
 
     val playerData = mutableMapOf<String, Any?>()
 
@@ -120,17 +126,26 @@ class HGPlayer(
     }
 
     val isNeo get() = canUseKit(neoKit)
-    
+
     val isAlive get() = status == HGPlayerStatus.ALIVE
 
     // vielleicht noch gucken dass nur player zählen
-    val inFight: Boolean get() {
-        val combatTracker = serverPlayer?.combatTracker ?: return false
-        val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
-        return lastCombatEntry?.source?.entity is ServerPlayer
-    }
+    val inFight: Boolean
+        get() {
+            val combatTracker = serverPlayer?.combatTracker ?: return false
+            val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
+            return lastCombatEntry?.source?.entity is ServerPlayer
+        }
 
     val isBot get() = this.serverPlayer is FakePlayer
+
+    fun updateStats(kills: Int = 0, deaths: Int = 0, wins: Int = 0) {
+        this.stats = this.stats.copy(
+            kills = this.stats.kills + kills,
+            deaths = this.stats.deaths + deaths,
+            wins = this.stats.wins + wins
+        )
+    }
 
     override fun toString(): String {
         return "HGPlayer ${this.name}, Kits: [${kits.joinToString()}]"
