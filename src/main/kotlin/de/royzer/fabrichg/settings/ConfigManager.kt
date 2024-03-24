@@ -60,7 +60,7 @@ object ConfigManager {
 //        updateConfigFile() anstattdessen button der das macht?
     }
 
-    private fun updateConfigFile() =
+    fun updateConfigFile() =
         mcCoroutineTask(sync = false) { kitConfigFile.writeText(json.encodeToString(kitConfigs.values.toList())) }
 }
 

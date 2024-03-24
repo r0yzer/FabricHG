@@ -16,6 +16,7 @@ import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.text.literal
+import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 import net.silkmc.silk.igui.*
 import net.silkmc.silk.igui.GuiActionType.PICKUP
@@ -164,6 +165,23 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 }
                 kitGuiList.mutate {}
             })
+
+            button(1 sl 1, Items.COMMAND_BLOCK.defaultInstance.also {
+                it.setCustomName {
+                    text("save config") {
+                        color = 0xE1A4FF
+                    }
+                }
+            }.guiIcon) {
+                ConfigManager.updateConfigFile()
+                it.player.sendSystemMessage(
+                    literalText {
+                        text("Config saved") {
+                            color = 0x00FF00
+                        }
+                    }
+                )
+            }
 
             compoundScrollBackwards(6 sl 5, Items.RED_STAINED_GLASS_PANE.guiIcon, compound, speed = 5.ticks)
             compoundScrollForwards(1 sl 5, Items.GREEN_STAINED_GLASS_PANE.guiIcon, compound, speed = 5.ticks)
