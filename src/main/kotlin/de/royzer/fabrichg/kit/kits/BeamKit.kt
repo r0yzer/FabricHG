@@ -18,6 +18,7 @@ import kotlin.time.Duration.Companion.seconds
 
 val beamKit = kit("Beam") {
     kitSelectorItem = Items.END_CRYSTAL.defaultInstance
+    description = "Beam your enemies"
 
     cooldown = 38.0
 
