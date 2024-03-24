@@ -13,7 +13,7 @@ import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.igui.*
 import net.silkmc.silk.igui.observable.toGuiList
 
-fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE, "Kits".literal, 1) {
+fun kitSelectorGUI(serverPlayerEntity: ServerPlayer, index: Int) = igui(GuiType.NINE_BY_FIVE, "Kit $index".literal, 1) {
     val hgPlayer = serverPlayerEntity.hgPlayer
     page(1) {
         placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
@@ -44,7 +44,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer) = igui(GuiType.NINE_BY_FIVE
                 }
             },
             onClick = { _, kit ->
-                hgPlayer.addKit(kit)
+                hgPlayer.setKit(kit, index - 1)
                 serverPlayerEntity.closeContainer()
             }
         )
