@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.kitProperty
 import net.minecraft.core.Vec3i
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -11,7 +12,8 @@ import net.silkmc.silk.core.task.mcCoroutineTask
 import kotlin.time.Duration.Companion.milliseconds
 
 val diggerKit = kit("Digger") {
-    val size = 6
+    val size by kitProperty(6.0, kit)
+    size
     kitSelectorItem = Items.DRAGON_EGG.defaultInstance
     cooldown = 7.0
     description = "Make a 5 by 5 hole"
@@ -22,11 +24,11 @@ val diggerKit = kit("Digger") {
         onPlace { hgPlayer, kit, stack, blockPos, world ->
             hgPlayer.activateCooldown(kit)
             mcCoroutineTask(period = 0.milliseconds, delay = 750L.milliseconds) {
-                repeat(size) { _x ->
-                    repeat(size) { _y ->
-                        repeat(size) { _z ->
-                            val x = _x - size / 2
-                            val z = _z - size / 2
+                repeat(size.toInt()) { _x ->
+                    repeat(size.toInt()) { _y ->
+                        repeat(size.toInt()) { _z ->
+                            val x = _x - size.toInt() / 2
+                            val z = _z - size.toInt() / 2
                             val pos = blockPos.subtract(Vec3i(x, _y, z))
                             if (world.getBlockState(pos).block != Blocks.BEDROCK)
                                 world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())

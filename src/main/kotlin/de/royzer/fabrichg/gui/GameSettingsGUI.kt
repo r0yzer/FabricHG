@@ -29,7 +29,7 @@ private val kitGuiList = kits.sortedBy { it.name.first() }.toMutableGuiList()
 
 private const val MAX_KITS = 4
 
-fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
+suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
     val gameSettings = ConfigManager.gameSettings
     return igui(GuiType.NINE_BY_SIX, "Game settings".literal, 1) {
         page(1) {
@@ -224,6 +224,8 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 val cooldownProp = GuiProperty(kit.cooldown)
                 val usableInInvincibilityProp = GuiProperty(kit.usableInInvincibility)
                 val maxUsesProp = GuiProperty(kit.maxUses)
+
+                val otherProperties: List<GuiProperty<Pair<String, *>>> = kit.properties.map { GuiProperty(it.toPair()) }
 
                 placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
 
@@ -426,6 +428,90 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
 
                 }
 
+                println("props: ${otherProperties}")
+                otherProperties.forEachIndexed { index, guiProperty ->
+                    if (guiProperty.get().second !is Double) return@forEachIndexed
+                    println("prop: $index: ${guiProperty}")
+                    button((3 + index) sl 5, guiProperty.guiIcon {
+                        val icon = Items.CLOCK
+                        itemStack(icon, builder = {
+                            this.setCustomName {
+                                text(it.first) {
+                                    color = TEXT_GRAY
+                                }
+                                text(it.second.toString()) {
+                                    color = 0xFFB125
+                                }
+                            }
+                        })
+                    }) {
+
+                    }
+
+                    // property - button
+                    button((3 + index) sl 4, cooldownProp.guiIcon { cooldown ->
+                        val icon = Items.STONE_BUTTON
+                        itemStack(icon, builder = {
+                            this.setCustomName {
+                                text("-") {
+                                    color = 0xFF0000
+                                }
+                                italic = false
+                                bold = true
+                            }
+                        })
+                    }) { event ->
+                        var newCooldown = guiProperty.get().second as Double
+                        when (event.type) {
+                            PICKUP -> {
+                                newCooldown -= 0.5
+                            }
+
+                            SHIFT_CLICK -> {
+                                newCooldown -= 1
+                            }
+
+                            else -> {}
+                        }
+                        if (newCooldown < 0) newCooldown = 0.0
+                        kit.properties[guiProperty.get().first] = newCooldown
+                        guiProperty.set(guiProperty.get().first to newCooldown)
+                        ConfigManager.updateKit(kit.name)
+                        kitGuiList.mutate { }
+                    }
+
+                    // cooldown add button
+                    button((3 + index) sl 6, cooldownProp.guiIcon {
+                        val icon = Items.OAK_BUTTON
+                        itemStack(icon, builder = {
+                            this.setCustomName {
+                                text("+") {
+                                    color = 0x00FF00
+                                }
+                                italic = false
+                                bold = true
+                            }
+                        })
+                    }) { event ->
+                        var newCooldown = guiProperty.get().second as Double
+                        when (event.type) {
+                            PICKUP -> {
+                                newCooldown += 0.5
+                            }
+
+                            SHIFT_CLICK -> {
+                                newCooldown += 1
+                            }
+
+                            else -> {}
+                        }
+                        if (newCooldown < 0) newCooldown = 0.0
+                        kit.properties[guiProperty.get().first] = newCooldown
+                        guiProperty.set(guiProperty.get().first to newCooldown)
+                        ConfigManager.updateKit(kit.name)
+                        kitGuiList.mutate { }
+                    }
+                }
             }
         }
     }
