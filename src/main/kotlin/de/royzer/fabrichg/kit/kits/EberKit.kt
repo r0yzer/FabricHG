@@ -30,7 +30,7 @@ class Eber(level: Level, val owner: HGPlayer) : Hoglin(EntityType.HOGLIN, level)
         owner.playerData[eberKey] = ebersBefore
 
         mcCoroutineTask(delay = 7.5.seconds) {
-            kill()
+            remove(RemovalReason.DISCARDED)
 
             val ebersAfterDeath = (owner.getPlayerData<MutableList<Eber>>(eberKey) ?: mutableListOf())
             ebersAfterDeath.remove(this@Eber)
@@ -61,6 +61,8 @@ val eberKit = kit("Eber") {
 
     cooldown = 35.0
 
+    description = "Fight with the help of an eber"
+
     kitItem {
         itemStack = kitSelectorItem.copy()
 
@@ -76,9 +78,8 @@ val eberKit = kit("Eber") {
         }
     }
 
-    // TODO auch ohne cooldown
     kitEvents {
-        onHitEntity { hgPlayer, kit, entity ->
+        onHitEntity(ignoreCooldown = true) { hgPlayer, kit, entity ->
             if (entity !is LivingEntity) return@onHitEntity
 
             val eber = hgPlayer.getPlayerData<List<Eber>>(eberKey)

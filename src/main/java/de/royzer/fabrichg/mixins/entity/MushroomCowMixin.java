@@ -1,6 +1,6 @@
 package de.royzer.fabrichg.mixins.entity;
 
-import de.royzer.fabrichg.settings.GameSettings;
+import de.royzer.fabrichg.settings.ConfigManager;
 import net.minecraft.world.entity.animal.MushroomCow;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -19,7 +19,7 @@ public class MushroomCowMixin {
             )
     )
     public ItemLike nerfMushroomCow(ItemLike item) {
-        if (GameSettings.INSTANCE.getMushroomCowNerf()) {
+        if (ConfigManager.INSTANCE.getGameSettings().getMushroomCowNerf()) {
             return Items.SUSPICIOUS_STEW;
         }
         return item;

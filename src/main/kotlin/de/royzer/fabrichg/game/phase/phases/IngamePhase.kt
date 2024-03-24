@@ -6,12 +6,11 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.feast.Minifeast
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.MOTD_STRING
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.settings.GameSettings
+import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
 import net.silkmc.silk.core.logging.logInfo
@@ -37,7 +36,7 @@ object IngamePhase : GamePhase() {
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
-        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A7eINGAME"
+        GamePhaseManager.server.motd = "${GamePhaseManager.MOTD_STRING}\nCURRENT GAME PHASE: \u00A7eINGAME"
         logInfo("IngamePhase startet")
         broadcastComponent(
             literalText {
@@ -51,7 +50,7 @@ object IngamePhase : GamePhase() {
             2f,
             min(2f, PlayerList.alivePlayers.size.toFloat()/20) + min(5, PlayerList.alivePlayers.size/3)
         )).toInt()
-        minifeastStartTimes = if (GameSettings.minifeastEnabled) List(max(1, minifeasts)) { Random.nextInt(minifeastStartTime, minifeastEndTime) } else listOf()
+        minifeastStartTimes = if (ConfigManager.gameSettings.minifeastEnabled) List(max(1, minifeasts)) { Random.nextInt(minifeastStartTime, minifeastEndTime) } else listOf()
         PlayerList.alivePlayers.forEach { hgPlayer ->
             hgPlayer.serverPlayer?.closeContainer()
         }

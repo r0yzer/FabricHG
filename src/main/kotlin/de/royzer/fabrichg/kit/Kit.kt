@@ -19,7 +19,8 @@ class Kit(val name: String) {
             field = value
             server.players.filter { it.hgPlayer.hasKit(this) }.forEach {
                 onDisable?.invoke(it.hgPlayer, this)
-                it.hgPlayer.kits.clear()
+                it.hgPlayer.kits.remove(this)
+                it.hgPlayer.addKit(noneKit)
             }
         }
     var maxUses: Int? = null
@@ -73,8 +74,10 @@ val kits = listOfNotNull(
     ninjaKit,
     frozenKit,
     beamKit,
-    dripstoneKit,
+    stalaktitKit,
     eberKit,
+    reaperKit,
+    jokerKit,
 )
 
 fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }.random()

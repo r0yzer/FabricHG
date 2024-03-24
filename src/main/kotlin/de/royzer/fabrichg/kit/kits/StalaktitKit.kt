@@ -66,9 +66,10 @@ fun ServerPlayer.sendChatPacket(from: HGPlayer, message: String, type: Int) {
     )
 }
 
-val dripstoneKit = kit("Dripstone") {
+val stalaktitKit = kit("Stalaktit") {
     kitSelectorItem = Items.POINTED_DRIPSTONE.defaultInstance
     cooldown = 25.0
+    description = "Hänge von der Decke wie ein Stalaktit"
 
     kitItem {
         itemStack = kitSelectorItem.copy()

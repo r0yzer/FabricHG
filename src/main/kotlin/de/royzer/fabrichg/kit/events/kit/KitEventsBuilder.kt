@@ -13,8 +13,11 @@ class KitEventsBuilder(val kit: Kit) {
         kit.events.hitPlayerAction = action
     }
 
-    fun onHitEntity(action: (HGPlayer, Kit, Entity) -> Unit) {
+    fun onHitEntity(ignoreCooldown: Boolean = false, action: (HGPlayer, Kit, Entity) -> Unit) {
         kit.events.hitEntityAction = action
+        if (ignoreCooldown) {
+            kit.events.noCooldownActions.add(action)
+        }
     }
 
     fun onMove(action: (HGPlayer, Kit) -> Unit) {

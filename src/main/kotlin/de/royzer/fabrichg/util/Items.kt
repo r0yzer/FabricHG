@@ -18,6 +18,13 @@ val kitSelector get() = itemStack(Items.CHEST) {
     } }
 }
 
+fun kitSelector(index: Int) = if (index == 1) kitSelector else itemStack(Items.CHEST) {
+    setCustomName { text("Kit Selector $index") {
+        bold = true
+        italic = false
+    } }
+}
+
 val gameSettingsItem get() = itemStack(Items.COMPARATOR) {
     setCustomName { text("Game settings") {
         bold = true

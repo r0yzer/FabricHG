@@ -28,6 +28,7 @@
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
     "server.network.ServerStatusMixin",
+    "server.level.LoggerChunkProgressListenerMixin",
     "world.CombatTrackerAcessor"
   ],
   "injectors": {

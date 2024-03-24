@@ -31,6 +31,10 @@ fun initServer() {
     ConnectEvents
     PlayerDeath
 
+    ServerLifecycleEvents.SERVER_STARTING.register {
+        GamePhaseManager.server = it as DedicatedServer
+    }
+
     ServerLifecycleEvents.SERVER_STARTED.register {
         GamePhaseManager.enable(it as DedicatedServer)
         ConfigManager

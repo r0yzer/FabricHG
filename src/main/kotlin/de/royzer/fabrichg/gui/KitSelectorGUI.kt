@@ -2,7 +2,6 @@ package de.royzer.fabrichg.gui
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kits
-import de.royzer.fabrichg.settings.GameSettings
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack

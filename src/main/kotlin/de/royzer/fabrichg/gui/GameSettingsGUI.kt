@@ -8,7 +8,6 @@ import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.settings.ConfigManager
-import de.royzer.fabrichg.settings.GameSettings
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack
@@ -28,11 +27,15 @@ import net.silkmc.silk.igui.observable.toMutableGuiList
 
 private val kitGuiList = kits.sortedBy { it.name.first() }.toMutableGuiList()
 
+private const val MAX_KITS = 4
+
 fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
+    val gameSettings = ConfigManager.gameSettings
     return igui(GuiType.NINE_BY_SIX, "Game settings".literal, 1) {
         page(1) {
-            val minifeastStatus = GuiProperty(GameSettings.minifeastEnabled)
-            val cowStatus = GuiProperty(GameSettings.mushroomCowNerf)
+            val minifeastStatus = GuiProperty(gameSettings.minifeastEnabled)
+            val cowStatus = GuiProperty(gameSettings.mushroomCowNerf)
+            val kitAmountStatus = GuiProperty(gameSettings.kitAmount)
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
             button(5 sl 2, minifeastStatus.guiIcon { enabled ->
                 itemStack(Items.ENCHANTING_TABLE) {
@@ -47,8 +50,8 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }
             }, onClick = {
-                GameSettings.minifeastEnabled = !GameSettings.minifeastEnabled
-                minifeastStatus.set(GameSettings.minifeastEnabled)
+                gameSettings.minifeastEnabled = !gameSettings.minifeastEnabled
+                minifeastStatus.set(gameSettings.minifeastEnabled)
             })
             button(5 sl 3, cowStatus.guiIcon { enabled ->
                 itemStack(Items.RED_MUSHROOM) {
@@ -63,14 +66,41 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }
             }, onClick = {
-                GameSettings.mushroomCowNerf = !GameSettings.mushroomCowNerf
-                cowStatus.set(GameSettings.mushroomCowNerf)
+                gameSettings.mushroomCowNerf = !gameSettings.mushroomCowNerf
+                cowStatus.set(gameSettings.mushroomCowNerf)
             })
-            changePageByKey(5 sl 4, Items.CHEST.defaultInstance.also {
+            button(5 sl 4, kitAmountStatus.guiIcon { amount ->
+                itemStack(Items.TRAPPED_CHEST) {
+                    this.setCustomName {
+                        text("Kit amount: ")
+                        text(amount.toString()) {
+                            bold = true
+                            color = TEXT_BLUE
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                if (it.type == SHIFT_CLICK) {
+                    if (gameSettings.kitAmount <= 1) {
+                        return@button
+                    }
+                    gameSettings.kitAmount -= 1
+                } else if (it.type == PICKUP) {
+                    if (gameSettings.kitAmount >= MAX_KITS) {
+                        return@button
+                    }
+                    gameSettings.kitAmount += 1
+                }
+                kitAmountStatus.set(gameSettings.kitAmount)
+            })
+            changePageByKey(5 sl 5, Items.CHEST.defaultInstance.also {
                 it.setCustomName {
                     text("Kits") {
                         bold = true
                         italic = false
+                        color = TEXT_GRAY
                     }
                 }
             }.guiIcon, "Kits")
@@ -168,19 +198,20 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
 
             button(1 sl 1, Items.COMMAND_BLOCK.defaultInstance.also {
                 it.setCustomName {
-                    text("save config") {
+                    text("Save config") {
                         color = 0xE1A4FF
                     }
+                    italic = false
                 }
             }.guiIcon) {
                 ConfigManager.updateConfigFile()
-                it.player.sendSystemMessage(
+                it.player.sendText {
                     literalText {
                         text("Config saved") {
                             color = 0x00FF00
                         }
                     }
-                )
+                }
             }
 
             compoundScrollBackwards(6 sl 5, Items.RED_STAINED_GLASS_PANE.guiIcon, compound, speed = 5.ticks)
@@ -205,13 +236,19 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }.guiIcon, "Kits")
 
+                // kit enabled?
                 button(5 sl 2, isEnabledProp.guiIcon { isEnabled ->
                     val icon = if (isEnabled) Items.GREEN_WOOL else Items.RED_WOOL
                     itemStack(icon, builder = {
                         this.setCustomName {
+                            text("Enabled: ") {
+                                color = TEXT_GRAY
+                            }
                             text(isEnabled.toString()) {
                                 color = if (isEnabled) 0x00FF00 else 0xFF0000
+                                bold = true
                             }
+                            italic = false
                         }
                     })
                 }) { _ ->
@@ -222,14 +259,19 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     kitGuiList.mutate { }
                 }
 
+                // usable in invincibility
                 button(5 sl 3, usableInInvincibilityProp.guiIcon { usableInInvincibility ->
                     val icon = if (usableInInvincibility) Items.GREEN_WOOL else Items.RED_WOOL
                     itemStack(icon, builder = {
                         this.setCustomName {
-                            text("Can be used in Invincibility: ")
+                            text("Useable in in invincibility: ") {
+                                color = TEXT_GRAY
+                            }
                             text(usableInInvincibility.toString()) {
                                 color = if (usableInInvincibility) 0x00FF00 else 0xFF0000
+                                bold = true
                             }
+                            italic = false
                         }
                     })
                 }) { _ ->
@@ -245,10 +287,13 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         val icon = Items.DIAMOND_SWORD
                         itemStack(icon, builder = {
                             this.setCustomName {
-                                text("maxUses: ")
+                                text("Max amount of uses before cooldown: ") {
+                                    color = TEXT_GRAY
+                                }
                                 text(maxUses.toString()) {
                                     color = 0xFFB125
                                 }
+                                italic = false
                             }
                         })
                     }) {
@@ -256,16 +301,18 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
 
                     button(3 sl 4, maxUsesProp.guiIcon {
-                        val icon = Items.GRAY_WOOL
+                        val icon = Items.STONE_BUTTON
                         itemStack(icon, builder = {
                             this.setCustomName {
-                                text("-")
-
+                                text("-") {
+                                    color = 0xFF0000
+                                }
+                                italic = false
+                                bold = true
                             }
                         })
                     }) {
                         var newUses = maxUsesProp.get()?.minus(1)!!
-
                         if (newUses < 0) newUses = 0
                         kit.maxUses = newUses
                         maxUsesProp.set(newUses)
@@ -274,18 +321,18 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
 
                     button(3 sl 6, maxUsesProp.guiIcon {
-                        val icon = Items.GRAY_WOOL
+                        val icon = Items.OAK_BUTTON
                         itemStack(icon, builder = {
                             this.setCustomName {
                                 text("+") {
                                     color = 0x00FF00
                                 }
+                                italic = false
+                                bold = true
                             }
                         })
                     }) {
                         val newUses = maxUsesProp.get()!!.plus(1)
-
-
                         kit.maxUses = newUses
                         maxUsesProp.set(newUses)
                         ConfigManager.updateKit(kit.name)
@@ -294,26 +341,35 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 }
 
 
+                // cooldown button
                 if (kit.cooldown != null) {
                     button(2 sl 5, cooldownProp.guiIcon {
                         val icon = Items.CLOCK
                         itemStack(icon, builder = {
                             this.setCustomName {
-                                text("Cooldown: ")
+                                text("Cooldown: ") {
+                                    color = TEXT_GRAY
+                                }
                                 text(kit.cooldown.toString()) {
                                     color = 0xFFB125
                                 }
+                                italic = false
                             }
                         })
                     }) {
 
                     }
 
+                    // cooldown minus button
                     button(2 sl 4, cooldownProp.guiIcon { cooldown ->
-                        val icon = Items.GRAY_WOOL
+                        val icon = Items.STONE_BUTTON
                         itemStack(icon, builder = {
                             this.setCustomName {
-                                text("-")
+                                text("-") {
+                                    color = 0xFF0000
+                                }
+                                italic = false
+                                bold = true
                             }
                         })
                     }) { event ->
@@ -321,8 +377,6 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         when (event.type) {
                             PICKUP -> {
                                 newCooldown -= 0.5
-
-
                             }
 
                             SHIFT_CLICK -> {
@@ -338,14 +392,16 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         kitGuiList.mutate { }
                     }
 
+                    // cooldown add button
                     button(2 sl 6, cooldownProp.guiIcon {
-                        val icon = Items.GRAY_WOOL
+                        val icon = Items.OAK_BUTTON
                         itemStack(icon, builder = {
                             this.setCustomName {
-
                                 text("+") {
                                     color = 0x00FF00
                                 }
+                                italic = false
+                                bold = true
                             }
                         })
                     }) { event ->

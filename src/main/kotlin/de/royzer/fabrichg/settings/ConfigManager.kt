@@ -13,8 +13,11 @@ object ConfigManager {
 
     private val kitConfigs = HashMap<String, KitConfigData>()
 
+    val gameSettings = GameSettings()
+
     private val configDirectory = File("config")
     private val kitConfigFile = File(configDirectory, "kitconfig.json")
+    private val gameConfigFile = File(configDirectory, "gameconfig.json")
     private val json = Json {
         prettyPrint = true
     }
@@ -26,11 +29,21 @@ object ConfigManager {
             kitConfigFile.writeText(json.encodeToString(listOf<KitConfigData>()))
         }
 
+        if (!gameConfigFile.exists()) {
+            gameConfigFile.createNewFile()
+            gameConfigFile.writeText(json.encodeToString(GameSettings))
+        }
+
         json.decodeFromString<List<KitConfigData>>(kitConfigFile.readText()).forEach {
             kitConfigs[it.name] = it
         }
+        val gameConfigData = json.decodeFromString<GameSettings>(gameConfigFile.readText())
+        gameSettings.kitAmount = gameConfigData.kitAmount
+        gameSettings.minifeastEnabled = gameConfigData.minifeastEnabled
+        gameSettings.mushroomCowNerf = gameConfigData.mushroomCowNerf
 
         setKitValues()
+        updateGameConfigFile()
     }
 
     private fun setKitValues() {
@@ -57,11 +70,13 @@ object ConfigManager {
      fun updateKit(name: String){
         val kit = kits.first { it.name == name }
         kitConfigs[name] = KitConfigData(name, kit.enabled, kit.usableInInvincibility, kit.cooldown, kit.maxUses)
-//        updateConfigFile() anstattdessen button der das macht?
     }
 
     fun updateConfigFile() =
         mcCoroutineTask(sync = false) { kitConfigFile.writeText(json.encodeToString(kitConfigs.values.toList())) }
+
+    private fun updateGameConfigFile() =
+        mcCoroutineTask(sync = false) { gameConfigFile.writeText(json.encodeToString(gameSettings)) }
 }
 
 @Serializable

@@ -13,7 +13,9 @@ import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.stats.Database
 import de.royzer.fabrichg.stats.Stats
+import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.forceGiveItem
+import de.royzer.fabrichg.util.kitSelector
 import net.fabricmc.fabric.api.entity.FakePlayer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
@@ -139,12 +141,20 @@ class HGPlayer(
 
     val isBot get() = this.serverPlayer is FakePlayer
 
+
     fun updateStats(kills: Int = 0, deaths: Int = 0, wins: Int = 0) {
         this.stats = this.stats.copy(
             kills = this.stats.kills + kills,
             deaths = this.stats.deaths + deaths,
             wins = this.stats.wins + wins
         )
+
+    fun giveKitSelectors() {
+        val kits = ConfigManager.gameSettings.kitAmount
+        repeat(kits) {
+            this.serverPlayer?.inventory?.add(kitSelector(it))
+        }
+
     }
 
     override fun toString(): String {

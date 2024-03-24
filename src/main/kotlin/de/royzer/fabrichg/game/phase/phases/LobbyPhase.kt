@@ -3,7 +3,6 @@ package de.royzer.fabrichg.game.phase.phases
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.MOTD_STRING
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
@@ -13,9 +12,6 @@ import de.royzer.fabrichg.util.getRandomHighestPos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import net.silkmc.silk.core.text.literalText
-import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.effect.MobEffectInstance
-import net.minecraft.world.effect.MobEffects
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineScope
 
@@ -28,7 +24,7 @@ object LobbyPhase : GamePhase() {
 
     override fun init() {
         GamePhaseManager.server.isPvpAllowed = false
-        GamePhaseManager.server.motd = "$MOTD_STRING\nCURRENT GAME PHASE: \u00A72LOBBY"
+        GamePhaseManager.server.motd = "${GamePhaseManager.MOTD_STRING}\nCURRENT GAME PHASE: \u00A72LOBBY"
     }
 
     override fun tick(timer: Int) {
