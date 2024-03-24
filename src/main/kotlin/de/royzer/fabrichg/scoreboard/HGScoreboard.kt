@@ -7,13 +7,15 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.EndPhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import net.minecraft.server.level.ServerPlayer
+import net.silkmc.silk.core.kotlin.ticks
+import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.game.sideboard.sideboard
 import kotlin.time.Duration.Companion.milliseconds
 
 fun ServerPlayer.showScoreboard() {
     val hgPlayer = PlayerList.addOrGetPlayer(uuid, name.string)
-    sideboard(
+    val board = sideboard(
         literalText("Fabric HG") { color = 0xFF00C8 }
     ) {
         updatingLine(100.milliseconds) {
@@ -51,7 +53,11 @@ fun ServerPlayer.showScoreboard() {
                 color = hgPlayer.status.statusColor
             }
         }
-    }.displayToPlayer(this)
+    }
+
+    mcCoroutineTask(delay=10.ticks) {
+        board.displayToPlayer(this@showScoreboard)
+    }
 }
 
 val Int.formattedTime: String
