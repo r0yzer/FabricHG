@@ -8,14 +8,12 @@ import de.royzer.fabrichg.game.phase.phases.EndPhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import net.minecraft.server.level.ServerPlayer
 import net.silkmc.silk.core.text.literalText
-import net.silkmc.silk.game.sideboard.Sideboard
 import net.silkmc.silk.game.sideboard.sideboard
 import kotlin.time.Duration.Companion.milliseconds
 
-
-val ServerPlayer.hgScoreboard: Sideboard get() {
+fun ServerPlayer.showScoreboard() {
     val hgPlayer = PlayerList.addOrGetPlayer(uuid, name.string)
-    return sideboard(
+    sideboard(
         literalText("Fabric HG") { color = 0xFF00C8 }
     ) {
         updatingLine(100.milliseconds) {
@@ -53,52 +51,8 @@ val ServerPlayer.hgScoreboard: Sideboard get() {
                 color = hgPlayer.status.statusColor
             }
         }
-    }
+    }.displayToPlayer(this)
 }
-
-//fun ServerPlayer.showScoreboard() {
-//    val hgPlayer = PlayerList.addOrGetPlayer(uuid, name.string)
-//    sideboard(
-//        literalText("Fabric HG") { color = 0xFF00C8 }
-//    ) {
-//        updatingLine(100.milliseconds) {
-//            when (GamePhaseManager.currentPhaseType) {              // rr keine ahnung warum man hier 1 dazurechnen muss
-//                PhaseType.LOBBY -> literalText("Start in: ${(1 + LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()).formattedTime}")
-//                PhaseType.END -> literalText("Zeit: ${(GamePhaseManager.currentPhase as EndPhase).endTime.formattedTime}")
-//                else -> literalText("Zeit: ${(GamePhaseManager.timer.get()).formattedTime}")
-//            }
-//        }
-//        emptyLine()
-//        updatingLine(1000.milliseconds) { literalText("Kills: ${hgPlayer.kills}") { color = 0x0032FF } }
-//        updatingLine(1000.milliseconds) {
-//            when (hgPlayer.status) {
-//                HGPlayerStatus.ALIVE ->  literalText("Kit(s): ${hgPlayer.kits.joinToString { it.name }}") {
-//                    color = 0x00FFFF
-//                    strikethrough = hgPlayer.kitsDisabled
-//                }
-//                else -> {
-//                    literalText()
-//                }
-//            }
-//        }
-//        line(literalText("") { })
-//        line(literalText("Spieler:") {
-//            color = 0x0032FF
-//        })
-//        updatingLine(1000.milliseconds) {
-//            literalText("${PlayerList.alivePlayers.size}/${PlayerList.maxPlayers}") {
-//                color = 0x00FFFF
-//            }
-//        }
-//        emptyLine()
-//        updatingLine(1000.milliseconds) {
-//            literalText(hgPlayer.status.toString()) {
-//                color = hgPlayer.status.statusColor
-//            }
-//        }
-//    }
-//        .displayToPlayer(this)
-//}
 
 val Int.formattedTime: String
     get() {

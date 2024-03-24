@@ -14,7 +14,7 @@ import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.onAnchorJoin
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
-import de.royzer.fabrichg.scoreboard.hgScoreboard
+import de.royzer.fabrichg.scoreboard.showScoreboard
 import de.royzer.fabrichg.util.gameSettingsItem
 import de.royzer.fabrichg.util.kitSelector
 import de.royzer.fabrichg.util.tracker
@@ -44,7 +44,7 @@ object ConnectEvents {
 
             mcCoroutineScope.launch {
                 delay(200)
-                player.hgScoreboard.displayToPlayer(player)
+                player.showScoreboard()
             }
 
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
@@ -64,7 +64,6 @@ object ConnectEvents {
 
                     player.foodData.foodLevel = 20
                     player.setGameMode(GameType.ADVENTURE)
-//                    if (LobbyPhase.isStarting) player.freeze()
                     PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                 }
 
