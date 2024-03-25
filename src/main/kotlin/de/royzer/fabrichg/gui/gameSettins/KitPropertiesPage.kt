@@ -9,28 +9,45 @@ import de.royzer.fabrichg.settings.KitProperty
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.item.setCustomName
-import net.silkmc.silk.igui.GuiActionType
-import net.silkmc.silk.igui.GuiBuilder
+import net.silkmc.silk.igui.*
 import net.silkmc.silk.igui.events.GuiClickEvent
-import net.silkmc.silk.igui.guiIcon
 import net.silkmc.silk.igui.observable.GuiProperty
-import net.silkmc.silk.igui.sl
 
+const val propertiesPerSlot = 4
 
 suspend fun GuiBuilder.PageBuilder.kitPropertiesPage(kit: Kit) {
+    placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
+
+    changePageByKey(6 sl 1, Items.FEATHER.defaultInstance.also {
+        it.setCustomName {
+            text("Back") {
+                color = TEXT_GRAY
+                italic = false
+            }
+        }
+    }.guiIcon, kit.name)
+
     val otherProperties: List<GuiProperty<Pair<String, KitProperty>>> = kit.properties.map { GuiProperty(it.toPair()) }
 
     otherProperties.forEachIndexed { index, guiProperty ->
         when (guiProperty.get().second) {
-            is KitProperty.DoubleKitProperty -> doubleProperty(kit, index, guiProperty as GuiProperty<Pair<String, KitProperty.DoubleKitProperty>>)
-            is KitProperty.IntKitProperty -> intProperty(kit, index, guiProperty as GuiProperty<Pair<String, KitProperty.IntKitProperty>>)
-            is KitProperty.BooleanKitProperty -> booleanProperty(kit, index, guiProperty as GuiProperty<Pair<String, KitProperty.BooleanKitProperty>>)
+            is KitProperty.DoubleKitProperty ->
+                doubleProperty(kit, index, otherProperties.size, guiProperty as GuiProperty<Pair<String, KitProperty.DoubleKitProperty>>)
+            is KitProperty.IntKitProperty ->
+                intProperty(kit, index, otherProperties.size, guiProperty as GuiProperty<Pair<String, KitProperty.IntKitProperty>>)
+            is KitProperty.BooleanKitProperty ->
+                booleanProperty(kit, index, otherProperties.size, guiProperty as GuiProperty<Pair<String, KitProperty.BooleanKitProperty>>)
         }
     }
 }
 
-fun GuiBuilder.PageBuilder.doubleProperty(kit: Kit, index: Int, guiProperty: GuiProperty<Pair<String, KitProperty.DoubleKitProperty>>) {
-    numberProperty(kit, index, guiProperty, clickPlus = { guiProperty, event ->
+fun GuiBuilder.PageBuilder.doubleProperty(
+    kit: Kit,
+    index: Int,
+    maxSlots: Int,
+    guiProperty: GuiProperty<Pair<String, KitProperty.DoubleKitProperty>>
+) {
+    numberProperty(kit, index, maxSlots, guiProperty, clickPlus = { guiProperty, event ->
         val newCooldown = guiProperty.get().second
         when (event.type) {
             GuiActionType.PICKUP -> {
@@ -68,8 +85,13 @@ fun GuiBuilder.PageBuilder.doubleProperty(kit: Kit, index: Int, guiProperty: Gui
 }
 
 
-fun GuiBuilder.PageBuilder.intProperty(kit: Kit, index: Int, guiProperty: GuiProperty<Pair<String, KitProperty.IntKitProperty>>) {
-    numberProperty(kit, index, guiProperty, clickPlus = { guiProperty, event ->
+fun GuiBuilder.PageBuilder.intProperty(
+    kit: Kit,
+    index: Int,
+    maxSlots: Int,
+    guiProperty: GuiProperty<Pair<String, KitProperty.IntKitProperty>>
+) {
+    numberProperty(kit, index, maxSlots, guiProperty, clickPlus = { guiProperty, event ->
         var newCooldown = guiProperty.get().second
         when (event.type) {
             GuiActionType.PICKUP -> {
@@ -109,15 +131,17 @@ fun GuiBuilder.PageBuilder.intProperty(kit: Kit, index: Int, guiProperty: GuiPro
 fun <T, V> GuiBuilder.PageBuilder.numberProperty(
     kit: Kit,
     index: Int,
+    size: Int,
     guiProperty: GuiProperty<Pair<String, T>>,
     clickPlus: suspend (property: GuiProperty<Pair<String, T>>, event: GuiClickEvent) -> Unit,
     clickMinus: suspend (property: GuiProperty<Pair<String, T>>, event: GuiClickEvent) -> Unit
 ) where T: KitProperty, T: Value<V> {
-    button((index + 1) sl 5, guiProperty.guiIcon {
+    val pos = getPosition(index, size)
+    button(pos, guiProperty.guiIcon {
         val icon = Items.CLOCK
         itemStack(icon, builder = {
-            this.setCustomName {
-                text(it.first) {
+            setCustomName {
+                text("${it.first}: ") {
                     color = TEXT_GRAY
                 }
                 text(it.second.data.toString()) {
@@ -130,7 +154,7 @@ fun <T, V> GuiBuilder.PageBuilder.numberProperty(
     }
 
     // property - button
-    button((index + 1) sl 4, guiProperty.guiIcon { cooldown ->
+    button(pos - (0 to 1), guiProperty.guiIcon { cooldown ->
         val icon = Items.STONE_BUTTON
         itemStack(icon, builder = {
             this.setCustomName {
@@ -146,8 +170,8 @@ fun <T, V> GuiBuilder.PageBuilder.numberProperty(
         kitGuiList.mutate { }
     }
 
-    // cooldown add button
-    button((index + 1) sl 6, guiProperty.guiIcon {
+    // property add button
+    button(pos + (0 to 1), guiProperty.guiIcon {
         val icon = Items.OAK_BUTTON
         itemStack(icon, builder = {
             this.setCustomName {
@@ -167,13 +191,15 @@ fun <T, V> GuiBuilder.PageBuilder.numberProperty(
 fun GuiBuilder.PageBuilder.booleanProperty(
     kit: Kit,
     index: Int,
+    size: Int,
     guiProperty: GuiProperty<Pair<String, KitProperty.BooleanKitProperty>>
 ) {
-    button((index + 1) sl 5, guiProperty.guiIcon {
+    val pos = getPosition(index, size)
+    button(pos, guiProperty.guiIcon {
         val icon = Items.GLASS_PANE
         itemStack(icon, builder = {
             setCustomName {
-                text(it.first) {
+                text("${it.first}: ") {
                     color = TEXT_GRAY
                 }
                 text(it.second.data.toString()) {
@@ -189,3 +215,28 @@ fun GuiBuilder.PageBuilder.booleanProperty(
         kitGuiList.mutate {  }
     }
 }
+
+fun getPosition(
+    index: Int,
+    size: Int
+): GuiSlot {
+    val useTwoColumns = size > propertiesPerSlot
+    val onSecondColumn = useTwoColumns && (index + 1) > propertiesPerSlot
+
+    return when {
+        !useTwoColumns -> (index + 2) sl 5
+
+        // auf jeden fall 2 columns
+        !onSecondColumn -> (index + 2) sl 3
+        onSecondColumn -> (index + 2 - propertiesPerSlot) sl 7
+
+        else -> -1 sl -1
+    }
+
+}
+
+operator fun GuiSlot.plus(brain: Pair<Int, Int>)
+    = (row + brain.first) sl (slotInRow + brain.second)
+
+operator fun GuiSlot.minus(brain: Pair<Int, Int>)
+    = (row - brain.first) sl (slotInRow - brain.second)
