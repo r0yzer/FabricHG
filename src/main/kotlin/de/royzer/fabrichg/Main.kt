@@ -5,7 +5,6 @@ import de.royzer.fabrichg.events.ConnectEvents
 import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.kit.kits
-import de.royzer.fabrichg.kit.property.start
 import de.royzer.fabrichg.settings.ConfigManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +33,6 @@ fun initServer() {
 
     ServerLifecycleEvents.SERVER_STARTING.register {
         GamePhaseManager.server = it as DedicatedServer
-        start()
     }
 
     ServerLifecycleEvents.SERVER_STARTED.register {

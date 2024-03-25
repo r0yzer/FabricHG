@@ -1,6 +1,6 @@
 package de.royzer.fabrichg.mixinskt
 
-import de.royzer.fabrichg.gui.gameSettingsGUI
+import de.royzer.fabrichg.gui.gameSettins.gameSettingsGUI
 import de.royzer.fabrichg.gui.kitSelectorGUI
 import kotlinx.coroutines.runBlocking
 import net.silkmc.silk.igui.openGui

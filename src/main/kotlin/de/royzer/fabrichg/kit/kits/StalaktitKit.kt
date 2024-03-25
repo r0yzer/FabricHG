@@ -5,6 +5,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import de.royzer.fabrichg.util.higherBy
 import kotlinx.coroutines.cancel
 import net.minecraft.core.BlockPos
@@ -71,6 +72,10 @@ val stalaktitKit = kit("Stalaktit") {
     cooldown = 25.0
     description = "Hänge von der Decke wie ein Stalaktit"
 
+    val dripstoneHigherBy by property(15, "dripstone higher by")
+    val dripstoneCount by property(35, "dripstone count")
+    val dripstoneDelay by property(5, "dripstone spawn delay (ticks)")
+
     kitItem {
         itemStack = kitSelectorItem.copy()
 
@@ -91,13 +96,13 @@ val stalaktitKit = kit("Stalaktit") {
                 }
             }
 
-            mcCoroutineTask(howOften = 35L, period = 5.ticks) {
+            mcCoroutineTask(howOften = dripstoneCount.toLong(), period = dripstoneDelay.ticks) {
                 if (!entity.isAlive) {
                     this.coroutineContext.cancel()
                     return@mcCoroutineTask
                 }
                 Items.POINTED_DRIPSTONE
-                val dripstoneHeight = 15
+                val dripstoneHeight = dripstoneHigherBy
                 val overPos = entity.onPos.higherBy(dripstoneHeight + 1)
                 val blockMap = createDripstonePosMap(entity.onPos, dripstoneHeight)
                 world.setBlockAndUpdate(overPos, Blocks.DRIPSTONE_BLOCK.defaultBlockState())

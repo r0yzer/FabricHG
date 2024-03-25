@@ -5,6 +5,7 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.silkmc.silk.core.task.coroutineTask
 import net.silkmc.silk.core.text.sendText
 import net.minecraft.server.level.ServerPlayer
@@ -18,11 +19,13 @@ val rougeKit = kit("Rouge") {
     cooldown = 35.0
     description = "Disable the kits of your enemies"
 
+    val range by property(8.0, "kit disable range")
+
     kitItem {
         itemStack = kitSelectorItem
         onClick { hgPlayer, kit ->
             val player = hgPlayer.serverPlayer ?: return@onClick
-            val nearbyPlayers = player.level().getEntitiesOfClass(ServerPlayer::class.java, player.boundingBox.expandTowards(8.0, 8.0, 8.0)) {
+            val nearbyPlayers = player.level().getEntitiesOfClass(ServerPlayer::class.java, player.boundingBox.expandTowards(range, range, range)) {
                 it != player && !it.hgPlayer.isNeo
             }
             nearbyPlayers.forEach { otherPlayer ->

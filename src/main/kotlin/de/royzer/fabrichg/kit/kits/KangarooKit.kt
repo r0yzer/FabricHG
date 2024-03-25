@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.silkmc.silk.core.entity.modifyVelocity
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
@@ -13,6 +14,9 @@ val kangarooKit = kit("Kangaroo") {
     kitSelectorItem = Items.FIREWORK_ROCKET.defaultInstance
     description = "Allows you to jump higher and longer"
 
+    val jumpVelocity by property(0.9, "jump velocity")
+    val jumpShiftVelocity by property(0.6, "jump velocity (shift)")
+
     kitItem {
         itemStack = kitSelectorItem
         onClick { hgPlayer, _ ->
@@ -21,9 +25,9 @@ val kangarooKit = kit("Kangaroo") {
             if (serverPlayerEntity.isShiftKeyDown) {
                 val vec = serverPlayerEntity.lookDirection
                 val vec3d = Vec3(vec.x, 0.0, vec.z)
-                serverPlayerEntity.modifyVelocity(vec3d.x, 0.6, vec3d.z, false)
+                serverPlayerEntity.modifyVelocity(vec3d.x, jumpShiftVelocity, vec3d.z, false)
             } else {
-                serverPlayerEntity.modifyVelocity(serverPlayerEntity.deltaMovement.x, 0.9, serverPlayerEntity.deltaMovement.z, false)
+                serverPlayerEntity.modifyVelocity(serverPlayerEntity.deltaMovement.x, jumpVelocity, serverPlayerEntity.deltaMovement.z, false)
             }
             hgPlayer.playerData[canJumpKey] = false
         }

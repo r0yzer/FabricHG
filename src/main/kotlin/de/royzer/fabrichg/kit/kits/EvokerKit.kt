@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
@@ -23,6 +24,8 @@ val evokerKit = kit("Evoker") {
 
     description = "Slow your enemies with magic"
 
+    val fangCount by property(12, "fang count")
+
     kitItem {
         itemStack = kitSelectorItem
 
@@ -34,7 +37,7 @@ val evokerKit = kit("Evoker") {
 
             val dir = serverPlayer.lookAngle
 
-            repeat(12) {
+            repeat(fangCount) {
                 val pos = playerPos.add(dir.scale(it.toDouble()))
                 val posAbove = playerPosAbove.add(dir.scale(it.toDouble() + 1.0))
                 val fang = EvokerFangs(serverPlayer.world, pos.x, pos.y, pos.z, 0F, 0, serverPlayer)

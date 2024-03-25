@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.projectile.Snowball
 import net.minecraft.world.item.Items
@@ -14,6 +15,9 @@ val frozenKit = kit("Frozen") {
     kitSelectorItem = Items.PACKED_ICE.defaultInstance
     description = "Freeze water and enemies"
 
+    val frozenDurationInS by property(10, "frozen duration in seconds")
+    val frostWalkerLevel by property(3, "frost walker level")
+
     kitItem {
         itemStack = itemStack(Items.SNOWBALL) { count = 16 }
     }
@@ -21,7 +25,7 @@ val frozenKit = kit("Frozen") {
     kitEvents {
         onMove { hgPlayer, _ ->
             hgPlayer.serverPlayer?.let {
-                FrostWalkerEnchantment.onEntityMoved(it, it.level(), it.blockPos, 3)
+                FrostWalkerEnchantment.onEntityMoved(it, it.level(), it.blockPos, frostWalkerLevel)
             }
         }
 
@@ -33,7 +37,7 @@ val frozenKit = kit("Frozen") {
             if (owner == hitEntity) return@onHitProjectile
 
             hitEntity.hurt(owner.damageSources().playerAttack(owner), 0.1f)
-            hitEntity.ticksFrozen = 20 * 10
+            hitEntity.ticksFrozen = 20 * frozenDurationInS
         }
     }
 }

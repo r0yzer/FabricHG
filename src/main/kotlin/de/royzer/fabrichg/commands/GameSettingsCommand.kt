@@ -2,7 +2,7 @@ package de.royzer.fabrichg.commands
 
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.gui.gameSettingsGUI
+import de.royzer.fabrichg.gui.gameSettins.gameSettingsGUI
 import de.royzer.fabrichg.settings.GameSettings
 import kotlinx.coroutines.runBlocking
 import net.silkmc.silk.commands.command

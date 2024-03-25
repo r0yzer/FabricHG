@@ -5,6 +5,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.events.kit.invoker.onTick
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.entity.modifyVelocity
@@ -21,13 +22,15 @@ val phantomKit = kit("Phantom") {
 
     cooldown = 45.0
 
+    val inFightVelocity by property(0.75, "up velocity in fight")
+    val velocity by property(0.75, "up velocity")
 
     kitItem {
         itemStack = kitSelectorItem
 
         onClick { hgPlayer, kit ->
             val inFight = hgPlayer.inFight
-            hgPlayer.serverPlayer?.modifyVelocity(0, if (inFight) 0.75 else 2.5,0, true)
+            hgPlayer.serverPlayer?.modifyVelocity(0, if (inFight) inFightVelocity else velocity,0, true)
 
             if (inFight) {
                 hgPlayer.serverPlayer?.sendText {

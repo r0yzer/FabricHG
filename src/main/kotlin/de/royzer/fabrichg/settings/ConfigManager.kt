@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.settings
 
 import de.royzer.fabrichg.kit.kits
+import de.royzer.fabrichg.kit.property.Value
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -66,7 +67,7 @@ object ConfigManager {
                     true,
                     it.cooldown,
                     it.maxUses,
-                    it.properties as? HashMap<String, Double?>
+                    it.properties
                 )
             }
             updateConfigFile()
@@ -75,7 +76,7 @@ object ConfigManager {
 
      fun updateKit(name: String){
         val kit = kits.first { it.name == name }
-        kitConfigs[name] = KitConfigData(name, kit.enabled, kit.usableInInvincibility, kit.cooldown, kit.maxUses, kit.properties as? HashMap<String, Double?>)
+        kitConfigs[name] = KitConfigData(name, kit.enabled, kit.usableInInvincibility, kit.cooldown, kit.maxUses, kit.properties)
     }
 
     fun updateConfigFile() =
@@ -84,6 +85,19 @@ object ConfigManager {
     private fun updateGameConfigFile() =
         mcCoroutineTask(sync = false) { gameConfigFile.writeText(json.encodeToString(gameSettings)) }
 }
+
+@Serializable
+sealed class KitProperty {
+    @Serializable
+    data class BooleanKitProperty(override var data: Boolean) : KitProperty(), Value<Boolean>
+
+    @Serializable
+    data class IntKitProperty(override var data: Int) : KitProperty(), Value<Int>
+
+    @Serializable
+    data class DoubleKitProperty(override var data: Double) : KitProperty(), Value<Double>
+}
+
 
 @Serializable
 data class KitConfigData @OptIn(ExperimentalSerializationApi::class) constructor(
@@ -95,5 +109,5 @@ data class KitConfigData @OptIn(ExperimentalSerializationApi::class) constructor
     val usableInInvincibility: Boolean = true,
     val cooldown: Double? = null,
     val maxUses: Int? = null,
-    val additionalProperties: HashMap<String, Double?>? = null
+    val additionalProperties: HashMap<String, KitProperty>? = hashMapOf()
 )

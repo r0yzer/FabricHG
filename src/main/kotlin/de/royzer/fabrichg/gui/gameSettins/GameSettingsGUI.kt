@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.gui
+package de.royzer.fabrichg.gui.gameSettins
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
@@ -25,7 +25,7 @@ import net.silkmc.silk.igui.observable.GuiProperty
 import net.silkmc.silk.igui.observable.toMutableGuiList
 
 
-private val kitGuiList = kits.sortedBy { it.name.first() }.toMutableGuiList()
+internal val kitGuiList = kits.sortedBy { it.name.first() }.toMutableGuiList()
 
 private const val MAX_KITS = 4
 
@@ -225,8 +225,6 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 val usableInInvincibilityProp = GuiProperty(kit.usableInInvincibility)
                 val maxUsesProp = GuiProperty(kit.maxUses)
 
-                val otherProperties: List<GuiProperty<Pair<String, *>>> = kit.properties.map { GuiProperty(it.toPair()) }
-
                 placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
 
                 changePageByKey(6 sl 1, Items.FEATHER.defaultInstance.also {
@@ -237,6 +235,15 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                         }
                     }
                 }.guiIcon, "Kits")
+
+                changePageByKey(1 sl 5, Items.FEATHER.defaultInstance.also {
+                    it.setCustomName {
+                        text("Additional Properties") {
+                            color = TEXT_BLUE
+                            italic = false
+                        }
+                    }
+                }.guiIcon, "${kit.name}_properties")
 
                 // kit enabled?
                 button(5 sl 2, isEnabledProp.guiIcon { isEnabled ->
@@ -427,91 +434,10 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
 
                 }
+            }
 
-                println("props: ${otherProperties}")
-                otherProperties.forEachIndexed { index, guiProperty ->
-                    if (guiProperty.get().second !is Double) return@forEachIndexed
-                    println("prop: $index: ${guiProperty}")
-                    button((3 + index) sl 5, guiProperty.guiIcon {
-                        val icon = Items.CLOCK
-                        itemStack(icon, builder = {
-                            this.setCustomName {
-                                text(it.first) {
-                                    color = TEXT_GRAY
-                                }
-                                text(it.second.toString()) {
-                                    color = 0xFFB125
-                                }
-                            }
-                        })
-                    }) {
-
-                    }
-
-                    // property - button
-                    button((3 + index) sl 4, cooldownProp.guiIcon { cooldown ->
-                        val icon = Items.STONE_BUTTON
-                        itemStack(icon, builder = {
-                            this.setCustomName {
-                                text("-") {
-                                    color = 0xFF0000
-                                }
-                                italic = false
-                                bold = true
-                            }
-                        })
-                    }) { event ->
-                        var newCooldown = guiProperty.get().second as Double
-                        when (event.type) {
-                            PICKUP -> {
-                                newCooldown -= 0.5
-                            }
-
-                            SHIFT_CLICK -> {
-                                newCooldown -= 1
-                            }
-
-                            else -> {}
-                        }
-                        if (newCooldown < 0) newCooldown = 0.0
-                        kit.properties[guiProperty.get().first] = newCooldown
-                        guiProperty.set(guiProperty.get().first to newCooldown)
-                        ConfigManager.updateKit(kit.name)
-                        kitGuiList.mutate { }
-                    }
-
-                    // cooldown add button
-                    button((3 + index) sl 6, cooldownProp.guiIcon {
-                        val icon = Items.OAK_BUTTON
-                        itemStack(icon, builder = {
-                            this.setCustomName {
-                                text("+") {
-                                    color = 0x00FF00
-                                }
-                                italic = false
-                                bold = true
-                            }
-                        })
-                    }) { event ->
-                        var newCooldown = guiProperty.get().second as Double
-                        when (event.type) {
-                            PICKUP -> {
-                                newCooldown += 0.5
-                            }
-
-                            SHIFT_CLICK -> {
-                                newCooldown += 1
-                            }
-
-                            else -> {}
-                        }
-                        if (newCooldown < 0) newCooldown = 0.0
-                        kit.properties[guiProperty.get().first] = newCooldown
-                        guiProperty.set(guiProperty.get().first to newCooldown)
-                        ConfigManager.updateKit(kit.name)
-                        kitGuiList.mutate { }
-                    }
-                }
+            page("${kit.name}_properties") {
+                kitPropertiesPage(kit)
             }
         }
     }
