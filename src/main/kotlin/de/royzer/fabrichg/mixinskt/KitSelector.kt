@@ -20,10 +20,14 @@ object KitSelector {
         world: Level,
         hand: InteractionHand
     ) {
-        if (stack.displayName.string == "[Kit Selector]") {
-            val player = playerEntity as? ServerPlayer ?: return
-            player.openGui(kitSelectorGUI(player), 1)
+        var index = 0
+        val displayName = stack.displayName.string
+        if (displayName.startsWith("[Kit Selector")) {
+            val indexStr = displayName.split(" ").getOrNull(2)?.removeSuffix("]")
+            index = if (indexStr == null) 1 else indexStr.toIntOrNull() ?: 1
         }
+        val player = playerEntity as? ServerPlayer ?: return
+        player.openGui(kitSelectorGUI(player, index), 1)
     }
 
     fun onClickCompatator(

@@ -82,18 +82,19 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }
             }, onClick = {
-                if (it.type == SHIFT_CLICK) {
-                    if (gameSettings.kitAmount <= 1) {
-                        return@button
-                    }
-                    gameSettings.kitAmount -= 1
-                } else if (it.type == PICKUP) {
-                    if (gameSettings.kitAmount >= MAX_KITS) {
-                        return@button
-                    }
-                    gameSettings.kitAmount += 1
-                }
-                kitAmountStatus.set(gameSettings.kitAmount)
+                // zu viele edge cases
+//                if (it.type == SHIFT_CLICK) {
+//                    if (gameSettings.kitAmount <= 1) {
+//                        return@button
+//                    }
+//                    gameSettings.kitAmount -= 1
+//                } else if (it.type == PICKUP) {
+//                    if (gameSettings.kitAmount >= MAX_KITS) {
+//                        return@button
+//                    }
+//                    gameSettings.kitAmount += 1
+//                }
+//                kitAmountStatus.set(gameSettings.kitAmount)
             })
             changePageByKey(5 sl 5, Items.CHEST.defaultInstance.also {
                 it.setCustomName {

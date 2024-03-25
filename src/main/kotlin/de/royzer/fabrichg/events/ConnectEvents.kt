@@ -3,6 +3,7 @@ package de.royzer.fabrichg.events
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
+import de.royzer.fabrichg.data.hgplayer.giveKitSelectors
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
@@ -11,12 +12,11 @@ import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
-import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.onAnchorJoin
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.scoreboard.showScoreboard
+import de.royzer.fabrichg.stats.Database
 import de.royzer.fabrichg.util.gameSettingsItem
-import de.royzer.fabrichg.util.kitSelector
 import de.royzer.fabrichg.util.tracker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.job
@@ -46,18 +46,17 @@ object ConnectEvents {
                 delay(200)
                 player.showScoreboard()
             }
-
+            Database.initPlayer(player)
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
 
-            if (hgPlayer.kits.isEmpty())
-                hgPlayer.kits.add(noneKit)
+            hgPlayer.fillKits()
 
             when (gamePhase) {
                 PhaseType.LOBBY -> {
                     player.removeAllEffects()
                     player.health = player.maxHealth
                     player.inventory.clearContent()
-                    player.inventory.add(kitSelector)
+                    player.giveKitSelectors()
                     if (player.hasPermissions(1)) {
                         player.inventory.setItem(8, gameSettingsItem)
                     }

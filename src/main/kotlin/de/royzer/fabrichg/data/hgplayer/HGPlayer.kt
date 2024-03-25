@@ -10,8 +10,11 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
+import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.settings.ConfigManager
+import de.royzer.fabrichg.stats.Database
+import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.kitSelector
 import net.fabricmc.fabric.api.entity.FakePlayer
@@ -31,6 +34,11 @@ class HGPlayer(
     var kills: Int = 0
     var offlineTime = maxOfflineTime
     val kits = mutableListOf<Kit>()
+    var stats: Stats = Stats(uuid.toString())
+        set(value) {
+            field = value
+            Database.updateOrCreateStats(value)
+        }
 
     val playerData = mutableMapOf<String, Any?>()
 
@@ -107,7 +115,6 @@ class HGPlayer(
             }
             return
         }
-        this.kits.clear() // solange nur 1 kit
         this.kits.add(kit)
         this.serverPlayer?.sendSystemMessage(
             literalText {
@@ -120,24 +127,72 @@ class HGPlayer(
         }
     }
 
+    fun setKit(kit: Kit, index: Int) {
+        if (kits.contains(kit)) {
+            this.serverPlayer?.sendText {
+                text("You already have this kit")
+                color = TEXT_GRAY
+                bold = true
+            }
+            return
+        }
+        if (!kit.enabled) {
+            this.serverPlayer?.sendText {
+                text("This kit is disabled")
+                color = TEXT_GRAY
+                bold = true
+            }
+            return
+        }
+        this.kits[index] = kit
+        this.serverPlayer?.sendSystemMessage(
+            literalText {
+                text("You are now ") { color = TEXT_GRAY }
+                text(kit.name) { color = TEXT_BLUE }
+            }
+        )
+        if (GamePhaseManager.isIngame) {
+            this.giveKitItems(kit)
+        }
+    }
+
+    fun fillKits() {
+        repeat(ConfigManager.gameSettings.kitAmount) {
+            if (kits.getOrNull(it) == null) {
+                kits.add(noneKit)
+            }
+        }
+    }
+
     val isNeo get() = canUseKit(neoKit)
-    
+
     val isAlive get() = status == HGPlayerStatus.ALIVE
 
     // vielleicht noch gucken dass nur player zählen
-    val inFight: Boolean get() {
-        val combatTracker = serverPlayer?.combatTracker ?: return false
-        val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
-        return lastCombatEntry?.source?.entity is ServerPlayer
-    }
+    val inFight: Boolean
+        get() {
+            val combatTracker = serverPlayer?.combatTracker ?: return false
+            val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
+            return lastCombatEntry?.source?.entity is ServerPlayer
+        }
 
     val isBot get() = this.serverPlayer is FakePlayer
+
+
+    fun updateStats(kills: Int = 0, deaths: Int = 0, wins: Int = 0) {
+        this.stats = this.stats.copy(
+            kills = this.stats.kills + kills,
+            deaths = this.stats.deaths + deaths,
+            wins = this.stats.wins + wins
+        )
+    }
 
     fun giveKitSelectors() {
         val kits = ConfigManager.gameSettings.kitAmount
         repeat(kits) {
             this.serverPlayer?.inventory?.add(kitSelector(it))
         }
+
     }
 
     override fun toString(): String {
@@ -157,3 +212,10 @@ val Entity.hgPlayer
         is HGBot -> hgPlayer
         else -> null
     }
+
+fun ServerPlayer.giveKitSelectors() {
+    val kitAmounts = ConfigManager.gameSettings.kitAmount
+    repeat(kitAmounts) {
+        this.inventory?.setItem(it, kitSelector(it))
+    }
+}

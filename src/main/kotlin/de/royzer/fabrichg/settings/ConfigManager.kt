@@ -32,14 +32,16 @@ object ConfigManager {
 
         if (!gameConfigFile.exists()) {
             gameConfigFile.createNewFile()
-            gameConfigFile.writeText(json.encodeToString(GameSettings))
+            gameConfigFile.writeText(json.encodeToString(gameSettings))
         }
 
         json.decodeFromString<List<KitConfigData>>(kitConfigFile.readText()).forEach {
             kitConfigs[it.name] = it
         }
         val gameConfigData = json.decodeFromString<GameSettings>(gameConfigFile.readText())
-        gameSettings.kitAmount = gameConfigData.kitAmount
+        gameSettings.kitAmount = gameConfigData.kitAmount.also {
+            require(it <= 4)
+        }
         gameSettings.minifeastEnabled = gameConfigData.minifeastEnabled
         gameSettings.mushroomCowNerf = gameConfigData.mushroomCowNerf
 

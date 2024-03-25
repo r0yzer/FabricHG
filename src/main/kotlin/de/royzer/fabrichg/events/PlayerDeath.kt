@@ -48,7 +48,9 @@ object PlayerDeath {
             }
         }
         hgPlayer.kills += 1
-        serverPlayerEntity.hgPlayer.kits.clear()
+        hgPlayer.updateStats(1)
+        serverPlayerEntity.hgPlayer.updateStats(deaths = 1)
+//        serverPlayerEntity.hgPlayer.kits.clear()
 
         return true
     }
@@ -62,6 +64,7 @@ object PlayerDeath {
         PlayerList.announcePlayerDeath(hgBot.hgPlayer, damageSource, killer)
         val hgPlayer = killer?.hgPlayer ?: return true
         hgPlayer.kills += 1
+        hgPlayer.updateStats(1)
 
         return true
     }
