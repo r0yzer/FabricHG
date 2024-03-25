@@ -62,7 +62,7 @@ fun registerCommands() {
     minifeastCommand
     gameSettingsCommand
     cooldownCommand
-    //statsCommand
+    statsCommand
     reviveCommand
 }
 
