@@ -80,7 +80,7 @@ object ConfigManager {
     }
 
     fun updateConfigFile() =
-        mcCoroutineTask(sync = false) { kitConfigFile.writeText(json.encodeToString(kitConfigs.values.toList())) }
+        mcCoroutineTask(sync = false) { kitConfigFile.writeText(json.encodeToString(kitConfigs.values.sortedBy { it.name }.toList())) }
 
     private fun updateGameConfigFile() =
         mcCoroutineTask(sync = false) { gameConfigFile.writeText(json.encodeToString(gameSettings)) }

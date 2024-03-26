@@ -18,16 +18,18 @@ val kitCommand = command("kit") {
         val index = 0
 
         val player = source.playerOrException
-        if (GamePhaseManager.isNotStarted || player.hgPlayer.kits[index] == backupKit || player.hasPermissions(
-                PermissionLevel.OWNER.level
-            )
-        ) {
+        if (GamePhaseManager.isNotStarted || player.hgPlayer.kits[index] == backupKit) {
             if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
                 if (player.hgPlayer.kits[index] == backupKit || player.hgPlayer.kits[index] == noneKit)
                     player.openGui(
                         kitSelectorGUI(player, index + 1), 1
                     )
             } else player.openGui(
+                kitSelectorGUI(player, index + 1), 1
+            )
+        }
+        if (player.hasPermissions(PermissionLevel.OWNER.level)) {
+            player.openGui(
                 kitSelectorGUI(player, index + 1), 1
             )
         }
