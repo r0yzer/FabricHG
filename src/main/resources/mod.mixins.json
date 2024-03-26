@@ -6,6 +6,7 @@
     "MainMixin",
     "entity.EntityAcessor",
     "entity.EntityMixin",
+    "entity.FallingBlockEntityMixin",
     "entity.HungerManagerMixin",
     "entity.LivingEntityAccessor",
     "entity.LivingEntityMixin",
@@ -14,7 +15,6 @@
     "entity.PlayerMixin",
     "entity.ProjectileAccessor",
     "entity.ProjectileMixin",
-    "entity.FallingBlockEntityMixin",
     "entity.ai.goal.CreeperIgniteGoalMixin",
     "item.BlockItemMixin",
     "item.ItemStackMixin",
@@ -24,17 +24,19 @@
     "kits.AnchorPlayerMixin",
     "kits.KangarooMixin",
     "kits.PhantomMixin",
+    "server.level.LoggerChunkProgressListenerMixin",
     "server.network.MinecraftServerMixin",
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
     "server.network.ServerStatusMixin",
-    "server.level.LoggerChunkProgressListenerMixin",
     "world.CombatTrackerAcessor"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "kits.BeamMixin"
+    "kits.BeamMixin",
+    "server.level.ChunkMapAccessor",
+    "server.level.TrackedEntityAccessor"
   ]
 }

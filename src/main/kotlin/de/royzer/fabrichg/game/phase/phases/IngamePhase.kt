@@ -2,6 +2,7 @@ package de.royzer.fabrichg.game.phase.phases
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.bots.FakeServerPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.feast.Minifeast
@@ -13,6 +14,8 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.item.Items
 import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.text.literalText
 import kotlin.math.max
@@ -48,11 +51,21 @@ object IngamePhase : GamePhase() {
         minifeasts = ((minifeastEndTime - minifeastStartTime) / 150 - 5 + lerp(
             0.5f,
             2f,
-            min(2f, PlayerList.alivePlayers.size.toFloat()/20) + min(5, PlayerList.alivePlayers.size/3)
+            min(2f, PlayerList.alivePlayers.size.toFloat() / 20) + min(5, PlayerList.alivePlayers.size / 3)
         )).toInt()
-        minifeastStartTimes = if (ConfigManager.gameSettings.minifeastEnabled) List(max(1, minifeasts)) { Random.nextInt(minifeastStartTime, minifeastEndTime) } else listOf()
+        minifeastStartTimes = if (ConfigManager.gameSettings.minifeastEnabled) List(max(1, minifeasts)) {
+            Random.nextInt(
+                minifeastStartTime,
+                minifeastEndTime
+            )
+        } else listOf()
         PlayerList.alivePlayers.forEach { hgPlayer ->
             hgPlayer.serverPlayer?.closeContainer()
+            if (hgPlayer.serverPlayer is FakeServerPlayer) (hgPlayer.serverPlayer as FakeServerPlayer).hgBot.setItemSlot(
+                EquipmentSlot.MAINHAND,
+                Items.STONE_SWORD.defaultInstance
+                )
+
         }
     }
 
@@ -79,6 +92,7 @@ object IngamePhase : GamePhase() {
                 text(" Sekunden")
                 color = TEXT_GRAY
             })
+
             0 -> {
                 winner = PlayerList.alivePlayers.shuffled().maxByOrNull { it.kills }
                 startNextPhase()

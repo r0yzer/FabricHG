@@ -2,6 +2,7 @@ package de.royzer.fabrichg.game
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.bots.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
@@ -44,6 +45,7 @@ object PlayerList {
     fun announcePlayerDeath(player: HGPlayer, source: DamageSource, killer: Entity?) {
         val sourceKiller = source.entity
         val otherHGPlayer = killer?.hgPlayer
+        if(killer is FakeServerPlayer || player.serverPlayer!! is FakeServerPlayer) return;
         broadcastComponent(
             literalText {
                 if (killer == sourceKiller && killer != null) {
@@ -102,6 +104,6 @@ fun ServerPlayer.removeHGPlayer() {
 
 fun HGBot.removeHGPlayer() {
     hgPlayer.status = HGPlayerStatus.SPECTATOR
-    fakePlayer.setGameMode(GameType.SPECTATOR)
+ //   fakePlayer.setGameMode(GameType.SPECTATOR)
 }
 

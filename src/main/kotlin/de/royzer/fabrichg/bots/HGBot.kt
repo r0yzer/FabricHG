@@ -9,49 +9,67 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import kotlinx.coroutines.delay
+import kotlinx.serialization.internal.throwArrayMissingFieldException
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.*
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntitySelector
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.entity.monster.Zombie
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
+import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
+import net.silkmc.silk.core.entity.modifyVelocity
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.time.Instant
+import java.util.function.Predicate
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
+
+
+val botCopys = arrayListOf<ServerPlayer>()
 
 class HGBot(
     world: Level,
     val hgName: String,
     target: ServerPlayer,
-    private val range: Double = 1.5
+    private val range: Double = 1.5,
+    val serverPlayer: FakeServerPlayer
 ) : Zombie(world) {
 
-    val fakePlayer = HGBotFakePlayer(this)
+   // val fakePlayer = HGBotFakePlayer(this)
 
     init {
+        serverPlayer.hgBot = this
+        serverPlayer.boundingBox = AABB(0.0, 0.0,0.0,0.0,0.0,0.0)
+        botCopys.add(serverPlayer)
+        this.isInvisible = true
         customName = hgName.literal
         isCustomNameVisible = true
         setTarget(target)
 
         setItemSlot(EquipmentSlot.MAINHAND, sword.defaultInstance)
-        setItemSlot(EquipmentSlot.HEAD, itemStack(Items.PLAYER_HEAD) {})
+        //setItemSlot(EquipmentSlot.HEAD, itemStack(Items.PLAYER_HEAD) {})
         attributes.getInstance(Attributes.FOLLOW_RANGE)?.baseValue = 100.0
         attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = 20.0
         health = 20.0F
@@ -59,9 +77,28 @@ class HGBot(
         attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 10.0
         attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 2.5
 
-        server?.playerList?.players?.add(fakePlayer)
+      //  server?.playerList?.players?.add(fakePlayer)
         sendPlayerInfoUpdatePacket()
 
+    }
+
+    override fun isInvisibleTo(player: Player): Boolean {
+
+        return true
+    }
+
+    override fun isInvisible(): Boolean {
+
+        return true;
+    }
+
+    override fun knockback(strength: Double, x: Double, z: Double) {
+        super.knockback(strength, x, z)
+    }
+
+    override fun setItemSlot(slot: EquipmentSlot, stack: ItemStack) {
+        serverPlayer.setItemSlot(slot, stack)
+       // super.setItemSlot(slot, stack)
     }
 
     private var soups = 50
@@ -90,8 +127,18 @@ class HGBot(
             return if (Feast.started) {
                 if (kills == 0) listOf(air, Items.IRON_CHESTPLATE.defaultInstance, air, air)
                 if (kills == 2) listOf(Items.IRON_HELMET.defaultInstance, air, Items.IRON_LEGGINGS.defaultInstance, air)
-                if (kills == 3) listOf(Items.IRON_HELMET.defaultInstance, Items.IRON_CHESTPLATE.defaultInstance, air, air)
-                if (kills == 4) listOf(Items.DIAMOND_HELMET.defaultInstance, air, Items.DIAMOND_LEGGINGS.defaultInstance, air)
+                if (kills == 3) listOf(
+                    Items.IRON_HELMET.defaultInstance,
+                    Items.IRON_CHESTPLATE.defaultInstance,
+                    air,
+                    air
+                )
+                if (kills == 4) listOf(
+                    Items.DIAMOND_HELMET.defaultInstance,
+                    air,
+                    Items.DIAMOND_LEGGINGS.defaultInstance,
+                    air
+                )
                 else listOf(air, Items.DIAMOND_CHESTPLATE.defaultInstance, Items.DIAMOND_LEGGINGS.defaultInstance, air)
             } else {
                 if (kills > 2) listOf(Items.IRON_CHESTPLATE.defaultInstance)
@@ -109,6 +156,7 @@ class HGBot(
     }
 
     fun jump() {
+        serverPlayer.jumpFromGround()
         super.jumpFromGround()
     }
 
@@ -129,7 +177,16 @@ class HGBot(
     override fun tick() {
         if (!isAlive) return
 
-        fakePlayer.setPos(pos)
+       // fakePlayer.setPos(pos)
+        //serverPlayer.setPos(pos)
+        serverPlayer.moveTo(x,y,z,yRot, xRot)
+        serverPlayer.xCloak
+        serverPlayer.health = health
+        serverPlayer.yHeadRot = yHeadRot
+        serverPlayer.yBodyRot = yBodyRot
+//        if(serverPlayer.del)
+//        serverPlayer.hasImpulse = hasImpulse
+//        serverPlayer.deltaMovement = deltaMovement
 
         /*armor.forEachIndexed { index, armorPiece ->
             setItemSlot(armorSlots[index], armorPiece)
@@ -155,12 +212,17 @@ class HGBot(
         }
         if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && target == null) {
             val distance = if (shouldWalkToFeast()) 45.0 else 250.0
-            target = world.getNearestPlayer(this, distance)
+            target = world.getNearestPlayer(this.x, this.y, this.z, distance, EntitySelector.NO_CREATIVE_OR_SPECTATOR.and { !botCopys.contains(it) })
         } else if (GamePhaseManager.currentPhaseType != PhaseType.INGAME) {
             target = null
         }
 
         super.tick()
+    }
+
+    override fun swing(hand: InteractionHand, updateSelf: Boolean) {
+        serverPlayer.swing(hand, updateSelf)
+        super.swing(hand, updateSelf)
     }
 
     override fun isWithinMeleeAttackRange(entity: LivingEntity): Boolean {
@@ -269,10 +331,12 @@ class HGBot(
         super.die(damageSource)
         remove(RemovalReason.KILLED)
         removeHGPlayer()
-
-        mcCoroutineTask(delay=(Random.nextDouble()*5).seconds) {
-            server?.playerList?.remove(fakePlayer)
+        if(!serverPlayer.isDeadOrDying){
+            serverPlayer.die(damageSource)
         }
+//        mcCoroutineTask(delay = (Random.nextDouble() * 5).seconds) {
+//            server?.playerList?.remove(fakePlayer)
+//        }
     }
 
     override fun shouldDespawnInPeaceful(): Boolean {
@@ -285,7 +349,9 @@ class HGBot(
     fun shouldWalkToFeast(): Boolean {
         if (target != null) return false
         if (!Feast.started) return false
-        if ((Instant.now().toEpochMilli() - (Feast.feastTimestamp?.toEpochMilli() ?: Long.MAX_VALUE)) > 1000 * 60) return false
+        if ((Instant.now().toEpochMilli() - (Feast.feastTimestamp?.toEpochMilli()
+                ?: Long.MAX_VALUE)) > 1000 * 60
+        ) return false
 
         return true
     }
@@ -308,10 +374,12 @@ class HGBot(
         server?.playerList?.broadcastAll(
             ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(
                 listOf(
-                    fakePlayer
+                   // fakePlayer
                 )
             )
         )
     }
+
+
 }
 

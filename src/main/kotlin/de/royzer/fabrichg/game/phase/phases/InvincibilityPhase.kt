@@ -2,6 +2,7 @@ package de.royzer.fabrichg.game.phase.phases
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.bots.FakeServerPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
@@ -11,6 +12,7 @@ import de.royzer.fabrichg.kit.kits.surpriseKit
 import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.scoreboard.formattedTime
 import de.royzer.fabrichg.util.tracker
+import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.level.GameType
 import net.silkmc.silk.core.text.literalText
 
@@ -35,6 +37,11 @@ object InvincibilityPhase : GamePhase() {
                 hgPlayer.giveKitItems()
 
             }
+            if (hgPlayer.serverPlayer is FakeServerPlayer) (hgPlayer.serverPlayer as FakeServerPlayer).hgBot.setItemSlot(
+                EquipmentSlot.MAINHAND,
+                tracker
+            )
+
         }
     }
 
