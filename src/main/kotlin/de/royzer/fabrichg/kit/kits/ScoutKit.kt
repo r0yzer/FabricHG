@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.silkmc.silk.core.item.setCustomName
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potions
@@ -33,7 +34,7 @@ val scoutPotion = itemStack(Items.SPLASH_POTION) {
 val scoutKit = kit("Scout") {
 
     val scoutJobKey = "${this.kit.name}JobKey"
-    val scoutPotionPeriod = 5 * 60 * 1000L
+    val scoutPotionPeriod by property(3.0, "scout potion period (minutes)")
     kitSelectorItem = scoutPotion.copy()
 
     description = "Recieve two speed potions every 5 minutes"
@@ -47,8 +48,8 @@ val scoutKit = kit("Scout") {
         if (hgPlayer.playerData[scoutJobKey] != null) return@onEnable
         val job = mcCoroutineTask(
             howOften = Long.MAX_VALUE,
-            period = scoutPotionPeriod.milliseconds,
-            delay = scoutPotionPeriod.milliseconds
+            period = (scoutPotionPeriod * 60 * 1000L).milliseconds,
+            delay = (scoutPotionPeriod * 60 * 1000L).milliseconds
         ) { hgPlayer.serverPlayer?.inventory?.add(scoutPotion.copy()) }
         job.start()
         hgPlayer.playerData[scoutJobKey] = job

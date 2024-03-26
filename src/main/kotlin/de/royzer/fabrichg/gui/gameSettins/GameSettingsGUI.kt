@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.gui
+package de.royzer.fabrichg.gui.gameSettins
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
@@ -25,11 +25,11 @@ import net.silkmc.silk.igui.observable.GuiProperty
 import net.silkmc.silk.igui.observable.toMutableGuiList
 
 
-private val kitGuiList = kits.sortedBy { it.name.first() }.toMutableGuiList()
+internal val kitGuiList = kits.sortedBy { it.name.first() }.toMutableGuiList()
 
 private const val MAX_KITS = 4
 
-fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
+suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
     val gameSettings = ConfigManager.gameSettings
     return igui(GuiType.NINE_BY_SIX, "Game settings".literal, 1) {
         page(1) {
@@ -237,6 +237,15 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }.guiIcon, "Kits")
 
+                changePageByKey(1 sl 5, Items.FEATHER.defaultInstance.also {
+                    it.setCustomName {
+                        text("Additional Properties") {
+                            color = TEXT_BLUE
+                            italic = false
+                        }
+                    }
+                }.guiIcon, "${kit.name}_properties")
+
                 // kit enabled?
                 button(5 sl 2, isEnabledProp.guiIcon { isEnabled ->
                     val icon = if (isEnabled) Items.GREEN_WOOL else Items.RED_WOOL
@@ -426,7 +435,10 @@ fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
 
                 }
+            }
 
+            page("${kit.name}_properties") {
+                kitPropertiesPage(kit)
             }
         }
     }

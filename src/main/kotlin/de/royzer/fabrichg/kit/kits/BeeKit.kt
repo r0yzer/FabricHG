@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.animal.Bee
@@ -20,11 +21,13 @@ val beeKit = kit("Bee") {
 
     cooldown = 28.0
 
+    val bees by property(4, "bees")
+
     kitItem {
         itemStack = kitSelectorItem
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
             val world = clickedPlayer.world
-            repeat(4) {
+            repeat(bees) {
                 val bee = Bee(EntityType.BEE, world)
                 bee.target = clickedPlayer
                 bee.setPos(clickedPlayer.eyePosition)

@@ -2,6 +2,7 @@ package de.royzer.fabrichg.mixins.server.network;
 
 import com.mojang.authlib.GameProfile;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
+import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
 import net.minecraft.core.BlockPos;
@@ -43,13 +44,16 @@ public abstract class ServerPlayerMixin extends Player {
             )
     )
     public boolean reduceDamage(Player instance, DamageSource source, float amount) {
+        float damageAmount = OnTakeDamageKt.onTakeDamage((ServerPlayer) instance, source, amount);
         if (source.getEntity() instanceof ServerPlayer) {
+            double multiplier = 0.6;
             if (((ServerPlayer) source.getEntity()).getMainHandItem().getDisplayName().getString().toLowerCase().contains("axe")) {
-                return super.hurt(source, (float) (amount * 0.30));
+                multiplier = 0.3;
             }
-            return super.hurt(source, (float) (amount * 0.6));
+            float damage = (float) (damageAmount * multiplier);
+            return super.hurt(source, damage);
         } else {
-            return super.hurt(source, amount);
+            return super.hurt(source, damageAmount);
         }
     }
     @Inject(

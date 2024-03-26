@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
@@ -12,16 +13,16 @@ val jokerKit = kit("Joker") {
     kitSelectorItem = Items.MUSIC_DISC_5.defaultInstance
     cooldown = 45.0
 
-    val shuffleDelay = 7.ticks
-    val shuffleTimes = 7L
-    val shufflesPerShuffle = 7
+    val shuffleDelay by property(7, "shuffle delay (in ticks)")
+    val shuffleTimes by property(7, "shuffle times")
+    val shufflesPerShuffle by property(7, "shuffles per shuffle")
 
     kitItem {
         itemStack = kitSelectorItem.copy()
 
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
             hgPlayer.activateCooldown(kit)
-            mcCoroutineTask(howOften = shuffleTimes, period = shuffleDelay) {
+            mcCoroutineTask(howOften = shuffleTimes.toLong(), period = shuffleDelay.ticks) {
                 repeat(shufflesPerShuffle) {
                     val item1 = clickedPlayer.inventory.items.random()
                     val item1Index = clickedPlayer.inventory.items.indexOf(item1)

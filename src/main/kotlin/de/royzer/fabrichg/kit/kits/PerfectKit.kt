@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import de.royzer.fabrichg.mixinskt.SOUP_HEAL
 import de.royzer.fabrichg.util.giveOrDropItem
 import net.minecraft.sounds.SoundEvents
@@ -18,7 +19,7 @@ val perfectKit = kit("Perfect") {
 
     val streakKey = "perfectStreak"
 
-    val soupsForReward = 7
+    val soupsForReward by property(7, "soups for reward")
 
     kitEvents {
         onSoupEat { hgPlayer, kit ->

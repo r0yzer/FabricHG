@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.silkmc.silk.core.entity.pos
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
@@ -13,7 +14,7 @@ import net.silkmc.silk.core.entity.blockPos
 
 val blinkKit = kit("Blink") {
     maxUses = 5
-    val blinkDistance = 4
+    val blinkDistance by property(4, "blink distance")
     kitSelectorItem = Items.NETHER_STAR.defaultInstance
     cooldown = 15.0
     description = "Teleport in the direction you are looking"

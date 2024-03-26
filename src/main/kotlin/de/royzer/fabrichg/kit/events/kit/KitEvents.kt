@@ -5,6 +5,7 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
@@ -23,6 +24,7 @@ class KitEvents(
     var projectileHitByAction: ((hgPlayer: HGPlayer, kit: Kit, entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
     var projectileHitAction: ((hgPlayer: HGPlayer, kit: Kit, entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
     var tickAction: ((hgPlayer: HGPlayer, kit: Kit) -> Unit)? = null, // should ignore cooldown (only for checking things like in pnatom)
+    var takeDamageAction: ((player: HGPlayer, source: DamageSource, amount: Float) -> Float)? = null,
     val noCooldownActions: MutableList<Any> = mutableListOf()
 )
 

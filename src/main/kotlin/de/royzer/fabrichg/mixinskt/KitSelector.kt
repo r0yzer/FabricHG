@@ -1,7 +1,8 @@
 package de.royzer.fabrichg.mixinskt
 
-import de.royzer.fabrichg.gui.gameSettingsGUI
+import de.royzer.fabrichg.gui.gameSettins.gameSettingsGUI
 import de.royzer.fabrichg.gui.kitSelectorGUI
+import kotlinx.coroutines.runBlocking
 import net.silkmc.silk.igui.openGui
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
@@ -38,7 +39,9 @@ object KitSelector {
     ) {
         if (stack.displayName.string == "[Game settings]") {
             val player = playerEntity as? ServerPlayer ?: return
-            player.openGui(gameSettingsGUI(player), 1)
+            runBlocking {
+                player.openGui(gameSettingsGUI(player), 1)
+            }
         }
     }
 }

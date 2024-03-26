@@ -2,6 +2,8 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.kitProperty
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.core.Vec3i
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -11,7 +13,8 @@ import net.silkmc.silk.core.task.mcCoroutineTask
 import kotlin.time.Duration.Companion.milliseconds
 
 val diggerKit = kit("Digger") {
-    val size = 6
+    val size by property(6, "size")
+
     kitSelectorItem = Items.DRAGON_EGG.defaultInstance
     cooldown = 7.0
     description = "Make a 5 by 5 hole"
