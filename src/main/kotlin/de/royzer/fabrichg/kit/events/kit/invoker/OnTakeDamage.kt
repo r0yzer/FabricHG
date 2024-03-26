@@ -11,7 +11,7 @@ fun onTakeDamage(player: ServerPlayer, source: DamageSource, amount: Float): Flo
 
     hgPlayer.kits.forEach { kit ->
         hgPlayer.invokeKitAction(kit, sendCooldown = false) {
-            kit.events.takeDamageAction?.let { newDamage = it.invoke(hgPlayer, source, newDamage) }
+            kit.events.takeDamageAction?.let { newDamage = it.invoke(hgPlayer, kit, source, newDamage) }
         }
     }
 

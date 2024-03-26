@@ -24,7 +24,7 @@ class KitEvents(
     var projectileHitByAction: ((hgPlayer: HGPlayer, kit: Kit, entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
     var projectileHitAction: ((hgPlayer: HGPlayer, kit: Kit, entityHitResult: EntityHitResult, projectileEntity: Projectile) -> Unit)? = null,
     var tickAction: ((hgPlayer: HGPlayer, kit: Kit) -> Unit)? = null, // should ignore cooldown (only for checking things like in pnatom)
-    var takeDamageAction: ((player: HGPlayer, source: DamageSource, amount: Float) -> Float)? = null,
+    var takeDamageAction: ((hgPlayer: HGPlayer, kit: Kit, source: DamageSource, amount: Float) -> Float)? = null,
     val noCooldownActions: MutableList<Any> = mutableListOf()
 )
 

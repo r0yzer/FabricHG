@@ -61,7 +61,7 @@ class KitEventsBuilder(val kit: Kit) {
      * action returns the new damage to deal to the player
      * das muss man evtl anders gestalten aber keine ahnung wie
      */
-    fun onTakeDamage(action: (player: HGPlayer, source: DamageSource, amount: Float) -> Float) {
+    fun onTakeDamage(action: (player: HGPlayer, kit: Kit, source: DamageSource, amount: Float) -> Float) {
         kit.events.takeDamageAction = action
     }
 }

@@ -1,7 +1,9 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.damagesource.DamageTypes
@@ -17,24 +19,29 @@ val stomperKit = kit("Stomper") {
     val range by property(7.5, "stomper range")
 
     kitEvents {
-        onTakeDamage { player, source, amount ->
+        onTakeDamage { hgPlayer, kit, source, amount ->
             if (!source.`is`(DamageTypes.FALL)) return@onTakeDamage amount
 
-            val world = player.serverPlayer?.world ?: return@onTakeDamage amount
+            val serverPlayer = hgPlayer.serverPlayer ?: return@onTakeDamage amount
 
+            val world = serverPlayer.world
 
             val nearbyEntities = world.getNearbyEntities(
                 LivingEntity::class.java,
                 TargetingConditions.DEFAULT,
-                player.serverPlayer!!,
-                player.serverPlayer!!.boundingBox.inflate(range, range/2, range)
-            )
-
-            nearbyEntities.forEach { nearbyEntity ->
-                nearbyEntity.hurt(nearbyEntity.damageSources().source(DamageTypes.FALL, player.serverPlayer!!), amount/2)
+                serverPlayer,
+                serverPlayer.boundingBox.inflate(range, range/2, range)
+            ).filter {
+                (it != serverPlayer) || (it.hgPlayer?.isNeo == false)
             }
 
-            world.playSound(null, player.serverPlayer!!.posUnder, SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 2f, 1f)
+            nearbyEntities.forEach { nearbyEntity ->
+                if (!nearbyEntity.isCrouching) {
+                    nearbyEntity.hurt(serverPlayer.damageSources().playerAttack(serverPlayer),  amount/2)
+                }
+            }
+
+            world.playSound(null, serverPlayer.posUnder, SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 2f, 1f)
 
             return@onTakeDamage 2f
         }
