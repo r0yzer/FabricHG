@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EntityType
@@ -28,7 +29,9 @@ val reaperKit = kit("Reaper") {
     description = "You are the reaper"
 
     cooldown = 12.5
-    val maxUses = 3
+
+    val maxUses by property(3, "max uses")
+    val maxUsesHitting by property(2, "max uses (hitting)")
 
     kitItem {
         itemStack = kitSelectorItem.copy()
@@ -38,7 +41,7 @@ val reaperKit = kit("Reaper") {
 
             entity.addEffect(MobEffectInstance(MobEffects.WITHER, 20 * 7, 2))
 
-            hgPlayer.checkUsesForCooldown(kit, 2)
+            hgPlayer.checkUsesForCooldown(kit, maxUsesHitting)
         }
 
         onClick { hgPlayer, kit ->

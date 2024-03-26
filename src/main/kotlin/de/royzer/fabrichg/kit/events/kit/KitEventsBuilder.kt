@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit.events.kit
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.Kit
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
@@ -54,5 +55,13 @@ class KitEventsBuilder(val kit: Kit) {
 
     fun onTick(action: (HGPlayer, Kit) -> Unit) {
         kit.events.tickAction = action
+    }
+
+    /**
+     * action returns the new damage to deal to the player
+     * das muss man evtl anders gestalten aber keine ahnung wie
+     */
+    fun onTakeDamage(action: (player: HGPlayer, kit: Kit, source: DamageSource, amount: Float) -> Float) {
+        kit.events.takeDamageAction = action
     }
 }

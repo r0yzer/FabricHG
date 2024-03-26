@@ -30,7 +30,7 @@ val neoKit: Kit = kit("Neo") {
                     }
                 }!!)
             } else {
-                (projectileEntity as ProjectileAccessor).onHitEntityNeo(entityHitResult)
+                (projectileEntity as ProjectileAccessor).onHitEntityInvoker(entityHitResult)
             }
         }
     }

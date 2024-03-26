@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import de.royzer.fabrichg.util.toHighestPos
 import net.minecraft.core.BlockPos
 import net.minecraft.sounds.SoundSource
@@ -26,7 +27,13 @@ import java.util.*
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
-class Eber(level: Level, val owner: HGPlayer): Hoglin(EntityType.HOGLIN, level) {
+class Eber(
+    level: Level,
+    val owner: HGPlayer,
+    val eberAliveTime: Double,
+    val eberVelocityBoost: Double,
+    val eberSpeed: Double
+): Hoglin(EntityType.HOGLIN, level) {
     init {
         setImmuneToZombification(true)
 
@@ -37,7 +44,7 @@ class Eber(level: Level, val owner: HGPlayer): Hoglin(EntityType.HOGLIN, level) 
         ebersBefore.add(this)
         owner.playerData[eberKey] = ebersBefore
 
-        mcCoroutineTask(delay = 7.5.seconds) {
+        mcCoroutineTask(delay = eberAliveTime.seconds) {
             remove(RemovalReason.DISCARDED)
 
             val ebersAfterDeath = (owner.getPlayerData<MutableList<Eber>>(eberKey) ?: mutableListOf())
@@ -61,7 +68,7 @@ class Eber(level: Level, val owner: HGPlayer): Hoglin(EntityType.HOGLIN, level) 
             val bpos = BlockPos(pos.x.toInt(), pos.y.toInt(), pos.z.toInt()).toHighestPos()
             path = navigation.createPath(bpos, 0)
         }
-        path?.let { navigation.moveTo(it, 1.5) }
+        path?.let { navigation.moveTo(it, eberSpeed) }
         ticksUntilPathRecalculation--
 
 
@@ -79,7 +86,7 @@ class Eber(level: Level, val owner: HGPlayer): Hoglin(EntityType.HOGLIN, level) 
 
     override fun doHurtTarget(target: Entity): Boolean {
         val result = super.doHurtTarget(target)
-        target.modifyVelocity(Vec3(0.0, Random.nextDouble(1.0, 1.25), 0.0))
+        target.modifyVelocity(Vec3(0.0, Random.nextDouble(eberVelocityBoost-0.15, eberVelocityBoost+0.15), 0.0))
         return result
     }
 
@@ -95,13 +102,17 @@ val eberKit = kit("Eber") {
 
     description = "Fight with the help of an eber"
 
+    val eberAliveTime by property(7.5, "ebers time alive")
+    val eberVelocityBoost by property(1.15, "eber launch velocity")
+    val eberSpeed by property(1.5, "eber speed")
+
     kitItem {
         itemStack = kitSelectorItem.copy()
 
         onClick { hgPlayer, kit ->
             val world = hgPlayer.serverPlayer?.world ?: return@onClick
 
-            val eber = Eber(world, hgPlayer).also {
+            val eber = Eber(world, hgPlayer, eberAliveTime, eberVelocityBoost, eberSpeed).also {
                 it.setPos(hgPlayer.serverPlayer!!.position())
             }
             hgPlayer.serverPlayer!!.startRiding(eber)

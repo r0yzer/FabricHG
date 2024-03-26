@@ -8,5 +8,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(Projectile.class)
 public interface ProjectileAccessor {
     @Invoker("onHitEntity")
-    void onHitEntityNeo(EntityHitResult entityHitResult);
+    void onHitEntityInvoker(EntityHitResult entityHitResult);
 }

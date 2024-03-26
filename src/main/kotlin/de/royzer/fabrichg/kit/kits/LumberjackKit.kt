@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.core.BlockPos
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.enchantment.Enchantments
@@ -17,12 +18,14 @@ val lumberjackKit = kit("Lumberjack") {
 
     cooldown = 8.0
 
+    val maxUses by property(10, "max uses")
+
     kitItem {
         itemStack = kitSelectorItem
         onDestroyBlock { hgPlayer, kit, blockPos ->
             val world = hgPlayer.serverPlayer?.world ?: return@onDestroyBlock
             destroyLogs(world, blockPos, 0)
-            hgPlayer.checkUsesForCooldown(kit, 10)
+            hgPlayer.checkUsesForCooldown(kit, maxUses)
         }
     }
 }

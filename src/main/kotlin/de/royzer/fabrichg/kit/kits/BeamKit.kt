@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.core.BlockPos
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
@@ -22,7 +23,7 @@ val beamKit = kit("Beam") {
 
     cooldown = 38.0
 
-    val distance = 15
+    val distance by property(15, "beam distance")
 
     kitItem {
         itemStack = kitSelectorItem
