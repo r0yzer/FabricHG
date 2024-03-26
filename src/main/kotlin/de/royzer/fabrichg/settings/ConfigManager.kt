@@ -40,7 +40,7 @@ object ConfigManager {
         }
         val gameConfigData = json.decodeFromString<GameSettings>(gameConfigFile.readText())
         gameSettings.kitAmount = gameConfigData.kitAmount.also {
-            require(it <= 4)
+            require(it <= 8)
         }
         gameSettings.minifeastEnabled = gameConfigData.minifeastEnabled
         gameSettings.mushroomCowNerf = gameConfigData.mushroomCowNerf
@@ -57,10 +57,8 @@ object ConfigManager {
                 it.cooldown = kitConfig.cooldown
                 it.usableInInvincibility = kitConfig.usableInInvincibility
                 it.maxUses = kitConfig.maxUses
-                kitConfig.additionalProperties?.forEach { s, d ->
-                    if (d != null) {
-                        it.properties[s] = d
-                    }
+                kitConfig.additionalProperties?.forEach { (s, d) ->
+                    it.properties[s] = d
                 }
             } else {
                 kitConfigs[it.name] = KitConfigData(
