@@ -26,9 +26,7 @@ fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
                 PlayerList.alivePlayers.sortedBy { it.kills }.toGuiList(),
                 iconGenerator = { hgPlayer ->
                     val skull = Items.PLAYER_HEAD.defaultInstance
-                    if (!hgPlayer.isBot) {
-                        hgPlayer.serverPlayer?.let { skull.setSkullPlayer(it) }
-                    }
+                    hgPlayer.serverPlayer?.let { skull.setSkullPlayer(it) }
                     skull.setCustomName {
                         text(if (hgPlayer.isBot) "Bot " else "") {
                             color = 0xFF0000

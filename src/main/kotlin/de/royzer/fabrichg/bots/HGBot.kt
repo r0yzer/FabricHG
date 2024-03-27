@@ -57,8 +57,6 @@ class HGBot(
     val serverPlayer: FakeServerPlayer
 ) : Zombie(world) {
 
-   // val fakePlayer = HGBotFakePlayer(this)
-
     init {
         serverPlayer.hgBot = this
         serverPlayer.boundingBox = AABB(0.0, 0.0,0.0,0.0,0.0,0.0)
@@ -69,7 +67,6 @@ class HGBot(
         setTarget(target)
 
         setItemSlot(EquipmentSlot.MAINHAND, sword.defaultInstance)
-        //setItemSlot(EquipmentSlot.HEAD, itemStack(Items.PLAYER_HEAD) {})
         attributes.getInstance(Attributes.FOLLOW_RANGE)?.baseValue = 100.0
         attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = 20.0
         health = 20.0F
@@ -77,20 +74,12 @@ class HGBot(
         attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 10.0
         attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 2.5
 
-      //  server?.playerList?.players?.add(fakePlayer)
         sendPlayerInfoUpdatePacket()
-
     }
 
-    override fun isInvisibleTo(player: Player): Boolean {
+    override fun isInvisibleTo(player: Player): Boolean = true
 
-        return true
-    }
-
-    override fun isInvisible(): Boolean {
-
-        return true;
-    }
+    override fun isInvisible(): Boolean = true
 
     override fun knockback(strength: Double, x: Double, z: Double) {
         super.knockback(strength, x, z)
@@ -98,7 +87,6 @@ class HGBot(
 
     override fun setItemSlot(slot: EquipmentSlot, stack: ItemStack) {
         serverPlayer.setItemSlot(slot, stack)
-       // super.setItemSlot(slot, stack)
     }
 
     private var soups = 50
@@ -107,7 +95,7 @@ class HGBot(
     private var kills = 0
     val armorSlots = EquipmentSlot.entries.filter { it.isArmor }
 
-    val sword: Item
+    private val sword: Item
         get() {
             return if (Feast.started) {
                 if (kills == 0) Items.IRON_SWORD
@@ -118,7 +106,7 @@ class HGBot(
             }
         }
 
-    val air get() = Items.AIR.defaultInstance
+    val air: ItemStack get() = Items.AIR.defaultInstance
 
     var tracking = false
 
@@ -177,20 +165,11 @@ class HGBot(
     override fun tick() {
         if (!isAlive) return
 
-       // fakePlayer.setPos(pos)
-        //serverPlayer.setPos(pos)
-        serverPlayer.moveTo(x,y,z,yRot, xRot)
+        serverPlayer.moveTo(x, y, z, yRot, xRot)
         serverPlayer.xCloak
         serverPlayer.health = health
         serverPlayer.yHeadRot = yHeadRot
         serverPlayer.yBodyRot = yBodyRot
-//        if(serverPlayer.del)
-//        serverPlayer.hasImpulse = hasImpulse
-//        serverPlayer.deltaMovement = deltaMovement
-
-        /*armor.forEachIndexed { index, armorPiece ->
-            setItemSlot(armorSlots[index], armorPiece)
-        }*/ // nicht sichtbar
 
         if (
             !tracking &&

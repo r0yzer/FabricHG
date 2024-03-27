@@ -24,9 +24,7 @@ object SkinManager {
 
     fun getUuidByName(name: String): String {
         val url = URL(MOJANG_NAME2UUID + name)
-        val result = urlRequest(url)
-        println(result)
-        if(result == null) return ""
+        val result = urlRequest(url) ?: return ""
         return Json.decodeFromString<UuidRequestData>(result).id
     }
 
@@ -39,17 +37,18 @@ object SkinManager {
     fun sendProfileUpdates(player: ServerPlayer) {
         if (server.overworld().isClientSide()) return
         server.playerList.broadcastAll(ClientboundPlayerInfoRemovePacket(listOf(player.uuid)))
-        server.playerList.broadcastAll(ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, player))
+        server.playerList.broadcastAll(
+            ClientboundPlayerInfoUpdatePacket(
+                ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED,
+                player
+            )
+        )
         val storage = server.overworld().chunkSource.chunkMap
 
         val entry = (storage as ChunkMapAccessor).entityMap.get(player.id)
         PlayerLookup.tracking(player).forEach { tracking ->
             entry.serverEntity.addPairing(tracking)
         }
-        if(entry != null){
-
-        }else println("NULL")
-
     }
 
 

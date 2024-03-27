@@ -25,14 +25,13 @@ object InvincibilityPhase : GamePhase() {
             hgPlayer.serverPlayer?.setGameMode(GameType.SURVIVAL)
             hgPlayer.serverPlayer?.closeContainer()
             hgPlayer.serverPlayer?.removeAllEffects()
-            if (hgPlayer.hasKit(surpriseKit)) {
-                hgPlayer.kits.remove(surpriseKit)
-                hgPlayer.kits.add(randomKit())
+            hgPlayer.kits.forEachIndexed { index, kit ->
+                if (kit == surpriseKit) {
+                    hgPlayer.setKit(randomKit(), index)
+                }
             }
             with(hgPlayer.serverPlayer?.inventory) {
                 this?.clearContent()
-//                this?.add(itemStack(Items.STONE_SWORD, 1) {})
-//                repeat(33) { this?.add(itemStack(Items.MUSHROOM_STEW, 1) {}) }
                 this?.add(tracker)
                 hgPlayer.giveKitItems()
 

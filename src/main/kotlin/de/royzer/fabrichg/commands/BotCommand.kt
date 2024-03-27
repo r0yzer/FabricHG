@@ -23,7 +23,8 @@ val hgbotCommand = command("hgbot") {
         runs {
             val botname = name()
             if (botname.toString().length <= 16) {
-                val world = source.player?.world
+                val executor = source.player ?: return@runs
+                val world = executor.world
                 val info = net.minecraft.server.level.ClientInformation.createDefault()
                 val uuid = SkinManager.getUuidByName(botname)
                 val skin = SkinManager.getSkinByUuid(uuid)!!
@@ -39,16 +40,11 @@ val hgbotCommand = command("hgbot") {
                     append(uuid.substring(20))
                 }
 
-                println(newUUID)
-
                 val profile = GameProfile(UUID.fromString(newUUID), botname)
                 val value = skin.properties.first().value
                 val signature = skin.properties.first().signature
-//        skinTag.putString("value", skin.properties.first().value)
-//        skinTag.putString("signature", skin.properties.first().signature)
                 val map = profile.properties
                 try {
-
                     val oldSkin = map?.get("textures")?.iterator()?.next()
                     map?.remove("textures", oldSkin)
                 } catch (_: NoSuchElementException) {
@@ -56,51 +52,26 @@ val hgbotCommand = command("hgbot") {
                 profile.properties.put("textures", Property("textures", value, signature))
                 val serverPlayer = FakeServerPlayer(profile)
                 server.playerList.placeNewPlayer(
-                    FakeClientConnection(),
-                    serverPlayer,
-                    CommonListenerCookie.createInitial(profile)
+                    FakeClientConnection(), serverPlayer, CommonListenerCookie.createInitial(profile)
                 )
-                serverPlayer.setPos(source!!.player!!.pos)
+                serverPlayer.setPos(executor.pos)
 
-                val hgBot = HGBot(world!!, botname, source.player!!, serverPlayer = serverPlayer)
-                source.player?.world?.addFreshEntity(hgBot.apply {
-                    setPos(source!!.player!!.pos)
+                val hgBot = HGBot(world, botname, executor, serverPlayer = serverPlayer)
+                executor.world.addFreshEntity(hgBot.apply {
+                    setPos(executor.pos)
                     addEffect(
                         net.minecraft.world.effect.MobEffectInstance(
-                            MobEffects.INVISIBILITY,
-                            Int.MAX_VALUE,
-                            1,
-                            false,
-                            false,
-                            false
+                            MobEffects.INVISIBILITY, Int.MAX_VALUE, 1, false, false, false
                         )
                     )
                 })
                 hgBot.isInvisible = true
 
-                //SkinManager.sendProfileUpdates(serverPlayer)
-
-                // PlayerList.players[hgBot.uuid] = HGPlayer(hgBot.uuid, botname)
-                // PlayerList.players[hgBot.uuid]?.kits?.add(randomKit())
             }
 
         }
     }
 
-    runs {
-
-
-    }
-
-//    runs {
-//        val world = source.player?.world
-//        val hgBot = HGBot(world!!, "HGBot", source.player!!, serverPlayer = serverPlayer)
-//        source.player?.world?.addFreshEntity(hgBot.apply {
-//            setPos(source!!.player!!.pos)
-//        })
-//        PlayerList.players[hgBot.uuid] = HGPlayer(hgBot.uuid, "HGBot")
-//        PlayerList.players[hgBot.uuid]?.kits?.add(beerKit)
-//    }
 }
 
 class FakeClientConnection constructor() : Connection(PacketFlow.CLIENTBOUND) {

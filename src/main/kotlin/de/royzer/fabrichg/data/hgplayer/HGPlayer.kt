@@ -2,6 +2,7 @@ package de.royzer.fabrichg.data.hgplayer
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.bots.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
@@ -11,13 +12,13 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.kit.kits.noneKit
+import de.royzer.fabrichg.kit.kits.surpriseKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.stats.Database
 import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.kitSelector
-import net.fabricmc.fabric.api.entity.FakePlayer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.silkmc.silk.core.item.setCustomName
@@ -129,12 +130,14 @@ class HGPlayer(
 
     fun setKit(kit: Kit, index: Int) {
         if (kits.contains(kit)) {
-            this.serverPlayer?.sendText {
-                text("You already have this kit")
-                color = TEXT_GRAY
-                bold = true
+            if (!(kit == surpriseKit || kit == noneKit)) {
+                this.serverPlayer?.sendText {
+                    text("You already have this kit")
+                    color = TEXT_GRAY
+                    bold = true
+                }
+                return
             }
-            return
         }
         if (!kit.enabled) {
             this.serverPlayer?.sendText {
@@ -176,7 +179,7 @@ class HGPlayer(
             return lastCombatEntry?.source?.entity is ServerPlayer
         }
 
-    val isBot get() = this.serverPlayer is FakePlayer
+    val isBot get() = this.serverPlayer is FakeServerPlayer
 
 
     fun updateStats(kills: Int = 0, deaths: Int = 0, wins: Int = 0) {
@@ -186,15 +189,6 @@ class HGPlayer(
             wins = this.stats.wins + wins
         )
     }
-
-    fun giveKitSelectors() {
-        val kits = ConfigManager.gameSettings.kitAmount
-        repeat(kits) {
-            this.serverPlayer?.inventory?.add(kitSelector(it))
-        }
-
-    }
-
     override fun toString(): String {
         return "HGPlayer ${this.name}, Kits: [${kits.joinToString()}]"
     }

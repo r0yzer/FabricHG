@@ -2,6 +2,7 @@ package de.royzer.fabrichg.events
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.bots.FakeServerPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.giveKitSelectors
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
@@ -36,6 +37,11 @@ object ConnectEvents {
         ServerPlayConnectionEvents.JOIN.register { handler, sender, server ->
             val gamePhase = GamePhaseManager.currentPhase.phaseType
             val player = handler.player
+
+            if (player is FakeServerPlayer) {
+                return@register
+            }
+
             val uuid = player.uuid
             val hgPlayer = player.hgPlayer
 
