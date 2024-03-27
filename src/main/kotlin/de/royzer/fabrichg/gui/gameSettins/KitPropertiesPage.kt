@@ -37,6 +37,9 @@ suspend fun GuiBuilder.PageBuilder.kitPropertiesPage(kit: Kit) {
                 intProperty(kit, index, otherProperties.size, guiProperty as GuiProperty<Pair<String, KitProperty.IntKitProperty>>)
             is KitProperty.BooleanKitProperty ->
                 booleanProperty(kit, index, otherProperties.size, guiProperty as GuiProperty<Pair<String, KitProperty.BooleanKitProperty>>)
+            is KitProperty.FloatKitProperty ->
+                floatProperty(kit, index, otherProperties.size, guiProperty as GuiProperty<Pair<String, KitProperty.FloatKitProperty>>)
+
         }
     }
 }
@@ -84,6 +87,49 @@ fun GuiBuilder.PageBuilder.doubleProperty(
     })
 }
 
+
+fun GuiBuilder.PageBuilder.floatProperty(
+    kit: Kit,
+    index: Int,
+    maxSlots: Int,
+    guiProperty: GuiProperty<Pair<String, KitProperty.FloatKitProperty>>
+) {
+    numberProperty(kit, index, maxSlots, guiProperty, clickPlus = { guiProperty, event ->
+        val newCooldown = guiProperty.get().second
+        when (event.type) {
+            GuiActionType.PICKUP -> {
+                newCooldown.data += 0.1f
+            }
+
+            GuiActionType.SHIFT_CLICK -> {
+                newCooldown.data += 0.5f
+            }
+
+            else -> {}
+        }
+        if (newCooldown.data < 0) newCooldown.data = 0.0f
+        kit.properties[guiProperty.get().first] = newCooldown
+        guiProperty.set(guiProperty.get().first to newCooldown)
+        ConfigManager.updateKit(kit.name)
+    }, clickMinus = { guiProperty, event ->
+        var newCooldown = guiProperty.get().second
+        when (event.type) {
+            GuiActionType.PICKUP -> {
+                newCooldown.data -= 0.1f
+            }
+
+            GuiActionType.SHIFT_CLICK -> {
+                newCooldown.data -= 0.5f
+            }
+
+            else -> {}
+        }
+        if (newCooldown.data < 0) newCooldown.data = 0.0f
+        kit.properties[guiProperty.get().first] = newCooldown
+        guiProperty.set(guiProperty.get().first to newCooldown)
+        ConfigManager.updateKit(kit.name)
+    })
+}
 
 fun GuiBuilder.PageBuilder.intProperty(
     kit: Kit,

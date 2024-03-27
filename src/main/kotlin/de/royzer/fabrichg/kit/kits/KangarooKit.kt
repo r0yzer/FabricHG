@@ -14,8 +14,8 @@ val kangarooKit = kit("Kangaroo") {
     kitSelectorItem = Items.FIREWORK_ROCKET.defaultInstance
     description = "Allows you to jump higher and longer"
 
-    val jumpVelocity by property(0.9, "jump velocity")
-    val jumpShiftVelocity by property(0.6, "jump velocity (shift)")
+    val jumpVelocity by property(0.9f, "jump velocity")
+    val jumpShiftVelocity by property(0.6f, "jump velocity (shift)")
 
     kitItem {
         itemStack = kitSelectorItem

@@ -17,6 +17,10 @@ val stomperKit = kit("Stomper") {
     kitSelectorItem = Items.DIAMOND_BOOTS.defaultInstance
 
     val range by property(7.5, "stomper range")
+    val damageDivisor by property(2f, "damage divisor (falldamage)")
+    val crouchDamage by property(1f, "crouch damage")
+    
+    val ignoreNeos by property(false, "ignore neos")
 
     kitEvents {
         onTakeDamage { hgPlayer, kit, source, amount ->
@@ -32,12 +36,14 @@ val stomperKit = kit("Stomper") {
                 serverPlayer,
                 serverPlayer.boundingBox.inflate(range, range/2, range)
             ).filter {
-                (it != serverPlayer) || (it.hgPlayer?.isNeo == false)
+                (it != serverPlayer) || (it.hgPlayer?.isNeo == false || ignoreNeos)
             }
 
             nearbyEntities.forEach { nearbyEntity ->
-                if (!nearbyEntity.isCrouching) {
-                    nearbyEntity.hurt(serverPlayer.damageSources().playerAttack(serverPlayer),  amount/2)
+                if (nearbyEntity.isCrouching) {
+                    nearbyEntity.hurt(serverPlayer.damageSources().playerAttack(serverPlayer), crouchDamage)
+                } else {
+                    nearbyEntity.hurt(serverPlayer.damageSources().playerAttack(serverPlayer), amount/damageDivisor)
                 }
             }
 

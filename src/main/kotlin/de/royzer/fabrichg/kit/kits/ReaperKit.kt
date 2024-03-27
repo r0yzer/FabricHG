@@ -40,8 +40,8 @@ val reaperKit = kit("Reaper") {
 
     val maxUses by property(3, "max uses")
     val maxUsesHitting by property(2, "max uses (hitting)")
-    val explosion by property(1.25, "explosion grösse")
-    val velocity by property(3.0, "velocity")
+    val explosion by property(1.25f, "explosion grösse")
+    val velocity by property(3.0f, "velocity")
     val witherDuration by property(7, "wither duration (seconds, hit)")
     val witherLevel by property(2, "wither level")
 
@@ -59,7 +59,7 @@ val reaperKit = kit("Reaper") {
         onClick { hgPlayer, kit ->
             val world = hgPlayer.serverPlayer?.world ?: return@onClick
 
-            world.addFreshEntity(ReaperProjectile(world, explosion).also {
+            world.addFreshEntity(ReaperProjectile(world, explosion.toDouble()).also {
                 val lookVector = hgPlayer.serverPlayer!!.forward
 
                 it.setPos(hgPlayer.serverPlayer!!.pos.plus(lookVector.multiply(1.5, 1.0, 1.5)))
@@ -68,7 +68,7 @@ val reaperKit = kit("Reaper") {
                     lookVector.x,
                     lookVector.y,
                     lookVector.z,
-                    velocity.toFloat(),
+                    velocity,
                     0.25f
                 )
 

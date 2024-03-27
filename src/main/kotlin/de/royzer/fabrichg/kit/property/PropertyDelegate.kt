@@ -44,6 +44,9 @@ inline fun <reified T : Any> kitProperty(value: T, kit: Kit, propertyName: Strin
         is Double -> {
             { _value -> KitProperty.DoubleKitProperty(_value as Double) }
         }
+        is Float -> {
+            { _value -> KitProperty.FloatKitProperty(_value as Float) }
+        }
         is Boolean -> {
             { _value -> KitProperty.BooleanKitProperty(_value as Boolean) }
         }

@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.projectile.Snowball
 import net.minecraft.world.item.Items
@@ -12,6 +13,8 @@ val switcherKit: Kit = kit("Switcher") {
     kitSelectorItem = Items.SNOWBALL.defaultInstance
 
     description = "Switch yourself with someone else"
+
+    val snowballDamage by property(0.1f, "snowball damage")
 
     kitItem {
         itemStack = itemStack(Items.SNOWBALL) { count = 16 }
@@ -31,7 +34,7 @@ val switcherKit: Kit = kit("Switcher") {
 
             owner.teleportTo(hitEntityPos.x, hitEntityPos.y, hitEntityPos.z)
             hitEntity.teleportTo(ownerPos.x, ownerPos.y, ownerPos.z)
-            hitEntity.hurt(owner.damageSources().playerAttack(owner), 0.1f)
+            hitEntity.hurt(owner.damageSources().playerAttack(owner), snowballDamage)
         }
     }
 }

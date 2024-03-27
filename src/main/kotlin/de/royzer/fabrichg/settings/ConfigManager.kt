@@ -96,6 +96,9 @@ sealed class KitProperty {
 
     @Serializable
     data class DoubleKitProperty(override var data: Double) : KitProperty(), Value<Double>
+
+    @Serializable
+    data class FloatKitProperty(override var data: Float) : KitProperty(), Value<Float>
 }
 
 

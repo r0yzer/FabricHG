@@ -17,6 +17,7 @@ val frozenKit = kit("Frozen") {
 
     val frozenDurationInS by property(10, "frozen duration in seconds")
     val frostWalkerLevel by property(3, "frost walker level")
+    val snowballDamage by property(0.1f, "snowball damage")
 
     kitItem {
         itemStack = itemStack(Items.SNOWBALL) { count = 16 }
@@ -36,7 +37,7 @@ val frozenKit = kit("Frozen") {
             val hitEntity = entityHitResult.entity
             if (owner == hitEntity) return@onHitProjectile
 
-            hitEntity.hurt(owner.damageSources().playerAttack(owner), 0.1f)
+            hitEntity.hurt(owner.damageSources().playerAttack(owner), snowballDamage)
             hitEntity.ticksFrozen = 20 * frozenDurationInS
         }
     }
