@@ -19,7 +19,11 @@ import de.royzer.fabrichg.stats.Database
 import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.kitSelector
+import net.minecraft.core.Holder
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.damagesource.CombatEntry
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
 import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setLore
@@ -176,6 +180,19 @@ class HGPlayer(
         get() {
             val combatTracker = serverPlayer?.combatTracker ?: return false
             val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
+            if(lastCombatEntry?.source?.entity is HGBot){
+                val hgBot = lastCombatEntry.source?.entity as HGBot
+                (combatTracker as CombatTrackerAcessor).entries[(combatTracker as CombatTrackerAcessor).entries.size-1] =
+                    CombatEntry(
+                        DamageSource(
+                            Holder.direct<DamageType>(DamageType("player", 0.1f)),
+                            hgBot.serverPlayer,
+                            hgBot.serverPlayer
+                        ), lastCombatEntry.damage, lastCombatEntry.fallLocation,
+                        lastCombatEntry.fallDistance
+                    )
+                return true
+            }
             return lastCombatEntry?.source?.entity is ServerPlayer
         }
 

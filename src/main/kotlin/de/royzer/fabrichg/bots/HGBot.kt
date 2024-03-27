@@ -1,7 +1,6 @@
 package de.royzer.fabrichg.bots
 
 import de.royzer.fabrichg.bots.goals.*
-import de.royzer.fabrichg.bots.player.HGBotFakePlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.feast.Feast
@@ -9,18 +8,14 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import kotlinx.coroutines.delay
-import kotlinx.serialization.internal.throwArrayMissingFieldException
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.EntitySelector
-import net.minecraft.world.entity.EntityType
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.entity.*
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.ai.navigation.PathNavigation
 import net.minecraft.world.entity.item.ItemEntity
@@ -34,17 +29,13 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import net.silkmc.silk.core.entity.modifyVelocity
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.time.Instant
-import java.util.function.Predicate
-import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 
 
 val botCopys = arrayListOf<ServerPlayer>()
@@ -59,7 +50,7 @@ class HGBot(
 
     init {
         serverPlayer.hgBot = this
-        serverPlayer.boundingBox = AABB(0.0, 0.0,0.0,0.0,0.0,0.0)
+        serverPlayer.boundingBox = AABB(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
         botCopys.add(serverPlayer)
         this.isInvisible = true
         customName = hgName.literal
@@ -75,6 +66,11 @@ class HGBot(
         attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 2.5
 
         sendPlayerInfoUpdatePacket()
+    }
+
+
+    override fun canBeAffected(effectInstance: MobEffectInstance): Boolean {
+        return true
     }
 
     override fun isInvisibleTo(player: Player): Boolean = true
@@ -191,7 +187,12 @@ class HGBot(
         }
         if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && target == null) {
             val distance = if (shouldWalkToFeast()) 45.0 else 250.0
-            target = world.getNearestPlayer(this.x, this.y, this.z, distance, EntitySelector.NO_CREATIVE_OR_SPECTATOR.and { !botCopys.contains(it) })
+            target = world.getNearestPlayer(
+                this.x,
+                this.y,
+                this.z,
+                distance,
+                EntitySelector.NO_CREATIVE_OR_SPECTATOR.and { !botCopys.contains(it) })
         } else if (GamePhaseManager.currentPhaseType != PhaseType.INGAME) {
             target = null
         }
@@ -310,7 +311,7 @@ class HGBot(
         super.die(damageSource)
         remove(RemovalReason.KILLED)
         removeHGPlayer()
-        if(!serverPlayer.isDeadOrDying){
+        if (!serverPlayer.isDeadOrDying) {
             serverPlayer.die(damageSource)
         }
 //        mcCoroutineTask(delay = (Random.nextDouble() * 5).seconds) {
@@ -353,7 +354,7 @@ class HGBot(
         server?.playerList?.broadcastAll(
             ClientboundPlayerInfoUpdatePacket.createPlayerInitializing(
                 listOf(
-                   // fakePlayer
+                    // fakePlayer
                 )
             )
         )

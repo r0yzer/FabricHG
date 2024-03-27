@@ -34,6 +34,7 @@
   },
   "mixins": [
     "kits.BeamMixin",
+    "kits.WitchKit",
     "server.level.ChunkMapAccessor",
     "server.level.TrackedEntityAccessor"
   ]
