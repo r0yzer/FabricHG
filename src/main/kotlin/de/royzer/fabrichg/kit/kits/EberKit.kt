@@ -6,24 +6,20 @@ import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import de.royzer.fabrichg.util.toHighestPos
 import net.minecraft.core.BlockPos
-import net.minecraft.sounds.SoundSource
-import net.minecraft.world.entity.*
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.targeting.TargetingConditions
 import net.minecraft.world.entity.monster.hoglin.Hoglin
-import net.minecraft.world.entity.monster.hoglin.HoglinBase
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.pathfinder.Path
-import net.minecraft.world.phys.Vec2
 import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.modifyVelocity
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
-import java.util.*
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 

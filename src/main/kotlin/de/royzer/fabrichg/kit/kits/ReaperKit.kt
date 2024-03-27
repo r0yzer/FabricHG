@@ -17,10 +17,18 @@ import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.math.vector.plus
 import kotlin.random.Random
 
-class ReaperProjectile(world: Level): WitherSkull(EntityType.WITHER_SKULL, world) {
+class ReaperProjectile(world: Level, val explosion: Double = 1.25): WitherSkull(EntityType.WITHER_SKULL, world) {
     override fun onHit(result: HitResult) {
         super.onHit(result)
-        level().explode(this, this.x, this.y, this.z, Random.nextDouble(0.75, 1.75).toFloat(), false, ExplosionInteraction.MOB)
+        level().explode(
+            this,
+            this.x,
+            this.y,
+            this.z,
+            Random.nextDouble(explosion-0.5, explosion+0.5).toFloat(),
+            false,
+            ExplosionInteraction.MOB
+        )
     }
 }
 
@@ -32,6 +40,10 @@ val reaperKit = kit("Reaper") {
 
     val maxUses by property(3, "max uses")
     val maxUsesHitting by property(2, "max uses (hitting)")
+    val explosion by property(1.25, "explosion grösse")
+    val velocity by property(3.0, "velocity")
+    val witherDuration by property(7, "wither duration (seconds, hit)")
+    val witherLevel by property(2, "wither level")
 
     kitItem {
         itemStack = kitSelectorItem.copy()
@@ -39,7 +51,7 @@ val reaperKit = kit("Reaper") {
         onClickAtEntity { hgPlayer, kit, entity, interactionHand ->
             if (entity !is LivingEntity) return@onClickAtEntity
 
-            entity.addEffect(MobEffectInstance(MobEffects.WITHER, 20 * 7, 2))
+            entity.addEffect(MobEffectInstance(MobEffects.WITHER, 20 * witherDuration, witherLevel))
 
             hgPlayer.checkUsesForCooldown(kit, maxUsesHitting)
         }
@@ -47,7 +59,7 @@ val reaperKit = kit("Reaper") {
         onClick { hgPlayer, kit ->
             val world = hgPlayer.serverPlayer?.world ?: return@onClick
 
-            world.addFreshEntity(ReaperProjectile(world).also {
+            world.addFreshEntity(ReaperProjectile(world, explosion).also {
                 val lookVector = hgPlayer.serverPlayer!!.forward
 
                 it.setPos(hgPlayer.serverPlayer!!.pos.plus(lookVector.multiply(1.5, 1.0, 1.5)))
@@ -56,7 +68,7 @@ val reaperKit = kit("Reaper") {
                     lookVector.x,
                     lookVector.y,
                     lookVector.z,
-                    3f,
+                    velocity.toFloat(),
                     0.25f
                 )
 

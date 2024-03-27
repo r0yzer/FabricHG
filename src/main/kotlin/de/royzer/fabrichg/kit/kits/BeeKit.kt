@@ -22,6 +22,7 @@ val beeKit = kit("Bee") {
     cooldown = 28.0
 
     val bees by property(4, "bees")
+    val beeTime by property(5, "bee kit time")
 
     kitItem {
         itemStack = kitSelectorItem
@@ -33,11 +34,11 @@ val beeKit = kit("Bee") {
                 bee.setPos(clickedPlayer.eyePosition)
                 world.addFreshEntity(bee)
 
-                mcCoroutineTask(delay = 5.seconds) {
+                mcCoroutineTask(delay = beeTime.seconds) {
                     bee.kill()
                 }
             }
-            mcCoroutineTask(howOften = 20 * 6L) {
+            mcCoroutineTask(howOften = 20L * (beeTime + 1)) {
                 val blocks: List<BlockPos> = listOf(
                     clickedPlayer.onPos,
                     clickedPlayer.onPos.north(),

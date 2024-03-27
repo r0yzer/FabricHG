@@ -24,6 +24,9 @@ val beamKit = kit("Beam") {
     cooldown = 38.0
 
     val distance by property(15, "beam distance")
+    val duration by property(5, "beam duration")
+    val damageTicks by property(10, "every n ticks player gets damaged")
+    val damage by property(4.0, "beam damage")
 
     kitItem {
         itemStack = kitSelectorItem
@@ -40,12 +43,12 @@ val beamKit = kit("Beam") {
             player.world.addFreshEntity(crystal)
             crystals.add(crystal)
 
-            mcCoroutineTask(howOften = 20L * 5L) {
+            mcCoroutineTask(howOften = 20L * duration) {
                 target = player.pos.add(player.lookDirection.normalize().times(distance))
                 crystal.teleportTo(player.eyePosition.x, player.eyePosition.y + 1.0, player.eyePosition.z)
                 crystal.beamTarget = BlockPos(target.x.roundToInt(), target.y.roundToInt(), target.z.roundToInt())
 
-                if ((it.round.toInt() % 10) == 0) {
+                if ((it.round.toInt() % damageTicks) == 0) {
                     PlayerList.alivePlayers.forEach { hgPlayer ->
                         val player1 = hgPlayer.serverPlayer ?: return@forEach
                         if (player1 == player) return@forEach
@@ -56,12 +59,12 @@ val beamKit = kit("Beam") {
                         vec32 = vec32.normalize()
                         val e = vec3.dot(vec32)
                         if ((e > 1.0 - 0.015 / d) && player.hasLineOfSight(player1) && player.distanceTo(player1) < distance) {
-                            player1.hurt(player.damageSources().playerAttack(player), 4.0f)
+                            player1.hurt(player.damageSources().playerAttack(player), damage.toFloat())
                         }
                     }
                 }
             }
-            mcCoroutineTask(delay = 5.seconds) {
+            mcCoroutineTask(delay = duration.seconds) {
                 crystal.remove(Entity.RemovalReason.DISCARDED)
                 crystals.remove(crystal)
             }

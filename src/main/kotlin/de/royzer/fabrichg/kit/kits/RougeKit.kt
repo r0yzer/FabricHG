@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.task.mcCoroutineTask
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.seconds
 
 val rougeKit = kit("Rouge") {
     kitSelectorItem = ItemStack(Items.GRAY_DYE)
@@ -20,6 +21,7 @@ val rougeKit = kit("Rouge") {
     description = "Disable the kits of your enemies"
 
     val range by property(8.0, "kit disable range")
+    val disableTime by property(12, "kit disable time (seconds)")
 
     kitItem {
         itemStack = kitSelectorItem
@@ -32,7 +34,7 @@ val rougeKit = kit("Rouge") {
                 otherPlayer.hgPlayer.kits.forEach { kit ->
                     kit.onDisable?.invoke(otherPlayer.hgPlayer, kit)
                     otherPlayer.hgPlayer.kitsDisabled = true
-                    mcCoroutineTask(delay = 12000.milliseconds) {
+                    mcCoroutineTask(delay = disableTime.seconds) {
                         otherPlayer.hgPlayer.kitsDisabled = false
                         kit.onEnable?.invoke(otherPlayer.hgPlayer, kit, otherPlayer)
                     }
