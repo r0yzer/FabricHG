@@ -20,8 +20,6 @@
     "item.ItemStackMixin",
     "item.PotionMixin",
     "kits.AnchorLivingEntityMixin",
-    "kits.AnchorMixin",
-    "kits.AnchorPlayerMixin",
     "kits.KangarooMixin",
     "kits.PhantomMixin",
     "server.level.LoggerChunkProgressListenerMixin",

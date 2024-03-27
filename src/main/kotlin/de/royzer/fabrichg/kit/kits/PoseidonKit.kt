@@ -27,7 +27,7 @@ val poseidonKit = kit("Poseidon") {
         enchant(Enchantments.RIPTIDE, 1)
     }
 
-    description = "Summon tridents"
+    description = "Summon and throw tridents"
 
     cooldown = 32.0
 
@@ -65,7 +65,7 @@ val poseidonKit = kit("Poseidon") {
                         val pos = player.eyePosition.add(xOffset, 0.3, zOffset)
 
                         thrownTrident.setPos(pos)
-                        thrownTrident.deltaMovement = Vec3(0.0, 0.2, 0.0)
+                        thrownTrident.deltaMovement = Vec3(0.0, 0.3, 0.0)
                     }
                     delay(1.ticks)
                 }
