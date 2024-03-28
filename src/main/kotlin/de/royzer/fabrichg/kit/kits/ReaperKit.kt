@@ -17,7 +17,11 @@ import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.math.vector.plus
 import kotlin.random.Random
 
-class ReaperProjectile(world: Level, val explosion: Double = 1.25): WitherSkull(EntityType.WITHER_SKULL, world) {
+class ReaperProjectile(world: Level, val explosion: Double = 1.25, val dangerousChance: Int): WitherSkull(EntityType.WITHER_SKULL, world) {
+    init {
+        if (Random.nextInt(100) <= dangerousChance) isDangerous = true
+    }
+
     override fun onHit(result: HitResult) {
         super.onHit(result)
         level().explode(
@@ -29,6 +33,10 @@ class ReaperProjectile(world: Level, val explosion: Double = 1.25): WitherSkull(
             false,
             ExplosionInteraction.MOB
         )
+    }
+
+    override fun getInertia(): Float {
+        return 1.0f
     }
 }
 
@@ -44,6 +52,7 @@ val reaperKit = kit("Reaper") {
     val velocity by property(3.0f, "velocity")
     val witherDuration by property(7, "wither duration (seconds, hit)")
     val witherLevel by property(2, "wither level")
+    val dangerousChance by property(5, "dangerous chance (5%)")
 
     kitItem {
         itemStack = kitSelectorItem.copy()
@@ -59,7 +68,7 @@ val reaperKit = kit("Reaper") {
         onClick { hgPlayer, kit ->
             val world = hgPlayer.serverPlayer?.world ?: return@onClick
 
-            world.addFreshEntity(ReaperProjectile(world, explosion.toDouble()).also {
+            world.addFreshEntity(ReaperProjectile(world, explosion.toDouble(), dangerousChance).also {
                 val lookVector = hgPlayer.serverPlayer!!.forward
 
                 it.setPos(hgPlayer.serverPlayer!!.pos.plus(lookVector.multiply(1.5, 1.0, 1.5)))
