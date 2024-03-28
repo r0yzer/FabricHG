@@ -8,6 +8,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
 import kotlinx.coroutines.delay
+import net.minecraft.network.protocol.game.ClientboundDamageEventPacket
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
@@ -112,16 +113,10 @@ class HGBot(
                 if (kills == 0) listOf(air, Items.IRON_CHESTPLATE.defaultInstance, air, air)
                 if (kills == 2) listOf(Items.IRON_HELMET.defaultInstance, air, Items.IRON_LEGGINGS.defaultInstance, air)
                 if (kills == 3) listOf(
-                    Items.IRON_HELMET.defaultInstance,
-                    Items.IRON_CHESTPLATE.defaultInstance,
-                    air,
-                    air
+                    Items.IRON_HELMET.defaultInstance, Items.IRON_CHESTPLATE.defaultInstance, air, air
                 )
                 if (kills == 4) listOf(
-                    Items.DIAMOND_HELMET.defaultInstance,
-                    air,
-                    Items.DIAMOND_LEGGINGS.defaultInstance,
-                    air
+                    Items.DIAMOND_HELMET.defaultInstance, air, Items.DIAMOND_LEGGINGS.defaultInstance, air
                 )
                 else listOf(air, Items.DIAMOND_CHESTPLATE.defaultInstance, Items.DIAMOND_LEGGINGS.defaultInstance, air)
             } else {
@@ -167,11 +162,7 @@ class HGBot(
         serverPlayer.yHeadRot = yHeadRot
         serverPlayer.yBodyRot = yBodyRot
 
-        if (
-            !tracking &&
-            mainHandItem.item != sword &&
-            mainHandItem.item != Items.MUSHROOM_STEW
-        ) {
+        if (!tracking && mainHandItem.item != sword && mainHandItem.item != Items.MUSHROOM_STEW) {
             setItemSlot(EquipmentSlot.MAINHAND, sword.defaultInstance)
         }
 
@@ -179,16 +170,15 @@ class HGBot(
             setItemSlot(EquipmentSlot.MAINHAND, Items.COMPASS.defaultInstance)
         }
 
-        if (
-            (target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive) ||
-            (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10
+        if ((target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive) || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(
+                lastHurtByPlayerTime
+            )) > 20 * 10
         ) {
             target = null
         }
         if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && target == null) {
             val distance = if (shouldWalkToFeast()) 45.0 else 250.0
-            target = world.getNearestPlayer(
-                this.x,
+            target = world.getNearestPlayer(this.x,
                 this.y,
                 this.z,
                 distance,
@@ -198,6 +188,10 @@ class HGBot(
         }
 
         super.tick()
+    }
+
+    override fun animateHurt(yaw: Float) {
+        super.animateHurt(yaw)
     }
 
     override fun swing(hand: InteractionHand, updateSelf: Boolean) {
@@ -226,9 +220,8 @@ class HGBot(
 
     override fun hurt(damageSource: DamageSource, f: Float): Boolean {
         val result = super.hurt(damageSource, f)
-
+        server?.playerList?.broadcastAll(ClientboundDamageEventPacket(serverPlayer, damageSource))
         lastAttackedByEntity = damageSource.entity
-
         mcCoroutineTask(true) {
             while (health < 17 && soups > 0) {
                 val soupDelay = if (soups % 8 == 0) 1000 else 125
@@ -343,8 +336,7 @@ class HGBot(
         } else {
             level().clip(
                 ClipContext(
-                    vec3, position, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE,
-                    this
+                    vec3, position, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this
                 )
             ).type == HitResult.Type.MISS
         }
