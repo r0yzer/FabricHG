@@ -112,5 +112,6 @@ data class KitConfigData @OptIn(ExperimentalSerializationApi::class) constructor
     val usableInInvincibility: Boolean = true,
     val cooldown: Double? = null,
     val maxUses: Int? = null,
+    @EncodeDefault
     val additionalProperties: HashMap<String, KitProperty>? = hashMapOf()
 )

@@ -86,6 +86,9 @@ object PlayerList {
 }
 
 fun ServerPlayer.removeHGPlayer() {
+    hgPlayer.kits.forEach {
+        it.onDisable?.invoke(hgPlayer, it)
+    }
     hgPlayer.status = HGPlayerStatus.SPECTATOR
     setGameMode(GameType.SPECTATOR)
     sendText {

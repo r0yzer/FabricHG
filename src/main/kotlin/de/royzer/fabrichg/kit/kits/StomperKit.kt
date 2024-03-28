@@ -36,7 +36,9 @@ val stomperKit = kit("Stomper") {
                 serverPlayer,
                 serverPlayer.boundingBox.inflate(range, range/2, range)
             ).filter {
-                (it != serverPlayer) || (it.hgPlayer?.isNeo == false || ignoreNeos)
+                (it != serverPlayer)
+            }.filter {
+                (it.hgPlayer?.isNeo == false || ignoreNeos)
             }
 
             nearbyEntities.forEach { nearbyEntity ->

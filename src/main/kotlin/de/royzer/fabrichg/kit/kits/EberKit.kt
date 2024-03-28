@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -74,7 +75,7 @@ class Eber(
             this,
             hitbox.inflate(1.5, 1.25, 1.5)
         ).forEach {
-            if (it == owner.serverPlayer) return@forEach
+            if (it == owner.serverPlayer || it.hgPlayer?.isNeo == true) return@forEach
             doHurtTarget(it)
         }
         super.tick()
