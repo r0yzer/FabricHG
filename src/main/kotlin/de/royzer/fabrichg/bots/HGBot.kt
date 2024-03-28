@@ -145,12 +145,12 @@ class HGBot(
     }
 
     override fun addBehaviourGoals() {
-        goalSelector.addGoal(4, HGBotAttackGoal(this, 1.0, true))
-        goalSelector.addGoal(1, MoveThroughVillageIfNoTargetGoal(
+        goalSelector.addGoal(1, HGBotAttackGoal(this, 1.0, true))
+        goalSelector.addGoal(4, MoveThroughVillageIfNoTargetGoal(
             this, 1.25, false, 4
         ) { this.canBreakDoors() })
-        goalSelector.addGoal(2, WaterAvoidingRandomStrollIfNoTargetGoal(this, 1.25, 0.5f))
-        goalSelector.addGoal(5, HGBotWalkTowardsFeastIfNoTargetGoal(this))
+        goalSelector.addGoal(3, WaterAvoidingRandomStrollIfNoTargetGoal(this, 1.25, 0.5f))
+        goalSelector.addGoal(2, HGBotWalkTowardsFeastIfNoTargetGoal(this))
     }
 
     override fun tick() {
