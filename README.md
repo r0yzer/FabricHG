@@ -108,6 +108,14 @@ val blinkKit = kit("Blink") {
     }
 }
 ```
+
+You can also make kit properties that can be changed ingame via the kit settings menu
+```kt
+val blinkKit = kit("Blink") {
+    val blinkDistance by property(4.0, "blink distance")
+}
+```
+
 If you want to execute something when the player does something without his kit item, use the `kitEvents` function
 
 ```kt

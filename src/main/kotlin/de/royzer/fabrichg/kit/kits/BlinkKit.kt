@@ -14,7 +14,7 @@ import net.silkmc.silk.core.entity.blockPos
 
 val blinkKit = kit("Blink") {
     maxUses = 5
-    val blinkDistance by property(4, "blink distance")
+    val blinkDistance by property(4.0, "blink distance")
     kitSelectorItem = Items.NETHER_STAR.defaultInstance
     cooldown = 15.0
     description = "Teleport in the direction you are looking"
