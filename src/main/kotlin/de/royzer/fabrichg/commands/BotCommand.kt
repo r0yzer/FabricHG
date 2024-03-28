@@ -41,7 +41,11 @@ private val playersWithSkin = listOf(
     "notch",
     "asbach",
     "Asbach_URALT",
-    "olaf_scholz"
+    "olaf_scholz",
+    "r0yzer",
+    "ASB4CH_URALT",
+    "Hotkeyyy",
+    "V8_BITURBO",
 )
 
 private var i = 0;
@@ -55,24 +59,14 @@ fun CommandContext<CommandSourceStack>.createBot(botname: String, skinName: Stri
     if (skin == null) {
         // bei 2 mal gleichen geht nicht wiel gleiche uuid
         // wenn einer von denen online ist geht auch alles kaputt
-        val newName = playersWithSkin[i++ % playersWithSkin.size]
+        val newName = playersWithSkin.random()
         executor.sendSystemMessage("$skinName existiert nicht, skin von $newName wird genommen".literal)
         createBot(botname, newName)
         return
     }
-    val newUUID = buildString {
-        append(uuid.substring(0, 8))
-        append("-")
-        append(uuid.substring(8, 12))
-        append("-")
-        append(uuid.substring(12, 16))
-        append("-")
-        append(uuid.substring(16, 20))
-        append("-")
-        append(uuid.substring(20))
-    }
+    val newUUID = UUID.randomUUID()
 
-    val profile = GameProfile(UUID.fromString(newUUID), botname)
+    val profile = GameProfile(newUUID, botname)
     val value = skin.properties.first().value
     val signature = skin.properties.first().signature
     val map = profile.properties
