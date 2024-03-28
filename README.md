@@ -109,7 +109,7 @@ val blinkKit = kit("Blink") {
 }
 ```
 
-You can also make kit properties that can be changed ingame via the kit settings menu
+You can also make kit properties that can be changed in game via the kit settings menu
 ```kt
 val blinkKit = kit("Blink") {
     val blinkDistance by property(4.0, "blink distance")

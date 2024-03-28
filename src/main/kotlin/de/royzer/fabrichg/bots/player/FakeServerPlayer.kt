@@ -1,17 +1,15 @@
-package de.royzer.fabrichg.bots
+package de.royzer.fabrichg.bots.player
 
 import com.mojang.authlib.GameProfile
 import com.mojang.datafixers.util.Pair
+import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.randomKit
-import de.royzer.fabrichg.mixins.server.level.ChunkMapAccessor
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
 import net.minecraft.server.level.ClientInformation
 import net.minecraft.server.level.ServerPlayer
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
@@ -66,5 +64,7 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
         server.playerList.broadcastAll(ClientboundSetEquipmentPacket(id, list))
     }
 
-
+    override fun allowsListing(): Boolean {
+        return true
+    }
 }

@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.bots
 
 import de.royzer.fabrichg.bots.goals.*
+import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.feast.Feast

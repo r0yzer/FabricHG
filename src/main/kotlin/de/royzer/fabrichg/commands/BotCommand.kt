@@ -3,7 +3,7 @@ package de.royzer.fabrichg.commands
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import com.mojang.brigadier.context.CommandContext
-import de.royzer.fabrichg.bots.FakeServerPlayer
+import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.bots.skin.SkinManager
 import de.royzer.fabrichg.server

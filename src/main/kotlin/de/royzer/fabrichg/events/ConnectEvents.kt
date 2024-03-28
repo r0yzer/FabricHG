@@ -2,7 +2,7 @@ package de.royzer.fabrichg.events
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
-import de.royzer.fabrichg.bots.FakeServerPlayer
+import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.giveKitSelectors
 import de.royzer.fabrichg.data.hgplayer.hgPlayer

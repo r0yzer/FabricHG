@@ -2,7 +2,7 @@ package de.royzer.fabrichg.game.phase.phases
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
-import de.royzer.fabrichg.bots.FakeServerPlayer
+import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
