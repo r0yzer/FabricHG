@@ -19,7 +19,7 @@ public class MainMixin {
             remap = false
     )
     private static void onStart(String[] args, CallbackInfo ci) throws IOException {
-        if (System.getProperty("os.name").contains("Windows")) {
+        if (System.getProperty("os.name").contains("Windows") || Arrays.stream(args).toList().contains("saveworld")) {
             return;
         }
         Arrays.stream(new File("./world").list()).filter(s -> !s.equalsIgnoreCase("datapacks")).forEach(s -> {
