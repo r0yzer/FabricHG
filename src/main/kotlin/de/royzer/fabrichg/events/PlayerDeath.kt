@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.events
 
 import de.royzer.fabrichg.bots.HGBot
+import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
@@ -9,6 +10,7 @@ import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
@@ -37,6 +39,9 @@ object PlayerDeath {
         }
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
+        if(serverPlayerEntity is FakeServerPlayer){
+            serverPlayerEntity.connection.onDisconnect(Component.literal("Dead"))
+        }
         val hgPlayer = killer?.hgPlayer ?: return true
         hgPlayer.kits.forEach {
             if (hgPlayer.canUseKit(it, true)) {

@@ -33,11 +33,15 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
     }
 
     override fun hurt(source: DamageSource, amount: Float): Boolean {
-        if(source.type()?.msgId.equals("player")){
+        if(health > 0){
             hgBot.hurt(source, amount)
         }
         return super.hurt(source, amount)
 
+    }
+
+    fun hurtFromHGBot(source: DamageSource, amount: Float){
+        super.hurt(source,amount)
     }
 
     override fun canCollideWith(entity: Entity): Boolean {

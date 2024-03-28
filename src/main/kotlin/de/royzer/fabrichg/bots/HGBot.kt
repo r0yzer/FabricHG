@@ -223,6 +223,8 @@ class HGBot(
         server?.playerList?.broadcastAll(ClientboundDamageEventPacket(serverPlayer, damageSource))
         lastAttackedByEntity = damageSource.entity
         if(health<=0.0f) {
+            serverPlayer.health = serverPlayer.health
+            serverPlayer.hurtFromHGBot(damageSource, f)
             die(damageSource)
             return result
         }
