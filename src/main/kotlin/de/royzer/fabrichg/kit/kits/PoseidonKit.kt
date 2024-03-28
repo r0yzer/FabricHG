@@ -81,6 +81,14 @@ val poseidonKit = kit("Poseidon") {
         hgPlayer.playerData[TRIDENT_KEY] = Collections.synchronizedList(mutableListOf<ThrownTrident>())
     }
 
+    onDisable { hgPlayer, kit ->
+        val tridents = hgPlayer.getPlayerData<MutableList<ThrownTrident>>(TRIDENT_KEY) ?: return@onDisable
+        tridents.forEach {
+            it.remove(Entity.RemovalReason.DISCARDED)
+        }
+        tridents.clear()
+    }
+
     kitEvents {
         onSneak(ignoreCooldown = true) { hgPlayer, kit ->
             val tridents = hgPlayer.getPlayerData<MutableList<ThrownTrident>>(TRIDENT_KEY) ?: return@onSneak

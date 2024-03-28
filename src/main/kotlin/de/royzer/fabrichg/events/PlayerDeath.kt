@@ -35,9 +35,6 @@ object PlayerDeath {
         if (killer is HGBot) {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
-        serverPlayerEntity.hgPlayer.kits.forEach {
-            it.onDisable?.invoke(serverPlayerEntity.hgPlayer, it)
-        }
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
         val hgPlayer = killer?.hgPlayer ?: return true
