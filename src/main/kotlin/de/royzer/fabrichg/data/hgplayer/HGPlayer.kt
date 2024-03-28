@@ -214,13 +214,9 @@ class HGPlayer(
 val ServerPlayer.hgPlayer
     get() = PlayerList.addOrGetPlayer(uuid, name.string)
 
-val HGBot.hgPlayer
-    get() = PlayerList.addOrGetPlayer(uuid, name.string)
-
 val Entity.hgPlayer
     get() = when (this) {
         is ServerPlayer -> hgPlayer
-        is HGBot -> hgPlayer
         else -> null
     }
 

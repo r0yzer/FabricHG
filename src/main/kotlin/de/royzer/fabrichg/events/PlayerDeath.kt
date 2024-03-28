@@ -19,8 +19,7 @@ object PlayerDeath {
     init {
         ServerLivingEntityEvents.ALLOW_DEATH.register { serverPlayerEntity, damageSource, amount ->
             val playerDeath = hgPlayerDeath(serverPlayerEntity, damageSource, amount)
-            val botDeath = hgBotDeath(serverPlayerEntity, damageSource, amount)
-            return@register (playerDeath && botDeath)
+            return@register (playerDeath)
         }
     }
 
@@ -51,20 +50,6 @@ object PlayerDeath {
         hgPlayer.updateStats(1)
         serverPlayerEntity.hgPlayer.updateStats(deaths = 1)
 //        serverPlayerEntity.hgPlayer.kits.clear()
-
-        return true
-    }
-
-    fun hgBotDeath(hgBot: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
-        if (hgBot !is HGBot) return false
-        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
-        val killer: Entity? = hgBot.lastAttackedByEntity
-
-        hgBot.die(damageSource)
-        PlayerList.announcePlayerDeath(hgBot.hgPlayer, damageSource, killer)
-        val hgPlayer = killer?.hgPlayer ?: return true
-        hgPlayer.kills += 1
-        hgPlayer.updateStats(1)
 
         return true
     }

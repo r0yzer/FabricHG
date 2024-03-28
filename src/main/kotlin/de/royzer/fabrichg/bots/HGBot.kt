@@ -303,13 +303,9 @@ class HGBot(
     override fun die(damageSource: DamageSource) {
         super.die(damageSource)
         remove(RemovalReason.KILLED)
-        removeHGPlayer()
         if (!serverPlayer.isDeadOrDying) {
             serverPlayer.die(damageSource)
         }
-//        mcCoroutineTask(delay = (Random.nextDouble() * 5).seconds) {
-//            server?.playerList?.remove(fakePlayer)
-//        }
     }
 
     override fun shouldDespawnInPeaceful(): Boolean {

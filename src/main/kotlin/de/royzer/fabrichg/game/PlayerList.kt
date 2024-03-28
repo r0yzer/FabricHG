@@ -102,8 +102,4 @@ fun ServerPlayer.removeHGPlayer() {
     }
 }
 
-fun HGBot.removeHGPlayer() {
-    hgPlayer.status = HGPlayerStatus.SPECTATOR
- //   fakePlayer.setGameMode(GameType.SPECTATOR)
-}
 
