@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.mixins.kits;
 
+import de.royzer.fabrichg.data.hgplayer.HGPlayer;
 import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.kit.kits.WitchKitKt;
 import net.minecraft.world.entity.Entity;
@@ -10,7 +11,6 @@ import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
@@ -23,9 +23,14 @@ public abstract class WitchKit extends Entity {
     }
 
     @ModifyVariable(method = "applySplash", at = @At("STORE"), ordinal = 1)
-    public  List<LivingEntity> modifyList( List<LivingEntity> value){
-        if(this.getTags().contains(WitchKitKt.getWitchPotionTag())){
-            return value.stream().filter(entity -> !HGPlayerKt.getHgPlayer(entity).hasKit(WitchKitKt.getWitchKit())).toList();
+    public List<LivingEntity> modifyList(List<LivingEntity> value) {
+        if (this.getTags().contains(WitchKitKt.getWitchPotionTag())) {
+            return value.stream()
+                    .filter(entity -> {
+                        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(entity);
+                        return hgPlayer != null && !hgPlayer.hasKit(WitchKitKt.getWitchKit());
+                    })
+                    .toList();
         }
         return value;
     }

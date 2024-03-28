@@ -27,6 +27,7 @@
     "server.network.ServerPlayerInteractionManagerMixin",
     "server.network.ServerPlayerMixin",
     "server.network.ServerStatusMixin",
+    "server.players.PlayerListMixin",
     "world.CombatTrackerAcessor"
   ],
   "injectors": {
