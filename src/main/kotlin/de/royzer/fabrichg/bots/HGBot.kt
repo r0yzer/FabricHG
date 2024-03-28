@@ -308,7 +308,7 @@ class HGBot(
     override fun die(damageSource: DamageSource) {
         super.die(damageSource)
         remove(RemovalReason.KILLED)
-            serverPlayer.die(damageSource)
+        // serverPlayer.die(damageSource)
     }
 
     override fun shouldDespawnInPeaceful(): Boolean {

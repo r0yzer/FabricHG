@@ -9,10 +9,12 @@ import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket
 import net.minecraft.server.level.ClientInformation
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EquipmentSlot
+import net.minecraft.world.entity.RelativeMovement
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 
@@ -47,6 +49,7 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
     }
 
     override fun die(damageSource: DamageSource) {
+        hgBot.die(damageSource)
         super.die(damageSource)
     }
 
@@ -67,4 +70,29 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
     override fun allowsListing(): Boolean {
         return true
     }
+
+    override fun teleportTo(x: Double, y: Double, z: Double) {
+        hgBot.teleportTo(x, y, z)
+        super.teleportTo(x, y, z)
+    }
+
+    // tp command
+    override fun teleportTo(
+        level: ServerLevel,
+        x: Double,
+        y: Double,
+        z: Double,
+        relativeMovements: MutableSet<RelativeMovement>,
+        yRot: Float,
+        xRot: Float
+    ): Boolean {
+        hgBot.teleportTo(level, x, y, z, relativeMovements, yRot, xRot)
+        return super.teleportTo(level, x, y, z, relativeMovements, yRot, xRot)
+    }
+
+    override fun kill() {
+        hgBot.kill()
+        super.kill()
+    }
+
 }
