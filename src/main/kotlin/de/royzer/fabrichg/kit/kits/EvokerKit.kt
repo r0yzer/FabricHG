@@ -52,11 +52,11 @@ val evokerKit = kit("Evoker") {
 }
 
 fun evokerOnDamage(damageSource: DamageSource, amount: Float, cir: CallbackInfoReturnable<Boolean>, damagedPlayer: ServerPlayer) {
-    if (damagedPlayer.hgPlayer.isNeo) {
-        cir.returnValue = false
-        return
-    }
     if (damageSource.entity is ServerPlayer && damageSource.type().msgId == "indirectMagic") {
+        if (damagedPlayer.hgPlayer.isNeo) {
+            cir.returnValue = false
+            return
+        }
         val attacker = (damageSource.entity as ServerPlayer).hgPlayer
         if (attacker.hasKit(evokerKit)) {
             damagedPlayer.addEffect(evokerEffect)

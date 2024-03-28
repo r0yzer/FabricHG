@@ -38,15 +38,14 @@ val witchKit = kit("Witch") {
                     val toX: Double = target.x - serverPlayer.x
                     val toY: Double = target.eyeY - 1.1 - serverPlayer.y
                     val toZ: Double = target.z - serverPlayer.z
-                    var potion = Potions.HARMING
-                    if (random.nextFloat() <= 0.20f) {
-                        potion = Potions.SLOWNESS
+                    val potion = if (random.nextFloat() <= 0.20f) {
+                        Potions.SLOWNESS
                     } else if (random.nextFloat() <= 0.20f) {
-                        potion = Potions.POISON
+                        Potions.POISON
                     } else {
-                        potion = Potions.HARMING
+                        Potions.HARMING
                     }
-                    val thrownPotion: ThrownPotion = ThrownPotion(serverPlayer.level(), serverPlayer)
+                    val thrownPotion = ThrownPotion(serverPlayer.level(), serverPlayer)
                     thrownPotion.item =
                         PotionUtils.setPotion(ItemStack(Items.SPLASH_POTION), potion)
                     thrownPotion.addTag(witchPotionTag)
