@@ -50,9 +50,6 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
 
     override fun die(damageSource: DamageSource) {
         super.die(damageSource)
-        if(!hgBot.isDeadOrDying){
-            hgBot.die(damageSource)
-        }
     }
 
     override fun setItemSlot(slot: EquipmentSlot, stack: ItemStack) {

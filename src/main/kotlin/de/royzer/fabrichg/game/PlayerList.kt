@@ -45,7 +45,6 @@ object PlayerList {
     fun announcePlayerDeath(player: HGPlayer, source: DamageSource, killer: Entity?) {
         val sourceKiller = source.entity
         val otherHGPlayer = killer?.hgPlayer
-        if(killer is FakeServerPlayer || player.serverPlayer!! is FakeServerPlayer) return;
         broadcastComponent(
             literalText {
                 if (killer == sourceKiller && killer != null) {

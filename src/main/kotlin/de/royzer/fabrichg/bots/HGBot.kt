@@ -6,7 +6,6 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.game.removeHGPlayer
 import kotlinx.coroutines.delay
 import net.minecraft.network.protocol.game.ClientboundDamageEventPacket
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
@@ -57,7 +56,6 @@ class HGBot(
         customName = hgName.literal
         isCustomNameVisible = true
         setTarget(target)
-
         setItemSlot(EquipmentSlot.MAINHAND, sword.defaultInstance)
         attributes.getInstance(Attributes.FOLLOW_RANGE)?.baseValue = 100.0
         attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = 20.0
@@ -65,7 +63,8 @@ class HGBot(
         attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = 0.3
         attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 10.0
         attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 2.5
-
+        attributes.getInstance(Attributes.KNOCKBACK_RESISTANCE)?.baseValue =
+            0.5
         sendPlayerInfoUpdatePacket()
     }
 
@@ -222,13 +221,18 @@ class HGBot(
         val result = super.hurt(damageSource, f)
         server?.playerList?.broadcastAll(ClientboundDamageEventPacket(serverPlayer, damageSource))
         lastAttackedByEntity = damageSource.entity
-        mcCoroutineTask(true) {
-            while (health < 17 && soups > 0) {
-                val soupDelay = if (soups % 8 == 0) 1000 else 125
-                delay(soupDelay.milliseconds)
-                soup()
-            }
+        if(health<=0.0f) {
+            die(damageSource)
+            return result
         }
+            mcCoroutineTask(true) {
+                while (health < 17 && soups > 0) {
+                    val soupDelay = if (soups % 8 == 0) 1000 else 125
+                    delay(soupDelay.milliseconds)
+                    soup()
+                }
+            }
+
         return result
     }
 
@@ -303,9 +307,7 @@ class HGBot(
     override fun die(damageSource: DamageSource) {
         super.die(damageSource)
         remove(RemovalReason.KILLED)
-        if (!serverPlayer.isDeadOrDying) {
             serverPlayer.die(damageSource)
-        }
     }
 
     override fun shouldDespawnInPeaceful(): Boolean {
