@@ -1,6 +1,5 @@
 package de.royzer.fabrichg.kit.kits
 
-import de.royzer.fabrichg.game.phase.phases.winnerText
 import de.royzer.fabrichg.kit.kit
 import net.minecraft.core.Registry
 import net.minecraft.core.registries.BuiltInRegistries
@@ -19,7 +18,6 @@ import net.silkmc.silk.core.text.sendText
 import net.silkmc.silk.nbt.set
 import kotlin.random.Random
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.nanoseconds
 import kotlin.time.Duration.Companion.seconds
 
 fun colourToNumber(r: Int, g: Int, b: Int): Int {
@@ -31,7 +29,7 @@ val pilsPotion = Registry.register(BuiltInRegistries.POTION,
     Potion(
         MobEffectInstance(MobEffects.BLINDNESS, 20 * 17, 1),
         MobEffectInstance(MobEffects.CONFUSION, 20 * 24, 3),
-        MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 30, 1),
+        MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20 * 30, 1),
     )
 )
 val weizenPotion = Registry.register(BuiltInRegistries.POTION,
@@ -47,8 +45,8 @@ val weizenPotion = Registry.register(BuiltInRegistries.POTION,
 val hellesPotion = Registry.register(BuiltInRegistries.POTION,
     "helles",
     Potion(
-        MobEffectInstance(MobEffects.BLINDNESS, 20 * 10),
-        MobEffectInstance(MobEffects.CONFUSION, 20 * 12, 1),
+        MobEffectInstance(MobEffects.DAMAGE_BOOST, 20 * 10),
+        MobEffectInstance(MobEffects.REGENERATION, 20 * 4, 3),
         MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 14),
     )
 )
@@ -59,6 +57,8 @@ val starkbierPotion = Registry.register(BuiltInRegistries.POTION,
         MobEffectInstance(MobEffects.BLINDNESS, 20 * 23, 3),
         MobEffectInstance(MobEffects.CONFUSION, 20 * 24, 4),
         MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 30, 2),
+        MobEffectInstance(MobEffects.DIG_SPEED, 20 * 5, 20),
+        MobEffectInstance(MobEffects.JUMP, 20 * 7, 20),
     )
 )
 val bierschissPotion = Registry.register(BuiltInRegistries.POTION,
