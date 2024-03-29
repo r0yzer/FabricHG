@@ -220,7 +220,7 @@ class HGBot(
 
     override fun hurt(damageSource: DamageSource, f: Float): Boolean {
         val result = super.hurt(damageSource, f)
-        server?.playerList?.broadcastAll(ClientboundDamageEventPacket(serverPlayer, damageSource))
+        if(result) server?.playerList?.broadcastAll(ClientboundDamageEventPacket(serverPlayer, damageSource))
         lastAttackedByEntity = damageSource.entity
         if(health<=0.0f) {
             serverPlayer.health = serverPlayer.health
