@@ -2,6 +2,7 @@ package de.royzer.fabrichg.mixins.server.network;
 
 import de.royzer.fabrichg.game.GamePhaseManager;
 import de.royzer.fabrichg.kit.events.kititem.invoker.OnDestroyBlockWithKitemKt;
+import de.royzer.fabrichg.kit.kits.TurtleKitKt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
@@ -43,6 +44,9 @@ abstract public class ServerPlayerInteractionManagerMixin {
 //        OnDestroyBlockKt.onDestroyBlock(this.player, pos);
 //        ServerPlayerGameMode serverPlayerGameMode = (ServerPlayerGameMode) (Object) this;
         if (this.player.level().getBlockState(pos).getBlock() == Blocks.HONEY_BLOCK) {
+            ci.cancel();
+        }
+        if(TurtleKitKt.getShellBlocks().contains(pos)){
             ci.cancel();
         }
     }
