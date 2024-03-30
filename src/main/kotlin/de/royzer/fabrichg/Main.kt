@@ -5,6 +5,7 @@ import de.royzer.fabrichg.events.ConnectEvents
 import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.kit.kits
+import de.royzer.fabrichg.proxy.ProxyManager
 import de.royzer.fabrichg.settings.ConfigManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,6 +25,8 @@ val fabrichgScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 const val TEXT_BLUE = 0x00FFFF
 const val TEXT_GRAY = 0x7A7A7A
 
+lateinit var proxyManager: ProxyManager
+
 fun initServer() {
     kits
 
@@ -38,6 +41,8 @@ fun initServer() {
     ServerLifecycleEvents.SERVER_STARTED.register {
         GamePhaseManager.enable(it as DedicatedServer)
         ConfigManager
+        proxyManager = ProxyManager(ConfigManager.serverInfoData.proxyHost, ConfigManager.serverInfoData.proxyPort)
+        proxyManager.sendStatus(ProxyManager.ServerStatus.REACHABLE)
         registerCommands()
         it.overworld().dayTime = 0L
         it.gameRules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, it)

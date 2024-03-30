@@ -9,6 +9,8 @@ import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.proxy.ProxyManager
+import de.royzer.fabrichg.proxyManager
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
@@ -34,6 +36,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
             addEffect(MobEffectInstance(MobEffects.GLOWING, -1, 0, false, false))
         }
         winner.updateStats(wins = 1)
+        proxyManager.sendStatus(ProxyManager.ServerStatus.UNREACHABLE)
     }
 
     override fun tick(timer: Int) {
