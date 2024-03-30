@@ -16,9 +16,12 @@ object ConfigManager {
 
     val gameSettings = GameSettings()
 
+    val serverInfoData: ServerInfoData
+
     private val configDirectory = File("config")
     private val kitConfigFile = File(configDirectory, "kitconfig.json")
     private val gameConfigFile = File(configDirectory, "gameconfig.json")
+    private val serverInfoFile = File(configDirectory, "serverinfo.json")
     private val json = Json {
         prettyPrint = true
     }
@@ -35,6 +38,11 @@ object ConfigManager {
             gameConfigFile.writeText(json.encodeToString(gameSettings))
         }
 
+        if (!serverInfoFile.exists()) {
+            serverInfoFile.createNewFile()
+            serverInfoFile.writeText(json.encodeToString(ServerInfoData()))
+        }
+
         json.decodeFromString<List<KitConfigData>>(kitConfigFile.readText()).forEach {
             kitConfigs[it.name] = it
         }
@@ -47,6 +55,8 @@ object ConfigManager {
 
         setKitValues()
         updateGameConfigFile()
+
+        serverInfoData = json.decodeFromString<ServerInfoData>(serverInfoFile.readText())
     }
 
     private fun setKitValues() {
@@ -74,13 +84,16 @@ object ConfigManager {
         }
     }
 
-     fun updateKit(name: String){
+    fun updateKit(name: String) {
         val kit = kits.first { it.name == name }
-        kitConfigs[name] = KitConfigData(name, kit.enabled, kit.usableInInvincibility, kit.cooldown, kit.maxUses, kit.properties)
+        kitConfigs[name] =
+            KitConfigData(name, kit.enabled, kit.usableInInvincibility, kit.cooldown, kit.maxUses, kit.properties)
     }
 
     fun updateConfigFile() =
-        mcCoroutineTask(sync = false) { kitConfigFile.writeText(json.encodeToString(kitConfigs.values.sortedBy { it.name }.toList())) }
+        mcCoroutineTask(sync = false) {
+            kitConfigFile.writeText(json.encodeToString(kitConfigs.values.sortedBy { it.name }.toList()))
+        }
 
     private fun updateGameConfigFile() =
         mcCoroutineTask(sync = false) { gameConfigFile.writeText(json.encodeToString(gameSettings)) }
@@ -114,4 +127,14 @@ data class KitConfigData @OptIn(ExperimentalSerializationApi::class) constructor
     val maxUses: Int? = null,
     @EncodeDefault
     val additionalProperties: HashMap<String, KitProperty>? = hashMapOf()
+)
+
+@Serializable
+data class ServerInfoData(
+    @EncodeDefault
+    val serverName: String = "same as in proxy config",
+    @EncodeDefault
+    val proxyHost: String = "127.0.0.1",
+    @EncodeDefault
+    val proxyPort: Int = 2000
 )
