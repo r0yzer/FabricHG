@@ -14,25 +14,25 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.List;
 
-@Mixin(ThrownPotion.class)
-public abstract class WitchKit extends Entity {
-
-
-    public WitchKit(EntityType<?> entityType, Level level) {
-        super(entityType, level);
-    }
-
-    @ModifyVariable(method = "applySplash", at = @At("STORE"), ordinal = 1)
-    public List<LivingEntity> modifyList(List<LivingEntity> value) {
-        if (this.getTags().contains(WitchKitKt.getWitchPotionTag())) {
-            return value.stream()
-                    .filter(entity -> {
-                        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(entity);
-                        return hgPlayer != null && !hgPlayer.hasKit(WitchKitKt.getWitchKit());
-                    })
-                    .toList();
-        }
-        return value;
-    }
-
-}
+//@Mixin(ThrownPotion.class)
+//public abstract class WitchKit extends Entity {
+//
+//
+////    public WitchKit(EntityType<?> entityType, Level level) {
+////        super(entityType, level);
+////    }
+////
+////    @ModifyVariable(method = "applySplash", at = @At("STORE"), ordinal = 1)
+////    public List<LivingEntity> modifyList(List<LivingEntity> value) {
+////        if (this.getTags().contains(WitchKitKt.getWitchPotionTag())) {
+////            return value.stream()
+////                    .filter(entity -> {
+////                        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(entity);
+////                        return hgPlayer != null && !hgPlayer.hasKit(WitchKitKt.getWitchKit());
+////                    })
+////                    .toList();
+////        }
+////        return value;
+////    }
+//
+//}

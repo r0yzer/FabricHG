@@ -7,6 +7,7 @@ import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
 import de.royzer.fabrichg.kit.events.kit.invoker.onRightClickEntity
 import net.minecraft.core.BlockPos
+import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -49,6 +50,6 @@ class KitItem(
 // hehe
 val ItemStack.isKitItem: Boolean
     get() {
-        val lore = getTagElement("display").toString()
+        val lore = this.get(DataComponents.LORE).toString() // TODO
         return lore.contains("Kititem")
     }

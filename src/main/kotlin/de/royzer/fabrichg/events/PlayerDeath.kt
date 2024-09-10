@@ -39,9 +39,9 @@ object PlayerDeath {
         }
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
-        if(serverPlayerEntity is FakeServerPlayer){
-            serverPlayerEntity.connection.onDisconnect(Component.literal("Dead"))
-        }
+//        if(serverPlayerEntity is FakeServerPlayer){
+//            serverPlayerEntity.connection.onDisconnect(Component.literal("Dead"))
+//        }
         val hgPlayer = killer?.hgPlayer ?: return true
         hgPlayer.kits.forEach {
             if (hgPlayer.canUseKit(it, true)) {

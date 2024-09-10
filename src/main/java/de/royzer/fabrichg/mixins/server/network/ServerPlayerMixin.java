@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player {
-    @Shadow protected abstract void fudgeSpawnLocation(ServerLevel serverLevel);
+//    @Shadow protected abstract void fudgeSpawnLocation(ServerLevel serverLevel);
 
     public ServerPlayerMixin(Level world, BlockPos pos, float yaw, GameProfile profile) {
         super(world, pos, yaw, profile);

@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.seconds
 val shellBlocks = arrayListOf<BlockPos>()
 
 val turtleKit = kit("Turtle"){
-    kitSelectorItem = Items.SCUTE.defaultInstance
+    kitSelectorItem = Items.TURTLE_SCUTE.defaultInstance
     cooldown = 30.0
     val shellDisappearTime by property(5, "How long should the shell exist")
     kitItem(itemStack = kitSelectorItem){

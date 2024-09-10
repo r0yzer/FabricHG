@@ -10,6 +10,7 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import kotlinx.coroutines.delay
 import net.minecraft.network.protocol.game.ClientboundDamageEventPacket
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -292,14 +293,10 @@ class HGBot(
         return false
     }
 
-    override fun getExperienceReward(): Int {
-        return 0
-    }
-
     override fun dropFromLootTable(damageSource: DamageSource, hitByPlayer: Boolean) {
     }
 
-    override fun dropCustomDeathLoot(damageSource: DamageSource, looting: Int, hitByPlayer: Boolean) {
+    override fun dropCustomDeathLoot(serverLevel: ServerLevel, damageSource: DamageSource, hitByPlayer: Boolean) {
         if (!hitByPlayer) return;
         repeat(soups) {
             spawnAtLocation(Items.MUSHROOM_STEW.defaultInstance)

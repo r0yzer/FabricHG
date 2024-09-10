@@ -2,6 +2,7 @@ package de.royzer.fabrichg.gui
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kits
+import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack
@@ -23,7 +24,8 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer, index: Int) = igui(GuiType.
             kits.sortedBy { it.name.first() }.filter { it.enabled }.toGuiList(),
             iconGenerator = { kit ->
                 itemStack(kit.kitSelectorItem?.item ?: Items.BARRIER) {
-                    tag = kit.kitSelectorItem?.tag
+                    //tag = kit.kitSelectorItem?.tag TODO
+
 
                     setCustomName {
                         text(kit.name) {

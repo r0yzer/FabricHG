@@ -20,11 +20,13 @@ import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.kitSelector
 import net.minecraft.core.Holder
+import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.CombatEntry
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.damagesource.DamageType
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.ItemStack
 import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.text.literalText
@@ -225,4 +227,8 @@ fun ServerPlayer.giveKitSelectors() {
     repeat(kitAmounts) {
         this.inventory?.setItem(it, kitSelector(it))
     }
+}
+
+fun ItemStack.hasCustomHoverName(): Boolean {
+    return get(DataComponents.CUSTOM_NAME)?.string?.isNotEmpty() ?: false
 }

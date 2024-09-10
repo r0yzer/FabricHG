@@ -4,15 +4,22 @@ import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.level.Level
+import net.silkmc.silk.core.Silk
 import net.silkmc.silk.core.entity.world
 
 
 val lumberjackKit = kit("Lumberjack") {
     kitSelectorItem = Items.WOODEN_AXE.defaultInstance.also {
-        it.enchant(Enchantments.UNBREAKING, 3)
+//        val unbreaking: Holder<Enchantment> = Holder.direct(
+//            Silk.server!!.overworld().registryAccess().registry(Registries.ENCHANTMENT).get().get(Enchantments.UNBREAKING)!!
+//        )
+//        it.enchant(unbreaking, 3)
     }
     description = "Chop down trees"
 

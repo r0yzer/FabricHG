@@ -21,7 +21,7 @@ val magmaKit = kit("Magma") {
         onHitEntity { _, _, entity ->
             if ((entity as? ServerPlayer)?.hgPlayer?.isNeo == true) return@onHitEntity
             if (Random.nextInt(maxInt) == 0)
-                entity.setSecondsOnFire(fireSeconds)
+                entity.remainingFireTicks = fireSeconds * 20
         }
     }
 }

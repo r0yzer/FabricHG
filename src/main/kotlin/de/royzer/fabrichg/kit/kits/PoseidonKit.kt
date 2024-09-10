@@ -6,12 +6,16 @@ import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import net.minecraft.core.Holder
+import net.minecraft.core.registries.Registries
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.projectile.AbstractArrow
 import net.minecraft.world.entity.projectile.ThrownTrident
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.Enchantments
 import net.minecraft.world.phys.Vec3
+import net.silkmc.silk.core.Silk
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.math.vector.times
@@ -24,7 +28,10 @@ const val TRIDENT_KEY = "tridents"
 
 val poseidonKit = kit("Poseidon") {
     kitSelectorItem = Items.TRIDENT.defaultInstance.apply {
-        enchant(Enchantments.RIPTIDE, 1)
+//        val riptide: Holder<Enchantment> = Holder.direct(
+//            Silk.server!!.overworld().registryAccess().registry(Registries.ENCHANTMENT).get().get(Enchantments.RIPTIDE)!!
+//        )
+//        enchant(riptide, 1)
     }
 
     description = "Summon and throw tridents"

@@ -59,8 +59,8 @@ object SoupHealingKt {
         }
 
     private val Item.restoredFood: Int
-        get() = this.foodProperties?.nutrition ?: 0
+        get() = 7 // this.foodProperties?.nutrition ?: 0
 
     private val Item.restoredSaturation: Float
-        get() = this.foodProperties?.saturationModifier ?: 0f
+        get() = 3f //this.foodProperties?.saturationModifier ?: 0f
 }

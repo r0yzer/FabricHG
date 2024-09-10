@@ -5,7 +5,7 @@ import de.royzer.fabrichg.kit.property.property
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.projectile.Snowball
 import net.minecraft.world.item.Items
-import net.minecraft.world.item.enchantment.FrostWalkerEnchantment
+import net.minecraft.world.item.enchantment.Enchantments
 import net.silkmc.silk.core.entity.blockPos
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.posUnder
@@ -24,11 +24,12 @@ val frozenKit = kit("Frozen") {
     }
 
     kitEvents {
-        onMove { hgPlayer, _ ->
-            hgPlayer.serverPlayer?.let {
-                FrostWalkerEnchantment.onEntityMoved(it, it.level(), it.blockPos, frostWalkerLevel)
-            }
-        }
+//        onMove { hgPlayer, _ ->
+//            hgPlayer.serverPlayer?.let {
+///
+//                FrostWalkerEnchantment.onEntityMoved(it, it.level(), it.blockPos, frostWalkerLevel)
+//            }
+//        }
 
         onHitProjectile { hgPlayer, kit, entityHitResult, projectileEntity ->
             if (projectileEntity !is Snowball) return@onHitProjectile;

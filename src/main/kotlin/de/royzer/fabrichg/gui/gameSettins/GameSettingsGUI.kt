@@ -123,7 +123,7 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
             val compound = compound((2 sl 2) rectTo (5 sl 8), kitGuiList, iconGenerator = { kit ->
                 itemStack(kit.kitSelectorItem?.item ?: Items.BARRIER) {
-                    tag = kit.kitSelectorItem?.tag
+//                    tag = kit.kitSelectorItem?.tag TODO
                     setLore(listOf())
                     setCustomName {
                         val disabled = !kit.enabled

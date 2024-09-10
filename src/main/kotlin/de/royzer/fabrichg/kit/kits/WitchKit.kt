@@ -8,8 +8,9 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.projectile.ThrownPotion
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import net.minecraft.world.item.alchemy.PotionUtils
+import net.minecraft.world.item.alchemy.PotionContents
 import net.minecraft.world.item.alchemy.Potions
+import net.minecraft.world.level.storage.loot.functions.SetPotionFunction
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.item.setPotion
 import net.silkmc.silk.core.kotlin.ticks
@@ -47,7 +48,8 @@ val witchKit = kit("Witch") {
                     }
                     val thrownPotion = ThrownPotion(serverPlayer.level(), serverPlayer)
                     thrownPotion.item =
-                        PotionUtils.setPotion(ItemStack(Items.SPLASH_POTION), potion)
+                        PotionContents.createItemStack(Items.SPLASH_POTION, potion)
+//                        SetPotionFunction.setPotion(ItemStack(Items.SPLASH_POTION), potion)
                     thrownPotion.addTag(witchPotionTag)
                     thrownPotion.xRot -= -20.0f
                     thrownPotion.shoot(toX, toY, toZ, 0.75f, 8.0f)

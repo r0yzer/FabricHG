@@ -43,9 +43,7 @@ public class ItemStackMixin {
             cir.setReturnValue(InteractionResultHolder.pass(itemStack));
             return;
         }
-        if (itemStack.getItem().isEdible()) {
-            SoupHealingKt.INSTANCE.onPotentialSoupUse(user, itemStack.getItem(), cir, world, hand);
-        }
+        SoupHealingKt.INSTANCE.onPotentialSoupUse(user, itemStack.getItem(), cir, world, hand);
         if (itemStack.getItem() == Items.COMPASS) {
             Tracker.INSTANCE.onTrackerUse(user, itemStack, cir, world, hand);
         }

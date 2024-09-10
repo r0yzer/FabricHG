@@ -9,6 +9,7 @@ import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.inventoryValue
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
@@ -148,7 +149,7 @@ fun clickGift(itemStack: ItemStack, player: Player) {
 private fun clickFeastItemGift(itemStack: ItemStack, player: Player) {
     if (player !is ServerPlayer) return
 
-    val lore = itemStack.getTagElement("display").toString()
+    val lore = itemStack.get(DataComponents.LORE).toString() // TODO
     if (itemStack.displayName.string.contains("Feast item gift") && lore.contains("Item gift")) {
         val loot = feastLoot.get() ?: return
         val amount = Random.nextInt(1, loot.maxAmount + 1)
@@ -177,7 +178,7 @@ private val feastItemGift = itemStack(Items.CHEST) {
 private fun clickKitItemGift(itemStack: ItemStack, player: Player) {
     if (player !is ServerPlayer) return
 
-    val lore = itemStack.getTagElement("display").toString()
+    val lore = itemStack.get(DataComponents.LORE).toString() // TODO
     if (itemStack.displayName.string.contains("Kit item gift") && lore.contains("Item gift")) {
         player.hgPlayer.kits.forEach { kit ->
             kit.kitItems.random().also { kitItem ->

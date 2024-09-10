@@ -64,7 +64,7 @@ val kits = listOfNotNull(
     snailKit,
     phantomKit,
     thorKit,
-    beerKit,
+//    beerKit, wenn buster das fixt
     beeKit,
     jackhammerKit,
     lumberjackKit,

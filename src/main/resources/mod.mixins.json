@@ -36,7 +36,6 @@
   "mixins": [
     "kits.BeamMixin",
     "kits.FrogMixin",
-    "kits.WitchKit",
     "server.level.ChunkMapAccessor",
     "server.level.TrackedEntityAccessor"
   ]

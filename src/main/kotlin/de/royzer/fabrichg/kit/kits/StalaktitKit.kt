@@ -26,6 +26,7 @@ import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.time.Instant
+import java.util.*
 import kotlin.random.Random
 
 fun createPointedDripstone(direction: Direction, dripstoneThickness: DripstoneThickness): BlockState {
@@ -44,27 +45,27 @@ fun createDripstonePosMap(original: BlockPos, overPlayer: Int): Map<BlockPos, Bl
 
 
 
-fun ServerPlayer.sendChatPacket(from: HGPlayer, message: String, type: Int) {
-    connection.send(
-        ClientboundPlayerChatPacket(
-            from.uuid,
-            0,
-            null,
-            SignedMessageBody.Packed(
-                message,
-                Instant.now(),
-                Random.nextLong(0, Long.MAX_VALUE),
-                LastSeenMessages.Packed(listOf())
-            ),
-            null,
-            FilterMask.PASS_THROUGH,
-            ChatType.BoundNetwork(
-                type,
-                from.serverPlayer?.name ?: "merkel".literal,
-                from.serverPlayer?.name ?: "merkel".literal
-            )
-        )
-    )
+fun ServerPlayer.sendChatPacket(from: HGPlayer, message: String, type: Int) { // junge buster bist du auf crack
+//    connection.send(
+//        ClientboundPlayerChatPacket(
+//            from.uuid,
+//            0,
+//            null,
+//            SignedMessageBody.Packed(
+//                message,
+//                Instant.now(),
+//                Random.nextLong(0, Long.MAX_VALUE),
+//                LastSeenMessages.Packed(listOf())
+//            ),
+//            null,
+//            FilterMask.PASS_THROUGH,
+//            ChatType.Bound(
+//                ChatType.Bound::chatType,
+//                from.serverPlayer?.name ?: "merkel".literal,
+//                Optional.of(from.serverPlayer?.name ?: "merkel".literal)
+//            )
+//        )
+//    )
 }
 
 val stalaktitKit = kit("Stalaktit") {

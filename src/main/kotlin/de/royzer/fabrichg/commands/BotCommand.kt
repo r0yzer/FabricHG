@@ -22,9 +22,9 @@ import java.util.*
 
 val hgbotCommand = command("hgbot") {
     requiresPermissionLevel(1)
-    argument("name") { name ->
+    argument<String>("name") { name ->
         runs {
-            val botname = name()
+            val botname = name().toString()
             if (botname.toString().length <= 16) {
                 createBot(botname)
             }
@@ -78,7 +78,7 @@ fun CommandContext<CommandSourceStack>.createBot(botname: String, skinName: Stri
     profile.properties.put("textures", Property("textures", value, signature))
     val serverPlayer = FakeServerPlayer(profile)
     server.playerList.placeNewPlayer(
-        FakeClientConnection(), serverPlayer, CommonListenerCookie.createInitial(profile)
+        FakeClientConnection(), serverPlayer, CommonListenerCookie.createInitial(profile, false)
     )
     serverPlayer.setPos(executor.pos)
 
@@ -97,7 +97,7 @@ fun CommandContext<CommandSourceStack>.createBot(botname: String, skinName: Stri
 
 
 class FakeClientConnection constructor() : Connection(PacketFlow.CLIENTBOUND) {
-    override fun setListener(packetListener: PacketListener) {
+    override fun setListenerForServerboundHandshake(packetListener: PacketListener) {
     }
 }
 
