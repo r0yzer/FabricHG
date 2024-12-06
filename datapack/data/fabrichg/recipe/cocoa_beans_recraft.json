@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "category": "food",
+    "ingredients": [
+        {
+            "item": "minecraft:cocoa_beans"
+        },
+        {
+            "item": "minecraft:bowl"
+        }
+    ],
+    "result": {
+        "id": "minecraft:mushroom_stew",
+        "count": 1
+    }
+}

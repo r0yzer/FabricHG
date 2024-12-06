@@ -3,8 +3,8 @@
   "downfall": 0.8,
   "has_precipitation": true,
   "effects": {
-    "sky_color": 8103167,
-    "fog_color": 12638463,
+    "sky_color": 16756216,
+    "fog_color": 16756216,
     "water_color": 6141935,
     "water_fog_color": 6141935,
     "grass_color": 11983713,
@@ -180,12 +180,11 @@
       "minecraft:glow_lichen",
       "minecraft:patch_tall_grass_2",
       "minecraft:patch_grass_plain",
-      "minecraft:flower_cherry",
       "minecraft:trees_cherry"
     ],
     [
       "minecraft:freeze_top_layer",
-      "minecraft:mush"
+      "fabrichg:mush"
     ]
   ]
 }

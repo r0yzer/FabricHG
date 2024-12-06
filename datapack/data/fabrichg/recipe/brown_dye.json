@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "brown_dye",
+  "ingredients": [
+    {
+      "item": "minecraft:command_block"
+    },
+    {
+      "item": "minecraft:barrier"
+    }
+  ],
+  "result": {
+    "id": "minecraft:brown_dye"
+  }
+}

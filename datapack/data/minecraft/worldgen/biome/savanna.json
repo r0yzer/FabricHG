@@ -196,7 +196,7 @@
     ],
     [
       "minecraft:freeze_top_layer",
-      "minecraft:mush"
+      "fabrichg:mush"
     ]
   ]
 }
