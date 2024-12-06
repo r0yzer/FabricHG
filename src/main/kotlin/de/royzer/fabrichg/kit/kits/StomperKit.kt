@@ -16,6 +16,8 @@ import net.silkmc.silk.core.entity.world
 val stomperKit = kit("Stomper") {
     kitSelectorItem = Items.DIAMOND_BOOTS.defaultInstance
 
+    description = "stop players to deal damage"
+
     val range by property(7.5, "stomper range")
     val damageDivisor by property(2f, "damage divisor (falldamage)")
     val crouchDamage by property(1f, "crouch damage")
