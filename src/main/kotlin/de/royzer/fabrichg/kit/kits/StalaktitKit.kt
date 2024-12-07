@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
@@ -15,6 +16,7 @@ import net.minecraft.network.chat.FilterMask
 import net.minecraft.network.chat.LastSeenMessages
 import net.minecraft.network.chat.SignedMessageBody
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket
+import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
@@ -45,27 +47,26 @@ fun createDripstonePosMap(original: BlockPos, overPlayer: Int): Map<BlockPos, Bl
 
 
 
-fun ServerPlayer.sendChatPacket(from: HGPlayer, message: String, type: Int) { // junge buster bist du auf crack
-//    connection.send(
-//        ClientboundPlayerChatPacket(
-//            from.uuid,
-//            0,
-//            null,
-//            SignedMessageBody.Packed(
-//                message,
-//                Instant.now(),
-//                Random.nextLong(0, Long.MAX_VALUE),
-//                LastSeenMessages.Packed(listOf())
-//            ),
-//            null,
-//            FilterMask.PASS_THROUGH,
-//            ChatType.Bound(
-//                ChatType.Bound::chatType,
-//                from.serverPlayer?.name ?: "merkel".literal,
-//                Optional.of(from.serverPlayer?.name ?: "merkel".literal)
-//            )
-//        )
-//    )
+fun ServerPlayer.sendChatPacket(from: HGPlayer, message: String, type: ResourceKey<ChatType>) { // junge buster bist du auf crack
+    val body = SignedMessageBody.Packed(
+        message,
+        Instant.now(),
+        Random.nextLong(0, Long.MAX_VALUE),
+        LastSeenMessages.Packed(listOf())
+    )
+    val chatType = ChatType.bind(type, from.serverPlayer ?: return)
+
+    connection.send(
+        ClientboundPlayerChatPacket(
+            from.uuid,
+            0,
+            null,
+            body,
+            null,
+            FilterMask.PASS_THROUGH,
+            chatType
+        )
+    )
 }
 
 val stalaktitKit = kit("Stalaktit") {
@@ -88,12 +89,20 @@ val stalaktitKit = kit("Stalaktit") {
             val messageFromPlayer = "Hänge von der Decke wie ein Stalaktit"
             val messageToPlayer = "du hängst von der Decke wie ein Stalaktit"
 
-            if (entity is ServerPlayer) {
-                entity.sendChatPacket(hgPlayer, messageToPlayer, 2)
+            println("click at: $entity")
+
+            val clickedPlayer = when (entity) {
+                is ServerPlayer -> entity
+                is HGBot -> entity.serverPlayer
+                else -> null
+            }
+
+            if (clickedPlayer != null) {
+                clickedPlayer.sendChatPacket(hgPlayer, messageToPlayer, ChatType.MSG_COMMAND_INCOMING)
 
                 PlayerList.players.forEach { (_, hgPlayer) ->
                     if (hgPlayer.uuid == entity.uuid) return@forEach;
-                    hgPlayer.serverPlayer?.sendChatPacket(entity.hgPlayer, messageFromPlayer, 0)
+                    hgPlayer.serverPlayer?.sendChatPacket(clickedPlayer.hgPlayer, messageFromPlayer, ChatType.CHAT)
                 }
             }
 
