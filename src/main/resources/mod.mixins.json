@@ -37,6 +37,7 @@
     "kits.BeamMixin",
     "kits.FrogMixin",
     "server.level.ChunkMapAccessor",
-    "server.level.TrackedEntityAccessor"
+    "server.level.TrackedEntityAccessor",
+    "server.level.block.MushroomBlockMixin"
   ]
 }
