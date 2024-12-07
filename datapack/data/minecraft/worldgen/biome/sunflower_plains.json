@@ -193,11 +193,11 @@
       "minecraft:brown_mushroom_normal",
       "minecraft:red_mushroom_normal",
       "minecraft:patch_sugar_cane",
-      "minecraft:patch_pumpkin"
+      "minecraft:patch_pumpkin",
+      "fabrichg:mush_few"
     ],
     [
-      "minecraft:freeze_top_layer",
-      "fabrichg:mush"
+      "minecraft:freeze_top_layer"
     ]
   ]
 }

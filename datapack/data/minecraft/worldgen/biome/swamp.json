@@ -204,11 +204,11 @@
       "minecraft:red_mushroom_normal",
       "minecraft:patch_sugar_cane_swamp",
       "minecraft:patch_pumpkin",
-      "minecraft:seagrass_swamp"
+      "minecraft:seagrass_swamp",
+      "fabrichg:mush_some"
     ],
     [
-      "minecraft:freeze_top_layer",
-      "fabrichg:mush"
+      "minecraft:freeze_top_layer"
     ]
   ]
 }

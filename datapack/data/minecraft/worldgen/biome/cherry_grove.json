@@ -180,11 +180,11 @@
       "minecraft:glow_lichen",
       "minecraft:patch_tall_grass_2",
       "minecraft:patch_grass_plain",
-      "minecraft:trees_cherry"
+      "minecraft:trees_cherry",
+      "fabrichg:mush_some"
     ],
     [
-      "minecraft:freeze_top_layer",
-      "fabrichg:mush"
+      "minecraft:freeze_top_layer"
     ]
   ]
 }

@@ -2,9 +2,9 @@
   "feature": {
     "type": "minecraft:flower",
     "config": {
-      "tries": 30,
-      "xz_spread": 1,
-      "y_spread": 20,
+      "tries": 5,
+      "xz_spread": 3,
+      "y_spread": 1,
       "feature": {
         "feature": {
           "type": "minecraft:simple_block",
@@ -34,11 +34,8 @@
             "count": 1
           },
           {
-            "type": "minecraft:in_square"
-          },
-          {
             "type": "minecraft:heightmap",
-            "heightmap": "WORLD_SURFACE"
+            "heightmap": "WORLD_SURFACE_WG"
           }
         ]
       }
@@ -50,11 +47,14 @@
       "count": 1
     },
     {
+      "type": "minecraft:biome"
+    },
+    {
       "type": "minecraft:in_square"
     },
     {
       "type": "minecraft:heightmap",
-      "heightmap": "WORLD_SURFACE"
+      "heightmap": "WORLD_SURFACE_WG"
     }
   ]
 }
