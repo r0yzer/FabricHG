@@ -34,6 +34,7 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "entity.ZombieMixin",
     "kits.BeamMixin",
     "kits.FrogMixin",
     "server.level.ChunkMapAccessor",

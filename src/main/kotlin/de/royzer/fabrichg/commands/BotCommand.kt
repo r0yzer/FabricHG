@@ -7,9 +7,13 @@ import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.bots.skin.SkinManager
 import de.royzer.fabrichg.server
+import net.fabricmc.fabric.impl.event.interaction.FakePlayerNetworkHandler
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.network.Connection
 import net.minecraft.network.PacketListener
+import net.minecraft.network.PacketSendListener
+import net.minecraft.network.ProtocolInfo
+import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.PacketFlow
 import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.world.effect.MobEffects
@@ -96,7 +100,16 @@ fun CommandContext<CommandSourceStack>.createBot(botname: String, skinName: Stri
 }
 
 
-class FakeClientConnection constructor() : Connection(PacketFlow.CLIENTBOUND) {
+class FakeClientConnection() : Connection(PacketFlow.CLIENTBOUND) {
+    override fun setupOutboundProtocol(protocolInfo: ProtocolInfo<*>) {
+    }
+
+    override fun <T : PacketListener?> setupInboundProtocol(protocolInfo: ProtocolInfo<T>, packetInfo: T & Any) {
+    }
+
+    override fun send(packet: Packet<*>, listener: PacketSendListener?, flush: Boolean) {
+    }
+
     override fun setListenerForServerboundHandshake(packetListener: PacketListener) {
     }
 }
