@@ -8,6 +8,7 @@ import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import kotlinx.coroutines.delay
+import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.game.ClientboundDamageEventPacket
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket
 import net.minecraft.server.level.ServerLevel
@@ -350,6 +351,10 @@ class HGBot(
         )
     }
 
+    override fun addAdditionalSaveData(compound: CompoundTag) {
+        super.addAdditionalSaveData(compound)
+        compound.putBoolean("hgbot", true)
+    }
 
 }
 

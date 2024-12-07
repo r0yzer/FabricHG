@@ -2,3 +2,5 @@
 build
 .gradle
 run
+.kotlin
+logs
