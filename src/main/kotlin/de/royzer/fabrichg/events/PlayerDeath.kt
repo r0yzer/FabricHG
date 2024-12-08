@@ -37,6 +37,7 @@ object PlayerDeath {
         if (killer is HGBot) {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
+        (serverPlayerEntity as LivingEntityAccessor).invokeDropAllDeathLoot(serverPlayerEntity.serverLevel(), damageSource)
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
 //        if(serverPlayerEntity is FakeServerPlayer){

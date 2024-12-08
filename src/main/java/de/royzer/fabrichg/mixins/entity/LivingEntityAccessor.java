@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.mixins.entity;
 
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -18,4 +19,7 @@ public interface LivingEntityAccessor {
 
     @Invoker("checkTotemDeathProtection")
     boolean invokeTryUseTotem(DamageSource source);
+
+    @Invoker("dropAllDeathLoot")
+    void invokeDropAllDeathLoot(ServerLevel level, DamageSource damageSource);
 }
