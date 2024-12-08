@@ -19,9 +19,13 @@ val jackhammerKit = kit("Jackhammer") {
         itemStack = kitSelectorItem
         onDestroyBlock { hgPlayer, kit, blockPos ->
             repeat(384) {
+                val world = hgPlayer.serverPlayer?.world ?: return@repeat
                 val unten = BlockPos(blockPos.x, -63, blockPos.z)
                 val pos = unten.subtract(Vec3i(0, -it, 0))
-                hgPlayer.serverPlayer?.world?.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+                if (world.getBlockState(pos).block != Blocks.BEDROCK) {
+                    world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+
+                }
             }
 
             hgPlayer.checkUsesForCooldown(kit, 6)
