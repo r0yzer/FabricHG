@@ -35,6 +35,7 @@
   },
   "mixins": [
     "entity.ZombieMixin",
+    "item.SwordItemMixin",
     "kits.BeamMixin",
     "kits.FrogMixin",
     "server.level.ChunkMapAccessor",
