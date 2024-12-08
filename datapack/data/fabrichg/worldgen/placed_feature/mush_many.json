@@ -3,7 +3,7 @@
     "type": "minecraft:flower",
     "config": {
       "tries": 15,
-      "xz_spread": 3,
+      "xz_spread": 5,
       "y_spread": 1,
       "feature": {
         "feature": {
