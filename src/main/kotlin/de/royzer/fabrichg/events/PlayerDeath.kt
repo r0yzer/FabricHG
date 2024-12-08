@@ -7,6 +7,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
+import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
@@ -26,7 +27,7 @@ object PlayerDeath {
     }
 
     private fun hgPlayerDeath(serverPlayerEntity: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
-        if (serverPlayerEntity !is ServerPlayer) return false
+        if (serverPlayerEntity !is ServerPlayer) return true
         if ((serverPlayerEntity as? LivingEntityAccessor)?.invokeTryUseTotem(damageSource) == true) {
             logInfo("${serverPlayerEntity.name.string} hat Totem genutzt")
             serverPlayerEntity.sendPlayerStatus()
@@ -37,7 +38,10 @@ object PlayerDeath {
         if (killer is HGBot) {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
-        (serverPlayerEntity as LivingEntityAccessor).invokeDropAllDeathLoot(serverPlayerEntity.serverLevel(), damageSource)
+//        (serverPlayerEntity as LivingEntityAccessor).invokeDropAllDeathLoot(serverPlayerEntity.serverLevel(), damageSource)
+        serverPlayerEntity.inventory.items.filter { !it.isKitItem }.forEach {
+            serverPlayerEntity.spawnAtLocation(it)
+        }
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
 //        if(serverPlayerEntity is FakeServerPlayer){
