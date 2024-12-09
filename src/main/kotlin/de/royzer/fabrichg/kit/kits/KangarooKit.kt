@@ -20,6 +20,12 @@ import kotlin.math.sin
 const val LAST_HIT_BY_KEY = "lasthitby"
 const val MAX_TIME_DIFF_MILLIS = 1000 * 4
 
+enum class KangaState {
+    Idle,
+    JumpedHorizontal,
+    JumpedVertical
+}
+
 data class HitInfo(
     val timestamp: Long,
     val player: ServerPlayer
@@ -77,6 +83,7 @@ val kangarooKit = kit("Kangaroo") {
 
     kitItem {
         itemStack = kitSelectorItem
+
         onClick { hgPlayer, _ ->
             val hitInfo =  hgPlayer.getPlayerData<HitInfo>(LAST_HIT_BY_KEY)
 
@@ -88,23 +95,27 @@ val kangarooKit = kit("Kangaroo") {
             }
 
             val serverPlayerEntity = hgPlayer.serverPlayer ?: return@onClick
-            if (hgPlayer.getPlayerData<Boolean>(canJumpKey) == false) return@onClick
+            val kangaState = hgPlayer.getPlayerData<KangaState>(canJumpKey)
+
+            if (kangaState == KangaState.JumpedHorizontal) return@onClick
+
+
             if (serverPlayerEntity.isShiftKeyDown) {
                 val vec = serverPlayerEntity.lookDirection
                 val vec3d = Vec3(vec.x, 0.0, vec.z)
                 serverPlayerEntity.modifyVelocity(vec3d.x, jumpShiftVelocity, vec3d.z, false)
-            } else {
+
+                hgPlayer.playerData[canJumpKey] = KangaState.JumpedHorizontal
+            } else if (kangaState != KangaState.JumpedVertical) {
                 serverPlayerEntity.modifyVelocity(serverPlayerEntity.deltaMovement.x, jumpVelocity, serverPlayerEntity.deltaMovement.z, false)
+                hgPlayer.playerData[canJumpKey] = KangaState.JumpedVertical
             }
-            hgPlayer.playerData[canJumpKey] = false
         }
     }
 
     kitEvents {
         onMove { hgPlayer, kit ->
-            if (hgPlayer.getPlayerData<Boolean>(canJumpKey) == false) {
-                if (hgPlayer.serverPlayer?.onGround() == true) hgPlayer.playerData[canJumpKey] = true
-            }
+            if (hgPlayer.serverPlayer?.onGround() == true) hgPlayer.playerData[canJumpKey] = KangaState.Idle
         }
 
         onTakeDamage { player, kit, source, amount ->
