@@ -83,7 +83,7 @@ fun beerItem(potion: Potion, name: String, beerColor: Int, itemCount: Int = 2): 
         set(DataComponents.POTION_CONTENTS, PotionContents(
             Optional.empty(), // wenn man da die potion reinmacht sucht er in der registry wenn der in der registry ist hat der client die nicht in der registry und wenn er mit fabric spielt gehts nicht danke frau merkel
             Optional.of(beerColor),
-            listOf()
+            potion.effects
         ))
         set(DataComponents.CUSTOM_DATA, CustomData.of(nbtCompound {
             put("potionname", name)

@@ -2,6 +2,7 @@ package de.royzer.fabrichg.gui
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kits
+import de.royzer.fabrichg.util.noPotionEffects
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack
@@ -25,6 +26,8 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer, index: Int) = igui(GuiType.
                 val defaultItemStack = itemStack(Items.BARRIER) { }
 
                 (kit.kitSelectorItem ?: defaultItemStack).copy().apply {
+                    noPotionEffects()
+
                     setCustomName {
                         text(kit.name) {
                             color = if (hgPlayer.hasKit(kit)) 0x00FF00 else 0x00FFFF

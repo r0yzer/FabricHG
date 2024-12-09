@@ -1,8 +1,12 @@
 package de.royzer.fabrichg.util
 
+import net.minecraft.core.component.DataComponents
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.alchemy.PotionContents
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.item.setCustomName
+import java.util.Optional
 
 val tracker get() = itemStack(Items.COMPASS) {
     setCustomName { text("Tracker") {
@@ -30,4 +34,14 @@ val gameSettingsItem get() = itemStack(Items.COMPARATOR) {
         bold = true
         italic = false
     } }
+}
+
+fun ItemStack.noPotionEffects() {
+    val potionContents = get(DataComponents.POTION_CONTENTS) ?: return
+
+    set(DataComponents.POTION_CONTENTS, PotionContents(
+        potionContents.potion,
+        potionContents.customColor,
+        listOf()
+    ))
 }
