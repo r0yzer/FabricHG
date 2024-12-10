@@ -85,6 +85,7 @@ val kits = listOfNotNull(
     witchKit,
     turtleKit,
 //    frogKit,
+    gliderKit
 )
 
 fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }.random()

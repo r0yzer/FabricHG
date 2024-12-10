@@ -58,4 +58,10 @@ class KitItemBuilder(val kitItem: KitItem) {
     fun onDestroyBlock(action: ((HGPlayer, Kit, BlockPos) -> Unit)?) {
         kitItem.destroyBlockAction = action
     }
+
+    fun whenHeld(action: ((HGPlayer, Kit) -> Unit)?) {
+        // wird immer aufgerufen wenn das item grad in der hand aber
+        // nichts wenn nicht mehr also keine unendlichen effekte hier machen etc
+        kitItem.whenHeldAction = action
+    }
 }

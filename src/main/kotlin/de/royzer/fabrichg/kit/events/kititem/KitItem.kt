@@ -34,6 +34,7 @@ class KitItem(
     internal var hitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
     internal var drinkAction: ((HGPlayer, Kit, ItemStack) -> Unit)? = null,
     internal var destroyBlockAction: ((HGPlayer, Kit, BlockPos) -> Unit)? = null,
+    internal var whenHeldAction: ((HGPlayer, Kit) -> Unit)? = null,
 ) {
     // prüft auf cooldown und ruft ggf. die übergebene action auf (meistens das invoken der entsprechenden action) + sendet ggf. cooldown msg
     fun invokeKitItemAction(hgPlayer: HGPlayer, kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {

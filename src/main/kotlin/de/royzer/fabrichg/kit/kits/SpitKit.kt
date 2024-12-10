@@ -42,10 +42,11 @@ val spits = hashMapOf<LlamaSpit, ServerPlayer>()
 fun onSpitHit(result: EntityHitResult, spitEntity: LlamaSpit) {
     val spitter = spits[spitEntity] ?: return
     spits.remove(spitEntity)
-    result.entity.hurt(spitter.damageSources().playerAttack(spitter), 1f)
     val hitted = result.entity as? ServerPlayer ?: return
 
     if (hitted.hgPlayer.isNeo) return
+
+    result.entity.hurt(spitter.damageSources().playerAttack(spitter), 1f)
 
     if (!hitted.inventory.hasAnyOf(setOf(Items.MUSHROOM_STEW))) {
         return

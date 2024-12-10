@@ -3,6 +3,8 @@ package de.royzer.fabrichg.mixinskt
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResultHolder
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
@@ -31,6 +33,10 @@ object SoupHealingKt {
                 }
             }
             player.heal(item.restoredHealth)
+            if (item == Items.SUSPICIOUS_STEW) {
+                player.addEffect(MobEffectInstance(MobEffects.BLINDNESS, 60, 1))
+                player.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 60, 1))
+            }
             consumedSoup = true
         } else if (foodData.needsFood()) {
             foodData.foodLevel += item.restoredFood
