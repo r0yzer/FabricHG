@@ -23,8 +23,11 @@ object PlayerList {
 
     val spectators get() = players.values.filter { it.status == HGPlayerStatus.SPECTATOR }
 
-    val maxPlayers: Int
-        get() = if (GamePhaseManager.currentPhaseType == PhaseType.INGAME || GamePhaseManager.currentPhaseType == PhaseType.END) IngamePhase.maxPlayers else alivePlayers.size
+    val maxPlayers: Int get() =
+        if (GamePhaseManager.currentPhaseType == PhaseType.INGAME || GamePhaseManager.currentPhaseType == PhaseType.END)
+            IngamePhase.INSTANCE.maxPlayers
+        else
+            alivePlayers.size
 
     fun addOrGetPlayer(uuid: UUID, name: String): HGPlayer {
         return players.getOrPut(uuid) {

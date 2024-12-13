@@ -131,6 +131,10 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
     override val phaseType = PhaseType.END
     override val maxPhaseTime = 20
     override val nextPhase: GamePhase? = null
+
+    override fun allowsKitChanges(player: HGPlayer, index: Int): Boolean {
+        return false
+    }
 }
 
 fun winnerText(winner: HGPlayer?): Component {

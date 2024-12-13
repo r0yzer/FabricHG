@@ -1,7 +1,8 @@
-package de.royzer.fabrichg.commands
+package de.royzer.fabrichg.command.commands
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.command.hgCommand
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
@@ -14,7 +15,7 @@ import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 
-val reviveCommand = command("revive") {
+val reviveCommand = hgCommand("revive") {
     requiresPermissionLevel(4)
     requires {
         GamePhaseManager.currentPhaseType == PhaseType.INGAME

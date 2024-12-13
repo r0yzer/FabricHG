@@ -21,7 +21,7 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer, index: Int) = igui(GuiType.
 
         val compound = compound(
             (2 sl 2) rectTo (4 sl 8),
-            kits.sortedBy { it.name.first() }.filter { it.enabled }.toGuiList(),
+            kits.sortedBy { it.name }.filter { it.enabled }.toGuiList(),
             iconGenerator = { kit ->
                 val defaultItemStack = itemStack(Items.BARRIER) { }
 

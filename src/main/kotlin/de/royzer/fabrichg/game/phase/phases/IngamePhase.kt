@@ -11,6 +11,7 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.kit.kits.backupKit
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
@@ -23,20 +24,29 @@ import kotlin.math.min
 import kotlin.properties.Delegates
 import kotlin.random.Random
 
-object IngamePhase : GamePhase() {
+open class IngamePhase : GamePhase() {
     var winner: HGPlayer? = null
     override val phaseType = PhaseType.INGAME
     override val maxPhaseTime = 30 * 60
     override val nextPhase by lazy { EndPhase(winner) }
 
-    private const val feastStartTime = 600
+    companion object {
+        private const val feastStartTime = 600
 
-    private const val minifeastStartTime = 300
-    private const val minifeastEndTime = 550
+        private const val minifeastStartTime = 300
+        private const val minifeastEndTime = 550
+
+        val INSTANCE = IngamePhase()
+    }
+
     private var minifeasts by Delegates.notNull<Int>()
-    private lateinit var minifeastStartTimes: List<Int>
+    internal lateinit var minifeastStartTimes: List<Int>
 
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
+
+    open fun shouldSpawnMinifeasts(): Boolean {
+        return ConfigManager.gameSettings.minifeastEnabled
+    }
 
     override fun init() {
         GamePhaseManager.server.motd = "${GamePhaseManager.MOTD_STRING}\nCURRENT GAME PHASE: \u00A7eINGAME"
@@ -53,7 +63,7 @@ object IngamePhase : GamePhase() {
             2f,
             min(2f, PlayerList.alivePlayers.size.toFloat() / 20) + min(5, PlayerList.alivePlayers.size / 3)
         )).toInt()
-        minifeastStartTimes = if (ConfigManager.gameSettings.minifeastEnabled) List(max(1, minifeasts)) {
+        minifeastStartTimes = if(shouldSpawnMinifeasts()) List(max(1, minifeasts)) {
             Random.nextInt(
                 minifeastStartTime,
                 minifeastEndTime
@@ -98,5 +108,11 @@ object IngamePhase : GamePhase() {
                 startNextPhase()
             }
         }
+    }
+
+    override fun allowsKitChanges(player: HGPlayer, index: Int): Boolean {
+        val isBackup = player.canUseKit(backupKit)
+
+        return isBackup
     }
 }

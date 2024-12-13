@@ -1,6 +1,20 @@
 package de.royzer.fabrichg
 
-import de.royzer.fabrichg.commands.*
+import de.royzer.fabrichg.command.commands.cooldownCommand
+import de.royzer.fabrichg.command.commands.feastCommand
+import de.royzer.fabrichg.command.commands.gameCommand
+import de.royzer.fabrichg.command.commands.gameSettingsCommand
+import de.royzer.fabrichg.command.commands.hgbotCommand
+import de.royzer.fabrichg.command.commands.infoCommand
+import de.royzer.fabrichg.command.commands.kitCommand
+import de.royzer.fabrichg.command.commands.kitinfoCommand
+import de.royzer.fabrichg.command.commands.listCommand
+import de.royzer.fabrichg.command.commands.minifeastCommand
+import de.royzer.fabrichg.command.commands.phaseCommand
+import de.royzer.fabrichg.command.commands.reviveCommand
+import de.royzer.fabrichg.command.commands.spawnCommand
+import de.royzer.fabrichg.command.commands.startCommand
+import de.royzer.fabrichg.command.commands.statsCommand
 import de.royzer.fabrichg.events.ConnectEvents
 import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
@@ -15,6 +29,8 @@ import net.minecraft.core.BlockPos
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.GameRules
+import net.silkmc.silk.commands.registration.setupRegistrationCallback
+import kotlin.properties.Delegates
 
 //val String.hgId get() = Identifier("fabrichg", this)
 
@@ -26,6 +42,7 @@ const val TEXT_BLUE = 0x00FFFF
 const val TEXT_GRAY = 0x7A7A7A
 
 lateinit var proxyManager: ProxyManager
+var isFFA by Delegates.notNull<Boolean>()
 
 fun initServer() {
     kits
@@ -54,21 +71,23 @@ fun initServer() {
 }
 
 fun registerCommands() {
-    startCommand
-    infoCommand
-    listCommand
-    kitCommand
-    kitinfoCommand
-    feastCommand
-    phaseCommand
-    gameCommand
-    hgbotCommand
-    spawnCommand
-    minifeastCommand
-    gameSettingsCommand
-    cooldownCommand
-    statsCommand
-    reviveCommand
+    listOf(
+        startCommand,
+        infoCommand,
+        listCommand,
+        kitCommand,
+        kitinfoCommand,
+        feastCommand,
+        phaseCommand,
+        gameCommand,
+        hgbotCommand,
+        spawnCommand,
+        minifeastCommand,
+        gameSettingsCommand,
+        cooldownCommand,
+        statsCommand,
+        reviveCommand
+    ).forEach { it.register() }
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

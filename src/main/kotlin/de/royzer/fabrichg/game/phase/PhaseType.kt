@@ -5,4 +5,6 @@ enum class PhaseType {
     INVINCIBILITY,
     INGAME,
     END,
+
+    FFA,
 }

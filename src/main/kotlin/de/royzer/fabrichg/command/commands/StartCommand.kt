@@ -1,10 +1,11 @@
-package de.royzer.fabrichg.commands
+package de.royzer.fabrichg.command.commands
 
+import de.royzer.fabrichg.command.hgCommand
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import net.silkmc.silk.commands.command
 
-val startCommand = command("start", true) {
+val startCommand = hgCommand("start") {
     requiresPermissionLevel(4)
     runs {
         val currentPhase = GamePhaseManager.currentPhase

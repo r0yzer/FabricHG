@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.commands
+package de.royzer.fabrichg.command.commands
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
@@ -6,8 +6,8 @@ import com.mojang.brigadier.context.CommandContext
 import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.bots.skin.SkinManager
+import de.royzer.fabrichg.command.sharedCommand
 import de.royzer.fabrichg.server
-import net.fabricmc.fabric.impl.event.interaction.FakePlayerNetworkHandler
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.network.Connection
 import net.minecraft.network.PacketListener
@@ -15,7 +15,9 @@ import net.minecraft.network.PacketSendListener
 import net.minecraft.network.ProtocolInfo
 import net.minecraft.network.protocol.Packet
 import net.minecraft.network.protocol.PacketFlow
+import net.minecraft.server.level.ClientInformation
 import net.minecraft.server.network.CommonListenerCookie
+import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.entity.pos
@@ -24,7 +26,7 @@ import net.silkmc.silk.core.text.literal
 import java.util.*
 
 
-val hgbotCommand = command("hgbot") {
+val hgbotCommand = sharedCommand("hgbot") {
     requiresPermissionLevel(1)
     argument<String>("name") { name ->
         runs {
@@ -57,7 +59,7 @@ private var i = 0;
 fun CommandContext<CommandSourceStack>.createBot(botname: String, skinName: String = botname) {
     val executor = source.player ?: return
     val world = executor.world
-    val info = net.minecraft.server.level.ClientInformation.createDefault()
+    val info = ClientInformation.createDefault()
     val uuid = SkinManager.getUuidByName(skinName)
     val skin = SkinManager.getSkinByUuid(uuid)
     if (skin == null) {
@@ -90,7 +92,7 @@ fun CommandContext<CommandSourceStack>.createBot(botname: String, skinName: Stri
     executor.world.addFreshEntity(hgBot.apply {
         setPos(executor.pos)
         addEffect(
-            net.minecraft.world.effect.MobEffectInstance(
+            MobEffectInstance(
                 MobEffects.INVISIBILITY, Int.MAX_VALUE, 1, false, false, false
             )
         )

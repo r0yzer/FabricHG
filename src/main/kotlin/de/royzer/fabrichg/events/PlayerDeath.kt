@@ -10,12 +10,16 @@ import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
+import de.royzer.fabrichg.util.forceGiveItem
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.Items
+import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.logging.logInfo
 
 object PlayerDeath {
@@ -33,7 +37,7 @@ object PlayerDeath {
             serverPlayerEntity.sendPlayerStatus()
             return false
         }
-        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
+        if (!GamePhaseManager.isPlayerDamageAllowed) return true
         val killer: Entity? = (serverPlayerEntity as LivingEntityAccessor).attackingMob
         if (killer is HGBot) {
             killer.kill(serverPlayerEntity.hgPlayer)
@@ -57,7 +61,18 @@ object PlayerDeath {
         hgPlayer.updateStats(1)
         serverPlayerEntity.hgPlayer.updateStats(deaths = 1)
 //        serverPlayerEntity.hgPlayer.kits.clear()
+        givePlayerRecraft(hgPlayer.serverPlayer ?: return true, 32)
 
         return true
+    }
+
+    private fun givePlayerRecraft(player: ServerPlayer, amount: Int) {
+        val bowls = itemStack(Items.BOWL, amount) { }
+        val brown = itemStack(Items.BROWN_MUSHROOM, amount) { }
+        val red = itemStack(Items.RED_MUSHROOM, amount) { }
+
+        player.forceGiveItem(bowls)
+        player.forceGiveItem(brown)
+        player.forceGiveItem(red)
     }
 }

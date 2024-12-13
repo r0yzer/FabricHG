@@ -1,12 +1,13 @@
-package de.royzer.fabrichg.commands
+package de.royzer.fabrichg.command.commands
 
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.command.hgCommand
 import de.royzer.fabrichg.feast.Feast
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
 
-val feastCommand = command("feast") {
+val feastCommand = hgCommand("feast") {
     literal("start") {
         requiresPermissionLevel(4)
 

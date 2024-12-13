@@ -3,11 +3,15 @@ package de.royzer.fabrichg.game.phase.phases
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.bots.player.FakeServerPlayer
+import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.kit.kits.backupKit
+import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.surpriseKit
 import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.scoreboard.formattedTime
@@ -56,7 +60,14 @@ object InvincibilityPhase : GamePhase() {
         }
     }
 
+    override fun allowsKitChanges(player: HGPlayer, index: Int): Boolean {
+        val isBackup = player.canUseKit(backupKit)
+        val isNone = player.kits[index] == noneKit
+
+        return isBackup || isNone
+    }
+
     override val phaseType = PhaseType.INVINCIBILITY
     override val maxPhaseTime = 120 * 1
-    override val nextPhase = IngamePhase
+    override val nextPhase = IngamePhase.INSTANCE
 }

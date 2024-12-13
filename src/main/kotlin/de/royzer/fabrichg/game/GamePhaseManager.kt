@@ -2,7 +2,10 @@ package de.royzer.fabrichg.game
 
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.phase.phases.FFAPhase
+import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
+import de.royzer.fabrichg.isFFA
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.Component
 import net.minecraft.server.dedicated.DedicatedServer
@@ -24,18 +27,26 @@ object GamePhaseManager {
         server.gameRules.getRule(GameRules.RULE_SHOWDEATHMESSAGES).set(false, server)
         server.overworld().dayTime = 0
         server.overworld().worldBorder.size = 1000.0
+
+        if (isFFA) {
+            currentPhase = FFAPhase
+        }
+
         currentPhase.init()
         mcCoroutineTask(howOften = Long.MAX_VALUE, period = 1000.milliseconds, delay = 0.milliseconds) {
             currentPhase.tick(timer.getAndIncrement())
         }
     }
+
     fun resetTimer() = timer.set(0)
 
     val isBuildingForbidden get() = currentPhaseType == PhaseType.LOBBY || currentPhaseType == PhaseType.END
 
     val isNotStarted get() = currentPhaseType == PhaseType.LOBBY || currentPhaseType == PhaseType.INVINCIBILITY
 
-    val isIngame get() = currentPhaseType == PhaseType.INGAME || currentPhaseType == PhaseType.INVINCIBILITY
+    val isIngame get() = currentPhaseType == PhaseType.INGAME || currentPhaseType == PhaseType.INVINCIBILITY || currentPhaseType == PhaseType.FFA
+
+    val isPlayerDamageAllowed get() = currentPhaseType == PhaseType.INGAME || currentPhaseType == PhaseType.FFA
 }
 
 fun broadcastComponent(text: Component) {

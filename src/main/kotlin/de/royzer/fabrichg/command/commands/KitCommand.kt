@@ -1,6 +1,8 @@
-package de.royzer.fabrichg.commands
+package de.royzer.fabrichg.command.commands
 
 import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.command.hgCommand
+import de.royzer.fabrichg.command.sharedCommand
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
@@ -13,27 +15,20 @@ import net.silkmc.silk.commands.*
 import net.silkmc.silk.core.text.sendText
 import net.silkmc.silk.igui.*
 
-val kitCommand = command("kit") {
+val kitCommand = sharedCommand("kit") {
     runs {
         val index = 0
 
         val player = source.playerOrException
-        if (GamePhaseManager.isNotStarted || player.hgPlayer.kits[index] == backupKit) {
-            if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
-                if (player.hgPlayer.kits[index] == backupKit || player.hgPlayer.kits[index] == noneKit)
-                    player.openGui(
-                        kitSelectorGUI(player, index + 1), 1
-                    )
-            } else player.openGui(
-                kitSelectorGUI(player, index + 1), 1
-            )
-        }
-        if (player.hasPermissions(PermissionLevel.OWNER.level)) {
+        val hgPlayer = player.hgPlayer
+
+        if (GamePhaseManager.currentPhase.allowsForKitChangesForPlayer(hgPlayer, index)) {
             player.openGui(
                 kitSelectorGUI(player, index + 1), 1
             )
         }
     }
+
     argument<Int>("index") { _index ->
         runs {
             val index = _index() - 1
@@ -43,16 +38,11 @@ val kitCommand = command("kit") {
             }
 
             val player = source.playerOrException
-            if (GamePhaseManager.isNotStarted || player.hgPlayer.kits[index] == backupKit || player.hasPermissions(
-                    PermissionLevel.OWNER.level
-                )
-            ) {
-                if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
-                    if (player.hgPlayer.kits[index] == backupKit || player.hgPlayer.kits[index] == noneKit)
-                        player.openGui(
-                            kitSelectorGUI(player, index + 1), 1
-                        )
-                } else player.openGui(
+            val hgPlayer = player.hgPlayer
+
+
+            if (GamePhaseManager.currentPhase.allowsForKitChangesForPlayer(hgPlayer, index)) {
+                player.openGui(
                     kitSelectorGUI(player, index + 1), 1
                 )
             }
@@ -92,7 +82,7 @@ val kitCommand = command("kit") {
     }
 }
 
-val kitinfoCommand = command("kitinfo") {
+val kitinfoCommand = sharedCommand("kitinfo") {
     argument<String>("kit") { kitArg ->
         suggestList { kits.map { it.name } }
         runs {

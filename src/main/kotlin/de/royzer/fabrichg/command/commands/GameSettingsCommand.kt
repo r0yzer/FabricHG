@@ -1,5 +1,6 @@
-package de.royzer.fabrichg.commands
+package de.royzer.fabrichg.command.commands
 
+import de.royzer.fabrichg.command.hgCommand
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.gui.gameSettins.gameSettingsGUI
@@ -9,7 +10,7 @@ import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.sendText
 import net.silkmc.silk.igui.openGui
 
-val gameSettingsCommand = command("gamesettings") {
+val gameSettingsCommand = hgCommand("gamesettings") {
     requiresPermissionLevel(4)
     runs {
         requires {
@@ -21,6 +22,6 @@ val gameSettingsCommand = command("gamesettings") {
         }
     }
     literal("list") runs {
-        source.player?.sendText(GameSettings.toString())
+        source.player?.sendText(toString())
     }
 }

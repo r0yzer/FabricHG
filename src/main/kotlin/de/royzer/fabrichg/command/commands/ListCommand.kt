@@ -1,12 +1,13 @@
-package de.royzer.fabrichg.commands
+package de.royzer.fabrichg.command.commands
 
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.command.hgCommand
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.game.PlayerList
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
 
-val listCommand = command("list") {
+val listCommand = hgCommand("list") {
     runs {
         val text = literalText {
             text("Alle Spieler: ") { color = TEXT_GRAY }

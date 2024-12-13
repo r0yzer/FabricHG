@@ -2,6 +2,7 @@ package de.royzer.fabrichg.game.phase.phases
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
@@ -74,5 +75,9 @@ object LobbyPhase : GamePhase() {
                 hgPlayer.serverPlayer?.removeAllEffects()
             }
         }
+    }
+
+    override fun allowsKitChanges(player: HGPlayer, index: Int): Boolean {
+        return true
     }
 }

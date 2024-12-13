@@ -1,20 +1,15 @@
-package de.royzer.fabrichg.commands
+package de.royzer.fabrichg.command.commands
 
-import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.command.sharedCommand
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.stats.Database
 import de.royzer.fabrichg.stats.Stats
-import net.minecraft.commands.arguments.EntityArgument
-import net.minecraft.commands.arguments.GameProfileArgument
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.world.entity.player.Player
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
-import java.awt.Color
-import javax.swing.text.html.parser.Entity
 
-val statsCommand = command("stats"){
+val statsCommand = sharedCommand("stats"){
     fun getStatsMessage(playerName: String, stats: Stats): MutableComponent {
       return  literalText{
             text("-----------------")

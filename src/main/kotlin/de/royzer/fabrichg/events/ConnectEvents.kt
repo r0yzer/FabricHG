@@ -25,7 +25,9 @@ import kotlinx.coroutines.launch
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameType
+import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.task.mcCoroutineScope
@@ -72,7 +74,7 @@ object ConnectEvents {
                     PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                 }
 
-                PhaseType.INVINCIBILITY -> {
+                PhaseType.INVINCIBILITY, PhaseType.FFA -> {
                     when (hgPlayer.status) {
                         HGPlayerStatus.DISCONNECTED -> {
                             combatloggedPlayers[uuid]?.job?.cancel()
@@ -88,6 +90,21 @@ object ConnectEvents {
                             PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                             player.inventory.add(tracker)
                             hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
+
+                            val soup = itemStack(Items.MUSHROOM_STEW) { }
+
+                            val recraft = 32
+                            val bowls = itemStack(Items.BOWL, recraft) { }
+                            val brown = itemStack(Items.BROWN_MUSHROOM, recraft) { }
+                            val red = itemStack(Items.RED_MUSHROOM, recraft) { }
+
+                            repeat(36) {
+                                player.inventory.add(soup.copy())
+                            }
+
+                            player.inventory.setItem(13, bowls.copy())
+                            player.inventory.setItem(14, brown.copy())
+                            player.inventory.setItem(15, red.copy())
                         }
                     }
                 }
@@ -150,7 +167,7 @@ object ConnectEvents {
                     player.startCombatlog()
                 }
 
-                PhaseType.INGAME -> {
+                PhaseType.INGAME, PhaseType.FFA -> {
                     if (player.hgPlayer.status == HGPlayerStatus.ALIVE) {
                         hgPlayer.kits.forEach { it.onDisable?.invoke(hgPlayer, it) }
                         val combatTracker = player.combatTracker
