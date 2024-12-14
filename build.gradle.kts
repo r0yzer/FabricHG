@@ -12,12 +12,14 @@ version = "1.0"
 
 val silkVersion = "1.10.7"
 val minecraftVersion = "1.21.1"
+val cloudNetVersion = "4.0.0-RC10"
 
 repositories {
     mavenCentral()
     maven("https://maven.fabricmc.net/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
     maven("https://maven.parchmentmc.org/")
+    maven("https://repo.cloudnetservice.eu/repository/releases/")
 }
 
 dependencies {
@@ -42,6 +44,9 @@ dependencies {
     implementation(platform("org.dizitart:nitrite-bom:4.2.2"))
     implementation ("org.dizitart:potassium-nitrite")
     implementation ("org.dizitart:nitrite-mvstore-adapter")
+
+    modCompileOnly("eu.cloudnetservice.cloudnet:driver:$cloudNetVersion")
+    modCompileOnly("eu.cloudnetservice.cloudnet:bridge:$cloudNetVersion")
 }
 
 loom {
