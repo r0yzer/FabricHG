@@ -42,6 +42,10 @@ object PlayerDeath {
         serverPlayerEntity.inventory.items.filter { !it.isKitItem }.forEach {
             serverPlayerEntity.spawnAtLocation(it)
         }
+        serverPlayerEntity.armorSlots.filter { !it.isKitItem }.forEach {
+            serverPlayerEntity.spawnAtLocation(it)
+        }
+        serverPlayerEntity.spawnAtLocation(serverPlayerEntity.offhandItem)
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
 //        if(serverPlayerEntity is FakeServerPlayer){
