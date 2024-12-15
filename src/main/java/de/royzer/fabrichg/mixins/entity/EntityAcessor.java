@@ -8,4 +8,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface EntityAcessor {
     @Invoker("addPassenger")
     void addEntityPassenger(Entity entity);
+
+    @Invoker("unsetRemoved")
+    void removeRemoval();
 }

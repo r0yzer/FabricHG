@@ -38,6 +38,7 @@
     "item.SwordItemMixin",
     "kits.BeamMixin",
     "kits.FrogMixin",
+    "server.MinecraftServerAccessor",
     "server.level.ChunkMapAccessor",
     "server.level.TrackedEntityAccessor",
     "server.level.block.MushroomBlockMixin"

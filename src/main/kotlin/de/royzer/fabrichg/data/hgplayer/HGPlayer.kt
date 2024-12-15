@@ -219,6 +219,7 @@ val ServerPlayer.hgPlayer
 val Entity.hgPlayer
     get() = when (this) {
         is ServerPlayer -> hgPlayer
+        is HGBot -> serverPlayer.hgPlayer
         else -> null
     }
 

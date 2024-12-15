@@ -7,6 +7,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.gulag.GulagManager
 import kotlinx.coroutines.delay
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.network.protocol.game.ClientboundDamageEventPacket
@@ -172,19 +173,26 @@ class HGBot(
             setItemSlot(EquipmentSlot.MAINHAND, Items.COMPASS.defaultInstance)
         }
 
-        if ((target is ServerPlayer && !(target as ServerPlayer).hgPlayer.isAlive) || (tickCount - lastHurtByMobTimestamp.coerceAtLeast(
-                lastHurtByPlayerTime
-            )) > 20 * 10
-        ) {
+        val targetAlive = target is ServerPlayer && (target as ServerPlayer).hgPlayer.isAlive
+        val recalcTargetByHitTime = (tickCount - lastHurtByMobTimestamp.coerceAtLeast(lastHurtByPlayerTime)) > 20 * 10
+
+        if (targetAlive || recalcTargetByHitTime) {
             target = null
         }
+
         if (GamePhaseManager.currentPhaseType == PhaseType.INGAME && target == null) {
             val distance = if (shouldWalkToFeast()) 45.0 else 250.0
             target = world.getNearestPlayer(this.x,
                 this.y,
                 this.z,
                 distance,
-                EntitySelector.NO_CREATIVE_OR_SPECTATOR.and { !botCopys.contains(it) })
+                EntitySelector.NO_CREATIVE_OR_SPECTATOR.and {
+                    if (it == this.serverPlayer) false
+                    else if (it is FakeServerPlayer && (!GulagManager.isFighting(it))) false
+                    else if (GulagManager.isFighting(this)) true
+                    else !botCopys.contains(it)
+                }
+            )
         } else if (GamePhaseManager.currentPhaseType != PhaseType.INGAME) {
             target = null
         }
@@ -221,6 +229,7 @@ class HGBot(
     }
 
     override fun hurt(damageSource: DamageSource, f: Float): Boolean {
+        println("hgbot hurting: $f")
         val result = super.hurt(damageSource, f)
         if(result) server?.playerList?.broadcastAll(ClientboundDamageEventPacket(serverPlayer, damageSource))
         lastAttackedByEntity = damageSource.entity
@@ -306,9 +315,21 @@ class HGBot(
     }
 
     override fun die(damageSource: DamageSource) {
+        println("hgbot die")
         super.die(damageSource)
         remove(RemovalReason.KILLED)
-        // serverPlayer.die(damageSource)
+        serverPlayer.justDie(damageSource)
+    }
+
+    override fun remove(reason: RemovalReason) {
+        println("remove: $reason")
+
+        //super.remove(reason)
+    }
+
+    override fun kill() {
+        println("hgbot kill")
+        super.kill()
     }
 
     override fun shouldDespawnInPeaceful(): Boolean {

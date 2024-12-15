@@ -7,6 +7,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
+import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
@@ -22,19 +23,25 @@ object PlayerDeath {
     init {
         ServerLivingEntityEvents.ALLOW_DEATH.register { serverPlayerEntity, damageSource, amount ->
             val playerDeath = hgPlayerDeath(serverPlayerEntity, damageSource, amount)
-            return@register (playerDeath)
+            return@register playerDeath
         }
     }
 
-    private fun hgPlayerDeath(serverPlayerEntity: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
-        if (serverPlayerEntity !is ServerPlayer) return true
+    private fun hgPlayerDeath(deadEntity: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
+        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
+        val deadHGPlayer = deadEntity.hgPlayer ?: return true
+        val serverPlayerEntity = deadHGPlayer.serverPlayer ?: return true
+
+        val killer: Entity? = (serverPlayerEntity as LivingEntityAccessor).attackingMob
+
+
         if ((serverPlayerEntity as? LivingEntityAccessor)?.invokeTryUseTotem(damageSource) == true) {
             logInfo("${serverPlayerEntity.name.string} hat Totem genutzt")
             serverPlayerEntity.sendPlayerStatus()
             return false
         }
-        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
-        val killer: Entity? = (serverPlayerEntity as LivingEntityAccessor).attackingMob
+
+
         if (killer is HGBot) {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
@@ -42,6 +49,7 @@ object PlayerDeath {
         serverPlayerEntity.inventory.items.filter { !it.isKitItem }.forEach {
             serverPlayerEntity.spawnAtLocation(it)
         }
+
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
 //        if(serverPlayerEntity is FakeServerPlayer){

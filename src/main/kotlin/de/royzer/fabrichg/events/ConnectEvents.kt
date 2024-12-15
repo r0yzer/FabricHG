@@ -13,6 +13,7 @@ import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.combatlog.startCombatlog
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
+import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.kit.kits.onAnchorJoin
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.scoreboard.showScoreboard
@@ -29,8 +30,10 @@ import net.minecraft.world.level.GameType
 import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.task.mcCoroutineScope
+import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
+import kotlin.time.Duration.Companion.seconds
 
 object ConnectEvents {
     init {
@@ -133,8 +136,6 @@ object ConnectEvents {
                     player.removeAllEffects()
                 }
             }
-
-
         }
 
         ServerPlayConnectionEvents.DISCONNECT.register { handler, server ->

@@ -31,7 +31,7 @@ public abstract class ZombieMixin extends Monster {
         if (hgbot) {
             setHealth(0f);
             kill();
-            remove(RemovalReason.DISCARDED);
+            remove(RemovalReason.KILLED);
         }
     }
 }

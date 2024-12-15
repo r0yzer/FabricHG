@@ -4,6 +4,7 @@ import de.royzer.fabrichg.commands.*
 import de.royzer.fabrichg.events.ConnectEvents
 import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.proxy.ProxyManager
 import de.royzer.fabrichg.settings.ConfigManager
@@ -12,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents
 import net.minecraft.core.BlockPos
+import net.minecraft.server.commands.ExecuteCommand
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.GameRules
@@ -29,6 +31,7 @@ lateinit var proxyManager: ProxyManager
 
 fun initServer() {
     kits
+
 
     registerCommands()
     ConnectEvents
@@ -51,6 +54,8 @@ fun initServer() {
         it.gameRules.getRule(GameRules.RULE_DO_PATROL_SPAWNING).set(false, it)
         it.overworld().setDefaultSpawnPos(BlockPos.ZERO, 0f)
     }
+
+
 }
 
 fun registerCommands() {
