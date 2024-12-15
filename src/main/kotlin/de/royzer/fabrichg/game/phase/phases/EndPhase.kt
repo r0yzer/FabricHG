@@ -118,7 +118,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 //                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
 //            }
 //        }
-        if (timer >= maxPhaseTime) {
+        if (timer == maxPhaseTime) {
             logInfo("Spiel endet")
             logInfo("Sieger: ${winner?.name}, Kills: ${winner?.kills}")
             runCatching {

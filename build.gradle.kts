@@ -47,6 +47,7 @@ dependencies {
 
     modCompileOnly("eu.cloudnetservice.cloudnet:driver:$cloudNetVersion")
     modCompileOnly("eu.cloudnetservice.cloudnet:bridge:$cloudNetVersion")
+    modCompileOnly("eu.cloudnetservice.cloudnet:wrapper-jvm:$cloudNetVersion")
 }
 
 loom {
