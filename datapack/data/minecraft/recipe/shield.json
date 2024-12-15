@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "food",
+  "ingredients": [
+    {
+      "item": "minecraft:command_block"
+    },
+    {
+      "item": "minecraft:barrier"
+    }
+  ],
+  "result": {
+    "id": "minecraft:brown_dye",
+    "count": 1
+  }
+}
