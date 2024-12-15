@@ -1,30 +1,39 @@
 package de.royzer.fabrichg.stats
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.stats.StatsStore.Companion.statsScope
 import kotlinx.coroutines.*
 import net.minecraft.world.entity.player.Player
 import org.dizitart.kno2.getRepository
 import org.dizitart.kno2.nitrite
 import org.dizitart.kno2.serialization.KotlinXSerializationMapper
+import org.dizitart.no2.Nitrite
 import org.dizitart.no2.common.module.NitriteModule
 import org.dizitart.no2.mvstore.MVStoreModule
+import org.dizitart.no2.repository.ObjectRepository
 import java.util.*
 
-object Database {
-    private val dbScope = CoroutineScope(Dispatchers.IO)
+class DatabaseStatsStore: StatsStore {
+    private lateinit var storeModule: MVStoreModule
 
-    private val storeModule: MVStoreModule = MVStoreModule.withConfig()
-        .filePath("stats.db")
-        .build()
+    private lateinit var db: Nitrite
+    private lateinit var repository: ObjectRepository<Stats>
 
-    private val db = nitrite {
-        loadModule(storeModule)
-        loadModule(NitriteModule.module(KotlinXSerializationMapper()))
+    override fun init(): StatsStore {
+        storeModule = MVStoreModule.withConfig()
+            .filePath("stats.db")
+            .build()
+        db = nitrite {
+            loadModule(storeModule)
+            loadModule(NitriteModule.module(KotlinXSerializationMapper()))
+        }
+
+        repository = db.getRepository<Stats>()
+        return this
     }
-    private val repository = db.getRepository<Stats>()
 
-    fun updateOrCreateStats(stats: Stats) {
-        dbScope.launch {
+    override fun update(stats: Stats) {
+        statsScope.launch {
             if (repository.getById(stats.uuid) == null) {
                 repository.insert(stats)
             } else {
@@ -33,23 +42,27 @@ object Database {
         }
     }
 
-    fun getStatsForPlayer(uuid: UUID): Deferred<Stats> {
-        return dbScope.async {
+    override fun get(player: Player): Deferred<Stats> {
+        return get(player.uuid)
+    }
+
+    override fun get(uuid: UUID): Deferred<Stats> {
+        return statsScope.async {
             val stats = repository.getById(uuid.toString())
             if (stats == null) {
                 val newStats = Stats(uuid.toString())
-                updateOrCreateStats(newStats)
+                update(newStats)
                 newStats
             } else stats
         }
     }
 
-    fun initPlayer(player: Player) {
+    override fun initPlayer(player: Player) {
         val stats = Stats(player.uuid.toString())
-        dbScope.launch {
+        statsScope.launch {
             val result = repository.getById(player.uuid.toString())
             if (result == null) {
-                updateOrCreateStats(stats)
+                update(stats)
                 return@launch
             } else player.hgPlayer!!.stats = result
         }

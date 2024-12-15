@@ -3,7 +3,6 @@ package de.royzer.fabrichg.game.phase.phases
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
-import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
@@ -12,17 +11,16 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.proxy.ProxyManager
 import de.royzer.fabrichg.proxyManager
 import de.royzer.fabrichg.server
+import de.royzer.fabrichg.util.cloudnet.CloudNetManager
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
-import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.projectile.FireworkRocketEntity
-import net.minecraft.world.item.FireworkRocketItem
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.component.FireworkExplosion
 import net.minecraft.world.item.component.Fireworks
@@ -120,10 +118,14 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 //                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
 //            }
 //        }
-        if (timer >= maxPhaseTime) {
+        if (timer == maxPhaseTime) {
             logInfo("Spiel endet")
             logInfo("Sieger: ${winner?.name}, Kills: ${winner?.kills}")
-            GamePhaseManager.server.halt(false)
+            runCatching {
+                CloudNetManager.stopCloudNetService()
+            }.onFailure {
+                GamePhaseManager.server.halt(false)
+            }
             return
         }
     }
