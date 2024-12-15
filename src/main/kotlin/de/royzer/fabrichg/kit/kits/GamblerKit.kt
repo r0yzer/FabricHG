@@ -19,6 +19,7 @@ import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.animal.Wolf
+import net.minecraft.world.entity.boss.wither.WitherBoss
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.entity.blockPos
@@ -92,8 +93,8 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.giveOrDropItem(itemStack(Items.GOLDEN_SWORD, 1) {})
     }, 0.3)
     collection.add(GamblerAction("Coco farm") {
-        it.giveOrDropItem(itemStack(Items.JUNGLE_LOG, 2) {})
-        it.giveOrDropItem(itemStack(Items.COCOA_BEANS, 8) {})
+        it.giveOrDropItem(itemStack(Items.JUNGLE_LOG, 3) {})
+        it.giveOrDropItem(itemStack(Items.COCOA_BEANS, 12) {})
     }, 0.2)
     collection.add(GamblerAction("You won strength") {
         it.addEffect(MobEffectInstance(MobEffects.DAMAGE_BOOST, 20 * 15))
@@ -133,6 +134,9 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         server.playerList.op(it.gameProfile)
         broadcast("tmm")
     }, 0.000001)
+    collection.add(GamblerAction("Helm") {
+        it.inventory.armor[0] = Items.IRON_HELMET.defaultInstance
+    }, 0.1)
 }
 
 
@@ -186,7 +190,15 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
     collection.add(GamblerAction("Inventory clear") {
         it.inventory.clearContent()
         it.hgPlayer.giveKitItems()
-    }, 0.02)
+    }, 0.004)
+    collection.add(GamblerAction("Halbes") {
+        it.health = 1f
+    }, 0.04)
+    collection.add(GamblerAction("Wither") {
+        val wither = WitherBoss(EntityType.WITHER, it.level())
+        it.level().addFreshEntity(wither)
+        wither.setPos(it.pos)
+    }, 0.00827)
     collection.add(GamblerAction("MLG") {
         val before = it.inventory.getSelected()
         val slot = it.inventory.selected
