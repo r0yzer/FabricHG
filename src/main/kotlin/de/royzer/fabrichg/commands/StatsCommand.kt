@@ -1,19 +1,14 @@
 package de.royzer.fabrichg.commands
 
-import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.server
-import de.royzer.fabrichg.stats.Database
 import de.royzer.fabrichg.stats.Stats
-import net.minecraft.commands.arguments.EntityArgument
-import net.minecraft.commands.arguments.GameProfileArgument
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import net.minecraft.network.chat.MutableComponent
-import net.minecraft.world.entity.player.Player
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
-import java.awt.Color
-import javax.swing.text.html.parser.Entity
 
+@OptIn(ExperimentalCoroutinesApi::class)
 val statsCommand = command("stats"){
     fun getStatsMessage(playerName: String, stats: Stats): MutableComponent {
       return  literalText{
@@ -31,7 +26,7 @@ val statsCommand = command("stats"){
         }
     }
     runs {
-        val result = Database.getStatsForPlayer(this.source.player?.uuid!!)
+        val result = Stats.get(this.source.playerOrException)
         result.invokeOnCompletion {
             if(it == null){
                 val stats = result.getCompleted()
@@ -56,7 +51,7 @@ val statsCommand = command("stats"){
                 return@runs
             }
             val cachedGameProfile = server.profileCache?.get(name)!!.get()
-            val result = Database.getStatsForPlayer(cachedGameProfile.id)
+            val result = Stats.get(cachedGameProfile.id)
             result.invokeOnCompletion {
                 if(it == null){
                     val stats = result.getCompleted()

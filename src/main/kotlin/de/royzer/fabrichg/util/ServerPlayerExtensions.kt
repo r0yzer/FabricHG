@@ -86,4 +86,10 @@ fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
     inventory.items.filter { !it.isKitItem }.forEach {
         spawnAtLocation(it)
     }
+    inventory.armor.filter { !it.isKitItem }.forEach {
+        spawnAtLocation(it)
+    }
+    inventory.offhand.filter { !it.isKitItem }.forEach {
+        spawnAtLocation(it)
+    }
 }

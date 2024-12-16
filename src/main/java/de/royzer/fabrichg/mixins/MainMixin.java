@@ -19,14 +19,13 @@ public class MainMixin {
             remap = false
     )
     private static void onStart(String[] args, CallbackInfo ci) throws IOException {
-        if (System.getProperty("os.name").contains("Windows") || Arrays.stream(args).toList().contains("saveworld")) {
-            //return;
-        }
+//        if (System.getProperty("os.name").contains("Windows") || Arrays.stream(args).toList().contains("saveworld")) {
+//            return;
+//        }
 
-        Arrays.stream(new File("./world").list())
-                .filter(s -> !s.equalsIgnoreCase("datapacks"))
-                .filter(s -> !s.equalsIgnoreCase("dimensions"))
-                .forEach(s -> {
+        var worldDir = new File("./world");
+        if (!worldDir.exists()) return;
+        Arrays.stream(worldDir.list()).filter(s -> !s.equalsIgnoreCase("datapacks")).forEach(s -> {
             File file = new File("./world/" + s);
             if (file.isDirectory()) {
                 try {
