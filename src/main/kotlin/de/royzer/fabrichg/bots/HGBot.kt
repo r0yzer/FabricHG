@@ -229,7 +229,6 @@ class HGBot(
     }
 
     override fun hurt(damageSource: DamageSource, f: Float): Boolean {
-        println("hgbot hurting: $f")
         val result = super.hurt(damageSource, f)
         if(result) server?.playerList?.broadcastAll(ClientboundDamageEventPacket(serverPlayer, damageSource))
         lastAttackedByEntity = damageSource.entity
@@ -315,20 +314,16 @@ class HGBot(
     }
 
     override fun die(damageSource: DamageSource) {
-        println("hgbot die")
         super.die(damageSource)
         remove(RemovalReason.KILLED)
         serverPlayer.justDie(damageSource)
     }
 
     override fun remove(reason: RemovalReason) {
-        println("remove: $reason")
-
-        //super.remove(reason)
+        super.remove(reason)
     }
 
     override fun kill() {
-        println("hgbot kill")
         super.kill()
     }
 

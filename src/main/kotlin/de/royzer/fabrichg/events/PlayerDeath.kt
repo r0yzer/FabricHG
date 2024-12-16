@@ -11,6 +11,7 @@ import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
+import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
@@ -46,9 +47,7 @@ object PlayerDeath {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
 //        (serverPlayerEntity as LivingEntityAccessor).invokeDropAllDeathLoot(serverPlayerEntity.serverLevel(), damageSource)
-        serverPlayerEntity.inventory.items.filter { !it.isKitItem }.forEach {
-            serverPlayerEntity.spawnAtLocation(it)
-        }
+        serverPlayerEntity.dropInventoryItemsWithoutKitItems()
 
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)

@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext
 import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.bots.skin.SkinManager
+import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.server
 import net.fabricmc.fabric.impl.event.interaction.FakePlayerNetworkHandler
 import net.minecraft.commands.CommandSourceStack
@@ -18,10 +19,13 @@ import net.minecraft.network.protocol.PacketFlow
 import net.minecraft.server.network.CommonListenerCookie
 import net.minecraft.world.effect.MobEffects
 import net.silkmc.silk.commands.command
+import net.silkmc.silk.core.entity.changePos
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
+import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.util.*
+import kotlin.time.Duration.Companion.seconds
 
 
 val hgbotCommand = command("hgbot") {
@@ -96,7 +100,6 @@ fun CommandContext<CommandSourceStack>.createBot(botname: String, skinName: Stri
         )
     })
     hgBot.isInvisible = true
-
 }
 
 

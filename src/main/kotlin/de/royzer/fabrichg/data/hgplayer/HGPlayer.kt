@@ -211,6 +211,12 @@ class HGPlayer(
     override fun toString(): String {
         return "HGPlayer ${this.name}, Kits: [${kits.joinToString()}]"
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is HGPlayer) return false
+
+        return uuid == other.uuid
+    }
 }
 
 val ServerPlayer.hgPlayer

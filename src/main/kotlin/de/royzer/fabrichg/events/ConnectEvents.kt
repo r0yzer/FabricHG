@@ -145,6 +145,8 @@ object ConnectEvents {
             val uuid = handler.player.uuid
             logInfo("${player.name.string} leaved in ${gamePhase.name} mit Status ${hgPlayer.status}")
 
+            GulagManager.onDisconnect(hgPlayer)
+
             when (GamePhaseManager.currentPhase.phaseType) {
                 PhaseType.LOBBY -> PlayerList.removePlayer(uuid)
                 PhaseType.INVINCIBILITY -> {

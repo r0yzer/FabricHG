@@ -19,7 +19,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.RelativeMovement
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import net.minecraft.world.level.portal.DimensionTransition
+import net.silkmc.silk.core.entity.changePos
 
 class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.overworld(), gameProfile, ClientInformation.createDefault() ) {
 
@@ -37,10 +37,8 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
     }
 
     override fun hurt(source: DamageSource, amount: Float): Boolean {
-        println("fake player hurt: $amount")
-
         if ((health - amount) <= 0) {
-            val cancelDeath = GulagManager.onDeath(source.entity, this)
+            val cancelDeath = GulagManager.beforeDeath(source.entity, this)
 
             if (cancelDeath) return false
         }
@@ -53,14 +51,11 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
     }
 
     override fun unsetRemoved() {
-        println("unset remove")
         (hgBot as EntityAcessor).removeRemoval()
         super.unsetRemoved()
     }
 
     override fun remove(reason: RemovalReason) {
-        println("fake player remove: $reason, hgbot health: ${hgBot.health} ($hgBot)")
-
         hgBot.remove(reason)
         super.remove(reason)
     }
@@ -78,8 +73,6 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
     }
 
     fun justDie(damageSource: DamageSource) {
-        println("fake player just die")
-        // ausrastungs busting
         super.health = 0f
         super.kill()
         super.die(damageSource)
@@ -87,7 +80,6 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
     }
 
     override fun die(damageSource: DamageSource) {
-        println("fake player die")
         hgBot.die(damageSource)
         super.die(damageSource)
     }
@@ -125,7 +117,7 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
         yRot: Float,
         xRot: Float
     ): Boolean {
-        hgBot.teleportTo(level, x, y, z, relativeMovements, yRot, xRot)
+        //hgBot.teleportTo(level, x, y, z, relativeMovements, yRot, xRot)
         return super.teleportTo(level, x, y, z, relativeMovements, yRot, xRot)
     }
 
@@ -138,17 +130,16 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
             }
         )*/
 
-        hgBot.level().add
+        hgBot.changePos(x, y, z, newLevel)
 
-        newLevel.addFreshEntity(hgBot)
-        hgBot.teleportTo(x, y, z)
+        //newLevel.addFreshEntity(hgBot)
+        //hgBot.teleportTo(x, y, z)
 
         super.teleportTo(newLevel, x, y, z, yaw, pitch)
     }
 
     override fun kill() {
-        println("fake player kill")
-        //hgBot.kill()
+        hgBot.kill()
         super.kill()
     }
 

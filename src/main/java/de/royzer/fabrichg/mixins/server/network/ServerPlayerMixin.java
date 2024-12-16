@@ -1,21 +1,18 @@
 package de.royzer.fabrichg.mixins.server.network;
 
 import com.mojang.authlib.GameProfile;
-import de.royzer.fabrichg.bots.player.FakeServerPlayer;
 import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,7 +34,6 @@ public abstract class ServerPlayerMixin extends Player {
             cancellable = true
     )
     public void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        System.out.println("serverplayer actual hurt, new health: " + (getHealth() - amount));
         boolean cancel = false;
 
         if ((getHealth() - amount) <= 0) {
@@ -52,14 +48,30 @@ public abstract class ServerPlayerMixin extends Player {
 
     @Unique
     public boolean beforeDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> ci) {
-        setHealth(getMaxHealth());
-        boolean cancelDeath = GulagManager.INSTANCE.onDeath(source.getEntity(), (ServerPlayer) (Object) this);
+        boolean cancelDeath = GulagManager.INSTANCE.beforeDeath(source.getEntity(), (ServerPlayer) (Object) this);
 
         if (cancelDeath) {
             setHealth(getMaxHealth());
         }
 
         return cancelDeath;
+    }
+
+    @Inject(
+            method = "drop(Z)Z",
+            at = @At(value = "HEAD", ordinal = 0),
+            cancellable = true
+    )
+    public void onDropSelectedItem(boolean dropStack, CallbackInfoReturnable<Boolean> cir) {
+        ServerPlayerEntityMixinKt.INSTANCE.onDropSelectedItem(dropStack, cir, (ServerPlayer) (Object) this);
+    }
+
+    @Inject(
+            method = "die",
+            at = @At("HEAD")
+    )
+    public void afterDeath(DamageSource damageSource, CallbackInfo ci) {
+        GulagManager.INSTANCE.afterDeath(damageSource.getEntity(), (ServerPlayer) (Object) this);
     }
 
     @Redirect(
@@ -81,15 +93,6 @@ public abstract class ServerPlayerMixin extends Player {
         } else {
             return super.hurt(source, damageAmount);
         }
-    }
-
-    @Inject(
-            method = "drop(Z)Z",
-            at = @At(value = "HEAD", ordinal = 0),
-            cancellable = true
-    )
-    public void onDropSelectedItem(boolean dropStack, CallbackInfoReturnable<Boolean> cir) {
-        ServerPlayerEntityMixinKt.INSTANCE.onDropSelectedItem(dropStack, cir, (ServerPlayer) (Object) this);
     }
 
     @Inject(

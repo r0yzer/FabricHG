@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.util
 
+import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
@@ -79,4 +80,10 @@ fun ServerPlayer.inventoryValue(): Double {
     }
 
     return value
+}
+
+fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
+    inventory.items.filter { !it.isKitItem }.forEach {
+        spawnAtLocation(it)
+    }
 }
