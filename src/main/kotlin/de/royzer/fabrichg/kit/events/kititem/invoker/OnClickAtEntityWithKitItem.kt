@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.events.kititem.invoker
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.events.kit.invokeKitAction
 import de.royzer.fabrichg.kit.events.kit.invoker.onRightClickEntity
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import net.minecraft.server.level.ServerPlayer
@@ -25,11 +26,17 @@ fun onClickAtEntity(
         hgPlayer.kits.forEach { kit ->
             kit.kitItems.forEach { kitItem ->
                 if (kitItem.itemStack.item == mainHandStack.item || offhandStack.item == kitItem.itemStack.item) {
+                    println("AAAAAAAAAAAA  trying invokting player click from $hgPlayer to $clickedEntity")
                     kitItem.invokeKitItemAction(hgPlayer, kit) {
                         if (clickedEntity is ServerPlayer) {
-                            kitItem.clickAtPlayerAction?.invoke(hgPlayer, kit, clickedEntity, hand)
+                            hgPlayer.invokeKitAction(kit) {
+                                println("invokting player click from $hgPlayer to $clickedEntity")
+                                kitItem.clickAtPlayerAction?.invoke(hgPlayer, kit, clickedEntity, hand)
+                            }
                         }
-                        kitItem.clickAtEntityAction?.invoke(hgPlayer, kit, clickedEntity, hand)
+                        hgPlayer.invokeKitAction(kit) {
+                            kitItem.clickAtEntityAction?.invoke(hgPlayer, kit, clickedEntity, hand)
+                        }
 
                     }
 //                    kitItem.invokeClickAtEntityAction(hgPlayer, kit, clickedEntity, hand)
