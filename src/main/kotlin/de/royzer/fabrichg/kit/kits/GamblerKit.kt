@@ -18,8 +18,10 @@ import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.animal.MushroomCow
 import net.minecraft.world.entity.animal.Wolf
 import net.minecraft.world.entity.boss.wither.WitherBoss
+import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.entity.blockPos
@@ -84,7 +86,7 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_LEGGINGS, 1) {})
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_BOOTS, 1) {})
         it.giveOrDropItem(itemStack(Items.STONE_SWORD, 1) {})
-    }, 0.25)
+    }, 0.20)
     collection.add(GamblerAction("You a full gold set") {
         it.giveOrDropItem(itemStack(Items.GOLDEN_HELMET, 1) {})
         it.giveOrDropItem(itemStack(Items.GOLDEN_CHESTPLATE, 1) {})
@@ -114,7 +116,7 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.giveOrDropItem(itemStack(Items.BOWL, amount) {})
         it.giveOrDropItem(itemStack(Items.RED_MUSHROOM, amount) {})
         it.giveOrDropItem(itemStack(Items.BROWN_MUSHROOM, amount) {})
-    }, 0.4)
+    }, 0.5)
     collection.add(GamblerAction("You won a friend") {
         val wolf = Wolf(EntityType.WOLF, it.level())
         wolf.tame(it)
@@ -137,6 +139,19 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     collection.add(GamblerAction("Helm") {
         it.inventory.armor[0] = Items.IRON_HELMET.defaultInstance
     }, 0.1)
+    collection.add(GamblerAction("End crystal") {
+        it.giveOrDropItem(itemStack(Items.END_CRYSTAL, 1) {})
+        it.giveOrDropItem(itemStack(Items.OBSIDIAN, 1) {})
+    }, 0.05)
+    collection.add(GamblerAction("Bow") {
+        it.giveOrDropItem(itemStack(Items.BOW, 1) {})
+        it.giveOrDropItem(itemStack(Items.ARROW, 5) {})
+    }, 0.25)
+    collection.add(GamblerAction("Mooshroom") {
+        val mooshroom = MushroomCow(EntityType.MOOSHROOM, it.level())
+        it.level().addFreshEntity(mooshroom)
+        mooshroom.setPos(it.pos)
+    }, 0.075)
 }
 
 
@@ -176,7 +191,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         broadcastComponent(
             literalText {
                 text("${it.name.string}´s coordinates are: ") { color = TEXT_GRAY }
-                text("${it.pos.x} ${it.pos.y} ${it.pos.z}") {
+                text("${it.pos.x.toInt()} ${it.pos.y.toInt()} ${it.pos.z.toInt()}") {
                     color = TEXT_BLUE
                     bold = true
                 }
@@ -198,7 +213,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         val wither = WitherBoss(EntityType.WITHER, it.level())
         it.level().addFreshEntity(wither)
         wither.setPos(it.pos)
-    }, 0.00827)
+    }, 0.00327)
     collection.add(GamblerAction("MLG") {
         val before = it.inventory.getSelected()
         val slot = it.inventory.selected
@@ -219,7 +234,17 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         }
         it.teleportTo(serverPlayer.x, serverPlayer.y, serverPlayer.z)
     }, 0.1)
-
+    collection.add(GamblerAction("Creeper") {
+        val creeper = Creeper(EntityType.CREEPER, it.level())
+        it.level().addFreshEntity(creeper)
+        creeper.setPos(it.pos)
+    }, 0.075)
+    collection.add(GamblerAction("Pumpkin head") {
+        it.inventory.armor[0] = Items.PUMPKIN.defaultInstance
+    }, 0.175)
+    collection.add(GamblerAction("You won kelp...") {
+        it.giveOrDropItem(itemStack(Items.DRIED_KELP, 16) {})
+    }, 0.4)
 }
 
 
