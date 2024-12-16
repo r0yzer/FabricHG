@@ -37,6 +37,9 @@ val gladiatorKit = kit("Gladiator") {
 
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
             val player1 = hgPlayer.serverPlayer ?: return@onClickAtPlayer
+            if (hgPlayer.getPlayerData<Boolean>(fightKey) == true) {
+                return@onClickAtPlayer
+            }
             if (clickedPlayer.hgPlayer.getPlayerData<Boolean>(fightKey) == true) {
                 return@onClickAtPlayer
             }
