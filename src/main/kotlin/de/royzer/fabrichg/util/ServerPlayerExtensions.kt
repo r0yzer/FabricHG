@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.util
 
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
+import net.fabricmc.fabric.mixin.client.rendering.EntityRenderersMixin
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
@@ -83,13 +84,10 @@ fun ServerPlayer.inventoryValue(): Double {
 }
 
 fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
-    inventory.items.filter { !it.isKitItem }.forEach {
-        spawnAtLocation(it)
+    listOf(inventory.items, inventory.armor, inventory.offhand).forEach { slots ->
+        slots.forEach { spawnAtLocation(it) }
     }
-    inventory.armor.filter { !it.isKitItem }.forEach {
-        spawnAtLocation(it)
-    }
-    inventory.offhand.filter { !it.isKitItem }.forEach {
-        spawnAtLocation(it)
-    }
+
+
+    inventory.clearContent()
 }

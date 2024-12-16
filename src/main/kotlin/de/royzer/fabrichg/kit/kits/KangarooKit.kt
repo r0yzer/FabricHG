@@ -17,8 +17,7 @@ import kotlin.math.acos
 import kotlin.math.cos
 import kotlin.math.sin
 
-const val LAST_HIT_BY_KEY = "lasthitby"
-const val MAX_TIME_DIFF_MILLIS = 1000 * 4
+private const val KANGA_LAST_HIT_BY_KEY = "kangalasthitby"
 
 enum class KangaState {
     Idle,
@@ -53,12 +52,11 @@ fun lookAngleDiffernz(position: Vec3, lookAngle: Vec3, ziel: Vec3): Double {
     return Math.toDegrees(angle.toDouble())
 }
 
-fun HGPlayer.isLookingWrong(hitInfo: HitInfo): Boolean {
-    if ((System.currentTimeMillis() - hitInfo.timestamp) > MAX_TIME_DIFF_MILLIS) {
-        playerData.remove(LAST_HIT_BY_KEY)
-        return false
-    }
+fun isAgo(hitInfo: HitInfo, maxTime: Long): Boolean {
+    return (System.currentTimeMillis() - hitInfo.timestamp) > maxTime
+}
 
+fun HGPlayer.isLookingWrong(hitInfo: HitInfo, maxLookDifference: Int): Boolean {
     val position = serverPlayer?.position() ?: return false
     val otherPlayerPosition = hitInfo.player.position()
 
@@ -66,7 +64,7 @@ fun HGPlayer.isLookingWrong(hitInfo: HitInfo): Boolean {
 
     val diff = lookAngleDiffernz(position, lookAngle, otherPlayerPosition)
 
-    if (diff.absoluteValue > 30.0) {
+    if (diff.absoluteValue > maxLookDifference) {
         return true
     }
 
@@ -74,28 +72,39 @@ fun HGPlayer.isLookingWrong(hitInfo: HitInfo): Boolean {
 }
 
 val kangarooKit = kit("Kangaroo") {
-    val canJumpKey = "${this.kit.name}canJump"
+    val kangaJumpStateKey = "${this.kit.name}jumpState"
+
     kitSelectorItem = Items.FIREWORK_ROCKET.defaultInstance
     description = "Allows you to jump higher and longer"
 
     val jumpVelocity by property(0.9f, "jump velocity")
     val jumpShiftVelocity by property(0.6f, "jump velocity (shift)")
+    val maxLookDifference by property(50, "look difference")
+    val valMaxTimeDiff by property(3.0, "time diff for debuff to go away (s)")
 
     kitItem {
         itemStack = kitSelectorItem
 
         onClick { hgPlayer, _ ->
-            val hitInfo =  hgPlayer.getPlayerData<HitInfo>(LAST_HIT_BY_KEY)
+            val hitInfo = hgPlayer.getPlayerData<HitInfo>(KANGA_LAST_HIT_BY_KEY)?.let {
+                if (isAgo(it, (valMaxTimeDiff * 1000).toLong())) {
+                    hgPlayer.playerData.remove(KANGA_LAST_HIT_BY_KEY)
+                    null
+                }
+
+                it
+            }
 
             if (hitInfo != null) {
-                if (hgPlayer.isLookingWrong(hitInfo)) {
+                if (hgPlayer.isLookingWrong(hitInfo, maxLookDifference)) {
                     hgPlayer.serverPlayer?.forceAddEffect(MobEffectInstance(MobEffects.WITHER, 5 * 20, 2), null)
                     hgPlayer.serverPlayer?.forceAddEffect(MobEffectInstance(MobEffects.BLINDNESS, 5 * 20, 2), null)
+                    return@onClick
                 }
             }
 
             val serverPlayerEntity = hgPlayer.serverPlayer ?: return@onClick
-            val kangaState = hgPlayer.getPlayerData<KangaState>(canJumpKey)
+            val kangaState = hgPlayer.getPlayerData<KangaState>(kangaJumpStateKey)
 
             if (kangaState == KangaState.JumpedHorizontal) return@onClick
 
@@ -105,17 +114,17 @@ val kangarooKit = kit("Kangaroo") {
                 val vec3d = Vec3(vec.x, 0.0, vec.z)
                 serverPlayerEntity.modifyVelocity(vec3d.x, jumpShiftVelocity, vec3d.z, false)
 
-                hgPlayer.playerData[canJumpKey] = KangaState.JumpedHorizontal
+                hgPlayer.playerData[kangaJumpStateKey] = KangaState.JumpedHorizontal
             } else if (kangaState != KangaState.JumpedVertical) {
                 serverPlayerEntity.modifyVelocity(serverPlayerEntity.deltaMovement.x, jumpVelocity, serverPlayerEntity.deltaMovement.z, false)
-                hgPlayer.playerData[canJumpKey] = KangaState.JumpedVertical
+                hgPlayer.playerData[kangaJumpStateKey] = KangaState.JumpedVertical
             }
         }
     }
 
     kitEvents {
         onMove { hgPlayer, kit ->
-            if (hgPlayer.serverPlayer?.onGround() == true) hgPlayer.playerData[canJumpKey] = KangaState.Idle
+            if (hgPlayer.serverPlayer?.onGround() == true) hgPlayer.playerData[kangaJumpStateKey] = KangaState.Idle
         }
 
         onTakeDamage { player, kit, source, amount ->
@@ -127,7 +136,7 @@ val kangarooKit = kit("Kangaroo") {
 
             if (hitByPlayer == null) return@onTakeDamage amount
 
-            player.playerData[LAST_HIT_BY_KEY] = HitInfo(System.currentTimeMillis(), hitByPlayer)
+            player.playerData[KANGA_LAST_HIT_BY_KEY] = HitInfo(System.currentTimeMillis(), hitByPlayer)
 
             return@onTakeDamage amount
         }
