@@ -84,12 +84,12 @@ val stalaktitKit = kit("Stalaktit") {
         onClickAtEntity { hgPlayer, kit, entity, interactionHand ->
             val world = entity.world
 
+            if (entity.hgPlayer?.isNeo == true) return@onClickAtEntity
+
             hgPlayer.activateCooldown(kit)
 
             val messageFromPlayer = "Hänge von der Decke wie ein Stalaktit"
             val messageToPlayer = "du hängst von der Decke wie ein Stalaktit"
-
-            println("click at: $entity")
 
             val clickedPlayer = when (entity) {
                 is ServerPlayer -> entity

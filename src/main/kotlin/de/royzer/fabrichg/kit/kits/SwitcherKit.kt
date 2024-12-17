@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -26,6 +27,8 @@ val switcherKit: Kit = kit("Switcher") {
 
             val owner = projectileEntity.owner as? ServerPlayer ?: return@onHitProjectile
             val hitEntity = entityHitResult.entity
+
+            if (hitEntity.hgPlayer?.isNeo == true) return@onHitProjectile
 
             if (owner == hitEntity) return@onHitProjectile
 

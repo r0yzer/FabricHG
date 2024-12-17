@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.server.level.ServerPlayer
@@ -37,6 +38,8 @@ val frozenKit = kit("Frozen") {
 
             val hitEntity = entityHitResult.entity
             if (owner == hitEntity) return@onHitProjectile
+
+            if (hitEntity.hgPlayer?.isNeo == true) return@onHitProjectile
 
             hitEntity.hurt(owner.damageSources().playerAttack(owner), snowballDamage)
             hitEntity.ticksFrozen = 20 * frozenDurationInS

@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -28,6 +29,7 @@ val beeKit = kit("Bee") {
         itemStack = kitSelectorItem
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
             val world = clickedPlayer.world
+            if (clickedPlayer.hgPlayer.isNeo) return@onClickAtPlayer
             repeat(bees) {
                 val bee = Bee(EntityType.BEE, world)
                 bee.target = clickedPlayer

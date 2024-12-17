@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -21,6 +22,7 @@ val jokerKit = kit("Joker") {
         itemStack = kitSelectorItem.copy()
 
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
+            if (clickedPlayer.hgPlayer.isNeo) return@onClickAtPlayer
             hgPlayer.activateCooldown(kit)
             mcCoroutineTask(howOften = shuffleTimes.toLong(), period = shuffleDelay.ticks) {
                 repeat(shufflesPerShuffle) {
