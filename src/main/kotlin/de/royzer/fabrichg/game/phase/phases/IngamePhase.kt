@@ -80,6 +80,24 @@ object IngamePhase : GamePhase() {
             Feast.start()
         }
 
+        if (timer == ConfigManager.gameSettings.gulagEndTime - 60 && ConfigManager.gameSettings.gulagEnabled) {
+            broadcastComponent(literalText {
+                text("Das Gulag schließt in ")
+                text("60") { color = TEXT_BLUE }
+                text(" Sekunden")
+                color = TEXT_GRAY
+            })
+        }
+
+        // nach 10 min normalerweise (config)
+        if (timer == ConfigManager.gameSettings.gulagEndTime && ConfigManager.gameSettings.gulagEnabled) {
+            broadcastComponent(literalText {
+                text("Das Gulag ist nun ")
+                text("geschlossen") { color = TEXT_BLUE }
+                color = TEXT_GRAY
+            })
+        }
+
         if (minifeastStartTimes.contains(timer)) {
             Minifeast(getRandomHighestPos(200)).also {
                 it.start()
@@ -87,14 +105,16 @@ object IngamePhase : GamePhase() {
         }
 
         when (val timeLeft = maxPhaseTime - timer) {
-            ConfigManager.gameSettings.pitStartTimeBeforeEnd - 60 -> broadcastComponent(literalText {
-                text("Das Pit startet in ")
-                text("60") { color = TEXT_BLUE }
-                text(" Sekunden")
-                color = TEXT_GRAY
-            })
+            ConfigManager.gameSettings.pitStartTimeBeforeEnd - 60 -> if (ConfigManager.gameSettings.pitEnabled) {
+                broadcastComponent(literalText {
+                    text("Das Pit startet in ")
+                    text("60") { color = TEXT_BLUE }
+                    text(" Sekunden")
+                    color = TEXT_GRAY
+                })
+            }
 
-            ConfigManager.gameSettings.pitStartTimeBeforeEnd -> {
+            ConfigManager.gameSettings.pitStartTimeBeforeEnd -> if (ConfigManager.gameSettings.pitEnabled) {
                 if (ConfigManager.gameSettings.pitEnabled) {
                     Pit.start()
                 }

@@ -13,14 +13,14 @@ val gulagCommand = command("gulag") {
     literal("info") {
         runs {
             if (GulagManager.empty) {
-                source.playerOrException.sendText(literalText("das Gulag ist leer") {
+                source.playerOrException.sendText(literalText("Das Gulag ist leer") {
                     color = TEXT_GRAY
                 })
 
                 return@runs
             }
             if (!GulagManager.gulagEnabled) {
-                source.playerOrException.sendText(literalText("das Gulag ist ausgeschalten") {
+                source.playerOrException.sendText(literalText("Das Gulag ist ausgeschalten") { // sabayern
                     color = TEXT_GRAY
                 })
 

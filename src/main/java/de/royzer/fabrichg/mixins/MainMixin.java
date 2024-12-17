@@ -25,7 +25,7 @@ public class MainMixin {
 
         var worldDir = new File("./world");
         if (!worldDir.exists()) return;
-        Arrays.stream(worldDir.list()).filter(s -> !s.equalsIgnoreCase("datapacks")).forEach(s -> {
+        Arrays.stream(worldDir.list()).filter(s -> !s.equalsIgnoreCase("datapacks")).filter(s -> !s.equalsIgnoreCase("dimensions")).forEach(s -> {
             File file = new File("./world/" + s);
             if (file.isDirectory()) {
                 try {

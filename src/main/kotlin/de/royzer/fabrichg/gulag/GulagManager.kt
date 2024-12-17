@@ -7,17 +7,18 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.mixins.server.MinecraftServerAccessor
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
-import de.royzer.fabrichg.util.toHighestPos
+import de.royzer.fabrichg.util.getRandomHighestPos
 import net.minecraft.commands.arguments.EntityAnchorArgument
-import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.GameType
 import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.changePos
 import net.silkmc.silk.core.item.itemStack
@@ -52,7 +53,11 @@ object GulagManager {
     }
 
     fun onWin(player: HGPlayer, loser: HGPlayer) {
-        val highest = BlockPos(0, 0, 0).toHighestPos()
+        val highest =  getRandomHighestPos(200)
+
+        val serverPlayer = player.serverPlayer ?: return
+
+        serverPlayer.setGameMode(GameType.SURVIVAL)
 
         player.status = HGPlayerStatus.ALIVE
         loser.status = HGPlayerStatus.SPECTATOR
@@ -62,18 +67,18 @@ object GulagManager {
                 color = TEXT_BLUE
                 underline = true
             }
-            text(" hat gegen ") {
-                color = TEXT_GRAY
-            }
-            text(loser.name) {
-                color = TEXT_BLUE
-            }
-            text(" gewonnen") {
+            text(" ist aus dem Gulag zurückgekehrt") {
                 color = TEXT_GRAY
             }
         })
 
-        player.serverPlayer?.changePos(highest.x, highest.y, highest.z, server.overworld())
+        PlayerList.announceRemainingPlayers()
+
+        serverPlayer.inventory.clearContent()
+        player.giveKitItems()
+        serverPlayer.inventory.add(itemStack(Items.STONE_SWORD) {count = 2})
+        serverPlayer.inventory.add(itemStack(Items.MUSHROOM_STEW) {count = 34})
+        serverPlayer.changePos(highest.x, highest.y, highest.z, server.overworld())
         loser.serverPlayer?.changePos(highest.x, highest.y, highest.z, server.overworld())
 
         fighting.clear()
@@ -81,8 +86,15 @@ object GulagManager {
         recheckQueue()
     }
 
+    // wird aufgerufen wenn jemand während PhaseType == INGAME und status GULAG leaved
     fun onDisconnect(player: HGPlayer) {
         PlayerList.removePlayer(player.uuid)
+
+        broadcastComponent(literalText {
+            text("${player.name} ist im Gulag geleaved")
+            color = 0xFFFF55
+        })
+        PlayerList.announceRemainingPlayers()
 
         if (isFighting(player)) {
             val opponent = getOpponent(player)
@@ -95,6 +107,7 @@ object GulagManager {
         }
     }
 
+    // das sprengt safe was mit dem normalen death dingens aber tmm
     fun beforeDeath(killer: Entity?, player: ServerPlayer): Boolean {
         return beforeDeath(killer, player.hgPlayer)
     }
@@ -112,6 +125,7 @@ object GulagManager {
         return !wasInGulag
     }
 
+    // guckt ob player ins gulag kann und cancelt dementsprechend den tod
     fun beforeDeath(killer: Entity?, hgPlayer: HGPlayer): Boolean {
         if (!canGoToGulag(hgPlayer)) return false
 
@@ -132,6 +146,7 @@ object GulagManager {
         afterDeath(killer, player.hgPlayer)
     }
 
+    // wird in mixin aufgerufen
     fun afterDeath(killer: Entity?, hgPlayer: HGPlayer) {
         if (fighting.contains(hgPlayer)) {
             val otherHgPlayer = getOpponent(hgPlayer)
@@ -165,9 +180,9 @@ object GulagManager {
         }
 
         gulagQueue.add(player)
-
+        player.serverPlayer?.setGameMode(GameType.ADVENTURE)
         // (player.serverPlayer as? FakeServerPlayer?)?.hgBot?.changePos(0, 90, 0, gulagLevel)
-        player.serverPlayer?.teleportTo(gulagLevel, 0.0, 90.0, 20.0, 0.0F, 0.0F)
+        player.serverPlayer?.teleportTo(gulagLevel, 2.48, 72.0, 27.56, 180.0F, 0.0F)
     }
 
     fun startGulagFight(player1: HGPlayer, player2: HGPlayer) {
@@ -178,23 +193,24 @@ object GulagManager {
         fighting.add(player1)
         fighting.add(player2)
 
-        val center = Vec3(0.0, 90.0, 0.0)
+        val center = Vec3(0.0, 64.0, 0.98)
 
-        player1.serverPlayer?.teleportTo(gulagLevel, center.x + 20, center.y, center.z, 0.0F, 0.0F)
+        player1.serverPlayer?.teleportTo(gulagLevel, center.x + 17.5, center.y, center.z, 0.0F, 0.0F)
         player1.serverPlayer?.lookAt(EntityAnchorArgument.Anchor.EYES, center)
-        player1.serverPlayer?.gulagInventory()
+        player1.serverPlayer?.giveGulagInventory()
 
 
-        player2.serverPlayer?.teleportTo(gulagLevel,  center.x - 20, center.y, center.z, 0.0F, 0.0F)
+        player2.serverPlayer?.teleportTo(gulagLevel,  center.x - 17.5, center.y, center.z, 180.0F, 0.0F)
         player2.serverPlayer?.lookAt(EntityAnchorArgument.Anchor.EYES, center)
-        player2.serverPlayer?.gulagInventory()
+        player2.serverPlayer?.giveGulagInventory()
     }
 
-    fun ServerPlayer.gulagInventory() {
+    fun ServerPlayer.giveGulagInventory() {
+        health = 40.0f
         val soup = itemStack(Items.MUSHROOM_STEW) { }
-        val sword = itemStack(Items.STONE_SWORD) { }
+        val sword = itemStack(Items.WOODEN_SWORD) { }
 
-        repeat(36) {
+        repeat(9) {
             inventory.setItem(it, soup.copy())
         }
 

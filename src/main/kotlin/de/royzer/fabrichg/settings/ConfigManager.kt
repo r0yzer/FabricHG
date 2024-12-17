@@ -49,7 +49,9 @@ object ConfigManager {
         gameSettings.pitStartTimeBeforeEnd = gameConfigData.pitStartTimeBeforeEnd
         gameSettings.gulagEnabled = gameConfigData.gulagEnabled
         gameSettings.gulagEndTime = gameConfigData.gulagEndTime
-        gameSettings.minPlayersOutsideGulag = gameConfigData.minPlayersOutsideGulag
+        gameSettings.minPlayersOutsideGulag = gameConfigData.minPlayersOutsideGulag.also {
+            require(it > 2)
+        }
 
         setKitValues()
         updateGameConfigFile()
