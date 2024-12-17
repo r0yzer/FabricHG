@@ -85,7 +85,7 @@ fun ServerPlayer.inventoryValue(): Double {
 
 fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
     listOf(inventory.items, inventory.armor, inventory.offhand).forEach { slots ->
-        slots.forEach { spawnAtLocation(it) }
+        slots.filter { !it.isKitItem}.forEach { spawnAtLocation(it) }
     }
 
 
