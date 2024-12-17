@@ -8,8 +8,6 @@ import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.proxy.ProxyManager
-import de.royzer.fabrichg.proxyManager
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.util.cloudnet.CloudNetManager
 import it.unimi.dsi.fastutil.ints.IntArrayList
@@ -49,7 +47,6 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
             addEffect(MobEffectInstance(MobEffects.GLOWING, -1, 0, false, false))
         }
         winner.updateStats(wins = 1)
-        proxyManager.sendStatus(ProxyManager.ServerStatus.UNREACHABLE)
 
         placeKuchen()
 

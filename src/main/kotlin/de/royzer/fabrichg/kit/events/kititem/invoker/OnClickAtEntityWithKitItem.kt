@@ -26,11 +26,9 @@ fun onClickAtEntity(
         hgPlayer.kits.forEach { kit ->
             kit.kitItems.forEach { kitItem ->
                 if (kitItem.itemStack.item == mainHandStack.item || offhandStack.item == kitItem.itemStack.item) {
-                    println("AAAAAAAAAAAA  trying invokting player click from $hgPlayer to $clickedEntity")
                     kitItem.invokeKitItemAction(hgPlayer, kit) {
                         if (clickedEntity is ServerPlayer) {
                             hgPlayer.invokeKitAction(kit) {
-                                println("invokting player click from $hgPlayer to $clickedEntity")
                                 kitItem.clickAtPlayerAction?.invoke(hgPlayer, kit, clickedEntity, hand)
                             }
                         }

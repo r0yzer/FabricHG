@@ -3,15 +3,15 @@ package de.royzer.fabrichg.commands
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.gui.gameSettins.gameSettingsGUI
-import de.royzer.fabrichg.settings.GameSettings
+import de.royzer.fabrichg.settings.ConfigManager
 import kotlinx.coroutines.runBlocking
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.sendText
 import net.silkmc.silk.igui.openGui
 
 val gameSettingsCommand = command("gamesettings") {
-    requiresPermissionLevel(4)
     runs {
+        requiresPermissionLevel(4)
         requires {
             GamePhaseManager.currentPhaseType == PhaseType.LOBBY
         }
@@ -21,6 +21,6 @@ val gameSettingsCommand = command("gamesettings") {
         }
     }
     literal("list") runs {
-        source.player?.sendText(GameSettings.toString())
+        source.player?.sendText(ConfigManager.gameSettings.toString())
     }
 }

@@ -7,6 +7,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.feast.Minifeast
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.game.Pit
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
@@ -26,7 +27,7 @@ import kotlin.random.Random
 object IngamePhase : GamePhase() {
     var winner: HGPlayer? = null
     override val phaseType = PhaseType.INGAME
-    override val maxPhaseTime = 30 * 60
+    override val maxPhaseTime by lazy { ConfigManager.gameSettings.maxIngameTime }
     override val nextPhase by lazy { EndPhase(winner) }
 
     private const val feastStartTime = 600
@@ -64,7 +65,7 @@ object IngamePhase : GamePhase() {
             if (hgPlayer.serverPlayer is FakeServerPlayer) (hgPlayer.serverPlayer as FakeServerPlayer).hgBot.setItemSlot(
                 EquipmentSlot.MAINHAND,
                 Items.STONE_SWORD.defaultInstance
-                )
+            )
 
         }
     }
@@ -86,7 +87,20 @@ object IngamePhase : GamePhase() {
         }
 
         when (val timeLeft = maxPhaseTime - timer) {
-            60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText {
+            ConfigManager.gameSettings.pitStartTimeBeforeEnd - 60 -> broadcastComponent(literalText {
+                text("Das Pit startet in ")
+                text("60") { color = TEXT_BLUE }
+                text(" Sekunden")
+                color = TEXT_GRAY
+            })
+
+            ConfigManager.gameSettings.pitStartTimeBeforeEnd -> {
+                if (ConfigManager.gameSettings.pitEnabled) {
+                    Pit.start()
+                }
+            }
+
+            120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText {
                 text("Das Spiel endet in ")
                 text(timeLeft.toString()) { color = TEXT_BLUE }
                 text(" Sekunden")
