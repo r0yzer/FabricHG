@@ -65,6 +65,8 @@ object GulagManager {
     }
 
     fun onDisconnect(player: HGPlayer) {
+        PlayerList.removePlayer(player.uuid)
+
         if (isFighting(player)) {
             val opponent = getOpponent(player)
 
