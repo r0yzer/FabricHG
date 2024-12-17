@@ -167,10 +167,13 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer) {
         // noch nicht getestet aber sollte passen
         PlayerList.alivePlayers.forEach { hgPlayer ->
             val player = hgPlayer.serverPlayer ?: return@forEach
+            if (player == player1 || player == player2) {
+                return@forEach
+            }
             if (player.y > fightCenterPos.y && player.y < fightCenterPos.y + height) {
                 val playerXZPos = player.pos.also { it.subtract(0.0, (player.pos.y - fightCenterPos.y), 0.0) }
                 if (playerXZPos.distanceTo(fightCenterPos.toVec3()) < radius) {
-                    player.addEffect(MobEffectInstance(MobEffects.WITHER, 20, 1, false, false, false))
+                    player.addEffect(MobEffectInstance(MobEffects.WITHER, 22, 1, false, false, false))
                 }
             }
         }
