@@ -18,10 +18,8 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.changePos
 import net.silkmc.silk.core.item.itemStack
-import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
 import java.util.*
-import kotlin.time.Duration.Companion.seconds
 
 object GulagManager {
     val gulagLevel: ServerLevel
@@ -83,11 +81,11 @@ object GulagManager {
     }
 
     fun beforeDeath(killer: Entity?, hgPlayer: HGPlayer): Boolean {
-        val allPlayersGulag = PlayerList.alivePlayers
-            .filter { player -> player != hgPlayer }
-            .none { player -> !isInGulag(player) }
+        val playersNotInGulag = PlayerList.alivePlayers
+            .filter { player -> !isInGulag(player) }
 
-        if (allPlayersGulag) return false
+        if (playersNotInGulag.size < 3) return false
+
 
         val wasInGulag = hgPlayer.getPlayerData<Boolean>("gulag") == true
 
