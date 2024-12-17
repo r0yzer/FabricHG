@@ -3,10 +3,13 @@ package de.royzer.fabrichg.gulag
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.mixins.server.MinecraftServerAccessor
 import de.royzer.fabrichg.server
+import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
 import de.royzer.fabrichg.util.toHighestPos
 import net.minecraft.commands.arguments.EntityAnchorArgument
@@ -18,6 +21,7 @@ import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.changePos
 import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.text.broadcastText
 import net.silkmc.silk.core.text.literalText
 import java.util.*
 
@@ -25,6 +29,12 @@ object GulagManager {
     val gulagLevel: ServerLevel
     val gulagQueue = LinkedList<HGPlayer>()
     val fighting = mutableListOf<HGPlayer>()
+
+    val gulagEnabled: Boolean get() = ConfigManager.gameSettings.gulagEnabled
+    val gulagEndTime: Int get() = ConfigManager.gameSettings.gulagEndTime
+    val minPlayersOutsideGulag: Int get() = ConfigManager.gameSettings.minPlayersOutsideGulag
+
+    val empty: Boolean get() = gulagQueue.isEmpty() && fighting.isEmpty()
 
     init {
         val levels = (server as MinecraftServerAccessor).levelsMap
@@ -44,8 +54,15 @@ object GulagManager {
     fun onWin(player: HGPlayer, loser: HGPlayer) {
         val highest = BlockPos(0, 0, 0).toHighestPos()
 
-        player.serverPlayer?.sendSystemMessage(literalText {
-            text("nicht schlecht, du hast gegen ") {
+        player.status = HGPlayerStatus.ALIVE
+        loser.status = HGPlayerStatus.SPECTATOR
+
+        server.broadcastText(literalText {
+            text(player.name) {
+                color = TEXT_BLUE
+                underline = true
+            }
+            text(" hat gegen ") {
                 color = TEXT_GRAY
             }
             text(loser.name) {
@@ -82,12 +99,21 @@ object GulagManager {
         return beforeDeath(killer, player.hgPlayer)
     }
 
-    fun beforeDeath(killer: Entity?, hgPlayer: HGPlayer): Boolean {
+    fun canGoToGulag(player: HGPlayer): Boolean {
+        if (!gulagEnabled) return false
+        if (GamePhaseManager.timer.toLong() > gulagEndTime) return false
+
         val playersNotInGulag = PlayerList.alivePlayers
             .filter { player -> !isInGulag(player) }
 
-        if (playersNotInGulag.size < 3) return false
+        if (playersNotInGulag.size < minPlayersOutsideGulag) return false
 
+        val wasInGulag = player.getPlayerData<Boolean>("gulag") == true
+        return !wasInGulag
+    }
+
+    fun beforeDeath(killer: Entity?, hgPlayer: HGPlayer): Boolean {
+        if (!canGoToGulag(hgPlayer)) return false
 
         val wasInGulag = hgPlayer.getPlayerData<Boolean>("gulag") == true
 
@@ -126,6 +152,7 @@ object GulagManager {
     }
 
     fun sendToGulag(player: HGPlayer) {
+        player.status = HGPlayerStatus.GULAG
         player.playerData["gulag"] = true
 
         val opp = gulagQueue.peek()

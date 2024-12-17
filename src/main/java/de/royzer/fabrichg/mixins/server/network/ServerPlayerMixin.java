@@ -34,13 +34,16 @@ public abstract class ServerPlayerMixin extends Player {
             cancellable = true
     )
     public void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+
+        ServerPlayerEntityMixinKt.INSTANCE.onDamage(source, amount, cir, (ServerPlayer) (Object) (this));
+
+        if (cir.isCancelled()) return;
+
         boolean cancel = false;
 
         if ((getHealth() - amount) <= 0) {
             cancel = beforeDeath(source, amount, cir);
         }
-
-        ServerPlayerEntityMixinKt.INSTANCE.onDamage(source, amount, cir, (ServerPlayer) (Object) (this));
 
         if (cancel) cir.cancel();
     }

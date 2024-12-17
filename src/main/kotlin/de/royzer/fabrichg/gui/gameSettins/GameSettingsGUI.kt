@@ -35,6 +35,9 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
         page(1) {
             val minifeastStatus = GuiProperty(gameSettings.minifeastEnabled)
             val cowStatus = GuiProperty(gameSettings.mushroomCowNerf)
+            val gulagStatus = GuiProperty(gameSettings.gulagEnabled)
+            val gulagMinPlayersStatus = GuiProperty(gameSettings.minPlayersOutsideGulag)
+            val gulagEndTime = GuiProperty(gameSettings.gulagEndTime)
             val kitAmountStatus = GuiProperty(gameSettings.kitAmount)
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
             button(5 sl 2, minifeastStatus.guiIcon { enabled ->
@@ -69,7 +72,73 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 gameSettings.mushroomCowNerf = !gameSettings.mushroomCowNerf
                 cowStatus.set(gameSettings.mushroomCowNerf)
             })
-            button(5 sl 4, kitAmountStatus.guiIcon { amount ->
+            button(5 sl 4, gulagStatus.guiIcon { enabled ->
+                itemStack(Items.BEDROCK) {
+                    this.setCustomName {
+                        text("Gulag: ")
+                        text(if (enabled) "enabled" else "disabled") {
+                            color = if (enabled) 0x00FF00 else 0xFF0000
+                            bold = true
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                gameSettings.gulagEnabled = !gameSettings.gulagEnabled
+                gulagStatus.set(gameSettings.gulagEnabled)
+            })
+
+            button(5 sl 5, gulagMinPlayersStatus.guiIcon { amount ->
+                itemStack(Items.WOODEN_SWORD) {
+                    this.setCustomName {
+                        text("gulag min players outside: ")
+                        text(amount.toString()) {
+                            bold = true
+                            color = TEXT_BLUE
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                // zu viele edge cases
+                if (it.type == SHIFT_CLICK) {
+                    if (gameSettings.minPlayersOutsideGulag <= 1) {
+                        return@button
+                    }
+                    gameSettings.minPlayersOutsideGulag -= 1
+                } else if (it.type == PICKUP) {
+                    gameSettings.minPlayersOutsideGulag += 1
+                }
+                gulagMinPlayersStatus.set(gameSettings.minPlayersOutsideGulag)
+            })
+            button(5 sl 6, gulagEndTime.guiIcon { amount ->
+                itemStack(Items.BARRIER) {
+                    this.setCustomName {
+                        text("gulag end time (s): ")
+                        text(amount.toString()) {
+                            bold = true
+                            color = TEXT_BLUE
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                // zu viele edge cases
+                if (it.type == SHIFT_CLICK) {
+                    if (gameSettings.gulagEndTime <= 1) {
+                        return@button
+                    }
+                    gameSettings.gulagEndTime -= 1
+                } else if (it.type == PICKUP) {
+                    gameSettings.gulagEndTime += 1
+                }
+                gulagEndTime.set(gameSettings.gulagEndTime)
+            })
+
+            button(5 sl 7, kitAmountStatus.guiIcon { amount ->
                 itemStack(Items.TRAPPED_CHEST) {
                     this.setCustomName {
                         text("Kit amount: ")
@@ -96,7 +165,7 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
 //                }
 //                kitAmountStatus.set(gameSettings.kitAmount)
             })
-            changePageByKey(5 sl 5, Items.CHEST.defaultInstance.also {
+            changePageByKey(5 sl 8, Items.CHEST.defaultInstance.also {
                 it.setCustomName {
                     text("Kits") {
                         bold = true

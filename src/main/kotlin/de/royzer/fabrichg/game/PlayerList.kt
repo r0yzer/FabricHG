@@ -19,6 +19,7 @@ import java.util.*
 object PlayerList {
     val players = mutableMapOf<UUID, HGPlayer>()
 
+    val aliveOrGulagPlayers get() = players.values.filter { it.status == HGPlayerStatus.ALIVE || it.status == HGPlayerStatus.DISCONNECTED || it.status == HGPlayerStatus.GULAG }
     val alivePlayers get() = players.values.filter { it.status == HGPlayerStatus.ALIVE || it.status == HGPlayerStatus.DISCONNECTED }
 
     val spectators get() = players.values.filter { it.status == HGPlayerStatus.SPECTATOR }
@@ -77,8 +78,8 @@ object PlayerList {
     fun announceRemainingPlayers() {
         broadcastComponent(
             literalText {
-                val v = if (alivePlayers.size == 1) "verbleibt" else "verbleiben"
-                text("Es $v ${alivePlayers.size} Spieler")
+                val v = if (aliveOrGulagPlayers.size == 1) "verbleibt" else "verbleiben"
+                text("Es $v ${aliveOrGulagPlayers.size} Spieler")
                 color = 0xFFFF55
             }
         )

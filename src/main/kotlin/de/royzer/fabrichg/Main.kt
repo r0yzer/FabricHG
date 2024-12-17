@@ -69,6 +69,7 @@ fun registerCommands() {
     cooldownCommand
     statsCommand
     reviveCommand
+    gulagCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

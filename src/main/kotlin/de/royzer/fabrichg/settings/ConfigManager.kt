@@ -47,6 +47,9 @@ object ConfigManager {
         gameSettings.mushroomCowNerf = gameConfigData.mushroomCowNerf
         gameSettings.pitEnabled = gameConfigData.pitEnabled
         gameSettings.pitStartTimeBeforeEnd = gameConfigData.pitStartTimeBeforeEnd
+        gameSettings.gulagEnabled = gameConfigData.gulagEnabled
+        gameSettings.gulagEndTime = gameConfigData.gulagEndTime
+        gameSettings.minPlayersOutsideGulag = gameConfigData.minPlayersOutsideGulag
 
         setKitValues()
         updateGameConfigFile()

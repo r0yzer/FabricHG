@@ -38,7 +38,7 @@ fun ServerPlayer.showScoreboard() {
             color = 0x0032FF
         })
         updatingLine(1000.milliseconds) {
-            literalText("${PlayerList.alivePlayers.size}/${PlayerList.maxPlayers}") {
+            literalText("${PlayerList.aliveOrGulagPlayers.size}/${PlayerList.maxPlayers}") {
                 color = 0x00FFFF
             }
         }

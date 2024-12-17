@@ -122,7 +122,7 @@ object ConnectEvents {
                             }
                         }
 
-                        HGPlayerStatus.SPECTATOR -> {
+                        HGPlayerStatus.SPECTATOR, HGPlayerStatus.GULAG -> {
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                             player.setGameMode(GameType.SPECTATOR)
                             player.removeAllEffects()
