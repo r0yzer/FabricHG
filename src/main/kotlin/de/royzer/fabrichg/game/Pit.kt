@@ -31,7 +31,7 @@ object Pit {
         }
         started = true
         broadcastComponent(literalText {
-            text("Das Pit startet in ")
+            text("Das Pit startet ")
             text("jetzt") { color = TEXT_BLUE }
             color = TEXT_GRAY
         })
