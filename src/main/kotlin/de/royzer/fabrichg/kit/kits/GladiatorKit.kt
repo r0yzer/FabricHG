@@ -8,12 +8,14 @@ import de.royzer.fabrichg.util.toVec3
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Vec3i
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.levelgen.Heightmap
+import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.blockPos
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
@@ -149,13 +151,14 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer) {
         }
 
         // xz distanz gucken ist ja n kreis
-        val player1XZPos = player1.pos.also { it.subtract(0.0, (player1.pos.y - fightCenterPos.y), 0.0) }
-        if (player1XZPos.distanceTo(fightCenterPos.toVec3()) > radius) {
+        val player1XZPos = Vec3(player1.pos.x, fightCenterPos.y.toDouble(), player1.pos.z)
+        if (player1XZPos.distanceTo(fightCenterPos.toVec3()) > radius + 1) {
             end()
             return
         }
-        val player2XZPos = player2.pos.also { it.subtract(0.0, (player2.pos.y - fightCenterPos.y), 0.0) }
-        if (player2XZPos.distanceTo(fightCenterPos.toVec3()) > radius) {
+        val player2XZPos = Vec3(player2.pos.x, fightCenterPos.y.toDouble(), player2.pos.z)
+
+        if (player2XZPos.distanceTo(fightCenterPos.toVec3()) > radius + 1) {
             end()
             return
         }
