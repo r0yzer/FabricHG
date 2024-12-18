@@ -100,7 +100,6 @@ object GulagManager {
             }
         })
 
-        PlayerList.announceRemainingPlayers()
 
         serverPlayer.inventory.clearContent()
         player.giveKitItems()
