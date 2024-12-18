@@ -177,7 +177,7 @@ object GulagManager {
     }
 
     fun recheckQueue() {
-        if (gulagQueue.size < 1) return
+        if (gulagQueue.isEmpty()) return
         if (gulagQueue.size == 1) {
             if (!open) {
                 val lastPlayer = gulagQueue.poll()
