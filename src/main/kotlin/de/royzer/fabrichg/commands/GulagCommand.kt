@@ -29,8 +29,10 @@ val gulagCommand = command("gulag") {
 
             val text = literalText {
                 text("Gulag Info\n") { color = TEXT_GRAY }
+                text("Open: ") { color = TEXT_GRAY }
+                text("${GulagManager.open}\n") { color = TEXT_BLUE }
 
-                if (!GulagManager.fighting.isEmpty()) {
+                if (GulagManager.fighting.isNotEmpty()) {
                     text("Fighting:\n") { color = TEXT_GRAY }
 
                     GulagManager.fighting.forEach { player ->

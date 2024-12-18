@@ -12,6 +12,7 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
@@ -91,11 +92,7 @@ object IngamePhase : GamePhase() {
 
         // nach 10 min normalerweise (config)
         if (timer == ConfigManager.gameSettings.gulagEndTime && ConfigManager.gameSettings.gulagEnabled) {
-            broadcastComponent(literalText {
-                text("Das Gulag ist nun ")
-                text("geschlossen") { color = TEXT_BLUE }
-                color = TEXT_GRAY
-            })
+            GulagManager.close()
         }
 
         if (minifeastStartTimes.contains(timer)) {

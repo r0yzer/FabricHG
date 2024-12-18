@@ -31,6 +31,8 @@ object GulagManager {
     val gulagQueue = LinkedList<HGPlayer>()
     val fighting = mutableListOf<HGPlayer>()
 
+    var open = true
+
     val gulagEnabled: Boolean get() = ConfigManager.gameSettings.gulagEnabled
     val gulagEndTime: Int get() = ConfigManager.gameSettings.gulagEndTime
     val minPlayersOutsideGulag: Int get() = ConfigManager.gameSettings.minPlayersOutsideGulag
@@ -44,6 +46,23 @@ object GulagManager {
             ?: error("gulag world not loaded")
     }
 
+    // schliesst es also man kann nicht mehr rein aber die drin sind machen noch zu ende
+    fun close() {
+        open = false
+
+        broadcastComponent(literalText {
+            text("Das Gulag ist nun ")
+            text("geschlossen") { color = TEXT_BLUE }
+            color = TEXT_GRAY
+        })
+
+        // fighting ist empty also ist entweder einer oder keiner am warten also kann man das aufrufen
+        if (fighting.isEmpty()) {
+            recheckQueue()
+        }
+
+    }
+
     fun getOpponent(player: HGPlayer): HGPlayer? {
         if (fighting.size != 2) return null
         if (!fighting.contains(player)) return null
@@ -52,15 +71,15 @@ object GulagManager {
         return if (player == player1) player2 else player1
     }
 
-    fun onWin(player: HGPlayer, loser: HGPlayer) {
-        val highest =  getRandomHighestPos(200)
+    fun onWin(player: HGPlayer, loser: HGPlayer?) {
+        val highest = getRandomHighestPos(200)
 
         val serverPlayer = player.serverPlayer ?: return
 
         serverPlayer.setGameMode(GameType.SURVIVAL)
 
         player.status = HGPlayerStatus.ALIVE
-        loser.status = HGPlayerStatus.SPECTATOR
+        loser?.status = HGPlayerStatus.SPECTATOR
 
         server.broadcastText(literalText {
             text(player.name) {
@@ -79,7 +98,7 @@ object GulagManager {
         serverPlayer.inventory.add(itemStack(Items.STONE_SWORD) {count = 2})
         serverPlayer.inventory.add(itemStack(Items.MUSHROOM_STEW) {count = 34})
         serverPlayer.changePos(highest.x, highest.y, highest.z, server.overworld())
-        loser.serverPlayer?.changePos(highest.x, highest.y, highest.z, server.overworld())
+        loser?.serverPlayer?.changePos(highest.x, highest.y, highest.z, server.overworld())
 
         fighting.clear()
 
@@ -149,16 +168,27 @@ object GulagManager {
     // wird in mixin aufgerufen
     fun afterDeath(killer: Entity?, hgPlayer: HGPlayer) {
         if (fighting.contains(hgPlayer)) {
-            val otherHgPlayer = getOpponent(hgPlayer)
-
-            if (otherHgPlayer == null) return
+            val otherHgPlayer = getOpponent(hgPlayer) ?: return
 
             onWin(otherHgPlayer, hgPlayer)
         }
     }
 
     fun recheckQueue() {
-        if (gulagQueue.size < 2) return
+        if (gulagQueue.size < 1) return
+        if (gulagQueue.size == 1) {
+            if (!open) {
+                val lastPlayer = gulagQueue.poll()
+                // free win msg
+                lastPlayer.serverPlayer?.sendSystemMessage(literalText {
+                    text("You were the last player in the gulag and returned without a fight")
+                    color = TEXT_GRAY
+                })
+                onWin(lastPlayer, null)
+            } else {
+                return
+            }
+        }
 
         val player1 = gulagQueue.poll()
         val player2 = gulagQueue.poll()
