@@ -5,6 +5,7 @@ import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
+import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,10 +35,9 @@ public abstract class ServerPlayerMixin extends Player {
             cancellable = true
     )
     public void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-
         ServerPlayerEntityMixinKt.INSTANCE.onDamage(source, amount, cir, (ServerPlayer) (Object) (this));
 
-        if (cir.isCancelled()) return;
+        if (!LivingEntityMixinKt.INSTANCE.canDamage(source, this)) return;
 
         boolean cancel = false;
 

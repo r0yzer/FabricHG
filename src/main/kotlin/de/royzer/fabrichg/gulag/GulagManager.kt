@@ -100,9 +100,12 @@ object GulagManager {
             }
         })
 
-        PlayerList.announceRemainingPlayers()
 
         serverPlayer.inventory.clearContent()
+        player.kitsDisabled = false
+        player.kits.forEach {
+            it.onEnable?.invoke(player, it, serverPlayer)
+        }
         player.giveKitItems()
         serverPlayer.inventory.add(itemStack(Items.STONE_SWORD) {count = 2})
         serverPlayer.inventory.add(itemStack(Items.MUSHROOM_STEW) {count = 34})
@@ -178,7 +181,7 @@ object GulagManager {
     }
 
     fun recheckQueue() {
-        if (gulagQueue.size < 1) return
+        if (gulagQueue.isEmpty()) return
         if (gulagQueue.size == 1) {
             if (!open) {
                 val lastPlayer = gulagQueue.poll()
@@ -202,6 +205,11 @@ object GulagManager {
     fun sendToGulag(player: HGPlayer) {
         player.status = HGPlayerStatus.GULAG
         player.playerData["gulag"] = true
+
+        player.kitsDisabled = true
+        player.kits.forEach {
+            it.onDisable?.invoke(player, it)
+        }
 
         val opp = gulagQueue.peek()
 

@@ -81,15 +81,6 @@ object IngamePhase : GamePhase() {
             Feast.start()
         }
 
-        if (timer == ConfigManager.gameSettings.gulagEndTime - 60 && ConfigManager.gameSettings.gulagEnabled) {
-            broadcastComponent(literalText {
-                text("Das Gulag schließt in ")
-                text("60") { color = TEXT_BLUE }
-                text(" Sekunden")
-                color = TEXT_GRAY
-            })
-        }
-
         // nach 10 min normalerweise (config)
         if (timer == ConfigManager.gameSettings.gulagEndTime && ConfigManager.gameSettings.gulagEnabled) {
             GulagManager.close()

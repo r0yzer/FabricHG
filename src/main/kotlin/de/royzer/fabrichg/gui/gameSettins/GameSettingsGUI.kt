@@ -85,57 +85,9 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                     }
                 }
             }, onClick = {
-                gameSettings.gulagEnabled = !gameSettings.gulagEnabled
-                gulagStatus.set(gameSettings.gulagEnabled)
-            })
-
-            button(5 sl 5, gulagMinPlayersStatus.guiIcon { amount ->
-                itemStack(Items.WOODEN_SWORD) {
-                    this.setCustomName {
-                        text("gulag min players outside: ")
-                        text(amount.toString()) {
-                            bold = true
-                            color = TEXT_BLUE
-                        }
-                        italic = false
-                        color = TEXT_GRAY
-                    }
-                }
-            }, onClick = {
-                // zu viele edge cases
-                if (it.type == SHIFT_CLICK) {
-                    if (gameSettings.minPlayersOutsideGulag <= 1) {
-                        return@button
-                    }
-                    gameSettings.minPlayersOutsideGulag -= 1
-                } else if (it.type == PICKUP) {
-                    gameSettings.minPlayersOutsideGulag += 1
-                }
-                gulagMinPlayersStatus.set(gameSettings.minPlayersOutsideGulag)
-            })
-            button(5 sl 6, gulagEndTime.guiIcon { amount ->
-                itemStack(Items.BARRIER) {
-                    this.setCustomName {
-                        text("gulag end time (s): ")
-                        text(amount.toString()) {
-                            bold = true
-                            color = TEXT_BLUE
-                        }
-                        italic = false
-                        color = TEXT_GRAY
-                    }
-                }
-            }, onClick = {
-                // zu viele edge cases
-                if (it.type == SHIFT_CLICK) {
-                    if (gameSettings.gulagEndTime <= 1) {
-                        return@button
-                    }
-                    gameSettings.gulagEndTime -= 1
-                } else if (it.type == PICKUP) {
-                    gameSettings.gulagEndTime += 1
-                }
-                gulagEndTime.set(gameSettings.gulagEndTime)
+                // erstmal raus
+//                gameSettings.gulagEnabled = !gameSettings.gulagEnabled
+//                gulagStatus.set(gameSettings.gulagEnabled)
             })
 
             button(5 sl 7, kitAmountStatus.guiIcon { amount ->
