@@ -80,14 +80,14 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     collection.add(GamblerAction("You won wood") {
         it.giveOrDropItem(itemStack(Items.OAK_PLANKS, 32) {})
     }, 0.8)
-    collection.add(GamblerAction("You a full chain set") {
+    collection.add(GamblerAction("You won a full chain set") {
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_HELMET, 1) {})
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_CHESTPLATE, 1) {})
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_LEGGINGS, 1) {})
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_BOOTS, 1) {})
         it.giveOrDropItem(itemStack(Items.STONE_SWORD, 1) {})
     }, 0.20)
-    collection.add(GamblerAction("You a full gold set") {
+    collection.add(GamblerAction("You won a full gold set") {
         it.giveOrDropItem(itemStack(Items.GOLDEN_HELMET, 1) {})
         it.giveOrDropItem(itemStack(Items.GOLDEN_CHESTPLATE, 1) {})
         it.giveOrDropItem(itemStack(Items.GOLDEN_LEGGINGS, 1) {})
@@ -132,10 +132,12 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         })
         serverPlayer.hurt(serverPlayer.damageSources().playerAttack(serverPlayer), 1000f)
     }, 0.005)
+/*
     collection.add(GamblerAction("OP") {
         server.playerList.op(it.gameProfile)
         broadcast("tmm")
     }, 0.000001)
+*/
     collection.add(GamblerAction("Helm") {
         it.inventory.armor[0] = Items.IRON_HELMET.defaultInstance
     }, 0.1)
