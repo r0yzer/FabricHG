@@ -102,6 +102,10 @@ object GulagManager {
 
 
         serverPlayer.inventory.clearContent()
+        player.kitsDisabled = false
+        player.kits.forEach {
+            it.onEnable?.invoke(player, it, serverPlayer)
+        }
         player.giveKitItems()
         serverPlayer.inventory.add(itemStack(Items.STONE_SWORD) {count = 2})
         serverPlayer.inventory.add(itemStack(Items.MUSHROOM_STEW) {count = 34})
@@ -201,6 +205,11 @@ object GulagManager {
     fun sendToGulag(player: HGPlayer) {
         player.status = HGPlayerStatus.GULAG
         player.playerData["gulag"] = true
+
+        player.kitsDisabled = true
+        player.kits.forEach {
+            it.onDisable?.invoke(player, it)
+        }
 
         val opp = gulagQueue.peek()
 
