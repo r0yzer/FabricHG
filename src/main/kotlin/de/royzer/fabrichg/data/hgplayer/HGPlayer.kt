@@ -216,6 +216,25 @@ class HGPlayer(
 
         return uuid == other.uuid
     }
+
+    override fun hashCode(): Int {
+        var result = kills
+        result = 31 * result + offlineTime
+        result = 31 * result + kitsDisabled.hashCode()
+        result = 31 * result + uuid.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + status.hashCode()
+        result = 31 * result + kits.hashCode()
+        result = 31 * result + stats.hashCode()
+        result = 31 * result + playerData.hashCode()
+        result = 31 * result + isNeo.hashCode()
+        result = 31 * result + isAlive.hashCode()
+        result = 31 * result + inFight.hashCode()
+        result = 31 * result + isBot.hashCode()
+        result = 31 * result + (serverPlayer?.hashCode() ?: 0)
+        result = 31 * result + serverPlayerOrException.hashCode()
+        return result
+    }
 }
 
 val ServerPlayer.hgPlayer
