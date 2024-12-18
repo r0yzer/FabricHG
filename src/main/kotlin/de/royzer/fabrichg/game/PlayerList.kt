@@ -8,6 +8,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.IngamePhase
+import de.royzer.fabrichg.gulag.GulagManager
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
@@ -71,6 +72,9 @@ object PlayerList {
                 color = 0xFFFF55
             }
         )
+        if (alivePlayers.size < GulagManager.minPlayersOutsideGulag) {
+            GulagManager.close()
+        }
         announceRemainingPlayers()
     }
 

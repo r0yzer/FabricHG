@@ -22,6 +22,8 @@ import net.minecraft.world.level.GameType
 import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.changePos
 import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.logging.logInfo
+import net.silkmc.silk.core.logging.logWarning
 import net.silkmc.silk.core.text.broadcastText
 import net.silkmc.silk.core.text.literalText
 import java.util.*
@@ -40,6 +42,7 @@ object GulagManager {
     val empty: Boolean get() = gulagQueue.isEmpty() && fighting.isEmpty()
 
     init {
+        open = gulagEnabled
         val levels = (server as MinecraftServerAccessor).levelsMap
 
         gulagLevel = levels.toList().find { pair -> pair.first.location().path == "gulag" }?.second
@@ -47,7 +50,12 @@ object GulagManager {
     }
 
     // schliesst es also man kann nicht mehr rein aber die drin sind machen noch zu ende
+    // wird nach close time oder wenn nicht mehr genug player leben aufgerufen
     fun close() {
+        if (!open) {
+            logWarning("Gulag wird geschlossen obwohl schon zu")
+            return
+        }
         open = false
 
         broadcastComponent(literalText {
@@ -57,6 +65,7 @@ object GulagManager {
         })
 
         // fighting ist empty also ist entweder einer oder keiner am warten also kann man das aufrufen
+        // wenn mehr als 2 sind wird ja nach fight ende nochmal geguckt
         if (fighting.isEmpty()) {
             recheckQueue()
         }
@@ -132,13 +141,7 @@ object GulagManager {
     }
 
     fun canGoToGulag(player: HGPlayer): Boolean {
-        if (!gulagEnabled) return false
-        if (GamePhaseManager.timer.toLong() > gulagEndTime) return false
-
-        val playersNotInGulag = PlayerList.alivePlayers
-            .filter { player -> !isInGulag(player) }
-
-        if (playersNotInGulag.size < minPlayersOutsideGulag) return false
+        if (!open) return false // guckt auch ob enabled ist oder schon zu spät oder zu wenig spieler weil das false ist wenn close() aufgerufen wurde
 
         val wasInGulag = player.getPlayerData<Boolean>("gulag") == true
         return !wasInGulag
