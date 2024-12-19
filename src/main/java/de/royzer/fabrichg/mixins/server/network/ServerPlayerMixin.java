@@ -1,6 +1,8 @@
 package de.royzer.fabrichg.mixins.server.network;
 
 import com.mojang.authlib.GameProfile;
+import de.royzer.fabrichg.data.hgplayer.HGPlayer;
+import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
@@ -54,6 +56,11 @@ public abstract class ServerPlayerMixin extends Player {
         boolean cancelDeath = GulagManager.INSTANCE.beforeDeath(source.getEntity(), (ServerPlayer) (Object) this);
 
         if (cancelDeath) {
+            Entity killer = source.getEntity();
+            if (killer instanceof ServerPlayer killerPlayer) {
+                HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(killerPlayer);
+                HGPlayerKt.gulagKill(hgPlayer, (ServerPlayer) (Object) this);
+            }
             setHealth(getMaxHealth());
         }
 

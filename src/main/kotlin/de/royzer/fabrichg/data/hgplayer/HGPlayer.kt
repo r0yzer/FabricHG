@@ -257,3 +257,14 @@ fun ServerPlayer.giveKitSelectors() {
 fun ItemStack.hasCustomHoverName(): Boolean {
     return get(DataComponents.CUSTOM_NAME)?.string?.isNotEmpty() == true
 }
+
+// wenn man wen killt der ins gulag geht (fürs mixin)
+fun HGPlayer.gulagKill(killed: ServerPlayer) {
+    kills += 1
+    updateStats(1)
+    kits.forEach {
+        if (canUseKit(it, true)) {
+            it.events.killPlayerAction?.invoke(this, it, killed)
+        }
+    }
+}
