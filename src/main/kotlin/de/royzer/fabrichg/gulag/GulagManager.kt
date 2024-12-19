@@ -5,7 +5,6 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
-import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.mixins.server.MinecraftServerAccessor
@@ -13,6 +12,7 @@ import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
 import de.royzer.fabrichg.util.getRandomHighestPos
+import de.royzer.fabrichg.util.tracker
 import net.minecraft.commands.arguments.EntityAnchorArgument
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -22,7 +22,6 @@ import net.minecraft.world.level.GameType
 import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.changePos
 import net.silkmc.silk.core.item.itemStack
-import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.logging.logWarning
 import net.silkmc.silk.core.text.broadcastText
 import net.silkmc.silk.core.text.literalText
@@ -51,18 +50,20 @@ object GulagManager {
 
     // schliesst es also man kann nicht mehr rein aber die drin sind machen noch zu ende
     // wird nach close time oder wenn nicht mehr genug player leben aufgerufen
-    fun close() {
+    fun close(sendMessage: Boolean = true) {
         if (!open) {
             logWarning("Gulag wird geschlossen obwohl schon zu")
             return
         }
         open = false
+        if (sendMessage) {
+            broadcastComponent(literalText {
+                text("Das Gulag ist nun ")
+                text("geschlossen") { color = TEXT_BLUE }
+                color = TEXT_GRAY
+            })
+        }
 
-        broadcastComponent(literalText {
-            text("Das Gulag ist nun ")
-            text("geschlossen") { color = TEXT_BLUE }
-            color = TEXT_GRAY
-        })
 
         // fighting ist empty also ist entweder einer oder keiner am warten also kann man das aufrufen
         // wenn mehr als 2 sind wird ja nach fight ende nochmal geguckt
@@ -109,6 +110,7 @@ object GulagManager {
         player.giveKitItems()
         serverPlayer.inventory.add(itemStack(Items.STONE_SWORD) {count = 2})
         serverPlayer.inventory.add(itemStack(Items.MUSHROOM_STEW) {count = 34})
+        serverPlayer.inventory.setItem(8, tracker)
         serverPlayer.changePos(highest.x, highest.y, highest.z, server.overworld())
         loser?.serverPlayer?.changePos(highest.x, highest.y, highest.z, server.overworld())
 

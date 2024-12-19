@@ -4,11 +4,11 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import de.royzer.fabrichg.util.toVec3
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import net.minecraft.core.BlockPos
-import net.minecraft.core.Vec3i
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
@@ -32,6 +32,9 @@ val gladiatorKit = kit("Gladiator") {
     usableInInvincibility = false
     cooldown = 45.0
 
+    val radius by property(15, "Gladi box radius")
+    val height by property(10, "Gladi box height")
+
     description = "Do a 1v1"
 
     kitItem {
@@ -48,7 +51,7 @@ val gladiatorKit = kit("Gladiator") {
             if (clickedPlayer.hgPlayer.isNeo) {
                 return@onClickAtPlayer
             }
-            val fight = GladiatorFight(player1, clickedPlayer)
+            val fight = GladiatorFight(player1, clickedPlayer, radius, height)
             fight.start()
             val task = mcCoroutineTask(sync = false, howOften = Long.MAX_VALUE, period = 20.ticks) {
                 fight.tick()
@@ -60,10 +63,7 @@ val gladiatorKit = kit("Gladiator") {
 
 // gucken ob geung platz für die box
 // das mit dem rot gelb grün glas
-class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer) {
-
-    val height = 10
-    val radius = 15
+class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer, val radius: Int, val height: Int) {
 
     val startPos1 = player1.pos
     val startPos2 = player2.pos
@@ -96,7 +96,7 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer) {
         }
         fightCenterPos.produceFilledCirclePositions(radius) {// dach
             player1.server.overworld()
-                .setBlockAndUpdate(BlockPos(it.x, it.y + 10, it.z), Blocks.GLASS.defaultBlockState())
+                .setBlockAndUpdate(BlockPos(it.x, it.y + height, it.z), Blocks.GLASS.defaultBlockState())
         }
         fightCenterPos.produceFilledCirclePositions(3) {// loch
             player1.server.overworld()
@@ -105,8 +105,9 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer) {
 
 
         val p = fightCenterPos.toVec3()
-        player1.teleportTo(player1.serverLevel(), p.x, p.y + 1, p.z + 10, -180f, 0f)
-        player2.teleportTo(player1.serverLevel(), p.x, p.y + 1, p.z - 10, 0f, 0f)
+        val distanceFromMiddle = radius / 2 - 1
+        player1.teleportTo(player1.serverLevel(), p.x, p.y + 1, p.z + distanceFromMiddle, -180f, 0f)
+        player2.teleportTo(player1.serverLevel(), p.x, p.y + 1, p.z - distanceFromMiddle, 0f, 0f)
     }
 
     fun end() {

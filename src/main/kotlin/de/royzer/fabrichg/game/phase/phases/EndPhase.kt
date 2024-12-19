@@ -90,7 +90,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
         val pos = BlockPos(0, 0, 0).toHighestPos()
         val height = min(server.overworld().height + 100, pos.y)
 
-        mcCoroutineTask(howOften = 500L, period = .01.seconds) { task ->
+        mcCoroutineTask(howOften = 5, period = 1.seconds) { task ->
             for (x in -size..size) {
                 for (z in -size..size) {
                     server.overworld().setBlockAndUpdate(BlockPos(x, height, z), Blocks.CAKE.defaultBlockState())
