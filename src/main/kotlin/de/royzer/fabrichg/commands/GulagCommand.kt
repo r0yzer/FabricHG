@@ -16,7 +16,7 @@ import net.silkmc.silk.core.text.sendText
 val gulagCommand = command("gulag") {
     literal("info") {
         runs {
-            if (GulagManager.empty) {
+            if (GulagManager.empty && GulagManager.open) {
                 source.playerOrException.sendText(literalText("Das Gulag ist leer") {
                     color = TEXT_GRAY
                 })
