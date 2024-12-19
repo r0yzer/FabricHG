@@ -68,7 +68,7 @@ object IngamePhase : GamePhase() {
                 Items.STONE_SWORD.defaultInstance
             )
         }
-        if (PlayerList.alivePlayers.size < GulagManager.minPlayersOutsideGulag) {
+        if (PlayerList.alivePlayers.size <= GulagManager.minPlayersOutsideGulag) {
             GulagManager.close(sendMessage = false)
         }
     }
@@ -84,7 +84,7 @@ object IngamePhase : GamePhase() {
         }
 
         // nach 10 min normalerweise (config)
-        if (timer == ConfigManager.gameSettings.gulagEndTime && ConfigManager.gameSettings.gulagEnabled) {
+        if (timer == GulagManager.gulagEndTime && GulagManager.gulagEnabled) {
             GulagManager.close()
         }
 

@@ -1,20 +1,16 @@
 package de.royzer.fabrichg.events
 
 import de.royzer.fabrichg.bots.HGBot
-import de.royzer.fabrichg.bots.player.FakeServerPlayer
+import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
-import de.royzer.fabrichg.gulag.GulagManager
-import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
 import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
-import net.minecraft.network.chat.Component
-import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
@@ -60,9 +56,12 @@ object PlayerDeath {
                 it.events.killPlayerAction?.invoke(hgPlayer, it, serverPlayerEntity)
             }
         }
-        hgPlayer.kills += 1
-        hgPlayer.updateStats(1)
-        serverPlayerEntity.hgPlayer.updateStats(deaths = 1)
+        if (deadHGPlayer.status != HGPlayerStatus.GULAG) {
+            hgPlayer.kills += 1
+            hgPlayer.updateStats(1)
+            serverPlayerEntity.hgPlayer.updateStats(deaths = 1)
+        }
+
 //        serverPlayerEntity.hgPlayer.kits.clear()
 
         return true
