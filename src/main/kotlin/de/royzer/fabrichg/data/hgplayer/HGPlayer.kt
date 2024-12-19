@@ -255,5 +255,5 @@ fun ServerPlayer.giveKitSelectors() {
 }
 
 fun ItemStack.hasCustomHoverName(): Boolean {
-    return get(DataComponents.CUSTOM_NAME)?.string?.isNotEmpty() ?: false
+    return get(DataComponents.CUSTOM_NAME)?.string?.isNotEmpty() == true
 }
