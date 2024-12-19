@@ -40,6 +40,7 @@ val reviveCommand = command("revive") {
             serverPlayer.teleportTo(executor.x, executor.y, executor.z)
             serverPlayer.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
 
+            hgPlayer.kitsDisabled = false
             hgPlayer.kits.forEach {
                 it.onEnable?.invoke(hgPlayer, it, serverPlayer)
             }

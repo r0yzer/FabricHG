@@ -68,7 +68,7 @@ object IngamePhase : GamePhase() {
                 Items.STONE_SWORD.defaultInstance
             )
         }
-        if (PlayerList.alivePlayers.size < GulagManager.minPlayersOutsideGulag) {
+        if (PlayerList.alivePlayers.size <= GulagManager.minPlayersOutsideGulag) {
             GulagManager.close(sendMessage = false)
         }
     }
