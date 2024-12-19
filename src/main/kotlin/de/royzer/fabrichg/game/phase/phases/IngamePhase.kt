@@ -84,7 +84,7 @@ object IngamePhase : GamePhase() {
         }
 
         // nach 10 min normalerweise (config)
-        if (timer == ConfigManager.gameSettings.gulagEndTime && ConfigManager.gameSettings.gulagEnabled) {
+        if (timer == GulagManager.gulagEndTime && GulagManager.gulagEnabled) {
             GulagManager.close()
         }
 
