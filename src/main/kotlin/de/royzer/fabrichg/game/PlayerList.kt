@@ -72,10 +72,10 @@ object PlayerList {
                 color = 0xFFFF55
             }
         )
+        announceRemainingPlayers()
         if (alivePlayers.size < GulagManager.minPlayersOutsideGulag) {
             GulagManager.close()
         }
-        announceRemainingPlayers()
     }
 
 
