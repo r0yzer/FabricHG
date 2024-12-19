@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.GameRules
 import net.minecraft.world.level.GameType
 import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.changePos
@@ -46,6 +47,8 @@ object GulagManager {
 
         gulagLevel = levels.toList().find { pair -> pair.first.location().path == "gulag" }?.second
             ?: error("gulag world not loaded")
+
+        gulagLevel.gameRules.getRule(GameRules.RULE_DOMOBSPAWNING).set(false, server)
     }
 
     // schliesst es also man kann nicht mehr rein aber die drin sind machen noch zu ende
