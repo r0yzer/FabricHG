@@ -88,9 +88,9 @@ fun CommandContext<CommandSourceStack>.createBot(botname: String, skinName: Stri
     server.playerList.placeNewPlayer(
         FakeClientConnection(), serverPlayer, CommonListenerCookie.createInitial(profile, false)
     )
-    serverPlayer.setPos(executor.pos)
 
     val hgBot = HGBot(world, botname, executor, serverPlayer = serverPlayer)
+    serverPlayer.setPos(executor.pos)
     executor.world.addFreshEntity(hgBot.apply {
         setPos(executor.pos)
         addEffect(
