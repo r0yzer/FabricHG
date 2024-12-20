@@ -189,7 +189,7 @@ object GulagManager {
         if (gulagQueue.isEmpty()) return
         if (gulagQueue.size == 1) {
             if (!open) {
-                val lastPlayer = gulagQueue.poll()
+                val lastPlayer = gulagQueue.poll() ?: return
                 // free win msg
                 lastPlayer.serverPlayer?.sendSystemMessage(literalText {
                     text("You were the last player in the gulag and returned without a fight")
