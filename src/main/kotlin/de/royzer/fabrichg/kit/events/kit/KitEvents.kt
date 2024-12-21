@@ -15,6 +15,7 @@ import net.minecraft.world.phys.EntityHitResult
 class KitEvents(
     var hitPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
     var hitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
+    var afterHitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
     var moveAction: ((HGPlayer, Kit) -> Unit)? = null,
     var rightClickEntityAction: ((HGPlayer, Kit, clickedEntity: Entity) -> Unit)? = null,
     var drinkAction: ((HGPlayer, Kit, ItemStack) -> Unit)? = null,

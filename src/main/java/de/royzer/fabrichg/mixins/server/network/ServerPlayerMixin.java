@@ -114,6 +114,14 @@ public abstract class ServerPlayerMixin extends Player {
     }
 
     @Inject(
+            method = "attack",
+            at = @At("TAIL")
+    )
+    public void afterAttackEntity(Entity target, CallbackInfo ci) {
+        OnAttackEntityKt.afterAttackEntity(target, this);
+    }
+
+    @Inject(
             method = "tick",
             at = @At("HEAD")
     )
