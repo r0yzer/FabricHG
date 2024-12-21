@@ -46,7 +46,7 @@ val rougeKit = kit("Rouge") {
                 text(nearbyPlayers.size.toString()) {
                     color = TEXT_BLUE
                 }
-                text(" Spielern disabled")
+                text(" Spieler(n) disabled")
                 color = TEXT_GRAY
             }
         }

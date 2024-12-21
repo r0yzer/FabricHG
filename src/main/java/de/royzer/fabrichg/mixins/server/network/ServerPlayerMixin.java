@@ -5,12 +5,14 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer;
 import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
+import de.royzer.fabrichg.kit.events.kit.invoker.OnLeftClickKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -111,6 +113,15 @@ public abstract class ServerPlayerMixin extends Player {
     )
     public void onAttackEntity(Entity target, CallbackInfo ci) {
         OnAttackEntityKt.onAttackEntity(target, this);
+    }
+
+
+    @Inject(
+            method = "swing",
+            at = @At("HEAD")
+    )
+    public void onSwing(InteractionHand hand, CallbackInfo ci) {
+        OnLeftClickKt.onLeftClick((ServerPlayer) (Object) this, hand);
     }
 
     @Inject(

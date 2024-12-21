@@ -4,6 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
+import de.royzer.fabrichg.commands.hgbotCommand
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.maxOfflineTime
@@ -163,7 +164,10 @@ class HGPlayer(
             }
         )
         if (GamePhaseManager.isIngame) {
+            this.kits[index].onDisable?.invoke(this, this.kits[index])
             this.giveKitItems(kit)
+            val serverPlayer = this.serverPlayer ?: return
+            kit.onEnable?.invoke(this, kit, serverPlayer)
         }
     }
 
@@ -220,24 +224,6 @@ class HGPlayer(
         return uuid == other.uuid
     }
 
-    override fun hashCode(): Int {
-        var result = kills
-        result = 31 * result + offlineTime
-        result = 31 * result + kitsDisabled.hashCode()
-        result = 31 * result + uuid.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + status.hashCode()
-        result = 31 * result + kits.hashCode()
-        result = 31 * result + stats.hashCode()
-        result = 31 * result + playerData.hashCode()
-        result = 31 * result + isNeo.hashCode()
-        result = 31 * result + isAlive.hashCode()
-        result = 31 * result + inFight.hashCode()
-        result = 31 * result + isBot.hashCode()
-        result = 31 * result + (serverPlayer?.hashCode() ?: 0)
-        result = 31 * result + serverPlayerOrException.hashCode()
-        return result
-    }
 }
 
 val ServerPlayer.hgPlayer

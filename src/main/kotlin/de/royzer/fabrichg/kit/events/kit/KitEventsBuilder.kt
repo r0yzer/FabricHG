@@ -74,4 +74,8 @@ class KitEventsBuilder(val kit: Kit) {
     fun onTakeDamage(action: (player: HGPlayer, kit: Kit, source: DamageSource, amount: Float) -> Float) {
         kit.events.takeDamageAction = action
     }
+
+    fun onLeftClick(action: (HGPlayer, Kit) -> Unit) {
+        kit.events.leftClickAction = action
+    }
 }

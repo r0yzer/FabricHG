@@ -23,7 +23,7 @@ fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
 
             val compound = compound(
                 (2 sl 2) rectTo (4 sl 8),
-                PlayerList.alivePlayers.sortedBy { it.kills }.toGuiList(),
+                PlayerList.aliveOrGulagPlayers.sortedBy { it.kills }.toGuiList(),
                 iconGenerator = { hgPlayer ->
                     val skull = Items.PLAYER_HEAD.defaultInstance
                     hgPlayer.serverPlayer?.let { skull.setSkullPlayer(it) }
