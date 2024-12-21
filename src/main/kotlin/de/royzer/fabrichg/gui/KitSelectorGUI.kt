@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.gui
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.AchievementManager
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.util.noPotionEffects
 import net.minecraft.server.level.ServerPlayer
@@ -49,6 +50,10 @@ fun kitSelectorGUI(serverPlayerEntity: ServerPlayer, index: Int) = igui(GuiType.
             onClick = { _, kit ->
                 hgPlayer.setKit(kit, index - 1)
                 serverPlayerEntity.closeContainer()
+
+                kit.achievements.forEach { achievement ->
+                    AchievementManager.initAchievement(serverPlayerEntity, achievement.id)
+                }
             }
         )
 

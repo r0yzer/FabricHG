@@ -92,7 +92,6 @@ class Eber(
 const val eberKey = "eberlist"
 
 val eberKit = kit("Eber") {
-
     kitSelectorItem = Items.NETHERITE_INGOT.defaultInstance
 
     cooldown = 35.0
