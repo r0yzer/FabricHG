@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -22,14 +23,22 @@ val thorKit = kit("Thor") {
     val heightForNetherrack by property(100, "height for netherrack")
     val netherrackExplosionRadius by property(5.0, "netherrack explosion radius")
 
+    val largeExplosionAchievement by achievement("large explosion") {
+        level(10)
+        level(50)
+        level(250)
+    }
+
     kitItem {
         itemStack = kitSelectorItem
         onUseOnBlock { hgPlayer, kit, blockPlaceContext ->
             val level = blockPlaceContext.level
             val lightningPos = blockPlaceContext.clickedPos.toHighestPos()
+            val player = hgPlayer.serverPlayer ?: return@onUseOnBlock
             if (lightningPos.y > heightForNetherrack) {
                 if (level.getBlockState(lightningPos.subtract(Vec3i(0, 1,0))).block == Blocks.NETHERRACK) {
                     // soll das auch unter y 100 explodieren?
+                    // glaube nicht
                     level.explode(
                         hgPlayer.serverPlayer,
                         lightningPos.x.toDouble(),
@@ -39,6 +48,8 @@ val thorKit = kit("Thor") {
                         true,
                         Level.ExplosionInteraction.TNT
                     )
+
+                    largeExplosionAchievement.awardLater(player)
                 } else {
                     level.setBlockAndUpdate(lightningPos, Blocks.NETHERRACK.defaultBlockState())
                 }

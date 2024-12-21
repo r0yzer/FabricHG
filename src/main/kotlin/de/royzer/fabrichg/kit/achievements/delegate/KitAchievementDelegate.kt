@@ -37,6 +37,10 @@ class AchievementBuilder(val kit: Kit, val name: String) {
     }
 }
 
+fun Kit.achievement(name: String, builder: AchievementBuilder.() -> Unit): KitAchievementDelegate {
+    return AchievementBuilder(this, name).apply(builder).build()
+}
+
 fun KitBuilder.achievement(name: String, builder: AchievementBuilder.() -> Unit): KitAchievementDelegate {
     return AchievementBuilder(kit, name).apply(builder).build()
 }

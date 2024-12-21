@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.Kit
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.mixins.entity.ProjectileAccessor
 import net.minecraft.world.entity.Entity
@@ -34,4 +35,11 @@ val neoKit: Kit = kit("Neo") {
             }
         }
     }
+}
+
+// TODO: das überall machen
+val blockKitsAchievement by neoKit.achievement("block kits") {
+    level(25)
+    level(100)
+    level(1000)
 }

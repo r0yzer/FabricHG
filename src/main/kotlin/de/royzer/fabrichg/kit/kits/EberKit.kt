@@ -2,11 +2,14 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.KitAchievement
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import de.royzer.fabrichg.util.toHighestPos
 import net.minecraft.core.BlockPos
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.LivingEntity
@@ -29,7 +32,8 @@ class Eber(
     val owner: HGPlayer,
     val eberAliveTime: Double,
     val eberVelocityBoost: Double,
-    val eberSpeed: Double
+    val eberSpeed: Double,
+    val launchPlayersAchievement: KitAchievement
 ): Hoglin(EntityType.HOGLIN, level) {
     init {
         setImmuneToZombification(true)
@@ -82,6 +86,10 @@ class Eber(
     }
 
     override fun doHurtTarget(target: Entity): Boolean {
+        if (target is ServerPlayer) {
+            owner.serverPlayer?.let { launchPlayersAchievement.awardLater(it) }
+        }
+
         val result = super.doHurtTarget(target)
         target.modifyVelocity(Vec3(0.0, Random.nextDouble(eberVelocityBoost-0.15, eberVelocityBoost+0.15), 0.0))
         return result
@@ -102,17 +110,31 @@ val eberKit = kit("Eber") {
     val eberVelocityBoost by property(1.15, "eber launch velocity")
     val eberSpeed by property(1.5, "eber speed")
 
+    val summonEbersAchievement by achievement("summon ebers") {
+        level(5)
+        level(50)
+        level(1000)
+    }
+
+    val eberLaunchPlayersAchievement by achievement("launch players with ebers") {
+        level(15)
+        level(100)
+        level(2500)
+    }
+
     kitItem {
         itemStack = kitSelectorItem.copy()
 
         onClick { hgPlayer, kit ->
             val world = hgPlayer.serverPlayer?.world ?: return@onClick
 
-            val eber = Eber(world, hgPlayer, eberAliveTime, eberVelocityBoost, eberSpeed).also {
+            val eber = Eber(world, hgPlayer, eberAliveTime, eberVelocityBoost, eberSpeed, eberLaunchPlayersAchievement).also {
                 it.setPos(hgPlayer.serverPlayer!!.position())
             }
             hgPlayer.serverPlayer!!.startRiding(eber)
             world.addFreshEntity(eber)
+
+            summonEbersAchievement.awardLater(hgPlayer.serverPlayer ?: return@onClick)
 
             hgPlayer.activateCooldown(kit)
         }

@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
@@ -19,14 +21,28 @@ val trymacsKit = kit("Trymacs") {
 
     val trymacsSpeed by property(0.01f, "trymacs speed")
 
+    val launchPlayersAchievement by achievement("launch players") {
+        level(25)
+        level(100)
+        level(400)
+    }
+
     kitEvents {
         afterHitEntity { player, kit, entity ->
-            val playerLook = player.serverPlayer?.forward?.normalize() ?: return@afterHitEntity
+            val serverPlayer = player.serverPlayer ?: return@afterHitEntity
+            val playerLook = serverPlayer.forward?.normalize() ?: return@afterHitEntity
+
+            if (entity.hgPlayer?.isNeo == true) {
+                blockKitsAchievement.awardLater(entity.hgPlayer?.serverPlayer ?: return@afterHitEntity)
+                return@afterHitEntity
+            }
 
             entity.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.0F, 1.0F);
             val launch = Vec3(playerLook.x * horizontalLaunchStrength, verticalLaunchStrength.toDouble(), playerLook.z * horizontalLaunchStrength)
 
             entity.modifyVelocity(launch)
+
+            launchPlayersAchievement.awardLater(serverPlayer)
         }
 
         onEnable { hgPlayer, kit, serverPlayer ->
