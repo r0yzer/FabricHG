@@ -56,7 +56,7 @@ val kits = listOfNotNull(
     blinkKit,
     diggerKit,
     cannibalKit,
-//    hulkKit,
+    hulkKit,
     mirrorKit,
     monkKit,
     urgalKit,
@@ -88,6 +88,7 @@ val kits = listOfNotNull(
     gliderKit,
     gladiatorKit,
     automaticKit,
+    trymacsKit,
 )
 
 fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }.random()

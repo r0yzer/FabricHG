@@ -36,3 +36,16 @@ fun onAttackEntity(target: Entity, entity: LivingEntity) {
         }
     }
 }
+
+
+fun afterAttackEntity(target: Entity, entity: LivingEntity) {
+    val hgPlayer = entity.hgPlayer ?: return
+
+    hgPlayer.kits.forEach { kit ->
+        // TODO das muss nochmal besser werden wenn mehr kits als das eber kit das machen wollen
+        val ignoreEntityCooldown = kit.events.noCooldownActions.contains<Any?>(kit.events.afterHitEntityAction)
+        hgPlayer.invokeKitAction(kit, sendCooldown = false, ignoreCooldown = ignoreEntityCooldown) {
+            kit.events.afterHitEntityAction?.invoke(hgPlayer, kit, target)
+        }
+    }
+}
