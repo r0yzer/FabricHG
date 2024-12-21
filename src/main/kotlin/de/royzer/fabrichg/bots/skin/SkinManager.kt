@@ -62,7 +62,6 @@ object SkinManager {
         connection.doOutput = true
         connection.doInput = true
         connection.requestMethod = "GET"
-        println(connection.responseCode)
         if (connection.responseCode == HttpURLConnection.HTTP_OK) {
             connection.inputStream.use { `is` ->
                 InputStreamReader(`is`).use { isr ->

@@ -56,7 +56,7 @@ val kits = listOfNotNull(
     blinkKit,
     diggerKit,
     cannibalKit,
-//    hulkKit,
+    hulkKit,
     mirrorKit,
     monkKit,
     urgalKit,
