@@ -27,6 +27,8 @@ import net.silkmc.silk.core.task.mcCoroutineTask
 
 private val fightKey = "isInGladiatorFight"
 
+val gladiatorBlockPositions = hashSetOf<BlockPos>()
+
 val gladiatorKit = kit("Gladiator") {
     kitSelectorItem = Items.IRON_BARS.defaultInstance
     usableInInvincibility = false
@@ -68,6 +70,8 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer, val r
     val startPos1 = player1.pos
     val startPos2 = player2.pos
 
+    val blocks = hashSetOf<BlockPos>()
+
     val pos = player1.world.getHeightmapPos(Heightmap.Types.WORLD_SURFACE, player1.blockPos)
     val fightCenterPos = pos.subtract(BlockPos(0, -40, 0)) // sollte passen
 
@@ -86,17 +90,23 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer, val r
         player2.hgPlayer.playerData[fightKey] = true
 
         fightCenterPos.produceFilledCirclePositions(radius) {// boden
-            player1.server.overworld().setBlockAndUpdate(BlockPos(it.x, it.y, it.z), Blocks.GLASS.defaultBlockState())
+            val pos = BlockPos(it.x, it.y, it.z)
+            player1.server.overworld().setBlockAndUpdate(pos, Blocks.GLASS.defaultBlockState())
+            blocks.add(pos)
         }
         repeat(height) { i ->
             fightCenterPos.produceCirclePositions(radius) {// wand
+                val pos = BlockPos(it.x, it.y + i, it.z)
                 player1.server.overworld()
-                    .setBlockAndUpdate(BlockPos(it.x, it.y + i, it.z), Blocks.GLASS.defaultBlockState())
+                    .setBlockAndUpdate(pos, Blocks.GLASS.defaultBlockState())
+                blocks.add(pos)
             }
         }
         fightCenterPos.produceFilledCirclePositions(radius) {// dach
+            val pos = BlockPos(it.x, it.y + height, it.z)
             player1.server.overworld()
-                .setBlockAndUpdate(BlockPos(it.x, it.y + height, it.z), Blocks.GLASS.defaultBlockState())
+                .setBlockAndUpdate(pos, Blocks.GLASS.defaultBlockState())
+            blocks.add(pos)
         }
         fightCenterPos.produceFilledCirclePositions(3) {// loch
             player1.server.overworld()
@@ -108,6 +118,8 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer, val r
         val distanceFromMiddle = radius / 2 - 1
         player1.teleportTo(player1.serverLevel(), p.x, p.y + 1, p.z + distanceFromMiddle, -180f, 0f)
         player2.teleportTo(player1.serverLevel(), p.x, p.y + 1, p.z - distanceFromMiddle, 0f, 0f)
+
+        gladiatorBlockPositions.addAll(blocks)
     }
 
     fun end() {
@@ -134,6 +146,7 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer, val r
             }
         }
 
+        gladiatorBlockPositions.removeAll(blocks)
         job.cancel("AAAAAAAAAHHHHHHHHH BLUEFIREOLY")
     }
 

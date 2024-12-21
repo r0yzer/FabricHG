@@ -2,6 +2,7 @@ package de.royzer.fabrichg.mixins.server.network;
 
 import de.royzer.fabrichg.game.GamePhaseManager;
 import de.royzer.fabrichg.kit.events.kititem.invoker.OnDestroyBlockWithKitemKt;
+import de.royzer.fabrichg.kit.kits.GladiatorKitKt;
 import de.royzer.fabrichg.kit.kits.TurtleKitKt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,12 +42,15 @@ abstract public class ServerPlayerInteractionManagerMixin {
             ci.cancel();
             return;
         }
-//        OnDestroyBlockKt.onDestroyBlock(this.player, pos);
-//        ServerPlayerGameMode serverPlayerGameMode = (ServerPlayerGameMode) (Object) this;
-        if (this.player.level().getBlockState(pos).getBlock() == Blocks.HONEY_BLOCK) {
+        if (this.player.level().getBlockState(pos).getBlock() == Blocks.HONEY_BLOCK) { // dass darf godtrouyvs nicht rausfinden
             ci.cancel();
+            return;
         }
-        if(TurtleKitKt.getShellBlocks().contains(pos)){
+        if (this.player.level().getBlockState(pos).getBlock() == Blocks.GLASS && GladiatorKitKt.getGladiatorBlockPositions().contains(pos)) {
+            ci.cancel();
+            return;
+        }
+        if (TurtleKitKt.getShellBlocks().contains(pos)) {
             ci.cancel();
         }
     }
