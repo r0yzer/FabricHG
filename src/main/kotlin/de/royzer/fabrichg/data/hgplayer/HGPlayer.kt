@@ -4,6 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
+import de.royzer.fabrichg.commands.hgbotCommand
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.maxOfflineTime
@@ -160,7 +161,10 @@ class HGPlayer(
             }
         )
         if (GamePhaseManager.isIngame) {
+            this.kits[index].onDisable?.invoke(this, this.kits[index])
             this.giveKitItems(kit)
+            val serverPlayer = this.serverPlayer ?: return
+            kit.onEnable?.invoke(this, kit, serverPlayer)
         }
     }
 
