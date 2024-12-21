@@ -26,9 +26,7 @@ val hulkKit = kit("Rühl24.de") {
             if (clickedEntity is Boat || clickedEntity is Minecart) return@onRightClickEntity
             if (serverPlayer.mainHandItem.item == Items.AIR && serverPlayer.passengers.isEmpty()) {
                 clickedEntity.startRiding(serverPlayer)
-                if (clickedEntity is Player) {
-                    serverPlayer.connection.send(ClientboundSetPassengersPacket(serverPlayer))
-                }
+                serverPlayer.connection.send(ClientboundSetPassengersPacket(serverPlayer))
             }
         }
         onLeftClick { hgPlayer, kit ->
