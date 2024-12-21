@@ -22,8 +22,8 @@ val phantomKit = kit("Phantom") {
 
     cooldown = 45.0
 
-    val inFightVelocity by property(2.25f, "up velocity in fight")
-    val velocity by property(0.75f, "up velocity")
+    val inFightVelocity by property(0.75f, "up velocity in fight")
+    val velocity by property(2.25f, "up velocity")
 
     kitItem {
         itemStack = kitSelectorItem
