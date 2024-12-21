@@ -47,6 +47,7 @@ fun initServer() {
         it.gameRules.getRule(GameRules.RULE_DAYLIGHT).set(false, it)
         it.gameRules.getRule(GameRules.RULE_DO_TRADER_SPAWNING).set(false, it)
         it.gameRules.getRule(GameRules.RULE_DO_PATROL_SPAWNING).set(false, it)
+        it.gameRules.getRule(GameRules.RULE_ANNOUNCE_ADVANCEMENTS).set(false, it)
         it.overworld().setDefaultSpawnPos(BlockPos.ZERO, 0f)
     }
 
