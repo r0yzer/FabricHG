@@ -12,12 +12,12 @@ import net.silkmc.silk.core.entity.modifyVelocity
 val trymacsKit = kit("Trymacs") {
     kitSelectorItem = Items.IRON_GOLEM_SPAWN_EGG.defaultInstance
 
-    description = "you are trymacs"
+    description = "You are trymacs"
 
     val horizontalLaunchStrength by property(1.1f, "horizontal launch strength")
     val verticalLaunchStrength by property(0.9f, "vertical launch strength")
 
-    val trymacsSpeed by property(0.01f, "trymacs speed")
+    val trymacsSpeed by property(5.00f, "trymacs speed")
 
     kitEvents {
         afterHitEntity { player, kit, entity ->
@@ -31,22 +31,15 @@ val trymacsKit = kit("Trymacs") {
 
         onEnable { hgPlayer, kit, serverPlayer ->
             serverPlayer.getAttribute(Attributes.MAX_HEALTH)?.baseValue = 40.0
-
-            serverPlayer.connection.send(ClientboundPlayerAbilitiesPacket(serverPlayer.abilities.also {
-                it.walkingSpeed = trymacsSpeed * 0.001f
-            }))
-            serverPlayer.boundingBox
-
-            serverPlayer.speed = trymacsSpeed
+            serverPlayer.attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = trymacsSpeed.toDouble() / 100
+            serverPlayer.attributes.getInstance(Attributes.JUMP_STRENGTH)?.baseValue = 0.40
             serverPlayer.health += 20f
         }
 
         onDisable { hgPlayer, kit ->
             val serverPlayer = hgPlayer.serverPlayer ?: return@onDisable
-
-            serverPlayer.abilities.walkingSpeed = 0.1f
-            serverPlayer.connection?.send(ClientboundPlayerAbilitiesPacket(serverPlayer.abilities))
-            serverPlayer.speed = 0.1f
+            serverPlayer.attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = 0.1
+            serverPlayer.attributes.getInstance(Attributes.JUMP_STRENGTH)?.baseValue = 0.42
             serverPlayer.getAttribute(Attributes.MAX_HEALTH)?.baseValue = 20.0
         }
     }
