@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.feast.Feast
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import net.minecraft.core.Holder
@@ -55,6 +56,11 @@ val anchorKit = kit("Anchor") {
     }
 }
 
+val applyAnchorKnockbackAchievement by anchorKit.achievement("apply anchor knockback") {
+    level(150)
+    level(2500)
+    level(1000)
+}
 
 fun onAnchorAttack(strength: Double, x: Double, z: Double, ci: CallbackInfo, attackedEntity: LivingEntity) {
     val attackingEntity =
@@ -76,12 +82,14 @@ fun onAnchorAttack(strength: Double, x: Double, z: Double, ci: CallbackInfo, att
     if (attackedPlayer.hgPlayer.isAnchor) {
         if (attacker.hgPlayer.isNeo) return
         attackedPlayer.applyAnchorKnockback(ci)
+        attackedPlayer.hgPlayer.serverPlayer?.let { applyAnchorKnockbackAchievement.awardLater(it) }
     }
 
     // attacker is anchor
     if (attacker.hgPlayer.isAnchor) {
         if (attackedPlayer.hgPlayer.isNeo) return
         attackedPlayer.applyAnchorKnockback(ci)
+        attacker.hgPlayer.serverPlayer?.let { applyAnchorKnockbackAchievement.awardLater(it) }
     }
 
 }

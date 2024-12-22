@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.core.BlockPos
@@ -24,29 +25,44 @@ val frozenKit = kit("Frozen") {
     val frostWalkerLevel by property(3, "frost walker level")
     val snowballDamage by property(0.1f, "snowball damage")
 
+    val freezeForSecondsAchievement by achievement("freeze players for seconds") {
+        level(700)
+        level(2000)
+        level(5000)
+    }
+    val transformWaterAchievement by achievement("transform water to ice") {
+        level(1000)
+        level(10000)
+        level(15000)
+    }
+
     kitItem {
         itemStack = itemStack(Items.SNOWBALL) { count = 16 }
     }
 
     kitEvents {
         onMove { hgPlayer, _ ->
-            hgPlayer.serverPlayer?.let {
+            hgPlayer.serverPlayer?.let { player ->
 
-                if (it.onGround()) {
-                    val posUnder = it.posUnder
+                if (player.onGround()) {
+                    val posUnder = player.posUnder
                     val range = (frostWalkerLevel + 1) * 2
-                    val level = it.level()
+                    val level = player.level()
 
                     posUnder.produceFilledCirclePositions(range) {
                         if (level.getBlockState(it).block != Blocks.WATER) return@produceFilledCirclePositions
 
                         level.setBlockAndUpdate(BlockPos(it.x, it.y, it.z), Blocks.FROSTED_ICE.defaultBlockState())
+
+                        transformWaterAchievement.awardLater(player)
                     }
                 }
             }
         }
 
         onHitProjectile { hgPlayer, kit, entityHitResult, projectileEntity ->
+            val player = hgPlayer.serverPlayer ?: return@onHitProjectile
+
             if (projectileEntity !is Snowball) return@onHitProjectile;
             val owner = projectileEntity.owner as? ServerPlayer ?: return@onHitProjectile
 
@@ -57,6 +73,8 @@ val frozenKit = kit("Frozen") {
 
             hitEntity.hurt(owner.damageSources().playerAttack(owner), snowballDamage)
             hitEntity.ticksFrozen = 20 * frozenDurationInS
+
+            freezeForSecondsAchievement.awardLater(player, frozenDurationInS)
         }
     }
 }

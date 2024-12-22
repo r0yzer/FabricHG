@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.bots.HGBot
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -15,6 +16,7 @@ import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.entity.blockPos
+import kotlin.math.roundToInt
 
 private const val BLINK_LAST_HIT_BY_KEY = "blinklasthitby"
 
@@ -28,6 +30,17 @@ val blinkKit = kit("Blink") {
     val blinkDistance by property(4.0, "blink distance")
     val maxLookDifference by property(50, "look difference")
     val valMaxTimeDiff by property(3.0, "time diff for debuff to go away (s)")
+
+    val blinkTimesAchievement by achievement("blink times") {
+        level(100)
+        level(700)
+        level(1400)
+    }
+    val blinkDistanceAchievement by achievement("blink distance") {
+        level(500)
+        level(3000)
+        level(10000)
+    }
 
 
     kitItem {
@@ -53,6 +66,9 @@ val blinkKit = kit("Blink") {
             }
 
             val player = hgPlayer.serverPlayer ?: return@onClick
+
+            blinkTimesAchievement.awardLater(player)
+
             hgPlayer.checkUsesForCooldown(kit, maxUses!!)
             val p = player.lookDirection.normalize().scale(blinkDistance.toDouble())
             val newPos = player.pos.add(p.x, p.y, p.z)
@@ -61,6 +77,7 @@ val blinkKit = kit("Blink") {
             )
             player.level().setBlockAndUpdate(BlockPos(player.blockPos.subtract(Vec3i(0,1,0))), Blocks.OAK_LEAVES.defaultBlockState())
             player.playNotifySound(SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.MASTER, 100F, 100F)
+            blinkDistanceAchievement.awardLater(player, blinkDistance.roundToInt())
         }
     }
 

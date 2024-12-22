@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -28,11 +29,25 @@ val beamKit = kit("Beam") {
     val damageTicks by property(10, "every n ticks player gets damaged")
     val damage by property(4.0, "beam damage")
 
+    val useBeamAchievement by achievement("use beam") {
+        level(50)
+        level(200)
+        level(600)
+    }
+
+    val dealBeamDamageAchievement by achievement("deal damage with beam") {
+        level(40)
+        level(500)
+        level(1000)
+    }
+
     kitItem {
         itemStack = kitSelectorItem
 
         onClick { hgPlayer, kit ->
             val player = hgPlayer.serverPlayer ?: return@onClick
+            useBeamAchievement.awardLater(player)
+
             val crystal = EndCrystal(EntityType.END_CRYSTAL, player.world)
             crystal.invulnerableTime = Int.MAX_VALUE
             crystal.setShowBottom(false)
@@ -60,6 +75,7 @@ val beamKit = kit("Beam") {
                         val e = vec3.dot(vec32)
                         if ((e > 1.0 - 0.015 / d) && player.hasLineOfSight(player1) && player.distanceTo(player1) < distance) {
                             player1.hurt(player.damageSources().playerAttack(player), damage.toFloat())
+                            dealBeamDamageAchievement.awardLater(player, damage.roundToInt())
                         }
                     }
                 }

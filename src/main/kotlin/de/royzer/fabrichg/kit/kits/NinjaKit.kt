@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
@@ -21,6 +22,12 @@ val ninjaKit = kit("Ninja") {
 
     val lastHittedKey = "ninjaLastHitted"
 
+    val ninjaAchievement by achievement("ninja behind someone") {
+        level(50)
+        level(300)
+        level(700)
+    }
+
     kitEvents {
         onSneak { hgPlayer, kit ->
             val serverPlayer = hgPlayer.serverPlayer ?: return@onSneak
@@ -30,6 +37,7 @@ val ninjaKit = kit("Ninja") {
 
             serverPlayer.teleportTo(lastHitted.world as ServerLevel, pos.x, pos.y, pos.z, lastHitted.yRot, lastHitted.xRot)
             hgPlayer.activateCooldown(kit)
+            ninjaAchievement.awardLater(serverPlayer)
         }
 
         onHitPlayer { hgPlayer, kit, serverPlayer ->

@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -18,11 +19,19 @@ val jokerKit = kit("Joker") {
     val shuffleTimes by property(7, "shuffle times")
     val shufflesPerShuffle by property(7, "shuffles per shuffle")
 
+    val shuffleTimesAchievement by achievement("shuffle times") {
+        level(500)
+        level(900)
+        level(3000)
+    }
+
     kitItem {
         itemStack = kitSelectorItem.copy()
 
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
             if (clickedPlayer.hgPlayer.isNeo) return@onClickAtPlayer
+            val player = hgPlayer.serverPlayer ?: return@onClickAtPlayer
+
             hgPlayer.activateCooldown(kit)
             mcCoroutineTask(howOften = shuffleTimes.toLong(), period = shuffleDelay.ticks) {
                 repeat(shufflesPerShuffle) {
@@ -39,6 +48,8 @@ val jokerKit = kit("Joker") {
                     text("You have been jokered") { color = TEXT_GRAY }
                 })
             }
+
+            shuffleTimesAchievement.awardLater(player)
         }
     }
 }

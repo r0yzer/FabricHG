@@ -43,6 +43,8 @@ val hulkKit = kit("Rühl24.de") {
     }
 
     onDisable { hgPlayer, kit ->
-        hgPlayer.serverPlayer?.ejectPassengers()
+        val serverPlayer = hgPlayer.serverPlayer ?: return@onDisable
+        serverPlayer.ejectPassengers()
+        serverPlayer.connection.send(ClientboundSetPassengersPacket(serverPlayer))
     }
 }

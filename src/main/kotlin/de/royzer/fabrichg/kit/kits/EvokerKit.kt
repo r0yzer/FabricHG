@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -26,6 +27,12 @@ val evokerKit = kit("Evoker") {
 
     val fangCount by property(12, "fang count")
 
+    val summonFangsAchievement by achievement("summon fangs") {
+        level(1000)
+        level(2500)
+        level(7000)
+    }
+
     kitItem {
         itemStack = kitSelectorItem
 
@@ -37,6 +44,7 @@ val evokerKit = kit("Evoker") {
 
             val dir = serverPlayer.lookAngle
 
+
             repeat(fangCount) {
                 val pos = playerPos.add(dir.scale(it.toDouble()))
                 val posAbove = playerPosAbove.add(dir.scale(it.toDouble() + 1.0))
@@ -45,6 +53,7 @@ val evokerKit = kit("Evoker") {
                 serverPlayer.world.addFreshEntity(fang)
                 serverPlayer.world.addFreshEntity(fangAbove)
             }
+            summonFangsAchievement.awardLater(serverPlayer, fangCount)
 
             hgPlayer.activateCooldown(kit)
         }

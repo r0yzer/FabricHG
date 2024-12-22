@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -25,9 +26,21 @@ val beeKit = kit("Bee") {
     val bees by property(4, "bees")
     val beeTime by property(5, "bee kit time")
 
+    val replaceBlocksAchievement by achievement("replace blocks") {
+        level(200)
+        level(1000)
+        level(2500)
+    }
+    val summonBeesAchievement by achievement("summon bees") {
+        level(100)
+        level(500)
+        level(2000)
+    }
+
     kitItem {
         itemStack = kitSelectorItem
         onClickAtPlayer { hgPlayer, kit, clickedPlayer, hand ->
+            val player = hgPlayer.serverPlayer ?: return@onClickAtPlayer
             val world = clickedPlayer.world
             if (clickedPlayer.hgPlayer.isNeo) return@onClickAtPlayer
             repeat(bees) {
@@ -40,6 +53,7 @@ val beeKit = kit("Bee") {
                     bee.kill()
                 }
             }
+            summonBeesAchievement.awardLater(player, bees)
             mcCoroutineTask(howOften = 20L * (beeTime + 1)) {
                 val blocks: List<BlockPos> = listOf(
                     clickedPlayer.onPos,
@@ -52,6 +66,7 @@ val beeKit = kit("Bee") {
                     val blockBefore = world.getBlockState(it)
                     if (blockBefore.block !in notReplaceBlocks) {
                         world.setBlockAndUpdate(it, Blocks.HONEY_BLOCK.defaultBlockState())
+                        replaceBlocksAchievement.award(player)
                         mcCoroutineTask(delay = 500.milliseconds) { _ ->
                             world.setBlockAndUpdate(it, blockBefore)
                         }
