@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.silkmc.silk.core.entity.modifyVelocity
@@ -15,6 +16,7 @@ import kotlin.collections.set
 import kotlin.math.absoluteValue
 import kotlin.math.acos
 import kotlin.math.cos
+import kotlin.math.roundToInt
 import kotlin.math.sin
 
 private const val KANGA_LAST_HIT_BY_KEY = "kangalasthitby"
@@ -78,14 +80,21 @@ val kangarooKit = kit("Kangaroo") {
     description = "Allows you to jump higher and longer"
 
     val jumpVelocity by property(0.9f, "jump velocity")
-    val jumpShiftVelocity by property(0.6f, "jump velocity (shift)")
+    val jumpShiftVelocity by property(1.6f, "jump velocity (shift)")
     val maxLookDifference by property(50, "look difference")
     val valMaxTimeDiff by property(3.0, "time diff for debuff to go away (s)")
+
+    val launchAchievement by achievement("launch") {
+        level(1000)
+        level(10000)
+        level(25000)
+    }
 
     kitItem {
         itemStack = kitSelectorItem
 
         onClick { hgPlayer, _ ->
+            val player = hgPlayer.serverPlayer ?: return@onClick
             val hitInfo = hgPlayer.getPlayerData<HitInfo>(KANGA_LAST_HIT_BY_KEY)?.let {
                 if (isAgo(it, (valMaxTimeDiff * 1000).toLong())) {
                     hgPlayer.playerData.remove(KANGA_LAST_HIT_BY_KEY)
@@ -108,15 +117,15 @@ val kangarooKit = kit("Kangaroo") {
 
             if (kangaState == KangaState.JumpedHorizontal) return@onClick
 
-
             if (serverPlayerEntity.isShiftKeyDown) {
                 val vec = serverPlayerEntity.lookDirection
-                val vec3d = Vec3(vec.x, 0.0, vec.z)
-                serverPlayerEntity.modifyVelocity(vec3d.x, jumpShiftVelocity, vec3d.z, false)
-
+                val vec3d = Vec3(vec.x * jumpShiftVelocity, jumpShiftVelocity.toDouble(), vec.z * jumpShiftVelocity)
+                serverPlayerEntity.modifyVelocity(vec3d.x, vec3d.y, vec3d.z, false)
+                launchAchievement.awardLater(player, (jumpShiftVelocity * 3 * 10).roundToInt())
                 hgPlayer.playerData[kangaJumpStateKey] = KangaState.JumpedHorizontal
             } else if (kangaState != KangaState.JumpedVertical) {
                 serverPlayerEntity.modifyVelocity(serverPlayerEntity.deltaMovement.x, jumpVelocity, serverPlayerEntity.deltaMovement.z, false)
+                launchAchievement.awardLater(player, (jumpVelocity * 3 * 10).roundToInt())
                 hgPlayer.playerData[kangaJumpStateKey] = KangaState.JumpedVertical
             }
         }

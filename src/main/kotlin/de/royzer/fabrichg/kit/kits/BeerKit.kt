@@ -1,6 +1,8 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
+import kotlinx.coroutines.delay
 import net.minecraft.core.component.DataComponents
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
@@ -122,10 +124,23 @@ val ItemStack.beerPotion: Potion? get() {
     }?.key
 }
 
+const val ON_BEER_KEY = "on_beer"
+
 val beerKit = kit("Beer") {
     kitSelectorItem = weizenBierItem.copy() // TODO: keine farbe ?!?
 
     description = "Recieve a few beers at the start of the round"
+
+    val drinkBierschissAchievement by achievement("drink bierschiss") {
+        level(10)
+        level(50)
+        level(100)
+    }
+    val killPlayersOnBeerAchievement by achievement("kill players on bier") {
+        level(3)
+        level(30)
+        level(100)
+    }
 
     kitItem {
         itemStack = pilsBeerItem.copy()
@@ -155,6 +170,7 @@ val beerKit = kit("Beer") {
     kitEvents {
         onDrink { hgPlayer, kit, itemStack ->
             val potion = itemStack.beerPotion
+            val player = hgPlayer.serverPlayer ?: return@onDrink
 
             var numBierschiss: Long = 0
             var bierschisssDuration: Duration = 0.seconds
@@ -178,8 +194,19 @@ val beerKit = kit("Beer") {
                 bierschissPotion -> {
                     numBierschiss = 20
                     bierschisssDuration = 50.seconds
+
+                    drinkBierschissAchievement.awardLater(player)
                 }
                 asbachPotion -> { }
+            }
+
+            val beer = hgPlayer.getPlayerData<Int>(ON_BEER_KEY)
+            hgPlayer.playerData[ON_BEER_KEY] = (beer ?: 0) + 1
+
+            mcCoroutineTask(delay = 5.seconds) {
+                val newBeer = hgPlayer.getPlayerData<Int>(ON_BEER_KEY) ?: return@mcCoroutineTask
+
+                if (beer == newBeer) hgPlayer.playerData.remove(ON_BEER_KEY)
             }
 
             if (numBierschiss > 0)
@@ -193,6 +220,14 @@ val beerKit = kit("Beer") {
                         color = 0xCE4B14
                     })
                 }
+        }
+
+        onKillPlayer { player, kit, killed ->
+            val serverPlayer = player.serverPlayer ?: return@onKillPlayer
+
+            val beer = player.getPlayerData<Int>(ON_BEER_KEY) ?: return@onKillPlayer
+
+            killPlayersOnBeerAchievement.awardLater(serverPlayer)
         }
     }
 }

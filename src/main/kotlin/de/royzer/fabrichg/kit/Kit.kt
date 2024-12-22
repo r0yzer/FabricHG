@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.KitAchievement
 import de.royzer.fabrichg.kit.events.kit.KitEvents
 import de.royzer.fabrichg.kit.events.kititem.KitItem
 import de.royzer.fabrichg.kit.kits.*
@@ -31,6 +32,7 @@ class Kit(val name: String) {
     var events = KitEvents()
     var description: String = ""
     var properties: HashMap<String, KitProperty> = hashMapOf()
+    var achievements: MutableList<KitAchievement> = mutableListOf()
 
     override fun toString(): String {
         return name

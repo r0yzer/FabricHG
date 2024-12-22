@@ -13,6 +13,7 @@ import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.gulag.GulagManager
+import de.royzer.fabrichg.kit.achievements.AchievementManager
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
@@ -41,6 +42,8 @@ object IngamePhase : GamePhase() {
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
+        AchievementManager.copyMemoryToDb()
+
         GamePhaseManager.server.motd = "${GamePhaseManager.MOTD_STRING}\nCURRENT GAME PHASE: \u00A7eINGAME"
         logInfo("IngamePhase startet")
         broadcastComponent(

@@ -6,6 +6,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.broadcastComponent
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.randomKit
@@ -42,6 +43,17 @@ val gamblerKit = kit("Gambler") {
 
     description = "Test your luck"
 
+    val goodGamblerAchievement by achievement("lucky gambler") {
+        level(200)
+        level(1000)
+        level(2500)
+    }
+    val diaGamblerAchievement by achievement("gamble diamonds") {
+        level(30)
+        level(100)
+        level(700)
+    }
+
     kitItem {
         itemStack = kitSelectorItem
         onClick { hgPlayer, kit ->
@@ -49,6 +61,11 @@ val gamblerKit = kit("Gambler") {
             val loot = (if (good) goodGambler.get() else badGambler.get()) ?: return@onClick
             val serverPlayer = hgPlayer.serverPlayer ?: return@onClick
 
+            if (loot.text == "You won a full diamond kit") {
+                diaGamblerAchievement.awardLater(serverPlayer, 26)
+            } else if (loot.text == "You won a diamond") {
+                diaGamblerAchievement.awardLater(serverPlayer, 26)
+            }
             loot.action.invoke(serverPlayer)
             serverPlayer.sendText {
                 text(loot.text)
@@ -59,6 +76,8 @@ val gamblerKit = kit("Gambler") {
         }
     }
 }
+
+
 
 private val goodGambler = WeightedCollection<GamblerAction>().also { collection ->
     collection.add(GamblerAction("You won a full diamond kit") {
