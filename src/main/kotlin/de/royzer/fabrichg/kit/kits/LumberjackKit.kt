@@ -1,11 +1,13 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.Registries
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.enchantment.Enchantment
 import net.minecraft.world.item.enchantment.Enchantments
@@ -27,18 +29,25 @@ val lumberjackKit = kit("Lumberjack") {
 
     val maxUses by property(10, "max uses")
 
+
     kitItem {
         itemStack = kitSelectorItem
         onDestroyBlock { hgPlayer, kit, blockPos ->
             val world = hgPlayer.serverPlayer?.world ?: return@onDestroyBlock
-            destroyLogs(world, blockPos, 0)
+            destroyLogs(world, blockPos, 0, hgPlayer.serverPlayer ?: return@onDestroyBlock)
             hgPlayer.checkUsesForCooldown(kit, maxUses)
         }
     }
 }
 
+val destroyLogsAchievement by lumberjackKit.achievement("destroy logs") {
+    level(500)
+    level(3000)
+    level(10000)
+}
+
 // rekursionsbuster
-fun destroyLogs(world: Level, blockPos: BlockPos, count: Int) {
+fun destroyLogs(world: Level, blockPos: BlockPos, count: Int, player: ServerPlayer) {
     world.destroyBlock(blockPos, true)
     if (count > 64 * 3) return
     val neighbors = listOf<BlockPos>(
@@ -52,7 +61,8 @@ fun destroyLogs(world: Level, blockPos: BlockPos, count: Int) {
     neighbors.filter {
         world.getBlockState(it).block.name.string.contains("log", true)
     }.forEach {
-        destroyLogs(world, it, count + 1)
+        destroyLogs(world, it, count + 1, player)
+        destroyLogsAchievement.awardLater(player)
     }
 
 }

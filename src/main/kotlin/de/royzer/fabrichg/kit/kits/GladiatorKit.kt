@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -61,6 +62,12 @@ val gladiatorKit = kit("Gladiator") {
             fight.job = task // das ist niemals best practice so
         }
     }
+}
+
+val killPlayersInGladiAchievement by gladiatorKit.achievement("kill players in gladi") {
+    level(10)
+    level(100)
+    level(250)
 }
 
 // gucken ob geung platz für die box
@@ -129,6 +136,7 @@ class GladiatorFight(val player1: ServerPlayer, val player2: ServerPlayer, val r
         if (player1.hgPlayer.isAlive) {
             if (!player2.hgPlayer.isAlive) {
                 player1.hgPlayer.activateCooldown(gladiatorKit)
+                killPlayersInGladiAchievement.awardLater(player1)
             }
             player1.teleportTo(startPos1.x, startPos1.y, startPos1.z)
             player1.addEffect(MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 3, 5, false, false, false))

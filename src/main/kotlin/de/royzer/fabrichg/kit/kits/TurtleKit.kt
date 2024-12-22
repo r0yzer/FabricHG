@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -24,29 +25,37 @@ val turtleKit = kit("Turtle"){
 
     val shellDisappearTime by property(5, "How long should the shell exist")
 
+    val createShellsAchievement by achievement("create shells") {
+        level(25)
+        level(50)
+        level(175)
+    }
+
     kitItem(itemStack = kitSelectorItem){
         onClick { hgPlayer, kit ->
-            val serverPlayer = hgPlayer.serverPlayer
-            val pos = serverPlayer?.blockPos
-            val world = serverPlayer?.world
+            val serverPlayer = hgPlayer.serverPlayer ?: return@onClick
+            val pos = serverPlayer.blockPos
+            val world = serverPlayer.world
             val blockPositions = hashMapOf<BlockPos, BlockState?>()
 
             hgPlayer.activateCooldown(kit)
 
-            blockPositions[pos?.atY(pos.y+3)!!] = world?.getBlockState(pos.atY(pos.y+3)!!)
-            blockPositions[pos.atY(pos.y-1)!!] = world?.getBlockState(pos.atY(pos.y-1)!!)
+            createShellsAchievement.awardLater(serverPlayer)
+
+            blockPositions[pos.atY(pos.y+3)!!] = world.getBlockState(pos.atY(pos.y+3)!!)
+            blockPositions[pos.atY(pos.y-1)!!] = world.getBlockState(pos.atY(pos.y-1)!!)
             repeat(3){
                 Direction.entries.filter { it != Direction.UP && it != Direction.DOWN }.forEach { direction ->
                     val newPos = pos.relative(direction)?.atY(pos.y+(it))!!
-                    blockPositions[newPos] = world?.getBlockState(newPos)
+                    blockPositions[newPos] = world.getBlockState(newPos)
                 }
             }
             Direction.entries.filter { it != Direction.UP && it != Direction.DOWN }.forEach { direction ->
                 val newPos = pos.relative(direction, 1).relative(Direction.UP).relative(direction.clockWise)!!
-                blockPositions[newPos] = world?.getBlockState(newPos)
+                blockPositions[newPos] = world.getBlockState(newPos)
             }
             blockPositions.forEach {
-                world?.setBlockAndUpdate(it.key, Blocks.WARPED_HYPHAE.defaultBlockState())
+                world.setBlockAndUpdate(it.key, Blocks.WARPED_HYPHAE.defaultBlockState())
                 shellBlocks.add(it.key)
             }
             serverPlayer.addEffect(MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, (shellDisappearTime+2)*20, 100))
@@ -54,7 +63,7 @@ val turtleKit = kit("Turtle"){
 
             mcCoroutineTask(delay = shellDisappearTime.seconds){
                 blockPositions.forEach {
-                    world?.setBlockAndUpdate(it.key, it.value ?: Blocks.AIR.defaultBlockState())
+                    world.setBlockAndUpdate(it.key, it.value ?: Blocks.AIR.defaultBlockState())
                     shellBlocks.remove(it.key)
                 }
             }

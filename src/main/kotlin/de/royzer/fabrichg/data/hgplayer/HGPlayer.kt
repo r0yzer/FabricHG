@@ -10,6 +10,7 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.maxOfflineTime
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.Kit
+import de.royzer.fabrichg.kit.achievements.PlayerAchievementDto
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.kit.kits.noneKit
@@ -46,6 +47,8 @@ class HGPlayer(
             field = value
             Stats.update(value)
         }
+
+    var achievements: List<PlayerAchievementDto> = listOf()
 
     val playerData = mutableMapOf<String, Any?>()
 

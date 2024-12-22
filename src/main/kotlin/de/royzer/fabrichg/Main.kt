@@ -4,6 +4,7 @@ import de.royzer.fabrichg.commands.*
 import de.royzer.fabrichg.events.ConnectEvents
 import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.kit.achievements.AchievementManager
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.stats.Stats
@@ -36,6 +37,7 @@ fun initServer() {
     ServerLifecycleEvents.SERVER_STARTING.register {
         GamePhaseManager.server = it as DedicatedServer
         Stats.init()
+        AchievementManager.init()
     }
 
     ServerLifecycleEvents.SERVER_STARTED.register {
@@ -71,6 +73,7 @@ fun registerCommands() {
     statsCommand
     reviveCommand
     gulagCommand
+    achievementsCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

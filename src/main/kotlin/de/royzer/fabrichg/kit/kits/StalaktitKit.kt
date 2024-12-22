@@ -4,6 +4,7 @@ import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -78,13 +79,23 @@ val stalaktitKit = kit("Stalaktit") {
     val dripstoneCount by property(35, "dripstone count")
     val dripstoneDelay by property(5, "dripstone spawn delay (ticks)")
 
+    val stalaktitSpawnerAchievement by achievement("stalaktit spawner") {
+        level(300)
+        level(1000)
+        level(5000)
+    }
+
     kitItem {
         itemStack = kitSelectorItem.copy()
 
         onClickAtEntity { hgPlayer, kit, entity, interactionHand ->
             val world = entity.world
+            val player = hgPlayer.serverPlayer ?: return@onClickAtEntity
 
-            if (entity.hgPlayer?.isNeo == true) return@onClickAtEntity
+            if (entity.hgPlayer?.isNeo == true) {
+                blockKitsAchievement.awardLater(entity.hgPlayer?.serverPlayer ?: return@onClickAtEntity)
+                return@onClickAtEntity
+            }
 
             hgPlayer.activateCooldown(kit)
 
@@ -106,6 +117,7 @@ val stalaktitKit = kit("Stalaktit") {
                 }
             }
 
+            stalaktitSpawnerAchievement.awardLater(player, dripstoneCount)
             mcCoroutineTask(howOften = dripstoneCount.toLong(), period = dripstoneDelay.ticks) {
                 if (!entity.isAlive) {
                     this.coroutineContext.cancel()
