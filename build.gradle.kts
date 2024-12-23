@@ -44,8 +44,8 @@ dependencies {
     modImplementation("net.silkmc:silk-game:$silkVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
     transitiveInclude(implementation(platform("org.dizitart:nitrite-bom:4.2.2"))!!)
-    transitiveInclude(implementation ("org.dizitart:potassium-nitrite")!!)
-    transitiveInclude(implementation ("org.dizitart:nitrite-mvstore-adapter")!!)
+    transitiveInclude(implementation("org.dizitart:potassium-nitrite")!!)
+    transitiveInclude(implementation("org.dizitart:nitrite-mvstore-adapter")!!)
 
     modCompileOnly("eu.cloudnetservice.cloudnet:driver:$cloudNetVersion")
     modCompileOnly("eu.cloudnetservice.cloudnet:bridge:$cloudNetVersion")

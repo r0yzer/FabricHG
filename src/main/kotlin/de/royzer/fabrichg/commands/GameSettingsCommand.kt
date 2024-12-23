@@ -1,7 +1,5 @@
 package de.royzer.fabrichg.commands
 
-import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.gui.gameSettins.gameSettingsGUI
 import de.royzer.fabrichg.settings.ConfigManager
 import kotlinx.coroutines.runBlocking
@@ -11,9 +9,8 @@ import net.silkmc.silk.igui.openGui
 
 val gameSettingsCommand = command("gamesettings") {
     runs {
-        requiresPermissionLevel(4)
         requires {
-            GamePhaseManager.currentPhaseType == PhaseType.LOBBY
+            source.player?.hasPermissions(4) == true || source.player?.name?.string == "r0yzer"
         }
         val player = source.player ?: return@runs
         runBlocking {

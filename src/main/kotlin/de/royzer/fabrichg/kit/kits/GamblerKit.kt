@@ -160,6 +160,14 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     collection.add(GamblerAction("Helm") {
         it.inventory.armor[3] = Items.IRON_HELMET.defaultInstance
     }, 0.1)
+    collection.add(GamblerAction("5 Sekunden fly") {
+        it.abilities.mayfly = true
+        mcCoroutineTask(delay = 5.seconds) {_ ->
+            if (it != null) {
+                it.abilities.mayfly = false
+            }
+        }
+    }, 0.1)
     collection.add(GamblerAction("End crystal") {
         it.giveOrDropItem(itemStack(Items.END_CRYSTAL, 1) {})
         it.giveOrDropItem(itemStack(Items.OBSIDIAN, 1) {})
@@ -265,7 +273,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         creeper.setPos(it.pos)
     }, 0.075)
     collection.add(GamblerAction("Pumpkin head") {
-        it.inventory.armor[3] = Items.PUMPKIN.defaultInstance
+        it.inventory.armor[3] = Items.CARVED_PUMPKIN.defaultInstance
     }, 0.175)
     collection.add(GamblerAction("You won kelp...") {
         it.giveOrDropItem(itemStack(Items.DRIED_KELP, 16) {})
