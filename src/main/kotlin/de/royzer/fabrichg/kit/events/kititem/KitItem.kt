@@ -1,22 +1,17 @@
 package de.royzer.fabrichg.kit.events.kititem
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
-import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
-import de.royzer.fabrichg.kit.events.kit.invoker.onRightClickEntity
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
-import net.minecraft.world.InteractionResult
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 fun kitItem(itemStack: ItemStack): KitItem {
     return KitItem(itemStack)

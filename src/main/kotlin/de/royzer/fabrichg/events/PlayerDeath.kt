@@ -43,22 +43,21 @@ object PlayerDeath {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
 //        (serverPlayerEntity as LivingEntityAccessor).invokeDropAllDeathLoot(serverPlayerEntity.serverLevel(), damageSource)
-        val hgPlayer = killer?.hgPlayer ?: return true
+        val hgPlayer = killer?.hgPlayer
 
         if (deadHGPlayer.status != HGPlayerStatus.GULAG) {
-            hgPlayer.kills += 1
-            hgPlayer.updateStats(1)
+            hgPlayer?.kills = hgPlayer?.kills?.plus(1) ?: 1
+            hgPlayer?.updateStats(1)
             serverPlayerEntity.hgPlayer.updateStats(deaths = 1)
+            serverPlayerEntity.dropInventoryItemsWithoutKitItems()
         }
-
-        serverPlayerEntity.dropInventoryItemsWithoutKitItems()
 
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
 //        if(serverPlayerEntity is FakeServerPlayer){
 //            serverPlayerEntity.connection.onDisconnect(Component.literal("Dead"))
 //        }
-        hgPlayer.kits.forEach {
+        hgPlayer?.kits?.forEach {
             if (hgPlayer.canUseKit(it, true)) {
                 it.events.killPlayerAction?.invoke(hgPlayer, it, serverPlayerEntity)
             }

@@ -7,6 +7,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.util.tracker
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.level.GameType
@@ -39,7 +40,8 @@ val reviveCommand = command("revive") {
             serverPlayer.setGameMode(GameType.SURVIVAL)
             serverPlayer.teleportTo(executor.x, executor.y, executor.z)
             serverPlayer.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
-
+            serverPlayer.inventory.clearContent()
+            serverPlayer.inventory.add(tracker)
             hgPlayer.kitsDisabled = false
             hgPlayer.kits.forEach {
                 it.onEnable?.invoke(hgPlayer, it, serverPlayer)
