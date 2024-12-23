@@ -198,8 +198,8 @@ object GulagManager {
             }
         }
 
-        val player1 = gulagQueue.poll()
-        val player2 = gulagQueue.poll()
+        val player1 = gulagQueue.poll() ?: return
+        val player2 = gulagQueue.poll() ?: return
 
         startGulagFight(player1, player2)
     }
