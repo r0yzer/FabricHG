@@ -160,6 +160,14 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     collection.add(GamblerAction("Helm") {
         it.inventory.armor[3] = Items.IRON_HELMET.defaultInstance
     }, 0.1)
+    collection.add(GamblerAction("5 Sekunden fly") {
+        it.abilities.mayfly = true
+        mcCoroutineTask(delay = 5.seconds) {_ ->
+            if (it != null) {
+                it.abilities.mayfly = false
+            }
+        }
+    }, 0.1)
     collection.add(GamblerAction("End crystal") {
         it.giveOrDropItem(itemStack(Items.END_CRYSTAL, 1) {})
         it.giveOrDropItem(itemStack(Items.OBSIDIAN, 1) {})
@@ -168,6 +176,10 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.giveOrDropItem(itemStack(Items.BOW, 1) {})
         it.giveOrDropItem(itemStack(Items.ARROW, 5) {})
     }, 0.25)
+    collection.add(GamblerAction("TNT") {
+        it.giveOrDropItem(itemStack(Items.TNT, 1) {})
+        it.giveOrDropItem(itemStack(Items.FLINT_AND_STEEL, 1) {})
+    }, 0.2)
     collection.add(GamblerAction("Mooshroom") {
         val mooshroom = MushroomCow(EntityType.MOOSHROOM, it.level())
         it.level().addFreshEntity(mooshroom)
@@ -261,7 +273,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         creeper.setPos(it.pos)
     }, 0.075)
     collection.add(GamblerAction("Pumpkin head") {
-        it.inventory.armor[3] = Items.PUMPKIN.defaultInstance
+        it.inventory.armor[3] = Items.CARVED_PUMPKIN.defaultInstance
     }, 0.175)
     collection.add(GamblerAction("You won kelp...") {
         it.giveOrDropItem(itemStack(Items.DRIED_KELP, 16) {})

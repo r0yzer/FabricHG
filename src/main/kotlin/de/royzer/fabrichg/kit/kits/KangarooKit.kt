@@ -106,8 +106,6 @@ val kangarooKit = kit("Kangaroo") {
 
             if (hitInfo != null) {
                 if (hgPlayer.isLookingWrong(hitInfo, maxLookDifference)) {
-                    hgPlayer.serverPlayer?.forceAddEffect(MobEffectInstance(MobEffects.WITHER, 5 * 20, 2), null)
-                    hgPlayer.serverPlayer?.forceAddEffect(MobEffectInstance(MobEffects.BLINDNESS, 5 * 20, 2), null)
                     return@onClick
                 }
             }
@@ -119,7 +117,7 @@ val kangarooKit = kit("Kangaroo") {
 
             if (serverPlayerEntity.isShiftKeyDown) {
                 val vec = serverPlayerEntity.lookDirection
-                val vec3d = Vec3(vec.x * jumpShiftVelocity, jumpShiftVelocity.toDouble(), vec.z * jumpShiftVelocity)
+                val vec3d = Vec3(vec.x * jumpShiftVelocity, 0.0, vec.z * jumpShiftVelocity)
                 serverPlayerEntity.modifyVelocity(vec3d.x, vec3d.y, vec3d.z, false)
                 launchAchievement.awardLater(player, (jumpShiftVelocity * 3 * 10).roundToInt())
                 hgPlayer.playerData[kangaJumpStateKey] = KangaState.JumpedHorizontal
