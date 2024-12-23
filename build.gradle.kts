@@ -22,6 +22,8 @@ repositories {
     maven("https://repo.cloudnetservice.eu/repository/releases/")
 }
 
+val transitiveInclude: Configuration by configurations.creating { }
+
 dependencies {
 
     minecraft("com.mojang:minecraft:$minecraftVersion")
@@ -41,13 +43,17 @@ dependencies {
     modImplementation("net.silkmc:silk-network:$silkVersion")
     modImplementation("net.silkmc:silk-game:$silkVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-    implementation(platform("org.dizitart:nitrite-bom:4.2.2"))
-    implementation ("org.dizitart:potassium-nitrite")
-    implementation ("org.dizitart:nitrite-mvstore-adapter")
+    transitiveInclude(implementation(platform("org.dizitart:nitrite-bom:4.2.2"))!!)
+    transitiveInclude(implementation("org.dizitart:potassium-nitrite")!!)
+    transitiveInclude(implementation("org.dizitart:nitrite-mvstore-adapter")!!)
 
     modCompileOnly("eu.cloudnetservice.cloudnet:driver:$cloudNetVersion")
     modCompileOnly("eu.cloudnetservice.cloudnet:bridge:$cloudNetVersion")
     modCompileOnly("eu.cloudnetservice.cloudnet:wrapper-jvm:$cloudNetVersion")
+
+    transitiveInclude.resolvedConfiguration.resolvedArtifacts.forEach {
+        include(it.moduleVersion.id.toString())
+    }
 }
 
 loom {
