@@ -168,7 +168,7 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     }, 0.25)
     collection.add(GamblerAction("TNT") {
         it.giveOrDropItem(itemStack(Items.TNT, 1) {})
-        it.giveOrDropItem(itemStack(Items.FLINT_AND_STEEL, 5) {})
+        it.giveOrDropItem(itemStack(Items.FLINT_AND_STEEL, 1) {})
     }, 0.2)
     collection.add(GamblerAction("Mooshroom") {
         val mooshroom = MushroomCow(EntityType.MOOSHROOM, it.level())
