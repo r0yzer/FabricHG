@@ -16,10 +16,10 @@ val trymacsKit = kit("Trymacs") {
 
     description = "You are trymacs"
 
-    val horizontalLaunchStrength by property(1.1f, "horizontal launch strength")
-    val verticalLaunchStrength by property(0.9f, "vertical launch strength")
-
+    val horizontalLaunchStrength by property(0.7f, "horizontal launch strength")
+    val verticalLaunchStrength by property(0.5f, "vertical launch strength")
     val trymacsSpeed by property(5.00f, "trymacs speed")
+    val trymacsSize by property(2.0, "trymacs size")
 
     val launchPlayersAchievement by achievement("launch players") {
         level(25)
@@ -49,6 +49,7 @@ val trymacsKit = kit("Trymacs") {
             serverPlayer.getAttribute(Attributes.MAX_HEALTH)?.baseValue = 40.0
             serverPlayer.attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = trymacsSpeed.toDouble() / 100
             serverPlayer.attributes.getInstance(Attributes.JUMP_STRENGTH)?.baseValue = 0.40
+            serverPlayer.attributes.getInstance(Attributes.SCALE)?.baseValue = trymacsSize
             serverPlayer.health += 20f
         }
 
@@ -56,6 +57,7 @@ val trymacsKit = kit("Trymacs") {
             val serverPlayer = hgPlayer.serverPlayer ?: return@onDisable
             serverPlayer.attributes.getInstance(Attributes.MOVEMENT_SPEED)?.baseValue = 0.1
             serverPlayer.attributes.getInstance(Attributes.JUMP_STRENGTH)?.baseValue = 0.42
+            serverPlayer.attributes.getInstance(Attributes.SCALE)?.baseValue = 1.0
             serverPlayer.getAttribute(Attributes.MAX_HEALTH)?.baseValue = 20.0
         }
     }
