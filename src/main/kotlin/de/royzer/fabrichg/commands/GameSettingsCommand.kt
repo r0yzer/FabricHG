@@ -9,12 +9,11 @@ import net.silkmc.silk.igui.openGui
 
 val gameSettingsCommand = command("gamesettings") {
     runs {
-        requires {
-            source.player?.hasPermissions(4) == true || source.player?.name?.string == "r0yzer"
-        }
         val player = source.player ?: return@runs
         runBlocking {
-            player.openGui(gameSettingsGUI(player), 1)
+            if (source.player?.hasPermissions(4) == true || source.player?.name?.string == "r0yzer") {
+                player.openGui(gameSettingsGUI(player), 1)
+            }
         }
     }
     literal("list") runs {
