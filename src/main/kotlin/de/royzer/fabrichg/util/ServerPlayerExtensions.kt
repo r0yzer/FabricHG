@@ -85,7 +85,7 @@ fun ServerPlayer.inventoryValue(): Double {
 
 fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
     listOf(inventory.items, inventory.armor, inventory.offhand).forEach { slots ->
-        slots.filter { !it.isKitItem}.forEach { spawnAtLocation(it) }
+        slots.filter { !it.isKitItem}.filter { it.item != Items.ANVIL }.forEach { spawnAtLocation(it) } // anvil wegen dem crash warum auch immer
     }
 
 

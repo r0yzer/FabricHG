@@ -90,9 +90,11 @@ object ConnectEvents {
                             player.setGameMode(GameType.SURVIVAL)
                             PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                             player.inventory.add(tracker)
-                            hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
                         }
                     }
+
+
+                    hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
                 }
 
                 PhaseType.INGAME -> {
