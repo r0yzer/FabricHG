@@ -78,4 +78,9 @@ class KitEventsBuilder(val kit: Kit) {
     fun onLeftClick(action: (HGPlayer, Kit) -> Unit) {
         kit.events.leftClickAction = action
     }
+
+    // true returnen wenn gecancelt werden soll
+    fun onAttackedByPlayer(action: (HGPlayer, Kit, attacker: ServerPlayer) -> Boolean) {
+        kit.events.attackedByPlayerAction = action
+    }
 }

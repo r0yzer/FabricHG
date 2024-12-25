@@ -28,6 +28,7 @@ class KitEvents(
     var takeDamageAction: ((hgPlayer: HGPlayer, kit: Kit, source: DamageSource, amount: Float) -> Float)? = null,
     val noCooldownActions: MutableList<Any> = mutableListOf(),
     var leftClickAction: ((HGPlayer, Kit) -> Unit)? = null,
+    var attackedByPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Boolean)? = null,
 )
 
 fun HGPlayer.invokeKitAction(kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {

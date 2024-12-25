@@ -138,10 +138,11 @@ public abstract class ServerPlayerMixin extends Player {
 
     @Inject(
             method = "attack",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            cancellable = true
     )
     public void onAttackEntity(Entity target, CallbackInfo ci) {
-        OnAttackEntityKt.onAttackEntity(target, this);
+        OnAttackEntityKt.onAttackEntity(target, this, ci);
     }
 
 
