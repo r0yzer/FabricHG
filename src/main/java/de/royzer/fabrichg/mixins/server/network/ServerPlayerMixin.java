@@ -16,7 +16,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -78,6 +80,15 @@ public abstract class ServerPlayerMixin extends Player {
     )
     public void onDropSelectedItem(boolean dropStack, CallbackInfoReturnable<Boolean> cir) {
         ServerPlayerEntityMixinKt.INSTANCE.onDropSelectedItem(dropStack, cir, (ServerPlayer) (Object) this);
+    }
+
+    @Inject(
+            method = "drop(Lnet/minecraft/world/item/ItemStack;ZZ)Lnet/minecraft/world/entity/item/ItemEntity;",
+            at = @At(value = "HEAD", ordinal = 0),
+            cancellable = true
+    )
+    public void onDropSelectedItem2(ItemStack droppedItem, boolean dropAround, boolean includeThrowerName, CallbackInfoReturnable<ItemEntity> cir) {
+        ServerPlayerEntityMixinKt.INSTANCE.onDropSelectedItem2(droppedItem, dropAround, includeThrowerName, cir, (ServerPlayer) (Object) this);
     }
 
     @Inject(
