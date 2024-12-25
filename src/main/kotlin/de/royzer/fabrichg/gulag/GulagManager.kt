@@ -141,11 +141,6 @@ object GulagManager {
         }
     }
 
-    // das sprengt safe was mit dem normalen death dingens aber tmm
-    fun beforeDeath(killer: Entity?, player: ServerPlayer): Boolean {
-        return beforeDeath(killer, player.hgPlayer)
-    }
-
     fun canGoToGulag(player: HGPlayer): Boolean {
         if (!open) return false // guckt auch ob enabled ist oder schon zu spät oder zu wenig spieler weil das false ist wenn close() aufgerufen wurde
 
@@ -154,7 +149,8 @@ object GulagManager {
     }
 
     // guckt ob player ins gulag kann und cancelt dementsprechend den tod
-    fun beforeDeath(killer: Entity?, hgPlayer: HGPlayer): Boolean {
+    fun beforeDeath(killer: Entity?, player: ServerPlayer): Boolean {
+        val hgPlayer = player.hgPlayer
         if (!canGoToGulag(hgPlayer)) return false
 
         val wasInGulag = hgPlayer.getPlayerData<Boolean>("gulag") == true
@@ -170,12 +166,9 @@ object GulagManager {
         return false
     }
 
-    fun afterDeath(killer: Entity?, player: ServerPlayer) {
-        afterDeath(killer, player.hgPlayer)
-    }
-
     // wird in mixin aufgerufen
-    fun afterDeath(killer: Entity?, hgPlayer: HGPlayer) {
+    fun afterDeath(killer: Entity?, player: ServerPlayer) {
+        val hgPlayer = player.hgPlayer
         if (fighting.contains(hgPlayer)) {
             val otherHgPlayer = getOpponent(hgPlayer) ?: return
 
@@ -267,6 +260,12 @@ object GulagManager {
         val hgPlayer = entity?.hgPlayer ?: return false
 
         return isFighting(hgPlayer)
+    }
+
+    fun isWaiting(entity: Entity?): Boolean {
+        val hgPlayer = entity?.hgPlayer ?: return false
+
+        return gulagQueue.contains(hgPlayer)
     }
 
     fun isFighting(hgPlayer: HGPlayer): Boolean {

@@ -7,11 +7,11 @@ import de.royzer.fabrichg.game.PlayerList;
 import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnLeftClickKt;
-import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -42,13 +42,15 @@ public abstract class ServerPlayerMixin extends Player {
             cancellable = true
     )
     public void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        ServerPlayerEntityMixinKt.INSTANCE.onDamage(source, amount, cir, (ServerPlayer) (Object) (this));
+        float reducedAmount = reducedDamage((ServerPlayer) (Object) this, source, amount);
+
+        ServerPlayerEntityMixinKt.INSTANCE.onDamage(source, reducedAmount, cir, (ServerPlayer) (Object) (this));
 
         if (!LivingEntityMixinKt.INSTANCE.canDamage(source, this)) return;
 
         boolean cancel = false;
 
-        if ((getHealth() - amount) <= 0) {
+        if ((getHealth() - reducedAmount) <= 0) {
             cancel = beforeDeath(source, amount, cir);
         }
 
@@ -107,16 +109,30 @@ public abstract class ServerPlayerMixin extends Player {
             )
     )
     public boolean reduceDamage(Player instance, DamageSource source, float amount) {
-        float damageAmount = OnTakeDamageKt.onTakeDamage((ServerPlayer) instance, source, amount);
+//        float damageAmount = OnTakeDamageKt.onTakeDamage((ServerPlayer) instance, source, amount);
+//        if (source.getEntity() instanceof ServerPlayer) {
+//            double multiplier = 0.6;
+//            if (((ServerPlayer) source.getEntity()).getMainHandItem().getDisplayName().getString().toLowerCase().contains("axe")) {
+//                multiplier = 0.3;
+//            }
+//            float damage = (float) (damageAmount * multiplier);
+//            return super.hurt(source, damage);
+//        } else {
+//            return super.hurt(source, damageAmount);
+//        }
+        return super.hurt(source, reducedDamage(instance, source, amount));
+    }
+
+    @Unique
+    public float reducedDamage(Player instance, DamageSource source, float amount) {
         if (source.getEntity() instanceof ServerPlayer) {
             double multiplier = 0.6;
             if (((ServerPlayer) source.getEntity()).getMainHandItem().getDisplayName().getString().toLowerCase().contains("axe")) {
                 multiplier = 0.3;
             }
-            float damage = (float) (damageAmount * multiplier);
-            return super.hurt(source, damage);
+            return (float) (amount * multiplier);
         } else {
-            return super.hurt(source, damageAmount);
+            return amount;
         }
     }
 
