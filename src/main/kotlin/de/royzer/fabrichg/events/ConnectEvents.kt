@@ -90,9 +90,11 @@ object ConnectEvents {
                             player.setGameMode(GameType.SURVIVAL)
                             PlayerList.addOrGetPlayer(player.uuid, player.name.string)
                             player.inventory.add(tracker)
-                            hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
                         }
                     }
+
+
+                    hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
                 }
 
                 PhaseType.INGAME -> {
@@ -155,6 +157,7 @@ object ConnectEvents {
                 PhaseType.INGAME -> {
                     if (player.hgPlayer.status == HGPlayerStatus.ALIVE) {
                         hgPlayer.kits.forEach { it.onDisable?.invoke(hgPlayer, it) }
+                        hgPlayer.kits.forEach { it.events.onLeave?.invoke(hgPlayer, it) }
                         val combatTracker = player.combatTracker
                         val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
                         if (lastCombatEntry?.source?.entity is ServerPlayer) {
