@@ -43,7 +43,7 @@ object PlayerList {
     }
 
 
-    fun announcePlayerDeath(player: HGPlayer, source: DamageSource, killer: Entity?) {
+    fun announcePlayerDeath(player: HGPlayer, source: DamageSource, killer: Entity?, gulag: Boolean = false) {
         val sourceKiller = source.entity
         val otherHGPlayer = killer?.hgPlayer
         broadcastComponent(
@@ -57,8 +57,9 @@ object PlayerList {
                         killMessage = "mit ${killer.mainHandItem?.item.toString().uppercase()} getötet"
                     }
                     text("${player.name}(${player.kits.joinToString { it.name }}) wurde von ${killer.name?.string}" +
-                            "(${otherHGPlayer?.kits?.joinToString { it.name }}) $killMessage")
-                } else if (killer != null){
+                            "(${otherHGPlayer?.kits?.joinToString { it.name }}) $killMessage"
+                    )
+                } else if (killer != null) {
                     text("${player.name} wurde von ${killer.name.string} getötet")
                 } else {
                     when (val cause = source.type().msgId) {
