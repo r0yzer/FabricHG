@@ -48,13 +48,13 @@ object LobbyPhase : GamePhase() {
                             }
                         }
                     }
-                    broadcastComponent(literalText("Das Spiel start in ") {
+                    broadcastComponent(literalText("Das Spiel startet in ") {
                         color = TEXT_GRAY
                         text(timeLeft.formattedTime) { color = TEXT_BLUE }
                         text(" Minuten")
                     })
                 }
-                180, 120, 60, 30, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText("Das Spiel start in ") {
+                180, 120, 60, 30, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText("Das Spiel startet in ") {
                     color = TEXT_GRAY
                     text(timeLeft.formattedTime) { color = TEXT_BLUE }
                     text(" Minuten")

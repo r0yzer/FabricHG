@@ -1,15 +1,12 @@
 package de.royzer.fabrichg.mixinskt
 
 import de.royzer.fabrichg.bots.HGBot
-import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.gulag.GulagManager
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
-import net.minecraft.world.damagesource.DamageTypes
 import net.minecraft.world.entity.LivingEntity
-import net.silkmc.silk.core.task.mcCoroutineTask
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 object LivingEntityMixinKt {
@@ -17,13 +14,21 @@ object LivingEntityMixinKt {
         val level = entity.level()
 
         if (level == GulagManager.gulagLevel) {
-            if (source.type() == DamageTypes.GENERIC_KILL) return true
+            // muss mal gucken wie das besser geht
+            if (source.type().msgId == "generic_kill") return true
             if (entity !is ServerPlayer) return true
 
             val sourceEntity = source.entity
 
             val sourceEntityFighting = sourceEntity?.let { GulagManager.isFighting(it) } == true
             val fighting = GulagManager.isFighting(entity)
+            val waiting = GulagManager.isWaiting(entity) // damit wartende nicht in lava rennen und sterben
+
+            if (waiting) {
+                return false
+            }
+
+            if ((source.type().msgId == "lava")) return true
 
             if (!sourceEntityFighting || !fighting) {
                 return false
