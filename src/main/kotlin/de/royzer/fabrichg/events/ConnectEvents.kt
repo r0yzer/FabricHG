@@ -157,7 +157,6 @@ object ConnectEvents {
                 PhaseType.INGAME -> {
                     if (player.hgPlayer.status == HGPlayerStatus.ALIVE) {
                         hgPlayer.kits.forEach { it.onDisable?.invoke(hgPlayer, it) }
-                        hgPlayer.kits.forEach { it.events.onLeave?.invoke(hgPlayer, it) }
                         val combatTracker = player.combatTracker
                         val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
                         if (lastCombatEntry?.source?.entity is ServerPlayer) {
