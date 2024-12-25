@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.world.level.GameRules
 import net.silkmc.silk.core.task.mcCoroutineTask
+import net.silkmc.silk.core.text.literal
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -26,7 +27,11 @@ object GamePhaseManager {
         server.overworld().worldBorder.size = 1000.0
         currentPhase.init()
         mcCoroutineTask(howOften = Long.MAX_VALUE, period = 1000.milliseconds, delay = 0.milliseconds) {
-            currentPhase.tick(timer.getAndIncrement())
+            try {
+                currentPhase.tick(timer.getAndIncrement())
+            } catch (e: Exception) {
+                broadcastComponent("error: $e wird ignoriert".literal)
+            }
         }
     }
     fun resetTimer() = timer.set(0)
