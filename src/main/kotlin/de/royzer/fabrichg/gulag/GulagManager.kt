@@ -7,12 +7,15 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
+import de.royzer.fabrichg.game.removeHGPlayer
 import de.royzer.fabrichg.mixins.server.MinecraftServerAccessor
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.tracker
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import net.minecraft.commands.arguments.EntityAnchorArgument
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -24,9 +27,11 @@ import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.changePos
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.logging.logWarning
+import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.broadcastText
 import net.silkmc.silk.core.text.literalText
 import java.util.*
+import kotlin.time.Duration.Companion.seconds
 
 object GulagManager {
     val gulagLevel: ServerLevel
@@ -40,6 +45,8 @@ object GulagManager {
     val minPlayersOutsideGulag: Int get() = ConfigManager.gameSettings.minPlayersOutsideGulag
 
     val empty: Boolean get() = gulagQueue.isEmpty() && fighting.isEmpty()
+
+    private var currentFightJob: Job? = null
 
     init {
         open = gulagEnabled
@@ -57,6 +64,7 @@ object GulagManager {
             return
         }
         open = false
+        // fight job wird nicht gecancelt weil könnten ja noch welche fighten
         if (sendMessage) {
             broadcastComponent(literalText {
                 text("Das Gulag ist nun ")
@@ -186,6 +194,8 @@ object GulagManager {
                     text("You were the last player in the gulag and returned without a fight")
                     color = TEXT_GRAY
                 })
+                currentFightJob?.cancel()
+                currentFightJob = null
                 onWin(lastPlayer, null)
             } else {
                 return
@@ -242,6 +252,41 @@ object GulagManager {
         player2.serverPlayer?.lookAt(EntityAnchorArgument.Anchor.EYES, center)
         player2.serverPlayer?.giveGulagInventory()
         player2.serverPlayer?.playSound(SoundEvents.GOAT_HORN_PLAY, 100f, 1f)
+
+        currentFightJob?.cancel() // sollte eigentlich null sein
+        currentFightJob = mcCoroutineTask(period = 1.seconds, howOften = 60L) {
+            when (it.round) {
+                30L, 40L, 50L, 55L, 56L, 57L, 58L, 59L -> {
+                    fighting.forEach { hgPlayer ->
+                        hgPlayer.serverPlayer?.sendSystemMessage(
+                            literalText {
+                                text("Der Kampf endet in ")
+                                text((60L - it.round).toString()) {color = TEXT_BLUE}
+                                text(" Sekunden")
+                                color = TEXT_GRAY
+                            }
+                        )
+                    }
+                }
+                60L -> {
+                    fighting.forEach { hgPlayer ->
+                        hgPlayer.serverPlayer?.removeHGPlayer()
+                        hgPlayer.serverPlayer?.sendSystemMessage(
+                            literalText {
+                                text("Der Kampf ist ")
+                                text("vorbei") {color = TEXT_BLUE}
+                                color = TEXT_GRAY
+                            }
+                        )
+                    }
+                    fighting.clear()
+                    currentFightJob?.cancel("kosta titan — heute um 23:29 Uhrbist auf helm")
+                    currentFightJob = null
+                    recheckQueue()
+                }
+
+            }
+        }
     }
 
     fun ServerPlayer.giveGulagInventory() {
