@@ -16,6 +16,7 @@ import de.royzer.fabrichg.util.tracker
 import net.minecraft.commands.arguments.EntityAnchorArgument
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameType
@@ -241,11 +242,13 @@ object GulagManager {
         player1.serverPlayer?.teleportTo(gulagLevel, center.x + 17.5, center.y, center.z, 0.0F, 0.0F)
         player1.serverPlayer?.lookAt(EntityAnchorArgument.Anchor.EYES, center)
         player1.serverPlayer?.giveGulagInventory()
+        player1.serverPlayer?.playSound(SoundEvents.GOAT_HORN_PLAY, 100f, 1f)
 
 
         player2.serverPlayer?.teleportTo(gulagLevel,  center.x - 17.5, center.y, center.z, 180.0F, 0.0F)
         player2.serverPlayer?.lookAt(EntityAnchorArgument.Anchor.EYES, center)
         player2.serverPlayer?.giveGulagInventory()
+        player2.serverPlayer?.playSound(SoundEvents.GOAT_HORN_PLAY, 100f, 1f)
     }
 
     fun ServerPlayer.giveGulagInventory() {
