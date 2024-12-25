@@ -16,14 +16,10 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.enchantment.Enchantment
-import net.minecraft.world.item.enchantment.EnchantmentHelper
 import net.minecraft.world.item.enchantment.Enchantments
-import net.minecraft.world.item.enchantment.ItemEnchantments
 import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.Silk
 import net.silkmc.silk.core.entity.modifyVelocity
-import net.silkmc.silk.core.entity.posUnder
-import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
@@ -103,7 +99,10 @@ fun onAnchorGetsAttacked(attackedEntity: LivingEntity, attackingEntity: LivingEn
 }
 
 private fun Entity.applyAnchorKnockback(ci: CallbackInfo) {
-    world.playSound(null, posUnder, SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 1f, 1f)
+//    this.world.playSeededSound(null, x,y,z,SoundEvents.ANVIL_FALL, SoundSource.PLAYERS, 1f, 1f, Random.nextLong())
+    if (this is ServerPlayer) {
+        this.playNotifySound(SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 1f, 1f)
+    }
     ci.cancel()
     deltaMovement = Vec3.ZERO
     modifyVelocity(0, -0.1, 0, false)

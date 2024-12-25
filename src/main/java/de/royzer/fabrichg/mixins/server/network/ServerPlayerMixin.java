@@ -3,6 +3,7 @@ package de.royzer.fabrichg.mixins.server.network;
 import com.mojang.authlib.GameProfile;
 import de.royzer.fabrichg.data.hgplayer.HGPlayer;
 import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
+import de.royzer.fabrichg.game.PlayerList;
 import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnLeftClickKt;
@@ -62,6 +63,7 @@ public abstract class ServerPlayerMixin extends Player {
             if (killer instanceof ServerPlayer killerPlayer) {
                 HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(killerPlayer);
                 HGPlayerKt.gulagKill(hgPlayer, (ServerPlayer) (Object) this);
+                PlayerList.INSTANCE.announcePlayerDeath(hgPlayer, source, source.getEntity(), true);
             }
             setHealth(getMaxHealth());
         }
