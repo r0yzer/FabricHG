@@ -16,6 +16,7 @@ fun ServerPlayer.giveOrDropItem(item: ItemStack) {
         itemEntity?.setTarget(this.uuid)
     }
 }
+
 fun ServerPlayer.giveOrDropItems(items: List<ItemStack>) {
     items.forEach {
         this.giveOrDropItem(it)
@@ -30,6 +31,21 @@ fun ServerPlayer.forceGiveItem(item: ItemStack) {
         this@forceGiveItem.forceGiveItem(item)
     }
 }
+
+val ServerPlayer.recraft: Int
+    get() {
+        var i = 0.0
+        this.inventory.items.forEach {
+            when (it.item) {
+                Items.COCOA_BEANS -> i += 1
+                Items.RED_MUSHROOM -> i += 0.5
+                Items.BROWN_MUSHROOM -> i += 0.5
+                Items.CACTUS -> i += 0.5
+                Items.PINK_PETALS -> i += 0.125
+            }
+        }
+        return i.toInt()
+    }
 
 fun ServerPlayer.armorValue(): Double {
     var value = 0.0
@@ -77,7 +93,7 @@ fun ServerPlayer.inventoryValue(): Double {
             Items.DIAMOND_AXE -> diamondValue * 3
 
             else -> 0.0
-        }  * item.count
+        } * item.count
     }
 
     return value
@@ -85,7 +101,8 @@ fun ServerPlayer.inventoryValue(): Double {
 
 fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
     listOf(inventory.items, inventory.armor, inventory.offhand).forEach { slots ->
-        slots.filter { !it.isKitItem}.filter { it.item != Items.ANVIL }.forEach { spawnAtLocation(it) } // anvil wegen dem crash warum auch immer
+        slots.filter { !it.isKitItem }.filter { it.item != Items.ANVIL }
+            .forEach { spawnAtLocation(it) } // anvil wegen dem crash warum auch immer
     }
 
 

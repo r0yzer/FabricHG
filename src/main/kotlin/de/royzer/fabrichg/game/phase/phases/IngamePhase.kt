@@ -17,6 +17,9 @@ import de.royzer.fabrichg.kit.achievements.AchievementManager
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
+import de.royzer.fabrichg.util.recraft
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.logging.logInfo
@@ -94,6 +97,13 @@ object IngamePhase : GamePhase() {
         if (minifeastStartTimes.contains(timer)) {
             Minifeast(getRandomHighestPos(200)).also {
                 it.start()
+            }
+        }
+
+        PlayerList.alivePlayers.forEach {
+            val serverPlayer = it.serverPlayer ?: return@forEach
+            if (serverPlayer.recraft > 96) {
+                serverPlayer.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 20, 3))
             }
         }
 
