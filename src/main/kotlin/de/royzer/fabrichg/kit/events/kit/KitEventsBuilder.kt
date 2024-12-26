@@ -48,6 +48,10 @@ class KitEventsBuilder(val kit: Kit) {
         kit.events.killPlayerAction = action
     }
 
+    fun onKillEntity(action: (HGPlayer, Kit, killed: Entity) -> Unit) {
+        kit.events.killEntityAction = action
+    }
+
     fun onSneak(ignoreCooldown: Boolean = false, action: (HGPlayer, Kit) -> Unit) {
         kit.events.sneakAction = action
         if (ignoreCooldown) {

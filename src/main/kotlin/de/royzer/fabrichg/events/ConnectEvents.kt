@@ -37,7 +37,7 @@ import kotlin.time.Duration.Companion.seconds
 
 object ConnectEvents {
     init {
-        ServerPlayConnectionEvents.JOIN.register { handler, sender, server ->
+        ServerPlayConnectionEvents.JOIN.register  { handler, sender, server ->
             val gamePhase = GamePhaseManager.currentPhase.phaseType
             val player = handler.player
 

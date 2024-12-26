@@ -24,7 +24,7 @@ val gravityKit = kit("Gravity") {
     kitItem {
         itemStack = kitSelectorItem
         onClick { hgPlayer, _ ->
-            hgPlayer.serverPlayer?.addEffect(MobEffectInstance(MobEffects.LEVITATION, clickDuration, 0, false, false))
+            hgPlayer.serverPlayer?.addEffect(MobEffectInstance(MobEffects.LEVITATION, clickDuration, 1, false, false))
 
             hgPlayer.checkUsesForCooldown(kit, maxUsesClick)
         }

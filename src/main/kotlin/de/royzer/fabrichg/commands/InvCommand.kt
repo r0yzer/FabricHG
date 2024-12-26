@@ -16,7 +16,7 @@ fun Inventory.toGuiPage(): GuiPage {
     return GuiPage(
         "1",
         1,
-        items.mapIndexed { index, itemStack -> (index) to GuiPlaceholder(itemStack.guiIcon) }.toMap(),
+        items.mapIndexed { index, itemStack -> (index) to GuiPlaceholder(itemStack.copy().guiIcon) }.toMap(),
         null,
         null
     )
