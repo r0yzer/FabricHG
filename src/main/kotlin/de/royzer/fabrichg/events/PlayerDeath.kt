@@ -11,9 +11,11 @@ import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
 import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents
+import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
+import net.minecraft.world.entity.player.Player
 import net.silkmc.silk.core.logging.logInfo
 
 object PlayerDeath {
@@ -25,25 +27,33 @@ object PlayerDeath {
     }
 
     private fun hgPlayerDeath(deadEntity: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
-        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
-        val deadHGPlayer = deadEntity.hgPlayer ?: return true
-        val serverPlayerEntity = deadHGPlayer.serverPlayer ?: return true
+        if ((deadEntity as? LivingEntityAccessor)?.invokeTryUseTotem(damageSource) == true) {
+            logInfo("${deadEntity.name.string} hat Totem genutzt")
 
-        val killer: Entity? = (serverPlayerEntity as LivingEntityAccessor).attackingMob
-
-
-        if ((serverPlayerEntity as? LivingEntityAccessor)?.invokeTryUseTotem(damageSource) == true) {
-            logInfo("${serverPlayerEntity.name.string} hat Totem genutzt")
-            serverPlayerEntity.sendPlayerStatus()
+            if (deadEntity is ServerPlayer)
+                deadEntity.sendPlayerStatus()
             return false
         }
 
+        val killer: Entity? = (deadEntity as LivingEntityAccessor).attackingMob
+
+        val hgPlayer = killer?.hgPlayer
+        hgPlayer?.kits?.forEach {
+            if (hgPlayer.canUseKit(it, true)) {
+                it.events.killEntityAction?.invoke(hgPlayer, it, deadEntity)
+            }
+        }
+
+        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
+
+        val deadHGPlayer = deadEntity.hgPlayer ?: return true
+        val serverPlayerEntity = deadHGPlayer.serverPlayer ?: return true
 
         if (killer is HGBot) {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
+
 //        (serverPlayerEntity as LivingEntityAccessor).invokeDropAllDeathLoot(serverPlayerEntity.serverLevel(), damageSource)
-        val hgPlayer = killer?.hgPlayer
 
         if (deadHGPlayer.status != HGPlayerStatus.GULAG) {
             hgPlayer?.kills = hgPlayer?.kills?.plus(1) ?: 1

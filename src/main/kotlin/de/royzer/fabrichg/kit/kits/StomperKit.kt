@@ -72,7 +72,7 @@ val stomperKit = kit("Stomper") {
                 }
             }
 
-            world.playSound(null, serverPlayer.posUnder, SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 2f, 1f)
+            world.playSound(serverPlayer, serverPlayer.posUnder, SoundEvents.ANVIL_FALL, SoundSource.BLOCKS, 2f, 1f)
 
             return@onTakeDamage 2f
         }

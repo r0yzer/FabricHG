@@ -72,7 +72,7 @@ class Minifeast(
 
         server.playerList.players.forEach {
             it.connection.send(ClientboundSoundPacket(SoundEvents.RAID_HORN, SoundSource.MASTER, it.x, it.y, it.z, 1f, 1f, Random.nextLong()))
-            it.playSound(SoundEvents.AMETHYST_BLOCK_BREAK, 1.0f, 1.0f)
+            it.playNotifySound(SoundEvents.AMETHYST_BLOCK_BREAK, SoundSource.BLOCKS,1.0f, 1.0f)
         }
 
         world.setBlock(

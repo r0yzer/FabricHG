@@ -61,16 +61,15 @@ public abstract class ServerPlayerMixin extends Player {
     @Unique
     public boolean beforeDeath(DamageSource source, float amount, CallbackInfoReturnable<Boolean> ci) {
         boolean cancelDeath = GulagManager.INSTANCE.beforeDeath(source.getEntity(), (ServerPlayer) (Object) this);
-
-
         ServerPlayer killed = (ServerPlayer) (Object) this;
+
         if (cancelDeath) {
             Entity killer = source.getEntity();
             if (killer instanceof ServerPlayer killerPlayer) {
                 HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(killerPlayer);
                 HGPlayerKt.gulagKill(hgPlayer, (ServerPlayer) (Object) this);
-                PlayerList.INSTANCE.announcePlayerDeath(HGPlayerKt.getHgPlayer(killed), source, source.getEntity(), true);
             }
+            PlayerList.INSTANCE.announcePlayerDeath(HGPlayerKt.getHgPlayer(killed), source, source.getEntity(), true);
             setHealth(getMaxHealth());
         }
 
