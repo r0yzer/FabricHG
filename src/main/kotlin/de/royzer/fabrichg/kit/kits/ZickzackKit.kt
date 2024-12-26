@@ -41,7 +41,6 @@ val zickzackKit = kit("Zickzack") {
             if (combo > minCombo) {
                 val chance = Random().nextInt(likelihood) + 1
                 if (chance > likelihood - combo) {
-                    serverPlayer.invulnerableTime = 5
                     hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.set(attacker.uuid, combo - 1)
                     serverPlayer.playNotifySound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS, 1f, 1f)
                     return@onAttackedByPlayer true
