@@ -42,6 +42,7 @@ object ConfigManager {
         gameSettings.kitAmount = gameConfigData.kitAmount.also {
             require(it <= 8)
         }
+        gameSettings.minPlayers = gameConfigData.minPlayers
         gameSettings.maxIngameTime = gameConfigData.maxIngameTime
         gameSettings.minifeastEnabled = gameConfigData.minifeastEnabled
         gameSettings.mushroomCowNerf = gameConfigData.mushroomCowNerf

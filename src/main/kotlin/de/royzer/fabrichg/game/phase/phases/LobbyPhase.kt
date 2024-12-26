@@ -8,6 +8,7 @@ import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.scoreboard.formattedTime
+import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -30,7 +31,7 @@ object LobbyPhase : GamePhase() {
     override fun tick(timer: Int) {
         val timeLeft = maxPhaseTime - timer
 
-        if (PlayerList.players.size >= 2) {
+        if (PlayerList.players.size >= ConfigManager.gameSettings.minPlayers) {
             when (timeLeft) {
                 15 -> {
                     isStarting = true

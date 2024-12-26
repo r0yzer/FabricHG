@@ -8,6 +8,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
+    var minPlayers: Int = 2,
+    @EncodeDefault
     var maxIngameTime: Int = 30 * 60,
     @EncodeDefault
     var minifeastEnabled: Boolean = true,
