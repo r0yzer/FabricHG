@@ -10,6 +10,7 @@ import kotlinx.coroutines.async
 import kotlinx.serialization.Serializable
 import net.minecraft.core.component.DataComponents
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.projectile.FireworkRocketEntity
 import net.minecraft.world.item.Items
@@ -101,7 +102,7 @@ abstract class KitAchievement {
             }
         }
 
-        player.playSound(SoundEvents.PLAYER_LEVELUP, 10f, 1f)
+        player.level().playSound(player, player.x, player.y, player.z, SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS)
 
         val starExplosion = FireworkExplosion(
             FireworkExplosion.Shape.STAR,

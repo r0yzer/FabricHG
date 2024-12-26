@@ -5,6 +5,7 @@ import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.item.Items
@@ -37,7 +38,8 @@ val berserkerKit = kit("Berserker") {
 
             berserkSecondsAchievement.awardLater(serverPlayer, berserkerTime)
 
-            serverPlayer.playSound(SoundEvents.WOLF_HOWL, 10f, 1f)
+            serverPlayer.level().playSound(serverPlayer, serverPlayer.x, serverPlayer.y, serverPlayer.z, SoundEvents.WOLF_HOWL, SoundSource.PLAYERS);
+            serverPlayer.playNotifySound(SoundEvents.WOLF_HOWL, SoundSource.PLAYERS, 100f, 1f)
         }
     }
 }

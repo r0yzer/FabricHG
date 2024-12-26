@@ -74,7 +74,7 @@ val diggerKit = kit("Digger") {
                         }
                     }
                 }
-                world.playSound(null, blockPos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 10F, 1F)
+                world.playSound(player, blockPos, SoundEvents.STONE_BREAK, SoundSource.BLOCKS, 10F, 1F)
                 stack.apply { count -= 1 }
             }
         }

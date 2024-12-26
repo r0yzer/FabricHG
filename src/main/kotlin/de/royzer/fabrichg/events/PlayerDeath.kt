@@ -27,8 +27,6 @@ object PlayerDeath {
     }
 
     private fun hgPlayerDeath(deadEntity: LivingEntity, damageSource: DamageSource, amount: Float): Boolean {
-        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
-
         if ((deadEntity as? LivingEntityAccessor)?.invokeTryUseTotem(damageSource) == true) {
             logInfo("${deadEntity.name.string} hat Totem genutzt")
 
@@ -39,15 +37,14 @@ object PlayerDeath {
 
         val killer: Entity? = (deadEntity as LivingEntityAccessor).attackingMob
 
-
-
-
         val hgPlayer = killer?.hgPlayer
         hgPlayer?.kits?.forEach {
             if (hgPlayer.canUseKit(it, true)) {
                 it.events.killEntityAction?.invoke(hgPlayer, it, deadEntity)
             }
         }
+
+        if (GamePhaseManager.currentPhase.phaseType != PhaseType.INGAME) return true
 
         val deadHGPlayer = deadEntity.hgPlayer ?: return true
         val serverPlayerEntity = deadHGPlayer.serverPlayer ?: return true

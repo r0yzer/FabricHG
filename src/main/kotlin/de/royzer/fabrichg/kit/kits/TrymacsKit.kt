@@ -6,6 +6,7 @@ import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
 import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.Items
 import net.minecraft.world.phys.Vec3
@@ -37,7 +38,7 @@ val trymacsKit = kit("Trymacs") {
                 return@afterHitEntity
             }
 
-            entity.playSound(SoundEvents.IRON_GOLEM_ATTACK, 1.0F, 1.0F);
+            entity.level().playSound(serverPlayer, entity.x, entity.y, entity.z, SoundEvents.IRON_GOLEM_ATTACK, SoundSource.PLAYERS);
             val launch = Vec3(playerLook.x * horizontalLaunchStrength, verticalLaunchStrength.toDouble(), playerLook.z * horizontalLaunchStrength)
 
             entity.modifyVelocity(launch)
