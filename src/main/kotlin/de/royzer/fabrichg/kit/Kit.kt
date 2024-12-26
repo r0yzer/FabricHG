@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.kit
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.achievements.KitAchievement
@@ -11,6 +13,7 @@ import de.royzer.fabrichg.settings.KitProperty
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.silkmc.silk.core.server.players
+import net.silkmc.silk.core.text.literalText
 
 class Kit(val name: String) {
     val kitItems = mutableListOf<KitItem>()
@@ -19,11 +22,22 @@ class Kit(val name: String) {
     var enabled: Boolean = true
         set(value) {
             field = value
-            server.players.filter { it.hgPlayer.hasKit(this) }.forEach {
-                onDisable?.invoke(it.hgPlayer, this)
-                val index = it.hgPlayer.kits.indexOf(this)
-                it.hgPlayer.setKit(this, index)
+            if (value) {
+                // wird enabled, nix sollte passieren
+            } else {
+                server.players.filter { it.hgPlayer.hasKit(this) }.forEach {
+                    onDisable?.invoke(it.hgPlayer, this)
+                    val index = it.hgPlayer.kits.indexOf(this)
+                    it.hgPlayer.setKit(noneKit, index)
+                    it.sendSystemMessage(literalText {
+                        text("Das Kit ")
+                        text(this@Kit.name) {color= TEXT_BLUE}
+                        text(" wurde in dieser Runde disabled")
+                        color = TEXT_GRAY
+                    })
+                }
             }
+
         }
     var maxUses: Int? = null
     var usableInInvincibility = true

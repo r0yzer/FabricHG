@@ -23,6 +23,11 @@ val zickzackKit = kit("Zickzack") {
         hgPlayer.playerData[ZICKZACK_COMBO_KEY] = hashMapOf<UUID, Int>()
     }
 
+    onDisable { hgPlayer, kit ->
+        hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.clear()
+        hgPlayer.serverPlayer?.playNotifySound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS, 1f, 1f)
+    }
+
     kitEvents {
         onHitPlayer { hgPlayer, kit, hittedPlayer ->
             val combo = hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.get(hittedPlayer.uuid) ?: 0
@@ -41,9 +46,9 @@ val zickzackKit = kit("Zickzack") {
             if (combo > minCombo) {
                 val chance = Random().nextInt(likelihood) + 1
                 if (chance > likelihood - combo) {
-                    serverPlayer.invulnerableTime = 5
                     hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.set(attacker.uuid, combo - 1)
                     serverPlayer.playNotifySound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS, 1f, 1f)
+                    attacker.playNotifySound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS, 1f, 1f)
                     return@onAttackedByPlayer true
                 } else {
                     hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.set(attacker.uuid, 0)
