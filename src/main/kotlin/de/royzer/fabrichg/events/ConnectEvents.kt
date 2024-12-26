@@ -108,7 +108,7 @@ object ConnectEvents {
                         }
 
                         HGPlayerStatus.ALIVE -> {
-                            logError("${player.name.string} joint als Alive")
+                            logError("${player.name.string} joint als Alive -> wird spec")
                             player.hgPlayer.status = HGPlayerStatus.SPECTATOR
                             player.setGameMode(GameType.SPECTATOR)
                             player.removeAllEffects()
@@ -176,7 +176,7 @@ object ConnectEvents {
                         GulagManager.onDisconnect(hgPlayer)
                     }
                     else {
-                        PlayerList.removePlayer(uuid)
+//                        PlayerList.removePlayer(uuid)
                     }
                 }
 

@@ -75,6 +75,7 @@ fun registerCommands() {
     gulagCommand
     achievementsCommand
     kititemCommand
+    invCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

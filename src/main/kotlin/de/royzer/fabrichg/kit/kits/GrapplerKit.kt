@@ -27,6 +27,7 @@ val grapplerKit = kit("Grappler") {
     cooldown = 3.0
 
     val launchVelocity by property(4.0, "Launch velocity")
+    val fightlaunchVelocity by property(1.5, "Fight launch velocity")
 
     kitItem {
         itemStack = kitSelectorItem
@@ -37,7 +38,7 @@ val grapplerKit = kit("Grappler") {
 
             val level = serverPlayer.level()
 
-            level.addFreshEntity(GrapplerArrow(EntityType.ARROW, level, launchVelocity).also {
+            level.addFreshEntity(GrapplerArrow(EntityType.ARROW, level, launchVelocity, fightlaunchVelocity).also {
                 it.deltaMovement = serverPlayer.lookAngle.scale(4.5)
                 it.setPos(serverPlayer.eyePosition)
                 grapplerArrows[it] = serverPlayer.uuid
@@ -49,7 +50,7 @@ val grapplerKit = kit("Grappler") {
 
 }
 
-class GrapplerArrow(entityType: EntityType<Arrow>, val level: Level, val launchVel: Double) : Arrow(entityType, level) {
+class GrapplerArrow(entityType: EntityType<Arrow>, val level: Level, val launchVel: Double, val fightLaunchVel: Double) : Arrow(entityType, level) {
     override fun onHit(result: HitResult) {
         val type = result.type
 
@@ -60,7 +61,7 @@ class GrapplerArrow(entityType: EntityType<Arrow>, val level: Level, val launchV
         val hgPlayer = PlayerList.getPlayer(uuid) ?: return
         val serverPlayer = hgPlayer.serverPlayer ?: return
 
-        val diff = this.pos.minus(serverPlayer.pos).normalize().scale(launchVel)
+        val diff = this.pos.minus(serverPlayer.pos).normalize().scale(if (hgPlayer.inFight) fightLaunchVel else launchVel)
 
         serverPlayer.modifyVelocity(diff.x, (diff.y * 0.8) + 0.2, diff.z)
 
