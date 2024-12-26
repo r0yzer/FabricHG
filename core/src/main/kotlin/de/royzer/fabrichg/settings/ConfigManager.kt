@@ -1,0 +1,101 @@
+package de.royzer.fabrichg.settings
+
+import de.royzer.fabrichg.kit.kits
+import de.royzer.fabrichg.kit.property.Value
+import kotlinx.serialization.EncodeDefault
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import net.silkmc.silk.core.task.mcCoroutineTask
+import java.io.File
+
+object ConfigManager {
+
+    private val kitConfigs = HashMap<String, KitConfigData>()
+
+    private val configDirectory = File("./config")
+    private val kitConfigFile = File(configDirectory, "kitconfig.json")
+    private val json = Json {
+        prettyPrint = true
+    }
+
+    init {
+        if (!kitConfigFile.exists()) {
+            configDirectory.mkdirs()
+            kitConfigFile.createNewFile()
+            kitConfigFile.writeText(json.encodeToString(listOf<KitConfigData>()))
+        }
+
+        json.decodeFromString<List<KitConfigData>>(kitConfigFile.readText()).forEach {
+            kitConfigs[it.name] = it
+        }
+        setKitValues()
+    }
+
+    private fun setKitValues() {
+        kits.forEach {
+            if (kitConfigs.contains(it.name)) {
+                val kitConfig = kitConfigs[it.name]!!
+                it.enabled = kitConfig.enabled
+                it.cooldown = kitConfig.cooldown
+                it.usableInInvincibility = kitConfig.usableInInvincibility
+                it.maxUses = kitConfig.maxUses
+                kitConfig.additionalProperties?.forEach { (s, d) ->
+                    it.properties[s] = d
+                }
+            } else {
+                kitConfigs[it.name] = KitConfigData(
+                    it.name,
+                    it.enabled,
+                    true,
+                    it.cooldown,
+                    it.maxUses,
+                    it.properties
+                )
+            }
+            updateConfigFile()
+        }
+    }
+
+    fun updateKit(name: String) {
+        val kit = kits.first { it.name == name }
+        kitConfigs[name] =
+            KitConfigData(name, kit.enabled, kit.usableInInvincibility, kit.cooldown, kit.maxUses, kit.properties)
+    }
+
+    fun updateConfigFile() =
+        mcCoroutineTask(sync = false) {
+            kitConfigFile.writeText(json.encodeToString(kitConfigs.values.sortedBy { it.name }.toList()))
+        }
+}
+
+@Serializable
+sealed class KitProperty {
+    @Serializable
+    data class BooleanKitProperty(override var data: Boolean) : KitProperty(), Value<Boolean>
+
+    @Serializable
+    data class IntKitProperty(override var data: Int) : KitProperty(), Value<Int>
+
+    @Serializable
+    data class DoubleKitProperty(override var data: Double) : KitProperty(), Value<Double>
+
+    @Serializable
+    data class FloatKitProperty(override var data: Float) : KitProperty(), Value<Float>
+}
+
+
+@Serializable
+data class KitConfigData @OptIn(ExperimentalSerializationApi::class) constructor(
+    @EncodeDefault
+    val name: String,
+    @EncodeDefault
+    val enabled: Boolean = true,
+    @EncodeDefault
+    val usableInInvincibility: Boolean = true,
+    val cooldown: Double? = null,
+    val maxUses: Int? = null,
+    @EncodeDefault
+    val additionalProperties: HashMap<String, KitProperty>? = hashMapOf()
+)

@@ -1,5 +1,7 @@
 rootProject.name = "FabricHG"
 
+include("core")
+
 pluginManagement {
     repositories {
         maven("https://maven.fabricmc.net/")

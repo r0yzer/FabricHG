@@ -1,0 +1,224 @@
+package de.royzer.fabrichg.data.hgplayer
+
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.game.fabricHGRuntime
+import de.royzer.fabrichg.kit.Kit
+import de.royzer.fabrichg.kit.achievements.PlayerAchievementDto
+import de.royzer.fabrichg.kit.cooldown.hasCooldown
+import de.royzer.fabrichg.kit.kits.neoKit
+import de.royzer.fabrichg.kit.kits.noneKit
+import de.royzer.fabrichg.kit.kits.surpriseKit
+import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
+import de.royzer.fabrichg.server
+import de.royzer.fabrichg.stats.Stats
+import de.royzer.fabrichg.util.forceGiveItem
+import de.royzer.fabrichg.util.kitSelector
+import net.minecraft.core.Holder
+import net.minecraft.core.component.DataComponents
+import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.damagesource.CombatEntry
+import net.minecraft.world.damagesource.DamageSource
+import net.minecraft.world.damagesource.DamageType
+import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.player.Player
+import net.minecraft.world.item.ItemStack
+import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.core.text.sendText
+import java.util.*
+
+class HGPlayer(
+    val uuid: UUID,
+    val name: String
+) {
+    var status: HGPlayerStatus = HGPlayerStatus.ALIVE
+    var kills: Int = 0
+    val kits = mutableListOf<Kit>()
+    var stats: Stats = Stats(uuid.toString())
+        set(value) {
+            field = value
+            Stats.update(value)
+        }
+
+    var achievements: List<PlayerAchievementDto> = listOf()
+
+    val playerData = mutableMapOf<String, Any?>()
+
+    inline fun <reified T> getPlayerData(key: String): T? {
+        return playerData[key] as? T
+    }
+
+    var kitsDisabled = false
+
+    val serverPlayer: ServerPlayer?
+        get() = server.playerList.getPlayerByName(name)
+    val serverPlayerOrException
+        get() = server.playerList.getPlayer(uuid) ?: error("HGPlayer has no ServerPlayer")
+
+    /**
+     * @return True if player has kit, even if currently not useable
+     */
+    fun hasKit(kit: Kit) = kit in kits
+
+    /**
+     * @return True if player has kit and kit is currently useable
+     */
+    fun canUseKit(kit: Kit): Boolean {
+        return if (kit.usableInInvincibility)
+            hasKit(kit) && !hasCooldown(kit) && fabricHGRuntime.isIngameOrInvincibility && !kitsDisabled
+        else
+            hasKit(kit) && !hasCooldown(kit) && fabricHGRuntime.isIngame && !kitsDisabled
+    }
+
+    /**
+     * @return True if player has kit and kit is currently useable
+     */
+    fun canUseKit(kit: Kit, ignoreCooldown: Boolean): Boolean {
+        return if (ignoreCooldown) hasKit(kit) && fabricHGRuntime.isIngame && !kitsDisabled
+        else canUseKit(kit)
+    }
+
+    /**
+     * @param singleKit null wenn die items aller kits gegeben werden sollen sonst das kit
+     */
+    fun giveKitItems(singleKit: Kit? = null) {
+        if (singleKit == null) {
+            kits.forEach { kit ->
+                kit.kitItems.forEach { item ->
+                    serverPlayer?.forceGiveItem(item.itemStack.copy().also {
+                        it.setLore(listOf(literalText("Kititem")))
+                        if (!it.hasCustomHoverName()) {
+                            it.setCustomName(kit.name)
+                        }
+                    })
+                }
+                kit.onEnable?.invoke(this, kit, serverPlayer!!)
+            }
+        } else {
+            singleKit.kitItems.forEach { item ->
+                serverPlayer?.forceGiveItem(item.itemStack.copy().also {
+                    it.setLore(listOf(literalText("Kititem")))
+                    if (!it.hasCustomHoverName()) {
+                        it.setCustomName(singleKit.name)
+                    }
+                })
+            }
+            singleKit.onEnable?.invoke(this, singleKit, serverPlayer!!)
+        }
+
+    }
+
+    fun addKit(kit: Kit) {
+        if (!kit.enabled) {
+            this.serverPlayer?.sendText {
+                text("This kit is disabled")
+                color = TEXT_GRAY
+                bold = true
+            }
+            return
+        }
+        this.kits.add(kit)
+        this.serverPlayer?.sendSystemMessage(
+            literalText {
+                text("You are now ") { color = TEXT_GRAY }
+                text(kit.name) { color = TEXT_BLUE }
+            }
+        )
+        if (fabricHGRuntime.isIngame) {
+            this.giveKitItems(kit)
+        }
+    }
+
+    fun setKit(kit: Kit, index: Int) {
+        if (kits.contains(kit)) {
+            if (!(kit == surpriseKit || kit == noneKit)) {
+                this.serverPlayer?.sendText {
+                    text("You already have this kit")
+                    color = TEXT_GRAY
+                    bold = true
+                }
+                return
+            }
+        }
+        if (!kit.enabled) {
+            this.serverPlayer?.sendText {
+                text("This kit is disabled")
+                color = TEXT_GRAY
+                bold = true
+            }
+            return
+        }
+        this.kits[index] = kit
+        this.serverPlayer?.sendSystemMessage(
+            literalText {
+                text("You are now ") { color = TEXT_GRAY }
+                text(kit.name) { color = TEXT_BLUE }
+            }
+        )
+        if (fabricHGRuntime.isIngame) {
+            this.kits[index].onDisable?.invoke(this, this.kits[index])
+            this.giveKitItems(kit)
+            val serverPlayer = this.serverPlayer ?: return
+            kit.onEnable?.invoke(this, kit, serverPlayer)
+        }
+    }
+
+    fun fillKits() {
+        repeat(fabricHGRuntime.kitAmount) {
+            if (kits.getOrNull(it) == null) {
+                kits.add(noneKit)
+            }
+        }
+    }
+
+    val isNeo get() = canUseKit(neoKit)
+
+    val isAlive get() = status == HGPlayerStatus.ALIVE
+
+    // vielleicht noch gucken dass nur player zählen
+    val inFight: Boolean
+        get() = fabricHGRuntime.isInFight(this)
+
+    fun updateStats(kills: Int = 0, deaths: Int = 0, wins: Int = 0) {
+        this.stats = this.stats.copy(
+            kills = this.stats.kills + kills,
+            deaths = this.stats.deaths + deaths,
+            wins = this.stats.wins + wins
+        )
+    }
+    override fun toString(): String {
+        return "HGPlayer ${this.name}, Kits: [${kits.joinToString()}]"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is HGPlayer) return false
+
+        return uuid == other.uuid
+    }
+
+}
+
+val Player.hgPlayer
+    get() = PlayerList.addOrGetPlayer(uuid, name.string)
+
+val Entity.hgPlayer
+    get() = when (this) {
+            is ServerPlayer -> hgPlayer
+            else -> null
+        }
+
+
+
+fun ServerPlayer.giveKitSelectors() {
+    val kitAmounts = fabricHGRuntime.kitAmount
+    repeat(kitAmounts) {
+        this.inventory?.setItem(it, kitSelector(it))
+    }
+}
+
+fun ItemStack.hasCustomHoverName(): Boolean {
+    return get(DataComponents.CUSTOM_NAME)?.string?.isNotEmpty() == true
+}

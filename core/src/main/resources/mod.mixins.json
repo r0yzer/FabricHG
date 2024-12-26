@@ -1,0 +1,45 @@
+{
+  "required": true,
+  "package": "de.royzer.fabrichg.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "server": [
+    "MainMixin",
+    "entity.EntityAcessor",
+    "entity.EntityMixin",
+    "entity.FallingBlockEntityMixin",
+    "entity.HungerManagerMixin",
+    "entity.LivingEntityAccessor",
+    "entity.LivingEntityMixin",
+    "entity.LlamaSpitMixin",
+    "entity.MushroomCowMixin",
+    "entity.PlayerMixin",
+    "entity.ProjectileAccessor",
+    "entity.ProjectileMixin",
+    "item.BlockItemMixin",
+    "item.ItemStackMixin",
+    "item.PotionMixin",
+    "kits.AnchorLivingEntityMixin",
+    "kits.KangarooMixin",
+    "kits.PhantomMixin",
+    "server.level.LoggerChunkProgressListenerMixin",
+    "server.network.MinecraftServerMixin",
+    "server.network.ServerPlayerInteractionManagerMixin",
+    "server.network.ServerPlayerMixin",
+    "server.network.ServerStatusMixin",
+    "server.players.PlayerListMixin",
+    "world.CombatTrackerAcessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "entity.ZombieMixin",
+    "item.SwordItemMixin",
+    "kits.BeamMixin",
+    "kits.FrogMixin",
+    "server.MinecraftServerAccessor",
+    "server.level.ChunkMapAccessor",
+    "server.level.TrackedEntityAccessor",
+    "server.level.block.MushroomBlockMixin"
+  ]
+}
