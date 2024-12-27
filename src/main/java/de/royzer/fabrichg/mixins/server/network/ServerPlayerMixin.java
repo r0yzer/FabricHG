@@ -11,7 +11,6 @@ import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -42,8 +41,6 @@ public abstract class ServerPlayerMixin extends Player {
             cancellable = true
     )
     public void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        System.out.println("server player hurt " + amount + ", source: " + source.type());
-
         float reducedAmount = reducedDamage((ServerPlayer) (Object) this, source, amount);
 
         ServerPlayerEntityMixinKt.INSTANCE.onDamage(source, reducedAmount, cir, (ServerPlayer) (Object) (this));

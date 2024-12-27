@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.mixins.entity;
 
 import de.royzer.fabrichg.kit.events.kit.invoker.OnSneakKt;
+import de.royzer.fabrichg.settings.ConfigManager;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -67,13 +68,15 @@ public abstract class PlayerMixin extends LivingEntity {
         float h1 = this.getAttackStrengthScale(0.5F);
         float f2 = f1 * (0.2F + h1 * h1 * 0.8F);
         float g2 = g1 * h1;
+        float originalDamage = f2 + g2;
+        float damageMultiplier = ConfigManager.INSTANCE.getGameSettings().getCritDamage();
 
         float givenDamage = args.get(1);
 
-        boolean isCrit = (f2 + g2) != givenDamage;
+        boolean isCrit = givenDamage != originalDamage;
 
         if (isCrit) {
-            float newDamage = givenDamage * 0.85f;
+            float newDamage = originalDamage * damageMultiplier;
             args.set(1, newDamage);
         }
     }
