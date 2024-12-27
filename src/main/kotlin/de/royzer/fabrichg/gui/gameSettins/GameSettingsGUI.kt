@@ -36,6 +36,7 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
             val minifeastStatus = GuiProperty(gameSettings.minifeastEnabled)
             val cowStatus = GuiProperty(gameSettings.mushroomCowNerf)
             val gulagStatus = GuiProperty(gameSettings.gulagEnabled)
+            val achievementStatus = GuiProperty(gameSettings.achievementsEnabled)
             val gulagMinPlayersStatus = GuiProperty(gameSettings.minPlayersOutsideGulag)
             val gulagEndTime = GuiProperty(gameSettings.gulagEndTime)
             val kitAmountStatus = GuiProperty(gameSettings.kitAmount)
@@ -88,6 +89,23 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 // erstmal raus
 //                gameSettings.gulagEnabled = !gameSettings.gulagEnabled
 //                gulagStatus.set(gameSettings.gulagEnabled)
+            })
+            button(5 sl 5, achievementStatus.guiIcon { enabled ->
+                itemStack(Items.NETHER_STAR) {
+                    this.setCustomName {
+                        text("Achievements: ")
+                        text(if (enabled) "enabled" else "disabled") {
+                            color = if (enabled) 0x00FF00 else 0xFF0000
+                            bold = true
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                // erstmal raus
+                gameSettings.achievementsEnabled = !gameSettings.achievementsEnabled
+                achievementStatus.set(gameSettings.achievementsEnabled)
             })
 
             button(5 sl 7, kitAmountStatus.guiIcon { amount ->

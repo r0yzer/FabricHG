@@ -122,6 +122,7 @@ object GulagManager {
         serverPlayer.inventory.add(itemStack(Items.MUSHROOM_STEW) {count = 34})
         serverPlayer.inventory.setItem(8, tracker)
         serverPlayer.changePos(highest.x, highest.y, highest.z, server.overworld())
+        serverPlayer.health = 40f
         loser?.serverPlayer?.changePos(highest.x, highest.y, highest.z, server.overworld())
 
         fighting.clear()
@@ -291,6 +292,8 @@ object GulagManager {
     }
 
     fun ServerPlayer.giveGulagInventory() {
+        inventory.clearContent()
+
         health = 40.0f
         val soup = itemStack(Items.MUSHROOM_STEW) { }
         val sword = itemStack(Items.WOODEN_SWORD) { }
