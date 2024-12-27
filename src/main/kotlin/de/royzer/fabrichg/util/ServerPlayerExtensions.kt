@@ -37,11 +37,11 @@ val ServerPlayer.recraft: Int
         var i = 0.0
         this.inventory.items.forEach {
             when (it.item) {
-                Items.COCOA_BEANS -> i += 1
-                Items.RED_MUSHROOM -> i += 0.5
-                Items.BROWN_MUSHROOM -> i += 0.5
-                Items.CACTUS -> i += 0.5
-                Items.PINK_PETALS -> i += 0.125
+                Items.COCOA_BEANS -> i += it.count * 1
+                Items.RED_MUSHROOM -> i += it.count * 0.5
+                Items.BROWN_MUSHROOM -> i += it.count * 0.5
+                Items.CACTUS -> i += it.count * 0.5
+                Items.PINK_PETALS -> i += it.count * 0.125
             }
         }
         return i.toInt()
