@@ -28,7 +28,9 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var gulagEndTime: Int = 10 * 60,
     @EncodeDefault
-    var minPlayersOutsideGulag: Int = 5
+    var minPlayersOutsideGulag: Int = 5,
+    @EncodeDefault
+    var critDamage: Float = 1.25f
 ) {
     override fun toString(): String {
         return "GameSettings(maxIngameTime=$maxIngameTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTimeBeforeEnd=$pitStartTimeBeforeEnd, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag)"
