@@ -1,7 +1,6 @@
 package de.royzer.fabrichg.util
 
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
-import net.fabricmc.fabric.mixin.client.rendering.EntityRenderersMixin
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
@@ -34,20 +33,17 @@ fun ServerPlayer.forceGiveItem(item: ItemStack) {
 
 val ServerPlayer.recraft: Int
     get() {
-        var i = 0.0
-        listOf(inventory.items, inventory.armor, inventory.offhand).forEach { m ->
-            m.forEach {
-                when (it.item) {
-                    Items.COCOA_BEANS -> i += it.count * 1
-                    Items.RED_MUSHROOM -> i += it.count * 0.5
-                    Items.BROWN_MUSHROOM -> i += it.count * 0.5
-                    Items.CACTUS -> i += it.count * 0.5
-                    Items.PINK_PETALS -> i += it.count * 0.125
-                }
+        var rc = 0.0
+        inventory.forEach {
+            when (it.item) {
+                Items.COCOA_BEANS -> rc += it.count * 1
+                Items.RED_MUSHROOM -> rc += it.count * 0.5
+                Items.BROWN_MUSHROOM -> rc += it.count * 0.5
+                Items.CACTUS -> rc += it.count * 0.5
+                Items.PINK_PETALS -> rc += it.count * 0.125
             }
-
         }
-        return i.toInt()
+        return rc.toInt()
     }
 
 fun ServerPlayer.armorValue(): Double {
@@ -73,7 +69,7 @@ fun ServerPlayer.inventoryValue(): Double {
     val ironValue = 2.0
     val diamondValue = 3.0
 
-    inventory.items.forEach { item ->
+    inventory.forEach { item ->
         value += when (item.item) {
             Items.GOLD_NUGGET -> goldValue / 9
             Items.GOLD_INGOT -> goldValue
@@ -81,6 +77,10 @@ fun ServerPlayer.inventoryValue(): Double {
             Items.GOLDEN_SWORD -> goldValue * 3
             Items.GOLDEN_PICKAXE -> goldValue * 3
             Items.GOLDEN_AXE -> goldValue * 3
+            Items.GOLDEN_BOOTS -> goldValue * 4
+            Items.GOLDEN_LEGGINGS -> goldValue * 7
+            Items.GOLDEN_CHESTPLATE -> goldValue * 8
+            Items.GOLDEN_HELMET -> goldValue * 5
 
             Items.IRON_NUGGET -> ironValue / 9
             Items.IRON_INGOT -> ironValue
@@ -88,12 +88,20 @@ fun ServerPlayer.inventoryValue(): Double {
             Items.IRON_SWORD -> ironValue * 3
             Items.IRON_PICKAXE -> ironValue * 3
             Items.IRON_AXE -> ironValue * 3
+            Items.IRON_BOOTS -> ironValue * 4
+            Items.IRON_LEGGINGS -> ironValue * 7
+            Items.IRON_CHESTPLATE -> ironValue * 8
+            Items.IRON_HELMET -> ironValue * 5
 
             Items.DIAMOND -> diamondValue
             Items.DIAMOND_BLOCK -> diamondValue * 9
             Items.DIAMOND_SWORD -> diamondValue * 3
             Items.DIAMOND_PICKAXE -> diamondValue * 3
             Items.DIAMOND_AXE -> diamondValue * 3
+            Items.DIAMOND_BOOTS -> diamondValue * 4
+            Items.DIAMOND_LEGGINGS -> diamondValue * 7
+            Items.DIAMOND_CHESTPLATE -> diamondValue * 8
+            Items.DIAMOND_HELMET -> diamondValue * 5
 
             else -> 0.0
         } * item.count
@@ -103,9 +111,11 @@ fun ServerPlayer.inventoryValue(): Double {
 }
 
 fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
-    listOf(inventory.items, inventory.armor, inventory.offhand).forEach { slots ->
-        slots.filter { !it.isKitItem }.filter { it.item != Items.ANVIL }
-            .forEach { spawnAtLocation(it) } // anvil wegen dem crash warum auch immer
+    inventory.forEach { item ->
+        if (item.isKitItem) return@forEach
+        if (item.item == Items.ANVIL) return@forEach
+
+        spawnAtLocation(item)
     }
 
 

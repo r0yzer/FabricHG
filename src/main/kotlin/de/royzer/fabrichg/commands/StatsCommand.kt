@@ -11,7 +11,7 @@ import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 
 @OptIn(ExperimentalCoroutinesApi::class)
-val statsCommand = command("stats"){
+val statsCommand = command("stats") {
     fun getStatsMessage(playerName: String, stats: Stats, allStats: Iterable<Stats>): MutableComponent {
         // ich erscheiss mich was ist das für formatting
 

@@ -15,10 +15,14 @@ import net.minecraft.core.Direction
 import net.minecraft.network.chat.ChatType
 import net.minecraft.network.chat.FilterMask
 import net.minecraft.network.chat.LastSeenMessages
+import net.minecraft.network.chat.LastSeenMessagesTracker
 import net.minecraft.network.chat.SignedMessageBody
+import net.minecraft.network.chat.SignedMessageChain
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket
+import net.minecraft.network.protocol.game.ServerboundChatPacket
 import net.minecraft.resources.ResourceKey
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.util.Crypt.SaltSupplier
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.PointedDripstoneBlock
@@ -70,6 +74,20 @@ fun ServerPlayer.sendChatPacket(from: HGPlayer, message: String, type: ResourceK
     )
 }
 
+// kein plan ob das geht
+fun ServerPlayer.sendMessage(message: String) {
+    val salt = SaltSupplier.getLong()
+    val timestamp = Instant.now()
+    val tracker = LastSeenMessagesTracker(20)
+    val update = tracker.generateAndApplyUpdate()
+    val encoder = SignedMessageChain.Encoder.UNSIGNED
+    val signature = encoder.pack(SignedMessageBody(message, timestamp, salt, update.lastSeen))
+
+    connection.handleChat(ServerboundChatPacket(
+        message, timestamp, salt, signature, update.update
+    ))
+}
+
 val stalaktitKit = kit("Stalaktit") {
     kitSelectorItem = Items.POINTED_DRIPSTONE.defaultInstance
     cooldown = 25.0
@@ -108,13 +126,16 @@ val stalaktitKit = kit("Stalaktit") {
                 else -> null
             }
 
+            println("clicked at: $clickedPlayer from $entity")
             if (clickedPlayer != null) {
-                clickedPlayer.sendChatPacket(hgPlayer, messageToPlayer, ChatType.MSG_COMMAND_INCOMING)
+                //clickedPlayer.sendChatPacket(hgPlayer, messageToPlayer, ChatType.MSG_COMMAND_INCOMING)
+                clickedPlayer.sendMessage(messageFromPlayer)
 
-                PlayerList.players.forEach { (_, hgPlayer) ->
-                    if (hgPlayer.uuid == entity.uuid) return@forEach;
-                    hgPlayer.serverPlayer?.sendChatPacket(clickedPlayer.hgPlayer, messageFromPlayer, ChatType.CHAT)
-                }
+
+                //PlayerList.players.forEach { (_, hgPlayer) ->
+                //    if (hgPlayer.uuid == entity.uuid) return@forEach;
+                //    hgPlayer.serverPlayer?.sendChatPacket(clickedPlayer.hgPlayer, messageFromPlayer, ChatType.CHAT)
+                //}
             }
 
             stalaktitSpawnerAchievement.awardLater(player, dripstoneCount)
