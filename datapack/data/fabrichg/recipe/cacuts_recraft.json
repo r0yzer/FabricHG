@@ -1,19 +1,23 @@
 {
-    "type": "minecraft:crafting_shapeless",
-    "category": "food",
-    "ingredients": [
-        {
-            "item": "minecraft:cactus"
-        },
-        {
-            "item": "minecraft:cactus"
-        },
-        {
-            "item": "minecraft:bowl"
-        }
-    ],
-    "result": {
-        "id": "minecraft:mushroom_stew",
-        "count": 1
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    {
+      "item": "minecraft:cactus"
+    },
+    {
+      "item": "minecraft:cactus"
+    },
+    {
+      "item": "minecraft:bowl"
     }
+  ],
+  "result": {
+    "id": "minecraft:mushroom_stew",
+    "components": {
+      "minecraft:custom_name": "{\"color\":\"#ffffff\",\"text\":\"Cactus Soup\",\"bold\":false,\"strikethrough\":false,\"italic\" :false}",
+      "minecraft:custom_model_data": 1
+    },
+    "count": 1
+  }
 }

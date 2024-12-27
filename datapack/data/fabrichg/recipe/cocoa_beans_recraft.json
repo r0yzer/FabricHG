@@ -11,6 +11,10 @@
     ],
     "result": {
         "id": "minecraft:mushroom_stew",
+        "components": {
+            "minecraft:custom_name": "{\"color\":\"#ffffff\",\"text\":\"Coco Milk\",\"bold\":false,\"strikethrough\":false,\"italic\" :false}",
+            "minecraft:custom_model_data": 1
+        },
         "count": 1
     }
 }
