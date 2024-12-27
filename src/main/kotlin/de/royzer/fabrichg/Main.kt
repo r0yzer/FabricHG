@@ -25,6 +25,9 @@ val fabrichgScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
 const val TEXT_BLUE = 0x00FFFF
 const val TEXT_GRAY = 0x7A7A7A
+const val TEXT_LIGHT_GRAY = 0xAAAAAA
+const val TEXT_YELLOW = 0xFFEE40
+const val TEXT_BRIGHT_YELLOW = 0xFFEE00
 
 fun initServer() {
     kits

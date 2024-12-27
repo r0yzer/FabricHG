@@ -24,11 +24,13 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var gulagEnabled: Boolean = true,
     @EncodeDefault
+    var achievementsEnabled: Boolean = true,
+    @EncodeDefault
     var gulagEndTime: Int = 10 * 60,
     @EncodeDefault
     var minPlayersOutsideGulag: Int = 5
 ) {
     override fun toString(): String {
-        return "GameSettings(maxIngameTime=$maxIngameTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTimeBeforeEnd=$pitStartTimeBeforeEnd, gulagEnabled=$gulagEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag)"
+        return "GameSettings(maxIngameTime=$maxIngameTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTimeBeforeEnd=$pitStartTimeBeforeEnd, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag)"
     }
 }

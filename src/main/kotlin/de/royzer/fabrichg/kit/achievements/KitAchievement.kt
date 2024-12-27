@@ -4,6 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.server
+import de.royzer.fabrichg.settings.ConfigManager
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -106,8 +107,8 @@ abstract class KitAchievement {
 
         val starExplosion = FireworkExplosion(
             FireworkExplosion.Shape.STAR,
-            IntArrayList(listOf(0xFF0000)),
-            IntArrayList(listOf(0xFF0000)),
+            IntArrayList(listOf(0x03FF03)),
+            IntArrayList(listOf(0x03FF03)),
             true,
             true
         )
@@ -132,6 +133,8 @@ abstract class KitAchievement {
 
     fun awardLater(player: Player, amount: Int = 1) = IAchievementStore.achievementScope.async { award(player, amount) }
     suspend fun award(player: Player, amount: Int = 1) {
+        if (!ConfigManager.gameSettings.achievementsEnabled) return
+
         val state = getState(player)
 
         val beforeLevel = getLevel(state.state)
