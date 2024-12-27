@@ -98,7 +98,7 @@ val statsCommand = command("stats") {
                 val completedPlayerStats = playerResult.getCompleted()
                 val completedAllStats = allResults.getCompleted()
 
-                val statsMessage = getStatsMessage(source.playerOrException.name.string, completedPlayerStats, completedAllStats)
+                val statsMessage = getStatsMessage(cachedGameProfile.name, completedPlayerStats, completedAllStats)
 
                 source.playerOrException.sendSystemMessage(statsMessage)
             } catch (e: Exception) {
