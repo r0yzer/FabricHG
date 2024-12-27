@@ -26,6 +26,7 @@ fun ServerPlayer.startCombatlog() {
                 mcSyncLaunch {
                     if (GamePhaseManager.currentPhaseType == PhaseType.INGAME) hgPlayer.offlineTime -= 1
                     if (hgPlayer.offlineTime <= 0) {
+                        hgPlayer.updateStats(deaths = 1)
                         removeHGPlayer()
                         broadcastComponent(literalText("${name.string} war zu lange offline") { color = 0xFFFF55 })
                         PlayerList.announceRemainingPlayers()

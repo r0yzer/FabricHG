@@ -54,6 +54,7 @@ object ConfigManager {
         gameSettings.minPlayersOutsideGulag = gameConfigData.minPlayersOutsideGulag.also {
             require(it > 2)
         }
+        gameSettings.critDamage = gameConfigData.critDamage
 
         setKitValues()
         updateGameConfigFile()
