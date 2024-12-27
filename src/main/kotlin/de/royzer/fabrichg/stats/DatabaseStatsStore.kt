@@ -10,6 +10,7 @@ import org.dizitart.kno2.serialization.KotlinXSerializationMapper
 import org.dizitart.no2.Nitrite
 import org.dizitart.no2.common.module.NitriteModule
 import org.dizitart.no2.mvstore.MVStoreModule
+import org.dizitart.no2.repository.Cursor
 import org.dizitart.no2.repository.ObjectRepository
 import java.util.*
 
@@ -54,6 +55,12 @@ class DatabaseStatsStore: StatsStore {
                 update(newStats)
                 newStats
             } else stats
+        }
+    }
+
+    override fun getAll(): Deferred<Iterable<Stats>> {
+        return statsScope.async {
+            repository.find()
         }
     }
 
