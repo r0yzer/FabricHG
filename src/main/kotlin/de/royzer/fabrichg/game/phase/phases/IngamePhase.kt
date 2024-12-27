@@ -104,7 +104,7 @@ object IngamePhase : GamePhase() {
             PlayerList.alivePlayers.forEach {
                 val serverPlayer = it.serverPlayer ?: return@forEach
                 if (serverPlayer.recraft > 96) {
-                    serverPlayer.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 20, 3))
+                    serverPlayer.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 21, 3, false, false, true))
                 }
             }
         }

@@ -35,14 +35,17 @@ fun ServerPlayer.forceGiveItem(item: ItemStack) {
 val ServerPlayer.recraft: Int
     get() {
         var i = 0.0
-        this.inventory.items.forEach {
-            when (it.item) {
-                Items.COCOA_BEANS -> i += it.count * 1
-                Items.RED_MUSHROOM -> i += it.count * 0.5
-                Items.BROWN_MUSHROOM -> i += it.count * 0.5
-                Items.CACTUS -> i += it.count * 0.5
-                Items.PINK_PETALS -> i += it.count * 0.125
+        listOf(inventory.items, inventory.armor, inventory.offhand).forEach { m ->
+            m.forEach {
+                when (it.item) {
+                    Items.COCOA_BEANS -> i += it.count * 1
+                    Items.RED_MUSHROOM -> i += it.count * 0.5
+                    Items.BROWN_MUSHROOM -> i += it.count * 0.5
+                    Items.CACTUS -> i += it.count * 0.5
+                    Items.PINK_PETALS -> i += it.count * 0.125
+                }
             }
+
         }
         return i.toInt()
     }
