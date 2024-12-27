@@ -3,6 +3,8 @@ package de.royzer.fabrichg.commands
 import de.royzer.fabrichg.*
 import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.stats.StatsStore
+import de.royzer.fabrichg.util.round
+import de.royzer.fabrichg.util.toStringWithoutTrailing0s
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import net.minecraft.network.chat.MutableComponent
@@ -32,6 +34,10 @@ val statsCommand = command("stats") {
 
             text("Deaths: ") { color = TEXT_LIGHT_GRAY }
             text(stats.deaths.toString()) { color = TEXT_YELLOW }
+            newLine()
+
+            text("K/D: ") { color = TEXT_LIGHT_GRAY }
+            text((stats.kills.toDouble() / stats.deaths.toDouble()).round(2).let { if (it.isNaN()) 0.0 else it }.toStringWithoutTrailing0s()) { color = TEXT_YELLOW }
             newLine()
 
             text("Wins: ") { color = TEXT_LIGHT_GRAY }
