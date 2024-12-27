@@ -15,9 +15,8 @@ object AchievementManager : IAchievementStore {
 
         IAchievementStore.achievementScope.launch {
             all.join()
-            println("completed: ${all.getCompleted()}")
+
             all.getCompleted().forEach { achievement ->
-                println("achievement in db: $achievement")
                 MemoryAchievementStore.update(achievement)
             }
         }
@@ -41,7 +40,7 @@ object AchievementManager : IAchievementStore {
     }
 
     fun copyMemoryToDb() {
-        MemoryAchievementStore.achievementsMap.forEach { key, achievement ->
+        MemoryAchievementStore.achievementsMap.forEach { (key, achievement) ->
             DatabaseAchievementStore.update(achievement)
         }
     }
