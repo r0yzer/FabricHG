@@ -42,6 +42,8 @@ public abstract class ServerPlayerMixin extends Player {
             cancellable = true
     )
     public void onDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        System.out.println("server player hurt " + amount + ", source: " + source.type());
+
         float reducedAmount = reducedDamage((ServerPlayer) (Object) this, source, amount);
 
         ServerPlayerEntityMixinKt.INSTANCE.onDamage(source, reducedAmount, cir, (ServerPlayer) (Object) (this));
