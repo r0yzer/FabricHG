@@ -7,6 +7,7 @@ import de.royzer.fabrichg.game.PlayerList;
 import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnLeftClickKt;
+import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
@@ -109,7 +110,7 @@ public abstract class ServerPlayerMixin extends Player {
             )
     )
     public boolean reduceDamage(Player instance, DamageSource source, float amount) {
-//        float damageAmount = OnTakeDamageKt.onTakeDamage((ServerPlayer) instance, source, amount);
+        float damageAmount = OnTakeDamageKt.onTakeDamage((ServerPlayer) instance, source, amount);
 //        if (source.getEntity() instanceof ServerPlayer) {
 //            double multiplier = 0.6;
 //            if (((ServerPlayer) source.getEntity()).getMainHandItem().getDisplayName().getString().toLowerCase().contains("axe")) {
@@ -120,7 +121,7 @@ public abstract class ServerPlayerMixin extends Player {
 //        } else {
 //            return super.hurt(source, damageAmount);
 //        }
-        return super.hurt(source, reducedDamage(instance, source, amount));
+        return super.hurt(source, reducedDamage(instance, source, damageAmount));
     }
 
     @Unique
