@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     java
     kotlin("jvm") version "2.0.20"
-    id("fabric-loom") version "1.7-SNAPSHOT"
+    id("fabric-loom") version "1.9-SNAPSHOT"
     kotlin("plugin.serialization") version "2.0.20"
 }
 

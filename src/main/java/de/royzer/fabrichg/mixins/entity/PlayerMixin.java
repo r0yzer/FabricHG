@@ -1,7 +1,12 @@
 package de.royzer.fabrichg.mixins.entity;
 
+import de.royzer.fabrichg.game.GamePhaseManager;
+import de.royzer.fabrichg.game.phase.PhaseType;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnSneakKt;
 import de.royzer.fabrichg.settings.ConfigManager;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -18,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Player.class)
@@ -78,6 +84,15 @@ public abstract class PlayerMixin extends LivingEntity {
         if (isCrit) {
             float newDamage = originalDamage * damageMultiplier;
             args.set(1, newDamage);
+        }
+    }
+
+    @Inject(method = "interactOn", at = @At("HEAD"), cancellable = true)
+    public void cancelChestInteraction(Entity entityToInteractOn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+        // geht nicht kp
+        if (GamePhaseManager.INSTANCE.getCurrentPhaseType() == PhaseType.LOBBY) {
+            cir.setReturnValue(InteractionResult.PASS);
+            cir.cancel();
         }
     }
 }
