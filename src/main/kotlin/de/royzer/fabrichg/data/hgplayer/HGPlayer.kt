@@ -88,6 +88,7 @@ class HGPlayer(
 
     /**
      * @param singleKit null wenn die items aller kits gegeben werden sollen sonst das kit
+     * das ist beschissen
      */
     fun giveKitItems(singleKit: Kit? = null) {
         if (singleKit == null) {
@@ -111,7 +112,8 @@ class HGPlayer(
                     }
                 })
             }
-            singleKit.onEnable?.invoke(this, singleKit, serverPlayer!!)
+            // das bekommen die hgbots manchmal hin kein plan
+            singleKit.onEnable?.invoke(this, singleKit, serverPlayer ?: return)
         }
 
     }
