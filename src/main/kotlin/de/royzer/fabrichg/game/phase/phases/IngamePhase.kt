@@ -35,7 +35,9 @@ object IngamePhase : GamePhase() {
     override val maxPhaseTime by lazy { ConfigManager.gameSettings.maxIngameTime }
     override val nextPhase by lazy { EndPhase(winner) }
 
-    private const val feastStartTime = 600
+    private val feastStartTime by lazy { ConfigManager.gameSettings.feastStartTime }
+    private val pitEnabled by lazy { ConfigManager.gameSettings.pitEnabled }
+    private val pitStartTime by lazy { ConfigManager.gameSettings.pitStartTime }
 
     private const val minifeastStartTime = 300
     private const val minifeastEndTime = 550
@@ -109,22 +111,20 @@ object IngamePhase : GamePhase() {
             }
         }
 
+        if (timer == pitStartTime - 60 && pitEnabled) {
+            broadcastComponent(literalText {
+                text("Das Pit startet in ")
+                text("60") { color = TEXT_BLUE }
+                text(" Sekunden")
+                color = TEXT_GRAY
+            })
+        }
+
+        if (timer == pitStartTime && pitEnabled) {
+            Pit.start()
+        }
+
         when (val timeLeft = maxPhaseTime - timer) {
-            ConfigManager.gameSettings.pitStartTimeBeforeEnd - 60 -> if (ConfigManager.gameSettings.pitEnabled) {
-                broadcastComponent(literalText {
-                    text("Das Pit startet in ")
-                    text("60") { color = TEXT_BLUE }
-                    text(" Sekunden")
-                    color = TEXT_GRAY
-                })
-            }
-
-            ConfigManager.gameSettings.pitStartTimeBeforeEnd -> if (ConfigManager.gameSettings.pitEnabled) {
-                if (ConfigManager.gameSettings.pitEnabled) {
-                    Pit.start()
-                }
-            }
-
             120, 60, 30, 15, 10, 5, 4, 3, 2, 1 -> broadcastComponent(literalText {
                 text("Das Spiel endet in ")
                 text(timeLeft.toString()) { color = TEXT_BLUE }

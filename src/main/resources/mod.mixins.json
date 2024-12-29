@@ -41,6 +41,7 @@
     "server.MinecraftServerAccessor",
     "server.level.ChunkMapAccessor",
     "server.level.TrackedEntityAccessor",
-    "server.level.block.MushroomBlockMixin"
+    "server.level.block.MushroomBlockMixin",
+    "server.network.ServerGamePacketListenerMixin"
   ]
 }
