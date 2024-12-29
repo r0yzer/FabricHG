@@ -112,4 +112,4 @@ val kits = listOfNotNull(
     berserkerKit
 )
 
-fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }.random()
+fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }.filter { it.enabled }.random()

@@ -7,6 +7,7 @@ import de.royzer.fabrichg.game.PlayerList;
 import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnLeftClickKt;
+import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
@@ -14,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -109,7 +111,7 @@ public abstract class ServerPlayerMixin extends Player {
             )
     )
     public boolean reduceDamage(Player instance, DamageSource source, float amount) {
-//        float damageAmount = OnTakeDamageKt.onTakeDamage((ServerPlayer) instance, source, amount);
+        float damageAmount = OnTakeDamageKt.onTakeDamage((ServerPlayer) instance, source, amount);
 //        if (source.getEntity() instanceof ServerPlayer) {
 //            double multiplier = 0.6;
 //            if (((ServerPlayer) source.getEntity()).getMainHandItem().getDisplayName().getString().toLowerCase().contains("axe")) {
@@ -120,12 +122,14 @@ public abstract class ServerPlayerMixin extends Player {
 //        } else {
 //            return super.hurt(source, damageAmount);
 //        }
-        return super.hurt(source, reducedDamage(instance, source, amount));
+        return super.hurt(source, reducedDamage(instance, source, damageAmount));
     }
 
     @Unique
     public float reducedDamage(Player instance, DamageSource source, float amount) {
-        if (source.getEntity() instanceof ServerPlayer) {
+        if (source.is(DamageTypes.FALLING_STALACTITE)) {
+            return amount * 0.5f;
+        } else if (source.getEntity() instanceof ServerPlayer) {
             double multiplier = 0.6;
             if (((ServerPlayer) source.getEntity()).getMainHandItem().getDisplayName().getString().toLowerCase().contains("axe")) {
                 multiplier = 0.3;

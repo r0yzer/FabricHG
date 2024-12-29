@@ -63,7 +63,7 @@ fun ServerPlayer.armorValue(): Double {
 }
 
 fun ServerPlayer.inventoryValue(): Double {
-    var value = armorValue()
+    var value = armorValue() + recraft
 
     val goldValue = 1.25
     val ironValue = 2.0
@@ -77,10 +77,6 @@ fun ServerPlayer.inventoryValue(): Double {
             Items.GOLDEN_SWORD -> goldValue * 3
             Items.GOLDEN_PICKAXE -> goldValue * 3
             Items.GOLDEN_AXE -> goldValue * 3
-            Items.GOLDEN_BOOTS -> goldValue * 4
-            Items.GOLDEN_LEGGINGS -> goldValue * 7
-            Items.GOLDEN_CHESTPLATE -> goldValue * 8
-            Items.GOLDEN_HELMET -> goldValue * 5
 
             Items.IRON_NUGGET -> ironValue / 9
             Items.IRON_INGOT -> ironValue
@@ -88,20 +84,14 @@ fun ServerPlayer.inventoryValue(): Double {
             Items.IRON_SWORD -> ironValue * 3
             Items.IRON_PICKAXE -> ironValue * 3
             Items.IRON_AXE -> ironValue * 3
-            Items.IRON_BOOTS -> ironValue * 4
-            Items.IRON_LEGGINGS -> ironValue * 7
-            Items.IRON_CHESTPLATE -> ironValue * 8
-            Items.IRON_HELMET -> ironValue * 5
 
             Items.DIAMOND -> diamondValue
             Items.DIAMOND_BLOCK -> diamondValue * 9
             Items.DIAMOND_SWORD -> diamondValue * 3
             Items.DIAMOND_PICKAXE -> diamondValue * 3
             Items.DIAMOND_AXE -> diamondValue * 3
-            Items.DIAMOND_BOOTS -> diamondValue * 4
-            Items.DIAMOND_LEGGINGS -> diamondValue * 7
-            Items.DIAMOND_CHESTPLATE -> diamondValue * 8
-            Items.DIAMOND_HELMET -> diamondValue * 5
+
+            Items.MUSHROOM_STEW -> 1.0
 
             else -> 0.0
         } * item.count

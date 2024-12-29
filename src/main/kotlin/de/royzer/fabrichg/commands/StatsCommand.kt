@@ -37,7 +37,8 @@ val statsCommand = command("stats") {
             newLine()
 
             text("K/D: ") { color = TEXT_LIGHT_GRAY }
-            text((stats.kills.toDouble() / stats.deaths.toDouble()).round(2).let { if (it.isNaN()) 0.0 else it }.toStringWithoutTrailing0s()) { color = TEXT_YELLOW }
+            val kd = stats.kills.toDouble() / stats.deaths.toDouble()
+            text(kd.round(2).let { if (it.isNaN()) 0.0 else it }.toStringWithoutTrailing0s()) { color = TEXT_YELLOW }
             newLine()
 
             text("Wins: ") { color = TEXT_LIGHT_GRAY }

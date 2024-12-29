@@ -12,6 +12,8 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var maxIngameTime: Int = 30 * 60,
     @EncodeDefault
+    var feastStartTime: Int = 10 * 60,
+    @EncodeDefault
     var minifeastEnabled: Boolean = true,
     @EncodeDefault
     var mushroomCowNerf: Boolean = true,
@@ -20,7 +22,7 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var pitEnabled: Boolean = false,
     @EncodeDefault
-    var pitStartTimeBeforeEnd: Int = 10 * 60,
+    var pitStartTime: Int = 45 * 60,
     @EncodeDefault
     var gulagEnabled: Boolean = true,
     @EncodeDefault
@@ -33,6 +35,6 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     var critDamage: Float = 1.25f
 ) {
     override fun toString(): String {
-        return "GameSettings(maxIngameTime=$maxIngameTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTimeBeforeEnd=$pitStartTimeBeforeEnd, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag)"
+        return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage)"
     }
 }

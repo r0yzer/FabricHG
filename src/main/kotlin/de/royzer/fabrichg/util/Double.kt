@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.util
 
+import java.math.BigDecimal
 import kotlin.math.pow
 
 fun Double.round(digits: Int): Double {
@@ -9,10 +10,5 @@ fun Double.round(digits: Int): Double {
 }
 
 fun Double.toStringWithoutTrailing0s(): String {
-    // gibts da ne java methode
-
-    val str = toString()
-
-    return if (str.endsWith(".00")) str.substring(0, str.length-4)
-    else str
+    return BigDecimal(this).stripTrailingZeros().toPlainString()
 }
