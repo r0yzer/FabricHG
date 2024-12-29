@@ -25,6 +25,7 @@ import net.minecraft.world.entity.animal.horse.Horse
 import net.minecraft.world.entity.boss.wither.WitherBoss
 import net.minecraft.world.entity.item.PrimedTnt
 import net.minecraft.world.entity.monster.Creeper
+import net.minecraft.world.entity.monster.hoglin.Hoglin
 import net.minecraft.world.entity.vehicle.Boat
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
@@ -80,7 +81,6 @@ val gamblerKit = kit("Gambler") {
         }
     }
 }
-
 
 
 private val goodGambler = WeightedCollection<GamblerAction>().also { collection ->
@@ -178,7 +178,7 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     }, 0.1)
     collection.add(GamblerAction("5 Sekunden fly") {
         it.abilities.mayfly = true
-        mcCoroutineTask(delay = 5.seconds) {_ ->
+        mcCoroutineTask(delay = 5.seconds) { _ ->
             if (it != null) {
                 it.abilities.mayfly = false
             }
@@ -219,6 +219,11 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.level().addFreshEntity(mooshroom)
         mooshroom.setPos(it.pos)
     }, 0.075)
+    collection.add(GamblerAction("Enchanter") {
+        it.giveOrDropItem(itemStack(Items.ENCHANTING_TABLE, 1) {})
+        it.giveOrDropItem(itemStack(Items.LAPIS_LAZULI, 16) {})
+        it.giveOrDropItem(itemStack(Items.EXPERIENCE_BOTTLE, 16) {})
+    }, 0.02)
 }
 
 
@@ -244,11 +249,6 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
     collection.add(GamblerAction("Eggs") {
         it.giveOrDropItem(itemStack(Items.EGG, 16) {})
     }, 0.2)
-    collection.add(GamblerAction("Enchanter") {
-        it.giveOrDropItem(itemStack(Items.ENCHANTING_TABLE, 1) {})
-        it.giveOrDropItem(itemStack(Items.LAPIS_LAZULI, 16) {})
-        it.giveOrDropItem(itemStack(Items.EXPERIENCE_BOTTLE, 16) {})
-    }, 0.02)
     collection.add(GamblerAction("You may want to look above you...") {
         it.world.setBlockAndUpdate(it.blockPos.subtract(Vec3i(0, -15, 0)), Blocks.ANVIL.defaultBlockState())
     }, 0.075)
@@ -284,6 +284,11 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
     collection.add(GamblerAction("Halbes") {
         it.health = 1f
     }, 0.04)
+    collection.add(GamblerAction("Eber") {
+        val eber = Hoglin(EntityType.HOGLIN, it.level())
+        it.level().addFreshEntity(eber)
+        eber.setPos(it.pos)
+    }, 0.06)
     collection.add(GamblerAction("Wither") {
         val wither = WitherBoss(EntityType.WITHER, it.level())
         it.level().addFreshEntity(wither)
