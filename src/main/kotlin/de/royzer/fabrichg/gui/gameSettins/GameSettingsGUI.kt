@@ -248,7 +248,7 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 it.player.sendText {
                     literalText {
                         text("Config saved") {
-                            color = 0x00FF00
+                            color = TEXT_BLUE
                         }
                     }
                 }

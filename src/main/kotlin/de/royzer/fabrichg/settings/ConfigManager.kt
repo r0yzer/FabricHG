@@ -44,10 +44,11 @@ object ConfigManager {
         }
         gameSettings.minPlayers = gameConfigData.minPlayers
         gameSettings.maxIngameTime = gameConfigData.maxIngameTime
+        gameSettings.feastStartTime = gameConfigData.feastStartTime
         gameSettings.minifeastEnabled = gameConfigData.minifeastEnabled
         gameSettings.mushroomCowNerf = gameConfigData.mushroomCowNerf
         gameSettings.pitEnabled = gameConfigData.pitEnabled
-        gameSettings.pitStartTimeBeforeEnd = gameConfigData.pitStartTimeBeforeEnd
+        gameSettings.pitStartTime = gameConfigData.pitStartTime
         gameSettings.gulagEnabled = gameConfigData.gulagEnabled
         gameSettings.achievementsEnabled = gameConfigData.achievementsEnabled
         gameSettings.gulagEndTime = gameConfigData.gulagEndTime
