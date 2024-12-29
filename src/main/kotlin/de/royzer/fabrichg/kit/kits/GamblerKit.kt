@@ -21,11 +21,15 @@ import net.minecraft.world.entity.EntityType
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.entity.animal.MushroomCow
 import net.minecraft.world.entity.animal.Wolf
+import net.minecraft.world.entity.animal.horse.Horse
 import net.minecraft.world.entity.boss.wither.WitherBoss
+import net.minecraft.world.entity.item.PrimedTnt
 import net.minecraft.world.entity.monster.Creeper
+import net.minecraft.world.entity.vehicle.Boat
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.entity.blockPos
+import net.silkmc.silk.core.entity.modifyVelocity
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
@@ -113,9 +117,23 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.giveOrDropItem(itemStack(Items.GOLDEN_BOOTS, 1) {})
         it.giveOrDropItem(itemStack(Items.GOLDEN_SWORD, 1) {})
     }, 0.3)
+    collection.add(GamblerAction("You a full leather set") {
+        it.giveOrDropItem(itemStack(Items.LEATHER_HELMET, 1) {})
+        it.giveOrDropItem(itemStack(Items.LEATHER_CHESTPLATE, 1) {})
+        it.giveOrDropItem(itemStack(Items.LEATHER_LEGGINGS, 1) {})
+        it.giveOrDropItem(itemStack(Items.LEATHER_BOOTS, 1) {})
+        it.giveOrDropItem(itemStack(Items.WOODEN_SWORD, 1) {})
+    }, 0.4)
     collection.add(GamblerAction("Coco farm") {
         it.giveOrDropItem(itemStack(Items.JUNGLE_LOG, 3) {})
         it.giveOrDropItem(itemStack(Items.COCOA_BEANS, 12) {})
+    }, 0.2)
+    collection.add(GamblerAction("Horse") {
+        val pferd = Horse(EntityType.HORSE, it.level())
+        pferd.isTamed = true
+        it.level().addFreshEntity(pferd)
+        it.giveOrDropItem(Items.SADDLE.defaultInstance)
+        pferd.setPos(it.pos)
     }, 0.2)
     collection.add(GamblerAction("You won strength") {
         it.addEffect(MobEffectInstance(MobEffects.DAMAGE_BOOST, 20 * 15))
@@ -146,11 +164,11 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         val killed = PlayerList.alivePlayers.random()
         val serverPlayer = killed.serverPlayer ?: return@GamblerAction
         broadcastComponent(literalText {
-            text("${killed.name} was randomkilled from a gambler lachkick")
+            text("${killed.name} was randomkilled by a gambler")
             color = 0xFFFF55
         })
         serverPlayer.hurt(serverPlayer.damageSources().playerAttack(serverPlayer), 1000f)
-    }, 0.005)
+    }, 0.0025)
     collection.add(GamblerAction("OP") {
         server.playerList.op(it.gameProfile)
         broadcast("tmm")
@@ -178,6 +196,24 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.giveOrDropItem(itemStack(Items.TNT, 1) {})
         it.giveOrDropItem(itemStack(Items.FLINT_AND_STEEL, 1) {})
     }, 0.2)
+    collection.add(GamblerAction("Double bed") {
+        it.giveOrDropItem(itemStack(Items.RED_BED, 1) {})
+        it.giveOrDropItem(itemStack(Items.RED_BED, 1) {})
+    }, 0.2)
+    collection.add(GamblerAction("Totem") {
+        it.giveOrDropItem(itemStack(Items.TOTEM_OF_UNDYING, 1) {})
+    }, 0.01)
+    collection.add(GamblerAction("Enderpearl") {
+        it.giveOrDropItem(itemStack(Items.ENDER_PEARL, 1) {})
+    }, 0.1)
+    collection.add(GamblerAction("Wind charge") {
+        it.giveOrDropItem(itemStack(Items.WIND_CHARGE, 3) {})
+    }, 0.03)
+    collection.add(GamblerAction("Boat") {
+        val boat = Boat(EntityType.BOAT, it.level())
+        it.level().addFreshEntity(boat)
+        boat.setPos(it.pos)
+    }, 0.2)
     collection.add(GamblerAction("Mooshroom") {
         val mooshroom = MushroomCow(EntityType.MOOSHROOM, it.level())
         it.level().addFreshEntity(mooshroom)
@@ -189,25 +225,33 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
 private val badGambler = WeightedCollection<GamblerAction>().also { collection ->
     collection.add(GamblerAction("You won dirt...") {
         it.giveOrDropItem(itemStack(Items.DIRT, 16) {})
-    }, 0.6)
+    }, 0.4)
     collection.add(GamblerAction("You won poision...") {
         it.addEffect(MobEffectInstance(MobEffects.POISON, 20 * 10))
-    }, 0.6)
+    }, 0.4)
     collection.add(GamblerAction("You won nausea...") {
         it.addEffect(MobEffectInstance(MobEffects.CONFUSION, 20 * 10))
-    }, 0.6)
+    }, 0.4)
     collection.add(GamblerAction("You won levitation") {
         it.addEffect(MobEffectInstance(MobEffects.LEVITATION, 20 * 10))
-    }, 0.6)
+    }, 0.4)
     collection.add(GamblerAction("You won some wheat") {
         it.giveOrDropItem(itemStack(Items.WHEAT, 10 + Random.nextInt(-10, 10)) {})
-    }, 0.5)
+    }, 0.4)
     collection.add(GamblerAction("Hoe") {
         it.giveOrDropItem(itemStack(Items.NETHERITE_HOE, 1) {})
-    }, 0.1)
+    }, 0.075)
+    collection.add(GamblerAction("Eggs") {
+        it.giveOrDropItem(itemStack(Items.EGG, 16) {})
+    }, 0.2)
+    collection.add(GamblerAction("Enchanter") {
+        it.giveOrDropItem(itemStack(Items.ENCHANTING_TABLE, 1) {})
+        it.giveOrDropItem(itemStack(Items.LAPIS_LAZULI, 16) {})
+        it.giveOrDropItem(itemStack(Items.EXPERIENCE_BOTTLE, 16) {})
+    }, 0.02)
     collection.add(GamblerAction("You may want to look above you...") {
         it.world.setBlockAndUpdate(it.blockPos.subtract(Vec3i(0, -15, 0)), Blocks.ANVIL.defaultBlockState())
-    }, 0.1)
+    }, 0.075)
     collection.add(GamblerAction("Instant death") {
         it.kill()
     }, 0.005)
@@ -244,7 +288,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         val wither = WitherBoss(EntityType.WITHER, it.level())
         it.level().addFreshEntity(wither)
         wither.setPos(it.pos)
-    }, 0.00327)
+    }, 0.000327)
     collection.add(GamblerAction("MLG") {
         val before = it.inventory.getSelected()
         val slot = it.inventory.selected
@@ -253,7 +297,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         mcCoroutineTask(delay = 4.seconds) { _ ->
             it.inventory.setItem(slot, before)
         }
-    }, 0.1)
+    }, 0.05)
     collection.add(GamblerAction("Random tp") {
         val random = PlayerList.alivePlayers.random()
         val serverPlayer = random.serverPlayer ?: run {
@@ -273,9 +317,29 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
     collection.add(GamblerAction("Pumpkin head") {
         it.inventory.armor[3] = Items.CARVED_PUMPKIN.defaultInstance
     }, 0.175)
-    collection.add(GamblerAction("You won kelp...") {
+    collection.add(GamblerAction("Dragon head") {
+        it.inventory.armor[3] = Items.DRAGON_HEAD.defaultInstance
+    }, 0.075)
+    collection.add(GamblerAction("You won kelp..") {
         it.giveOrDropItem(itemStack(Items.DRIED_KELP, 16) {})
     }, 0.4)
+    collection.add(GamblerAction("Lava") {
+        it.world.setBlockAndUpdate(it.blockPos, Blocks.LAVA.defaultBlockState())
+    }, 0.15)
+    collection.add(GamblerAction("Cobweb") {
+        it.world.setBlockAndUpdate(it.blockPos, Blocks.COBWEB.defaultBlockState())
+    }, 0.2)
+    collection.add(GamblerAction("Random boost") {
+        it.modifyVelocity(Random.nextFloat() * 2, Random.nextFloat() / 2, Random.nextFloat() * 2)
+    }, 0.05)
+    collection.add(GamblerAction("Slime") {
+        it.giveOrDropItem(itemStack(Items.SLIME_BLOCK, 1) {})
+    }, 0.25)
+    collection.add(GamblerAction("TNT") {
+        val tnt = PrimedTnt(EntityType.TNT, it.level())
+        it.level().addFreshEntity(tnt)
+        tnt.setPos(it.pos)
+    }, 0.1)
 }
 
 
