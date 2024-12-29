@@ -35,9 +35,9 @@ object IngamePhase : GamePhase() {
     override val maxPhaseTime by lazy { ConfigManager.gameSettings.maxIngameTime }
     override val nextPhase by lazy { EndPhase(winner) }
 
-    private val feastStartTime = ConfigManager.gameSettings.feastStartTime
-    private val pitEnabled = ConfigManager.gameSettings.pitEnabled
-    private val pitStartTime = ConfigManager.gameSettings.pitStartTime
+    private val feastStartTime by lazy { ConfigManager.gameSettings.feastStartTime }
+    private val pitEnabled by lazy { ConfigManager.gameSettings.pitEnabled }
+    private val pitStartTime by lazy { ConfigManager.gameSettings.pitStartTime }
 
     private const val minifeastStartTime = 300
     private const val minifeastEndTime = 550
