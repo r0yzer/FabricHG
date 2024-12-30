@@ -1,4 +1,4 @@
-package de.royzer.fabrichg.mixins;
+package de.royzer.fabrichg.mixins.world;
 
 import de.royzer.fabrichg.kit.events.kit.invoker.OnCraftKt;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Optional;
 
 @Mixin(ResultSlot.class)
-public class slotbusting {
+public class ResultSlotMixin {
     @Shadow @Final private CraftingContainer craftSlots;
 
     @Shadow private int removeCount;

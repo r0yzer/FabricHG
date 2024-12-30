@@ -34,7 +34,7 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "slotbusting",
+    "world.ResultSlotMixin",
     "entity.ZombieMixin",
     "item.SwordItemMixin",
     "kits.BeamMixin",
