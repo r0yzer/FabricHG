@@ -57,6 +57,7 @@ object ConfigManager {
         }
         gameSettings.critDamage = gameConfigData.critDamage
         gameSettings.maxRecraftBeforeFeast = gameConfigData.maxRecraftBeforeFeast
+        gameSettings.surpriseOnlyEnabledKits = gameConfigData.surpriseOnlyEnabledKits
 
         setKitValues()
         updateGameConfigFile()
