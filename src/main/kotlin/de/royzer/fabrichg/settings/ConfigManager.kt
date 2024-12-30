@@ -56,6 +56,7 @@ object ConfigManager {
             require(it > 2)
         }
         gameSettings.critDamage = gameConfigData.critDamage
+        gameSettings.maxRecraftBeforeFeast = gameConfigData.maxRecraftBeforeFeast
 
         setKitValues()
         updateGameConfigFile()

@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.sounds.SoundEvents
@@ -9,7 +10,6 @@ import java.util.*
 
 private const val ZICKZACK_COMBO_KEY = "zickzackCombo"
 
-// rr kein plan wieso das geht hab das aus der alten kitapi abgeschrieben
 
 val zickzackKit = kit("Zickzack") {
     kitSelectorItem = Items.DIAMOND_BLOCK.defaultInstance
@@ -17,7 +17,7 @@ val zickzackKit = kit("Zickzack") {
     description = "BastiGHG"
 
     val minCombo by property(3, "Min combo")
-    val likelihood by property(20, "likelihood")
+    val chanceMultiplier by property(8, "Dodge probability (combo * this)")
 
     onEnable { hgPlayer, kit, serverPlayer ->
         hgPlayer.playerData[ZICKZACK_COMBO_KEY] = hashMapOf<UUID, Int>()
@@ -30,24 +30,27 @@ val zickzackKit = kit("Zickzack") {
 
     kitEvents {
         onHitPlayer { hgPlayer, kit, hittedPlayer ->
-            val combo = hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.get(hittedPlayer.uuid) ?: 0
-
-            if (combo < likelihood) {  // ist wenn kein element drin ist == 0 also auch true
-                hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.set(hittedPlayer.uuid, combo + 1) // muss != null sein
-            }
-
+            val combo = hgPlayer.combo(hittedPlayer.uuid)
+            hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)
+                ?.set(hittedPlayer.uuid, combo + 1) // muss != null sein
         }
 
         // return ob gecancelt werden soll
         onAttackedByPlayer { hgPlayer, kit, attacker ->
             val serverPlayer = hgPlayer.serverPlayer ?: return@onAttackedByPlayer false
-            val combo = hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.get(attacker.uuid) ?: 0
+            val combo = hgPlayer.combo(attacker.uuid)
 
             if (combo > minCombo) {
-                val chance = Random().nextInt(likelihood) + 1
-                if (chance > likelihood - combo) {
+                // bei 3er combo 24% bei 10er 80% und dann pro dodge 1 runter
+                // und wenn ein hit durch geht reset
+                if (kotlin.random.Random.nextInt(100) < combo * chanceMultiplier) {
                     hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.set(attacker.uuid, combo - 1)
-                    serverPlayer.playNotifySound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS, 1f, 1f)
+                    serverPlayer.playNotifySound(
+                        SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE,
+                        SoundSource.PLAYERS,
+                        1f,
+                        1f
+                    )
                     attacker.playNotifySound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS, 1f, 1f)
                     return@onAttackedByPlayer true
                 } else {
@@ -60,3 +63,5 @@ val zickzackKit = kit("Zickzack") {
         }
     }
 }
+
+private fun HGPlayer.combo(uuid: UUID): Int = getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.get(uuid) ?: 0

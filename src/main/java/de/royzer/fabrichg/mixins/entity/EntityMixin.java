@@ -1,8 +1,11 @@
 package de.royzer.fabrichg.mixins.entity;
 
 import de.royzer.fabrichg.bots.HGBot;
+import de.royzer.fabrichg.data.hgplayer.HGPlayer;
+import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnMoveKt;
 import de.royzer.fabrichg.kit.events.kititem.invoker.OnClickAtEntityWithKitItemKt;
+import de.royzer.fabrichg.kit.kits.TankKitKt;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -13,6 +16,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
 import net.silkmc.silk.core.SilkKt;
 import org.spongepowered.asm.mixin.Mixin;
@@ -73,5 +77,20 @@ public abstract class EntityMixin {
         if (stack.getItem().equals(Items.POINTED_DRIPSTONE)) {
             cir.setReturnValue(null);
         }
+    }
+
+    @Inject(
+            method = "ignoreExplosion",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    public void tankIgnoreExplosions(Explosion explosion, CallbackInfoReturnable<Boolean> cir) {
+        Entity entity = (Entity) (Object) this;
+        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(entity);
+
+        if (hgPlayer == null) return;
+        if (!hgPlayer.canUseKit(TankKitKt.getTankKit())) return;
+
+        cir.setReturnValue(true);
     }
 }

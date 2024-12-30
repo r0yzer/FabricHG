@@ -9,6 +9,8 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.crafting.CraftingRecipe
+import net.minecraft.world.item.crafting.RecipeHolder
 import net.minecraft.world.phys.EntityHitResult
 
 
@@ -30,6 +32,7 @@ class KitEvents(
     val noCooldownActions: MutableList<Any> = mutableListOf(),
     var leftClickAction: ((HGPlayer, Kit) -> Unit)? = null,
     var attackedByPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Boolean)? = null,
+    var craftAction: ((HGPlayer, ItemStack, RecipeHolder<CraftingRecipe>, Kit) -> Unit)? = null
 )
 
 fun HGPlayer.invokeKitAction(kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {
