@@ -1,7 +1,10 @@
 package de.royzer.fabrichg.mixins.entity;
 
+import de.royzer.fabrichg.data.hgplayer.HGPlayer;
+import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.game.GamePhaseManager;
 import de.royzer.fabrichg.game.phase.PhaseType;
+import de.royzer.fabrichg.gulag.GulagManager;
 import kotlin.random.Random;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
@@ -36,6 +39,14 @@ public class HungerManagerMixin {
     )
     public void setHunger(Player player, CallbackInfo ci) {
         if (GamePhaseManager.INSTANCE.isNotStarted()) {
+            ci.cancel();
+        }
+
+        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(player);
+
+        if (hgPlayer == null) return;
+
+        if (GulagManager.INSTANCE.isInGulag(hgPlayer)) {
             ci.cancel();
         }
     }
