@@ -109,7 +109,8 @@ val kits = listOfNotNull(
     grapplerKit,
     squidKit,
     zickzackKit,
-    berserkerKit
+    berserkerKit,
+    tankKit,
 )
 
 fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }.filter { it.enabled }.random()

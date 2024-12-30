@@ -21,7 +21,7 @@ val perfectKit = kit("Perfect") {
 
     val streakKey = "perfectStreak"
 
-    val soupsForReward by property(7, "soups for reward")
+    val soupsForReward by property(8, "soups for reward")
 
     val soupPerfectAchievement by achievement("soup perfekt") {
         level(200)

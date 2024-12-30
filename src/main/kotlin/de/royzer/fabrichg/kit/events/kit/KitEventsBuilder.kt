@@ -7,6 +7,8 @@ import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.projectile.Projectile
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.crafting.CraftingRecipe
+import net.minecraft.world.item.crafting.RecipeHolder
 import net.minecraft.world.phys.EntityHitResult
 
 class KitEventsBuilder(val kit: Kit) {
@@ -48,8 +50,11 @@ class KitEventsBuilder(val kit: Kit) {
         kit.events.killPlayerAction = action
     }
 
-    fun onKillEntity(action: (HGPlayer, Kit, killed: Entity) -> Unit) {
+    fun onKillEntity(ignoreCooldown: Boolean = false, action: (HGPlayer, Kit, killed: Entity) -> Unit) {
         kit.events.killEntityAction = action
+        if (ignoreCooldown) {
+            kit.events.noCooldownActions.add(action)
+        }
     }
 
     fun onSneak(ignoreCooldown: Boolean = false, action: (HGPlayer, Kit) -> Unit) {
@@ -86,5 +91,12 @@ class KitEventsBuilder(val kit: Kit) {
     // true returnen wenn gecancelt werden soll
     fun onAttackedByPlayer(action: (HGPlayer, Kit, attacker: ServerPlayer) -> Boolean) {
         kit.events.attackedByPlayerAction = action
+    }
+
+    fun onCraft(ignoreCooldown: Boolean = false, action: (HGPlayer, ItemStack, RecipeHolder<CraftingRecipe>, Kit) -> Unit) {
+        kit.events.craftAction = action
+        if (ignoreCooldown) {
+            kit.events.noCooldownActions.add(action)
+        }
     }
 }
