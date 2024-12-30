@@ -48,7 +48,7 @@ val stomperKit = kit("Stomper") {
 
             val nearbyEntities = world.getNearbyEntities(
                 LivingEntity::class.java,
-                TargetingConditions.DEFAULT,
+                TargetingConditions.forNonCombat().range(range).ignoreInvisibilityTesting().ignoreLineOfSight(),
                 serverPlayer,
                 serverPlayer.boundingBox.inflate(range, range/2, range)
             ).filter {
