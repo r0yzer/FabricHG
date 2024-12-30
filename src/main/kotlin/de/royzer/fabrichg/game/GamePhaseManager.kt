@@ -7,6 +7,7 @@ import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.Component
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.world.level.GameRules
+import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.util.concurrent.atomic.AtomicInteger
@@ -31,6 +32,8 @@ object GamePhaseManager {
                 currentPhase.tick(timer.getAndIncrement())
             } catch (e: Exception) {
                 broadcastComponent("error: $e wird ignoriert".literal)
+                logError(e)
+                logError(e.stackTrace)
             }
         }
     }
