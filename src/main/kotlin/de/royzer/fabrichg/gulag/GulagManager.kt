@@ -132,7 +132,7 @@ object GulagManager {
 
     // wird aufgerufen wenn jemand während PhaseType == INGAME und status GULAG leaved
     fun onDisconnect(player: HGPlayer) {
-        PlayerList.removePlayer(player.uuid)
+        player.status = HGPlayerStatus.SPECTATOR
 
         broadcastComponent(literalText {
             text("${player.name} ist im Gulag geleaved")
