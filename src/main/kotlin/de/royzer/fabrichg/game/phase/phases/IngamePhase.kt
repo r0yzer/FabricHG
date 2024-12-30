@@ -38,6 +38,7 @@ object IngamePhase : GamePhase() {
     private val feastStartTime by lazy { ConfigManager.gameSettings.feastStartTime }
     private val pitEnabled by lazy { ConfigManager.gameSettings.pitEnabled }
     private val pitStartTime by lazy { ConfigManager.gameSettings.pitStartTime }
+    private val maxRecraft by lazy { ConfigManager.gameSettings.maxRecraftBeforeFeast }
 
     private const val minifeastStartTime = 300
     private const val minifeastEndTime = 550
@@ -105,7 +106,7 @@ object IngamePhase : GamePhase() {
         if (!Feast.started) {
             PlayerList.alivePlayers.forEach {
                 val serverPlayer = it.serverPlayer ?: return@forEach
-                if (serverPlayer.recraft > 96) {
+                if (serverPlayer.recraft > maxRecraft) {
                     serverPlayer.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 21, 3, false, false, true))
                 }
             }
