@@ -35,6 +35,27 @@ val kitCommand = command("kit") {
         }
     }
     argument<Int>("index") { _index ->
+        argument<String>("kit") { kitArg ->
+            suggestList { kits.map { it.name } }
+            runs {
+                val player = source.playerOrException
+                if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit) || player.hasPermissions(
+                        PermissionLevel.OWNER.level
+                    )
+                ) {
+                    if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
+                        if (!(player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))) return@runs
+                    }
+                    val kitName = kitArg()
+                    val kit = kits.firstOrNull { it.name.equals(kitName, true) }
+                    if (kit != null) {
+                        player.hgPlayer.setKit(kit, _index() - 1)
+                    } else {
+                        player.sendText("Es konnte kein Kit mit dem Namen gefunden werden") { color = 0xFF0000 }
+                    }
+                }
+            }
+        }
         runs {
             val index = _index() - 1
 
@@ -59,26 +80,26 @@ val kitCommand = command("kit") {
         }
     }
 
-//    argument<String>("kit") { kitArg ->
-//        suggestList { kits.map { it.name } }
-//        runs {
-//            val player = source.playerOrException
-//            if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit) || player.hasPermissions(
-//                    PermissionLevel.OWNER.level
-//                )
-//            ) {
-//                if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY)
-//                    if (!(player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))) return@runs
-//                val kitName = kitArg()
-//                val kit = kits.firstOrNull { it.name.equals(kitName, true) }
-//                if (kit != null) {
-//                    player.hgPlayer.addKit(kit)
-//                } else {
-//                    player.sendText("Es konnte kein Kit mit dem Namen gefunden werden") { color = 0xFF0000 }
-//                }
-//            }
-//        }
-//    }
+    argument<String>("kit") { kitArg ->
+        suggestList { kits.map { it.name } }
+        runs {
+            val player = source.playerOrException
+            if (GamePhaseManager.isNotStarted || player.hgPlayer.canUseKit(backupKit) || player.hasPermissions(
+                    PermissionLevel.OWNER.level
+                )
+            ) {
+                if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY)
+                    if (!(player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))) return@runs
+                val kitName = kitArg()
+                val kit = kits.firstOrNull { it.name.equals(kitName, true) }
+                if (kit != null) {
+                    player.hgPlayer.setKit(kit, 0)
+                } else {
+                    player.sendText("Es konnte kein Kit mit dem Namen gefunden werden") { color = 0xFF0000 }
+                }
+            }
+        }
+    }
     literal("info") runs {
         val player = source.playerOrException
         player.sendText {
