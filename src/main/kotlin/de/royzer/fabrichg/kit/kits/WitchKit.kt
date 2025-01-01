@@ -32,7 +32,6 @@ val witchKit = kit("Witch") {
         infiniteMcCoroutineTask(period = (20 * potionCooldown).ticks) {
             if (hgPlayer.inFight) {
                 val lastCombatEntry = (serverPlayer.combatTracker as CombatTrackerAcessor).entries.lastOrNull()
-                if (lastCombatEntry == null) println("null")
                 if (lastCombatEntry?.source?.entity is ServerPlayer) {
                     val target = lastCombatEntry.source.entity as ServerPlayer
                     if(!target.hgPlayer.isAlive) return@infiniteMcCoroutineTask

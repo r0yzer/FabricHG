@@ -40,6 +40,7 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
             val gulagMinPlayersStatus = GuiProperty(gameSettings.minPlayersOutsideGulag)
             val gulagEndTime = GuiProperty(gameSettings.gulagEndTime)
             val kitAmountStatus = GuiProperty(gameSettings.kitAmount)
+            val surpriseOnlyEnabledKitsStatus = GuiProperty(gameSettings.surpriseOnlyEnabledKits)
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
             button(5 sl 2, minifeastStatus.guiIcon { enabled ->
                 itemStack(Items.ENCHANTING_TABLE) {
@@ -106,6 +107,22 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 // erstmal raus
                 gameSettings.achievementsEnabled = !gameSettings.achievementsEnabled
                 achievementStatus.set(gameSettings.achievementsEnabled)
+            })
+            button(4 sl 2, cowStatus.guiIcon { enabled ->
+                itemStack(Items.PUFFERFISH) {
+                    this.setCustomName {
+                        text("Only enabled kits for Surprise: ")
+                        text(if (enabled) "enabled" else "disabled") {
+                            color = if (enabled) 0x00FF00 else 0xFF0000
+                            bold = true
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                gameSettings.surpriseOnlyEnabledKits = !gameSettings.surpriseOnlyEnabledKits
+                cowStatus.set(gameSettings.surpriseOnlyEnabledKits)
             })
 
             button(5 sl 7, kitAmountStatus.guiIcon { amount ->

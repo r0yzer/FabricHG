@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.CraftingRecipe
 import net.minecraft.world.item.crafting.RecipeHolder
@@ -42,7 +43,7 @@ class KitEventsBuilder(val kit: Kit) {
         kit.events.drinkAction = action
     }
 
-    fun onSoupEat(action: (HGPlayer, Kit) -> Unit) {
+    fun onSoupEat(action: (HGPlayer, Kit, Item) -> Unit) {
         kit.events.soupEatAction = action
     }
 

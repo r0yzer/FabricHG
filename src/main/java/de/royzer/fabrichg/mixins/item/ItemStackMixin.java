@@ -37,7 +37,7 @@ public class ItemStackMixin {
         if (itemStack.getItem().equals(Items.CHEST)) {
             MinifeastKt.clickGift(itemStack, user);
         }
-        if (GamePhaseManager.INSTANCE.isNotStarted()) {
+        if (GamePhaseManager.INSTANCE.isNotInPvpPhase()) {
             if (itemStack.getItem().equals(Items.CHEST)) {
                 KitSelector.INSTANCE.onClick(user, itemStack, cir, world, hand);
             }

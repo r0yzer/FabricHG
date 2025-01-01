@@ -45,9 +45,6 @@ object DatabaseAchievementStore : IAchievementStore {
 
     fun getAll(): Deferred<Cursor<PlayerAchievementDto>> {
         return IAchievementStore.achievementScope.async {
-            println("a")
-            println(repository.find())
-            println("b")
             repository.find()
         }
     }
