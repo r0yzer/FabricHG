@@ -3,12 +3,10 @@ package de.royzer.fabrichg.mixins.entity;
 import de.royzer.fabrichg.data.hgplayer.HGPlayer;
 import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.game.GamePhaseManager;
-import de.royzer.fabrichg.game.phase.PhaseType;
 import de.royzer.fabrichg.gulag.GulagManager;
 import kotlin.random.Random;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.minecraft.world.food.FoodProperties;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,7 +36,7 @@ public class HungerManagerMixin {
             cancellable = true
     )
     public void setHunger(Player player, CallbackInfo ci) {
-        if (GamePhaseManager.INSTANCE.isNotStarted()) {
+        if (GamePhaseManager.INSTANCE.isNotInPvpPhase()) {
             ci.cancel();
         }
 
