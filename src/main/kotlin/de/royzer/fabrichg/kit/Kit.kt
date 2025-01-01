@@ -9,6 +9,7 @@ import de.royzer.fabrichg.kit.events.kit.KitEvents
 import de.royzer.fabrichg.kit.events.kititem.KitItem
 import de.royzer.fabrichg.kit.kits.*
 import de.royzer.fabrichg.server
+import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.settings.KitProperty
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
@@ -31,7 +32,7 @@ class Kit(val name: String) {
                     it.hgPlayer.setKit(noneKit, index)
                     it.sendSystemMessage(literalText {
                         text("Das Kit ")
-                        text(this@Kit.name) {color= TEXT_BLUE}
+                        text(this@Kit.name) { color = TEXT_BLUE }
                         text(" wurde in dieser Runde disabled")
                         color = TEXT_GRAY
                     })
@@ -113,4 +114,5 @@ val kits = listOfNotNull(
     tankKit,
 )
 
-fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }.filter { it.enabled }.random()
+fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }
+    .filter { if (ConfigManager.gameSettings.surpriseOnlyEnabledKits) it.enabled else true }.randomOrNull() ?: noneKit

@@ -139,7 +139,7 @@ class HGPlayer(
         }
     }
 
-    fun setKit(kit: Kit, index: Int) {
+    fun setKit(kit: Kit, index: Int, force: Boolean = false) {
         if (kits.contains(kit)) {
             if (!(kit == surpriseKit || kit == noneKit)) {
                 this.serverPlayer?.sendText {
@@ -150,7 +150,7 @@ class HGPlayer(
                 return
             }
         }
-        if (!kit.enabled) {
+        if (!kit.enabled && !force) {
             this.serverPlayer?.sendText {
                 text("This kit is disabled")
                 color = TEXT_GRAY

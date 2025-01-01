@@ -27,7 +27,7 @@ object InvincibilityPhase : GamePhase() {
             hgPlayer.serverPlayer?.removeAllEffects()
             hgPlayer.kits.forEachIndexed { index, kit ->
                 if (kit == surpriseKit) {
-                    hgPlayer.setKit(randomKit(), index)
+                    hgPlayer.setKit(randomKit(), index, force=true)
                 }
             }
             with(hgPlayer.serverPlayer?.inventory) {

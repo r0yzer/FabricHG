@@ -43,7 +43,7 @@ val zickzackKit = kit("Zickzack") {
             if (combo > minCombo) {
                 // bei 3er combo 24% bei 10er 80% und dann pro dodge 1 runter
                 // und wenn ein hit durch geht reset
-                if (kotlin.random.Random.nextInt(100) < combo * chanceMultiplier) {
+                if (kotlin.random.Random.nextInt(100) < Math.clamp(combo * chanceMultiplier.toLong(), 0, 70)) {
                     hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.set(attacker.uuid, combo - 1)
                     serverPlayer.playNotifySound(
                         SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE,

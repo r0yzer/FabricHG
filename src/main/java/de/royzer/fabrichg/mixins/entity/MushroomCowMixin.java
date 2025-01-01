@@ -20,7 +20,7 @@ public class MushroomCowMixin {
     )
     public ItemLike nerfMushroomCow(ItemLike item) {
         if (ConfigManager.INSTANCE.getGameSettings().getMushroomCowNerf()) {
-            return Items.SUSPICIOUS_STEW;
+            return Items.BEETROOT_SOUP;
         }
         return item;
     }

@@ -29,10 +29,10 @@ object SoupHealingKt {
         if (player.health < player.maxHealth) {
             player.hgPlayer?.kits?.forEach {
                 if (player.hgPlayer!!.canUseKit(it)) {
-                    it.events.soupEatAction?.invoke(player.hgPlayer!!, it) // only on heal soups not hunger soups
+                    it.events.soupEatAction?.invoke(player.hgPlayer!!, it, item) // only on heal soups not hunger soups
                 }
             }
-            player.heal(item.restoredHealth)
+            player.heal(item.soupHealing)
             if (item == Items.SUSPICIOUS_STEW) {
                 player.addEffect(MobEffectInstance(MobEffects.BLINDNESS, 60, 1))
                 player.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 60, 1))
@@ -55,12 +55,12 @@ object SoupHealingKt {
             else -> false
         }
 
-    private val Item.restoredHealth: Float
+    val Item.soupHealing: Float
         get() = when (this) {
             Items.MUSHROOM_STEW -> 7.0f
-            Items.BEETROOT_SOUP -> 7.0f
+            Items.BEETROOT_SOUP -> 3.0f // mushroom cow nerf
             Items.RABBIT_STEW -> 8.0f // used in perfect kit
-            Items.SUSPICIOUS_STEW -> 2.0f
+            Items.SUSPICIOUS_STEW -> 2.0f // spit
             else -> 0f
         }
 

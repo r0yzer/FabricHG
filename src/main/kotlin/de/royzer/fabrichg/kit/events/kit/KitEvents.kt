@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.projectile.Projectile
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.crafting.CraftingRecipe
 import net.minecraft.world.item.crafting.RecipeHolder
@@ -21,7 +22,7 @@ class KitEvents(
     var moveAction: ((HGPlayer, Kit) -> Unit)? = null,
     var rightClickEntityAction: ((HGPlayer, Kit, clickedEntity: Entity) -> Unit)? = null,
     var drinkAction: ((HGPlayer, Kit, ItemStack) -> Unit)? = null,
-    var soupEatAction: ((HGPlayer, Kit) -> Unit)? = null,
+    var soupEatAction: ((HGPlayer, Kit, Item) -> Unit)? = null,
     var killPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
     var killEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
     var sneakAction: ((HGPlayer, Kit) -> Unit)? = null,

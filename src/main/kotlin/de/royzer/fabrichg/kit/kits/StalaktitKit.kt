@@ -126,7 +126,6 @@ val stalaktitKit = kit("Stalaktit") {
                 else -> null
             }
 
-            println("clicked at: $clickedPlayer from $entity")
             if (clickedPlayer != null) {
                 //clickedPlayer.sendChatPacket(hgPlayer, messageToPlayer, ChatType.MSG_COMMAND_INCOMING)
                 clickedPlayer.sendMessage(messageFromPlayer)
