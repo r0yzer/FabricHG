@@ -3,8 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
-import de.royzer.fabrichg.mixinskt.SOUP_HEAL
-import de.royzer.fabrichg.server
+import de.royzer.fabrichg.mixinskt.SoupHealingKt.soupHealing
 import de.royzer.fabrichg.util.giveOrDropItem
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
@@ -35,12 +34,12 @@ val perfectKit = kit("Perfect") {
     }
 
     kitEvents {
-        onSoupEat { hgPlayer, kit ->
+        onSoupEat { hgPlayer, kit, item ->
             val serverPlayer = hgPlayer.serverPlayer ?: return@onSoupEat
             val streak = hgPlayer.getPlayerData<Int>(streakKey) ?: 0
 
             val presouped =
-                (serverPlayer.health + SOUP_HEAL) > serverPlayer.attributes.getBaseValue(Attributes.MAX_HEALTH)
+                (serverPlayer.health + item.soupHealing) > serverPlayer.attributes.getBaseValue(Attributes.MAX_HEALTH)
 
             if (!presouped) {
                 hgPlayer.playerData[streakKey] = streak + 1
