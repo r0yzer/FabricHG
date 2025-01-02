@@ -27,7 +27,7 @@ val squidKit = kit("Squid") {
 
             val blindedPlayers = serverPlayer.level().getEntitiesOfClass(ServerPlayer::class.java, serverPlayer.boundingBox.inflate(range)) {
                 it != serverPlayer
-            }.filter { !it.hgPlayer.isNeo }
+            }.filter { !it.hgPlayer.isNeo }.filter { it.hgPlayer.isAlive }
 
 
             if (blindedPlayers.isNotEmpty()) {
