@@ -37,7 +37,7 @@ object IngamePhase : GamePhase() {
 
     private val feastStartTime by lazy { ConfigManager.gameSettings.feastStartTime }
     private val pitEnabled by lazy { ConfigManager.gameSettings.pitEnabled }
-    private val pitStartTime by lazy { ConfigManager.gameSettings.pitStartTime }
+    val pitStartTime by lazy { ConfigManager.gameSettings.pitStartTime }
     private val maxRecraft by lazy { ConfigManager.gameSettings.maxRecraftBeforeFeast }
 
     private const val minifeastStartTime = 300
