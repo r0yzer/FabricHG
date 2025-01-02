@@ -7,6 +7,7 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.networking.PluginMessaging
 import de.royzer.fabrichg.scoreboard.formattedTime
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
@@ -59,6 +60,10 @@ object LobbyPhase : GamePhase() {
                     color = TEXT_GRAY
                     text(timeLeft.formattedTime) { color = TEXT_BLUE }
                     text(" Minuten")
+
+                    if (timeLeft == 30) {
+                        PluginMessaging.sendHgStartingMessage()
+                    }
                 })
                 0 -> {
                     isStarting = false
