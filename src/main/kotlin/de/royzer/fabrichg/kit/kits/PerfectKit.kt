@@ -10,8 +10,15 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.item.setCustomName
 import kotlin.math.round
 import kotlin.math.sqrt
+
+private val perfectSoup get() = itemStack(Items.RABBIT_STEW) {
+    setCustomName("Perfect Stew") {
+        italic = false
+    }
+}
 
 val perfectKit = kit("Perfect") {
     kitSelectorItem = Items.BEACON.defaultInstance
@@ -52,7 +59,7 @@ val perfectKit = kit("Perfect") {
                     val soupsToBeAdded =
                         round(sqrt(((streak + 1) / soupsForReward).toDouble() * 0.8)).toInt() + 1 // round(sqrt(x*0.8))+1 auf https://www.geogebra.org/calculator
                     repeat(soupsToBeAdded) {
-                        serverPlayer.giveOrDropItem(itemStack(Items.RABBIT_STEW) {})
+                        serverPlayer.giveOrDropItem(perfectSoup)
                         serverPlayer.playNotifySound(SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.MASTER,1f, 1f)
                     }
                 }
