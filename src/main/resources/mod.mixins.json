@@ -34,8 +34,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "world.ResultSlotMixin",
     "entity.ZombieMixin",
+    "entitylookup.EntityLookupMixin",
     "item.SwordItemMixin",
     "kits.BeamMixin",
     "kits.FrogMixin",
@@ -43,6 +43,7 @@
     "server.level.ChunkMapAccessor",
     "server.level.TrackedEntityAccessor",
     "server.level.block.MushroomBlockMixin",
-    "server.network.ServerGamePacketListenerMixin"
+    "server.network.ServerGamePacketListenerMixin",
+    "world.ResultSlotMixin"
   ]
 }
