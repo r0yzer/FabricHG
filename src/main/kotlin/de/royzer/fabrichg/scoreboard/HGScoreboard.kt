@@ -4,12 +4,17 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.TEXT_YELLOW
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
+import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
+import de.royzer.fabrichg.game.Pit
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.EndPhase
+import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.settings.ConfigManager
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import net.minecraft.server.level.ServerPlayer
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
@@ -53,7 +58,29 @@ fun ServerPlayer.showScoreboard() {
             }
         }
 
+        updatingLine(100.milliseconds) {
+            val timeUntilFeast = (Feast.feastTimestamp?.epochSecond ?: 0) - Clock.System.now().epochSeconds
+            val timeUntilPit = IngamePhase.pitStartTime - GamePhaseManager.timer.get()
+            val timeUntilEnd = IngamePhase.maxPhaseTime - GamePhaseManager.timer.get()
+
+            val showThreshold = 60 * 5
+
+            literalText {
+                if (timeUntilEnd in 0..showThreshold) {
+                    text("End in: ") { color = TEXT_GRAY }
+                    text(timeUntilEnd.formattedTime) { color = TEXT_YELLOW }
+                } else if (timeUntilPit in 0..showThreshold && ConfigManager.gameSettings.pitEnabled) {
+                    text("Pit in: ") { color = TEXT_GRAY }
+                    text(timeUntilPit.formattedTime) { color = TEXT_YELLOW }
+                } else if (timeUntilFeast in 0..showThreshold) {
+                    text("Feast in: ") { color = TEXT_GRAY }
+                    text(timeUntilFeast.toInt().formattedTime) { color = TEXT_YELLOW }
+                }
+            }
+        }
+
         emptyLine()
+
         line(literalText {
             text("Spieler:") { color = TEXT_GRAY }
         })
