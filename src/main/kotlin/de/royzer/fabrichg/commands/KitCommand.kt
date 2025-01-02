@@ -49,7 +49,7 @@ val kitCommand = command("kit") {
                     || player.hasPermissions(PermissionLevel.OWNER.level)
                 ) {
                     if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
-                        if (!(player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))) return@runs
+                        if (!(player.hgPlayer.kits[index] == backupKit || player.hgPlayer.kits[index] == noneKit)) return@runs
                         // mit none kann man auch in invincibility
                         // backup auch ingame
                     }
@@ -92,12 +92,13 @@ val kitCommand = command("kit") {
         suggestList { kits.map { it.name } }
         runs {
             val player = source.playerOrException
-            if (GamePhaseManager.isNotInPvpPhase || player.hgPlayer.canUseKit(backupKit) || player.hasPermissions(
+            if (GamePhaseManager.isNotInPvpPhase || (player.hgPlayer.canUseKit(backupKit) && player.hgPlayer.kits[index] == backupKit) || player.hasPermissions(
                     PermissionLevel.OWNER.level
                 )
             ) {
-                if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY)
-                    if (!(player.hgPlayer.hasKit(backupKit) || player.hgPlayer.hasKit(noneKit))) return@runs
+                if (GamePhaseManager.currentPhaseType == PhaseType.INVINCIBILITY) {
+                    if (!(player.hgPlayer.kits[index] == backupKit || player.hgPlayer.kits[index] == noneKit)) return@runs
+                }
                 val kitName = kitArg()
                 val kit = kits.firstOrNull { it.name.equals(kitName, true) }
                 if (kit != null) {
