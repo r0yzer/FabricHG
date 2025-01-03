@@ -43,7 +43,7 @@ object PlayerList {
     }
 
 
-    fun announcePlayerDeath(player: HGPlayer, source: DamageSource, killer: Entity?, gulag: Boolean = false) {
+    fun announcePlayerDeath(deadPlayer: HGPlayer, source: DamageSource, killer: Entity?, gulag: Boolean = false) {
         val sourceKiller = source.entity
         val otherHGPlayer = killer?.hgPlayer
         broadcastComponent(
@@ -56,18 +56,18 @@ object PlayerList {
                     if (killer is HGBot) {
                         killMessage = "mit ${killer.mainHandItem?.item.toString().uppercase()} getötet"
                     }
-                    text("${player.name}(${player.kits.joinToString { it.name }}) wurde von ${killer.name?.string}" +
+                    text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) wurde von ${killer.name?.string}" +
                             "(${otherHGPlayer?.kits?.joinToString { it.name }}) $killMessage"
                     )
                 } else if (killer != null) {
-                    text("${player.name} wurde von ${killer.name.string} getötet")
+                    text("${deadPlayer.name} wurde von ${killer.name.string} getötet")
                 } else {
                     when (val cause = source.type().msgId) {
-                        "cactus" -> text("${player.name} ist an einem Kaktus gestorben")
-                        "mob_attack" -> text("${player.name} ist an einem Mob gestorben")
-                        "fireball" -> text("${player.name} ist an einem Feuerball gestorben")
-                        "generickill" -> text("${player.name} wurde getötet")
-                        else -> text("${player.name} ist an ${cause.uppercase()} gestorben")
+                        "cactus" -> text("${deadPlayer.name} ist an einem Kaktus gestorben")
+                        "mob_attack" -> text("${deadPlayer.name} ist an einem Mob gestorben")
+                        "fireball" -> text("${deadPlayer.name} ist an einem Feuerball gestorben")
+                        "generickill" -> text("${deadPlayer.name} wurde getötet")
+                        else -> text("${deadPlayer.name} ist an ${cause.uppercase()} gestorben")
                     }
                 }
                 color = 0xFFFF55

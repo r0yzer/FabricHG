@@ -63,7 +63,7 @@ object PlayerDeath {
         }
 
         serverPlayerEntity.removeHGPlayer()
-        PlayerList.announcePlayerDeath(serverPlayerEntity.hgPlayer, damageSource, killer)
+        PlayerList.announcePlayerDeath(deadHGPlayer, damageSource, killer)
 //        if(serverPlayerEntity is FakeServerPlayer){
 //            serverPlayerEntity.connection.onDisconnect(Component.literal("Dead"))
 //        }
