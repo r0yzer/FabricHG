@@ -3,6 +3,7 @@ package de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.commands.revive
+import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
@@ -347,11 +348,11 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         tnt.setPos(it.pos)
     }, 0.1)
     collection.add(GamblerAction("Random spectator revive") {
-        val player = PlayerList.spectators.randomOrNull() ?: run {
+        val player = server.playerList.players.filter { it.hgPlayer.status == HGPlayerStatus.SPECTATOR }.randomOrNull() ?: run {
             it.sendSystemMessage(literalText("There is no spectator online..") {color = TEXT_GRAY})
             return@GamblerAction
         }
-        player.revive(gambler = true)
+        player.hgPlayer.revive(gambler = true)
     }, 0.01)
 }
 
