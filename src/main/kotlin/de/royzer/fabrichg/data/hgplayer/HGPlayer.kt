@@ -22,6 +22,7 @@ import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.kitSelector
 import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.CombatEntry
 import net.minecraft.world.damagesource.DamageSource
@@ -49,6 +50,7 @@ class HGPlayer(
         }
 
     var achievements: List<PlayerAchievementDto> = listOf()
+    var kitInfos = mutableListOf<Component>()
 
     val playerData = mutableMapOf<String, Any?>()
 
@@ -171,6 +173,8 @@ class HGPlayer(
             val serverPlayer = this.serverPlayer ?: return
             kit.onEnable?.invoke(this, kit, serverPlayer)
         }
+
+        updateScoreboard()
     }
 
     fun fillKits() {
@@ -216,6 +220,14 @@ class HGPlayer(
             wins = this.stats.wins + wins
         )
     }
+
+    fun updateScoreboard() {
+        val newKitInfos = kits.mapNotNull { it.infoGenerator?.invoke(this, it) }
+
+        kitInfos.clear()
+        kitInfos.addAll(newKitInfos)
+    }
+
     override fun toString(): String {
         return "HGPlayer ${this.name}, Kits: [${kits.joinToString()}]"
     }

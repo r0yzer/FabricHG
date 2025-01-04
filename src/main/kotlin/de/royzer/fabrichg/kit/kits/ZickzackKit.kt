@@ -1,11 +1,15 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.Items
+import net.silkmc.silk.core.text.literalText
 import java.util.*
 
 private const val ZICKZACK_COMBO_KEY = "zickzackCombo"
@@ -28,11 +32,24 @@ val zickzackKit = kit("Zickzack") {
         hgPlayer.serverPlayer?.playNotifySound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS, 1f, 1f)
     }
 
+    info { hgPlayer, kit ->
+        literalText {
+            val lastAttackedPlayer = hgPlayer.serverPlayer?.lastHurtMob?.hgPlayer ?: return@info null
+
+            val combo = hgPlayer.combo(lastAttackedPlayer.uuid)
+
+            text("Combo (${lastAttackedPlayer.name}): ") { color = TEXT_GRAY }
+            text(combo.toString()) { color = TEXT_BLUE }
+        }
+    }
+
     kitEvents {
         onHitPlayer { hgPlayer, kit, hittedPlayer ->
             val combo = hgPlayer.combo(hittedPlayer.uuid)
             hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)
                 ?.set(hittedPlayer.uuid, combo + 1) // muss != null sein
+
+            hgPlayer.updateScoreboard()
         }
 
         // return ob gecancelt werden soll
@@ -52,12 +69,15 @@ val zickzackKit = kit("Zickzack") {
                         1f
                     )
                     attacker.playNotifySound(SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, SoundSource.PLAYERS, 1f, 1f)
+
+                    hgPlayer.updateScoreboard()
                     return@onAttackedByPlayer true
                 } else {
                     hgPlayer.getPlayerData<HashMap<UUID, Int>>(ZICKZACK_COMBO_KEY)?.set(attacker.uuid, 0)
                 }
             }
 
+            hgPlayer.updateScoreboard()
             return@onAttackedByPlayer false
 
         }

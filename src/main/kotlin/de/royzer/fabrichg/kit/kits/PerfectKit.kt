@@ -43,6 +43,15 @@ val perfectKit = kit("Perfect") {
         level(5000)
     }
 
+    info { hgPlayer, kit ->
+        val streak = hgPlayer.getPlayerData<Int>(streakKey) ?: 0
+
+        literalText {
+            text("Perfect Streak: ") { color = TEXT_GRAY }
+            text(streak.toString()) { color = TEXT_BLUE }
+        }
+    }
+
     kitEvents {
         onSoupEat { hgPlayer, kit, item ->
             val serverPlayer = hgPlayer.serverPlayer ?: return@onSoupEat
@@ -53,10 +62,6 @@ val perfectKit = kit("Perfect") {
 
             if (!presouped) {
                 hgPlayer.playerData[streakKey] = streak + 1
-                kit.currentInfo = literalText {
-                    text("Perfect Streak: ") { color = TEXT_GRAY}
-                    text((streak + 1).toString()) { color = TEXT_BLUE }
-                }
                 soupPerfectAchievement.awardLater(serverPlayer)
 
                 if (streak + 1 == 25) {
@@ -76,11 +81,9 @@ val perfectKit = kit("Perfect") {
                     serverPlayer.playNotifySound(SoundEvents.DONKEY_DEATH, SoundSource.MASTER,1f, 1f)
                 }
                 hgPlayer.playerData[streakKey] = 0
-                kit.currentInfo = literalText {
-                    text("Perfect Streak: ") { color = TEXT_GRAY }
-                    text("0") { color = TEXT_BLUE }
-                }
             }
+
+            hgPlayer.updateScoreboard()
         }
     }
 }

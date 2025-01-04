@@ -90,18 +90,15 @@ fun ServerPlayer.showScoreboard() {
             }
 
         }
-        emptyLine()
-        val kitsWithInfo = hgPlayer.kits.filter { it.currentInfo != null } // hab das rausziehen jetzt nicht getestet aber sollte gehen
-        if (kitsWithInfo.isNotEmpty()) {
-            updatingLine(1.ticks) {
-                // 1 tick 50 ms also 60 ticks für 3 sekunden
-                if (kitsWithInfo.isEmpty()) return@updatingLine "".literal // keine infos -> nix
-                val kitIndex = (server.tickCount / 60) % kitsWithInfo.size
-                val info = hgPlayer.kits.find { it == kitsWithInfo[kitIndex] }?.currentInfo ?: "null kit info (error)".literal
-                info
-            }
-            emptyLine()
+
+        updatingLine(1.ticks) {
+            hgPlayer.updateScoreboard()
+            val kitInfos = hgPlayer.kitInfos
+            if (kitInfos.isEmpty()) return@updatingLine "".literal // keine infos -> nix
+            val infoIndex = (server.tickCount / 60) % kitInfos.size
+            kitInfos.getOrNull(infoIndex) ?: "null kit info?".literal
         }
+        emptyLine()
 
         updatingLine(1000.milliseconds) {
             literalText(hgPlayer.status.toString()) {
@@ -111,6 +108,7 @@ fun ServerPlayer.showScoreboard() {
     }
 
     mcCoroutineTask(delay=10.ticks) {
+        hgPlayer.updateScoreboard()
         board.displayToPlayer(this@showScoreboard)
     }
 }
