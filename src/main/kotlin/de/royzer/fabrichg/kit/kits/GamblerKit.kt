@@ -146,6 +146,11 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     collection.add(GamblerAction("You won resistance") {
         it.addEffect(MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 20 * 15, 0))
     }, 0.5)
+    collection.add(GamblerAction("You won a Beer") {
+        beerPotions.values.random().also { beer ->
+            it.giveOrDropItem(beer.copy())
+        }
+    }, 0.45)
     collection.add(GamblerAction("Extra heart") {
         val max = it.attributes.getBaseValue(Attributes.MAX_HEALTH)
         it.attributes.getInstance(Attributes.MAX_HEALTH)?.baseValue = max + 2.0
