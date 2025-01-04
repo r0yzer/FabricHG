@@ -54,8 +54,8 @@ val perfectKit = kit("Perfect") {
             if (!presouped) {
                 hgPlayer.playerData[streakKey] = streak + 1
                 kit.currentInfo = literalText {
-                    text("Perfect Streak: ") { TEXT_GRAY}
-                    text((streak + 1).toString()) { TEXT_BLUE }
+                    text("Perfect Streak: ") { color = TEXT_GRAY}
+                    text((streak + 1).toString()) { color = TEXT_BLUE }
                 }
                 soupPerfectAchievement.awardLater(serverPlayer)
 
@@ -77,8 +77,8 @@ val perfectKit = kit("Perfect") {
                 }
                 hgPlayer.playerData[streakKey] = 0
                 kit.currentInfo = literalText {
-                    text("Perfect Streak: ") { TEXT_GRAY }
-                    text("0") { TEXT_BLUE }
+                    text("Perfect Streak: ") { color = TEXT_GRAY }
+                    text("0") { color = TEXT_BLUE }
                 }
             }
         }
