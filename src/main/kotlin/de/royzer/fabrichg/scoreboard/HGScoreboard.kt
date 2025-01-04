@@ -3,10 +3,8 @@ package de.royzer.fabrichg.scoreboard
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.TEXT_YELLOW
-import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.Pit
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.EndPhase
@@ -14,10 +12,10 @@ import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.settings.ConfigManager
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import net.minecraft.server.level.ServerPlayer
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
+import net.silkmc.silk.core.text.literal
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.game.sideboard.sideboard
 import kotlin.time.Duration.Companion.milliseconds
@@ -92,7 +90,16 @@ fun ServerPlayer.showScoreboard() {
             }
 
         }
+
+        updatingLine(1.ticks) {
+            hgPlayer.updateScoreboard()
+            val kitInfos = hgPlayer.kitInfos
+            if (kitInfos.isEmpty()) return@updatingLine "".literal // keine infos -> nix
+            val infoIndex = (server.tickCount / 60) % kitInfos.size
+            kitInfos.getOrNull(infoIndex) ?: "null kit info?".literal
+        }
         emptyLine()
+
         updatingLine(1000.milliseconds) {
             literalText(hgPlayer.status.toString()) {
                 color = hgPlayer.status.statusColor
@@ -101,6 +108,7 @@ fun ServerPlayer.showScoreboard() {
     }
 
     mcCoroutineTask(delay=10.ticks) {
+        hgPlayer.updateScoreboard()
         board.displayToPlayer(this@showScoreboard)
     }
 }

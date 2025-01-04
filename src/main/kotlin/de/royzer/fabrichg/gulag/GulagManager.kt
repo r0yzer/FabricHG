@@ -296,7 +296,7 @@ object GulagManager {
 
     fun ServerPlayer.giveGulagInventory() {
         inventory.clearContent()
-
+        removeAllEffects()
         health = 40.0f
         val soup = itemStack(Items.MUSHROOM_STEW) { }
         val sword = itemStack(Items.WOODEN_SWORD) { }
