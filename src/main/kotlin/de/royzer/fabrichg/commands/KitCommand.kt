@@ -36,7 +36,7 @@ val kitCommand = command("kit") {
     }
     argument<Int>("index") { _index ->
         argument<String>("kit") { kitArg ->
-            suggestList { kits.map { it.name } }
+            suggestsListFiltering { kits.map { it.name } }
             runs {
                 val index = _index() - 1
 
@@ -89,7 +89,7 @@ val kitCommand = command("kit") {
     }
     argument<String>("kit") { kitArg ->
         val index = 0
-        suggestList { kits.map { it.name } }
+        suggestsListFiltering { kits.map { it.name } }
         runs {
             val player = source.playerOrException
             if (GamePhaseManager.isNotInPvpPhase || (player.hgPlayer.canUseKit(backupKit) && player.hgPlayer.kits[index] == backupKit) || player.hasPermissions(
@@ -124,7 +124,7 @@ val kitCommand = command("kit") {
 
 val kitinfoCommand = command("kitinfo") {
     argument<String>("kit") { kitArg ->
-        suggestList { kits.map { it.name } }
+        suggestsListFiltering { kits.map { it.name } }
         runs {
             val kitName = kitArg()
             val kit = kits.firstOrNull { it.name.equals(kitName, true) }

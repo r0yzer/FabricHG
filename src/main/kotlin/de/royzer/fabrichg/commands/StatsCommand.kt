@@ -1,16 +1,23 @@
 package de.royzer.fabrichg.commands
 
+import com.mojang.brigadier.context.CommandContext
 import de.royzer.fabrichg.*
 import de.royzer.fabrichg.stats.Stats
-import de.royzer.fabrichg.stats.StatsStore
 import de.royzer.fabrichg.util.round
 import de.royzer.fabrichg.util.toStringWithoutTrailing0s
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
+import net.minecraft.commands.CommandSourceStack
 import net.minecraft.network.chat.MutableComponent
+import net.silkmc.silk.commands.ArgumentCommandBuilder
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
+
+fun <T> ArgumentCommandBuilder<CommandSourceStack, T>.suggestsListFiltering(block: CommandContext<CommandSourceStack>.() -> List<T>) {
+    suggestList { context ->
+        context.block().filter { listItem -> listItem.toString().contains(context.input.split(" ").last(), true) } // das ist bisschen kacke weil das ncith richtig das string argumet macht mit "brain busting" und so aber egal
+    }
+}
 
 @OptIn(ExperimentalCoroutinesApi::class)
 val statsCommand = command("stats") {
@@ -79,6 +86,10 @@ val statsCommand = command("stats") {
     }
 
     argument<String>("player"){ nameArg ->
+        suggestsListFiltering {
+            source.server.playerNames.toList()
+        }
+
         runsAsync {
             val name = nameArg()
             val wasOnline = !(server.profileCache?.get(name)?.isEmpty)!!
