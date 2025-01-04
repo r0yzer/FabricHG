@@ -11,8 +11,8 @@ import net.minecraft.world.item.Items
 val gravityKit = kit("Gravity") {
     cooldown = 40.0
 
-    val maxUsesHit by property(3, "max uses (hit)")
-    val maxUsesClick by property(1, "max uses (click)")
+    maxUses = 3
+    alternativeMaxUses = 1
 
     val hitDuration by property(75, "levitation duration (hit)")
     val clickDuration by property(300, "levitation duration (click)")
@@ -26,14 +26,14 @@ val gravityKit = kit("Gravity") {
         onClick { hgPlayer, _ ->
             hgPlayer.serverPlayer?.addEffect(MobEffectInstance(MobEffects.LEVITATION, clickDuration, 1, false, false))
 
-            hgPlayer.checkUsesForCooldown(kit, maxUsesClick)
+            hgPlayer.checkUsesForCooldown(kit, alternativeMaxUses!!)
         }
 
         onHitPlayer { hgPlayer, kit, clickedPlayer ->
             if (clickedPlayer.hgPlayer.isNeo) return@onHitPlayer
             clickedPlayer.addEffect(MobEffectInstance(MobEffects.LEVITATION, hitDuration, 0, false, false))
 
-            hgPlayer.checkUsesForCooldown(kit, maxUsesHit)
+            hgPlayer.checkUsesForCooldown(kit, maxUses!!)
         }
     }
 }

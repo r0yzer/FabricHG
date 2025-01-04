@@ -27,15 +27,14 @@ val lumberjackKit = kit("Lumberjack") {
 
     cooldown = 8.0
 
-    val maxUses by property(10, "max uses")
-
+    maxUses = 10
 
     kitItem {
         itemStack = kitSelectorItem
         onDestroyBlock { hgPlayer, kit, blockPos ->
             val world = hgPlayer.serverPlayer?.world ?: return@onDestroyBlock
             destroyLogs(world, blockPos, 0, hgPlayer.serverPlayer ?: return@onDestroyBlock)
-            hgPlayer.checkUsesForCooldown(kit, maxUses)
+            hgPlayer.checkUsesForCooldown(kit, maxUses!!)
         }
     }
 }

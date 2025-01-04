@@ -222,7 +222,7 @@ class HGPlayer(
     }
 
     fun updateScoreboard() {
-        val newKitInfos = kits.mapNotNull { it.infoGenerator?.invoke(this, it) }
+        val newKitInfos = kits.mapNotNull { it.getInfo(this) }
 
         kitInfos.clear()
         kitInfos.addAll(newKitInfos)

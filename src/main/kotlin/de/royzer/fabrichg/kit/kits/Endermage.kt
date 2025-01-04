@@ -29,7 +29,7 @@ val endermageKit = kit("Endermage") {
 
     cooldown = 15.0
 
-    val maxUses = 5
+    maxUses = 5
 
     val verticalIgnoreDistance by property(2, "Vertical ignore distance")
     val horizontalSearchDistance by property(1.5, "Horizontal search distance")
@@ -93,7 +93,7 @@ val endermageKit = kit("Endermage") {
 
             hgPlayer.playerData[ENDERMAGE_JOB_KEY] = task
 
-            hgPlayer.checkUsesForCooldown(kit, maxUses)
+            hgPlayer.checkUsesForCooldown(kit, maxUses!!)
         }
     }
 

@@ -5,6 +5,7 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.achievements.KitAchievement
+import de.royzer.fabrichg.kit.cooldown.cooldown
 import de.royzer.fabrichg.kit.events.kit.KitEvents
 import de.royzer.fabrichg.kit.events.kititem.KitItem
 import de.royzer.fabrichg.kit.info.InfoGenerator
@@ -12,6 +13,7 @@ import de.royzer.fabrichg.kit.kits.*
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.settings.KitProperty
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.silkmc.silk.core.server.players
@@ -42,6 +44,7 @@ class Kit(val name: String) {
 
         }
     var maxUses: Int? = null
+    var alternativeMaxUses: Int? = null
     var usableInInvincibility = true
     var onDisable: ((HGPlayer, Kit) -> Unit)? = null
     var onEnable: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null
@@ -50,6 +53,28 @@ class Kit(val name: String) {
     var properties: HashMap<String, KitProperty> = hashMapOf()
     var achievements: MutableList<KitAchievement> = mutableListOf()
     var infoGenerator: InfoGenerator? = null
+
+    fun getInfo(player: HGPlayer): Component? {
+        val text = infoGenerator?.invoke(player, this)
+        if (text != null) return text
+
+        val key = name + "uses"
+        val uses = player.getPlayerData<Int>(key) ?: 1
+
+        val remainingUses = (maxUses ?: -10) - uses + 1
+        val alternativeRemainingUses = (alternativeMaxUses ?: -10) - uses + 1
+
+        if (player.cooldown(this) > 0.0) return null
+        if (remainingUses <= 0 && alternativeRemainingUses <= 0) return null
+
+        return literalText {
+            text("$name remaining uses ") { color = TEXT_GRAY }
+
+            if (remainingUses >= 0) text(remainingUses.toString()) { color = TEXT_BLUE }
+            if (remainingUses >= 0 && alternativeRemainingUses >= 0) text("/") { color = TEXT_GRAY }
+            if (alternativeRemainingUses >= 0) text(alternativeRemainingUses.toString()) { color = TEXT_BLUE }
+        }
+    }
 
     override fun toString(): String {
         return name
