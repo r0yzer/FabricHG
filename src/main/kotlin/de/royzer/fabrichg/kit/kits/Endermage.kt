@@ -5,6 +5,7 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.cooldown.checkUsesForCooldown
 import de.royzer.fabrichg.kit.kit
+import de.royzer.fabrichg.kit.property.property
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import net.minecraft.core.Vec3i
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.phys.AABB
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
+import kotlin.math.abs
 import kotlin.time.Duration.Companion.seconds
 
 
@@ -27,7 +29,10 @@ val endermageKit = kit("Endermage") {
 
     cooldown = 15.0
 
-    val maxUses = 5
+    maxUses = 5
+
+    val verticalIgnoreDistance by property(2, "Vertical ignore distance")
+    val horizontalSearchDistance by property(1.5, "Horizontal search distance")
 
     kitItem {
         itemStack = kitSelectorItem
@@ -45,10 +50,12 @@ val endermageKit = kit("Endermage") {
 
             val task = mcCoroutineTask(howOften = 5 * 20) {
                 val nearbyPlayers = serverPlayer.level()
-                    .getEntitiesOfClass(ServerPlayer::class.java, AABB(blockPos).inflate(1.5, 300.0, 1.5)).filter {
+                    .getEntitiesOfClass(ServerPlayer::class.java, AABB(blockPos).inflate(horizontalSearchDistance, 356.0, horizontalSearchDistance)).filter {
                         !it.hgPlayer.isNeo
                     }.filter {
                         !it.hgPlayer.hasKit(this@kit.kit)
+                    }.filter {
+                        abs(it.y - serverPlayer.y) > verticalIgnoreDistance
                     }
                 if (nearbyPlayers.isNotEmpty()) {
                     val centerPos = blockPos.center
@@ -63,7 +70,7 @@ val endermageKit = kit("Endermage") {
                         level as ServerLevel, centerPos.x,
                         centerPos.y + 1, centerPos.z, 180f, 0f
                     )
-                    serverPlayer.invulnerableTime = 2 * 20
+                    serverPlayer.invulnerableTime = 3 * 20
                     serverPlayer.sendSystemMessage(literalText {
                         text("Du hast ")
                         text("${nearbyPlayers.size}") { color = TEXT_BLUE }
@@ -86,7 +93,7 @@ val endermageKit = kit("Endermage") {
 
             hgPlayer.playerData[ENDERMAGE_JOB_KEY] = task
 
-            hgPlayer.checkUsesForCooldown(kit, maxUses)
+            hgPlayer.checkUsesForCooldown(kit, maxUses!!)
         }
     }
 

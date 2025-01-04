@@ -1,5 +1,7 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -11,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.text.literalText
 import kotlin.math.round
 import kotlin.math.sqrt
 
@@ -38,6 +41,15 @@ val perfectKit = kit("Perfect") {
         level(200)
         level(1000)
         level(5000)
+    }
+
+    info { hgPlayer, kit ->
+        val streak = hgPlayer.getPlayerData<Int>(streakKey) ?: 0
+
+        literalText {
+            text("Perfect Streak: ") { color = TEXT_GRAY }
+            text(streak.toString()) { color = TEXT_BLUE }
+        }
     }
 
     kitEvents {
@@ -70,6 +82,8 @@ val perfectKit = kit("Perfect") {
                 }
                 hgPlayer.playerData[streakKey] = 0
             }
+
+            hgPlayer.updateScoreboard()
         }
     }
 }

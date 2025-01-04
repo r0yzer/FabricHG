@@ -4,6 +4,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.events.kit.KitEventsBuilder
 import de.royzer.fabrichg.kit.events.kititem.KitItem
 import de.royzer.fabrichg.kit.events.kititem.KitItemBuilder
+import de.royzer.fabrichg.kit.info.InfoGenerator
 import net.minecraft.server.level.ServerPlayer
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.text.literalText
@@ -33,6 +34,13 @@ class KitBuilder(val kit: Kit) {
         get() = kit.maxUses
         set(value) {
             kit.maxUses = value
+            field = value
+        }
+
+    var alternativeMaxUses: Int? = null
+        get() = kit.alternativeMaxUses
+        set(value) {
+            kit.alternativeMaxUses = value
             field = value
         }
 
@@ -67,6 +75,10 @@ class KitBuilder(val kit: Kit) {
 
     fun kitEvents(builder: KitEventsBuilder.() -> Unit) {
         kit.events.apply { KitEventsBuilder(kit).apply(builder) }
+    }
+
+    fun info(generator: InfoGenerator) {
+        kit.infoGenerator = generator
     }
 
     var cooldown: Double? = null
