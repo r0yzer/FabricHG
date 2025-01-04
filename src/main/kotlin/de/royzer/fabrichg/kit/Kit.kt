@@ -11,6 +11,7 @@ import de.royzer.fabrichg.kit.kits.*
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.settings.KitProperty
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.silkmc.silk.core.server.players
@@ -48,6 +49,7 @@ class Kit(val name: String) {
     var description: String = ""
     var properties: HashMap<String, KitProperty> = hashMapOf()
     var achievements: MutableList<KitAchievement> = mutableListOf()
+    var currentInfo: Component? = null
 
     override fun toString(): String {
         return name

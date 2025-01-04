@@ -3,10 +3,8 @@ package de.royzer.fabrichg.scoreboard
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.TEXT_YELLOW
-import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.feast.Feast
 import de.royzer.fabrichg.game.GamePhaseManager
-import de.royzer.fabrichg.game.Pit
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.EndPhase
@@ -14,10 +12,10 @@ import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.settings.ConfigManager
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import net.minecraft.server.level.ServerPlayer
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
+import net.silkmc.silk.core.text.literal
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.game.sideboard.sideboard
 import kotlin.time.Duration.Companion.milliseconds
@@ -93,6 +91,18 @@ fun ServerPlayer.showScoreboard() {
 
         }
         emptyLine()
+        val kitsWithInfo = hgPlayer.kits.filter { it.currentInfo != null } // hab das rausziehen jetzt nicht getestet aber sollte gehen
+        if (kitsWithInfo.isNotEmpty()) {
+            updatingLine(1.ticks) {
+                // 1 tick 50 ms also 60 ticks für 3 sekunden
+                if (kitsWithInfo.isEmpty()) return@updatingLine "".literal // keine infos -> nix
+                val kitIndex = (server.tickCount / 60) % kitsWithInfo.size
+                val info = hgPlayer.kits.find { it == kitsWithInfo[kitIndex] }?.currentInfo ?: "null kit info (error)".literal
+                info
+            }
+            emptyLine()
+        }
+
         updatingLine(1000.milliseconds) {
             literalText(hgPlayer.status.toString()) {
                 color = hgPlayer.status.statusColor
