@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.settings
 
+import de.royzer.fabrichg.commands.teamCommand
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.property.Value
 import kotlinx.serialization.EncodeDefault
@@ -7,6 +8,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import net.silkmc.silk.commands.registration.setupRegistrationCallback
 import net.silkmc.silk.core.task.mcCoroutineTask
 import java.io.File
 
@@ -39,6 +41,7 @@ object ConfigManager {
             kitConfigs[it.name] = it
         }
         val gameConfigData = json.decodeFromString<GameSettings>(gameConfigFile.readText())
+        // was ist das für eine spassten scheisse hier
         gameSettings.kitAmount = gameConfigData.kitAmount.also {
             require(it <= 8)
         }
@@ -58,6 +61,15 @@ object ConfigManager {
         gameSettings.critDamage = gameConfigData.critDamage
         gameSettings.maxRecraftBeforeFeast = gameConfigData.maxRecraftBeforeFeast
         gameSettings.surpriseOnlyEnabledKits = gameConfigData.surpriseOnlyEnabledKits
+        gameSettings.teamsEnabled = gameConfigData.teamsEnabled
+        gameSettings.teamSize = gameConfigData.teamSize
+        gameSettings.invincibilityTime = gameConfigData.invincibilityTime
+        gameSettings.friendlyFire = gameConfigData.friendlyFire
+        gameSettings.forbiddenKitCombinations = gameConfigData.forbiddenKitCombinations
+
+        if (gameSettings.teamsEnabled) {
+            teamCommand.setupRegistrationCallback()
+        }
 
         setKitValues()
         updateGameConfigFile()

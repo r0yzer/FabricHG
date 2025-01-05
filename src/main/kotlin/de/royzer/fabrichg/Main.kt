@@ -29,6 +29,7 @@ const val TEXT_GRAY = 0x7A7A7A
 const val TEXT_LIGHT_GRAY = 0xAAAAAA
 const val TEXT_YELLOW = 0xFFEE40
 const val TEXT_BRIGHT_YELLOW = 0xFFEE00
+const val TEXT_GREEN = 0x33FF33
 
 fun initServer() {
     kits
@@ -37,6 +38,7 @@ fun initServer() {
     registerCommands()
     ConnectEvents
     PlayerDeath
+    ConfigManager
 
     ServerLifecycleEvents.SERVER_STARTING.register {
         GamePhaseManager.server = it as DedicatedServer
@@ -46,7 +48,6 @@ fun initServer() {
 
     ServerLifecycleEvents.SERVER_STARTED.register {
         GamePhaseManager.enable(it as DedicatedServer)
-        ConfigManager
         registerCommands()
         it.overworld().dayTime = 0L
         it.gameRules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, it)
@@ -81,6 +82,7 @@ fun registerCommands() {
     achievementsCommand
     kititemCommand
     invCommand
+    teamCommand // wird nicht registriert hier registrierung in ConfigManager
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?
