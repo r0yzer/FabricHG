@@ -37,8 +37,16 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     var maxRecraftBeforeFeast: Int = 96,
     @EncodeDefault
     var surpriseOnlyEnabledKits: Boolean = true,
+    @EncodeDefault
+    var teamsEnabled: Boolean = false,
+    @EncodeDefault
+    var teamSize: Int = 2,
+    @EncodeDefault
+    var invincibilityTime: Int = 60 * 2,
+    @EncodeDefault
+    var friendlyFire: Boolean = false
 ) {
     override fun toString(): String {
-        return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage, maxRecraftBeforeFeast=$maxRecraftBeforeFeast, surpriseOnlyEnabledKits=$surpriseOnlyEnabledKits)"
+        return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage, maxRecraftBeforeFeast=$maxRecraftBeforeFeast, surpriseOnlyEnabledKits=$surpriseOnlyEnabledKits, teamsEnabled=$teamsEnabled, teamSize=$teamSize, invincibilityTime=$invincibilityTime, friendlyFire=$friendlyFire)"
     }
 }

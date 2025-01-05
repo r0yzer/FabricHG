@@ -38,6 +38,7 @@ fun initServer() {
     registerCommands()
     ConnectEvents
     PlayerDeath
+    ConfigManager
 
     ServerLifecycleEvents.SERVER_STARTING.register {
         GamePhaseManager.server = it as DedicatedServer
@@ -47,7 +48,6 @@ fun initServer() {
 
     ServerLifecycleEvents.SERVER_STARTED.register {
         GamePhaseManager.enable(it as DedicatedServer)
-        ConfigManager
         registerCommands()
         it.overworld().dayTime = 0L
         it.gameRules.getRule(GameRules.RULE_WEATHER_CYCLE).set(false, it)
@@ -82,7 +82,7 @@ fun registerCommands() {
     achievementsCommand
     kititemCommand
     invCommand
-    teamCommand
+    teamCommand // wird nicht registriert hier registrierung in ConfigManager
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

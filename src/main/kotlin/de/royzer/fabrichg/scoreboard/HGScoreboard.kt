@@ -9,7 +9,10 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.EndPhase
 import de.royzer.fabrichg.game.phase.phases.IngamePhase
+import de.royzer.fabrichg.game.phase.phases.InvincibilityPhase
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
+import de.royzer.fabrichg.game.teams.hgTeam
+import de.royzer.fabrichg.game.teams.isInTeam
 import de.royzer.fabrichg.settings.ConfigManager
 import kotlinx.datetime.Clock
 import net.minecraft.server.level.ServerPlayer
@@ -30,6 +33,10 @@ fun ServerPlayer.showScoreboard() {
             when (GamePhaseManager.currentPhaseType) {              // rr keine ahnung warum man hier 1 dazurechnen muss
                 PhaseType.LOBBY -> literalText("Start in: ${(1 + LobbyPhase.maxPhaseTime - GamePhaseManager.timer.get()).formattedTime}") { color = TEXT_YELLOW }
                 PhaseType.END -> literalText("Zeit: ${(GamePhaseManager.currentPhase as EndPhase).endTime.formattedTime}") { color = TEXT_YELLOW }
+                PhaseType.INVINCIBILITY -> literalText {
+                    text("Invincibility: ") { color = TEXT_GRAY }
+                    text((InvincibilityPhase.maxPhaseTime - GamePhaseManager.timer.get()).formattedTime) { color = TEXT_YELLOW }
+                }
                 else -> literalText("Zeit: ${(GamePhaseManager.timer.get()).formattedTime}") { color = TEXT_YELLOW }
             }
         }
@@ -77,7 +84,16 @@ fun ServerPlayer.showScoreboard() {
             }
         }
 
-        emptyLine()
+        if (ConfigManager.gameSettings.teamsEnabled) emptyLine()
+
+        updatingLine(100.milliseconds) {
+            if (!hgPlayer.isInTeam) return@updatingLine "".literal
+
+            literalText {
+                text("Team: ") { color = TEXT_GRAY}
+                text(hgPlayer.hgTeam?.let { "${it.name} (${it.hgPlayers.size})" } ?: "in team aber kein team?") { color = TEXT_BLUE }
+            }
+        }
 
         line(literalText {
             text("Spieler:") { color = TEXT_GRAY }

@@ -12,7 +12,10 @@ import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 
-val teamCommand = command("team") {
+// eig team aber der vanilla command ist da schon kein plan wie man den removed
+val teamCommand = command("hgteam") {
+    alias("hgteam")
+
     literal("create") {
         argument<String>("name") { _name ->
             runs {
@@ -25,7 +28,7 @@ val teamCommand = command("team") {
                 val name = _name()
                 val existingTeam = teams.firstOrNull { it.name.equals(name, true) }
                 if (existingTeam != null) {
-                    player.sendText("The team ${existingTeam.name} already exists") { color = TEXT_GRAY }
+                    player.sendText("the team ${existingTeam.name} already exists (by ${existingTeam.leader.name})") { color = TEXT_GRAY }
                     return@runs
                 }
                 val team = HGTeam(name, hgPlayer)
@@ -52,7 +55,7 @@ val teamCommand = command("team") {
                     text(" [Click to Join]") {
                         color = TEXT_GREEN
                         hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, literalText("Join team ${team.name}") { color = TEXT_GREEN })
-                        clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/team join ${team.name}")
+                        clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hgteam join ${team.name}")
                     }
                 }
                 inviter.sendText {
