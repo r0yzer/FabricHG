@@ -81,6 +81,7 @@ fun registerCommands() {
     achievementsCommand
     kititemCommand
     invCommand
+    teamCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?
