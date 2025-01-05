@@ -2,10 +2,14 @@ package de.royzer.fabrichg.commands
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.TEXT_GREEN
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.teams.*
 import net.minecraft.commands.arguments.EntityArgument
+import net.minecraft.network.chat.ClickEvent
+import net.minecraft.network.chat.HoverEvent
 import net.silkmc.silk.commands.command
+import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 
 // eig team aber der vanilla command ist da schon kein plan wie man den removed
@@ -20,8 +24,13 @@ val teamCommand = command("hgteam") {
                     return@runs
                 }
                 val name = _name()
+                val existingTeam = teams.firstOrNull { it.name.equals(name, true) }
+                if (existingTeam != null) {
+                    player.sendText("the team ${existingTeam.name} already exists (by ${existingTeam.leader.name})") { color = TEXT_GRAY }
+                    return@runs
+                }
                 val team = HGTeam(name, hgPlayer)
-                player.sendText() {
+                player.sendText {
                     text("You successfully created the team ") { color = TEXT_GRAY }
                     text(name) {color = TEXT_BLUE}
                 }
@@ -41,6 +50,11 @@ val teamCommand = command("hgteam") {
                     text(team.name) { color = TEXT_BLUE }
                     text(" from ") { color = TEXT_GRAY }
                     text(inviter.name.string) { color = TEXT_BLUE }
+                    text(" [Click to Join]") {
+                        color = TEXT_GREEN
+                        hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, literalText("Join team ${team.name}") { color = TEXT_GREEN })
+                        clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hgteam join ${team.name}")
+                    }
                 }
                 inviter.sendText {
                     text("You invited ") { color = TEXT_GRAY }
@@ -53,6 +67,11 @@ val teamCommand = command("hgteam") {
 
     literal("join") {
         argument<String>("name") { name ->
+            suggestsListFiltering {
+                val hgPlayer = source.player?.hgPlayer ?: return@suggestsListFiltering listOf()
+                pendingInvites.filter { it.value.contains(hgPlayer) }.map { it.key.name }
+            }
+
             runs {
                 val hgPlayer = source.player?.hgPlayer ?: return@runs
                 if (hgPlayer.isInTeam) {
@@ -65,10 +84,17 @@ val teamCommand = command("hgteam") {
                 }
                 if (pendingInvites[team]?.contains(hgPlayer) == true) {
                     val added = team.addPlayer(hgPlayer)
-                    if (!added) { // wenn nicht added muss voll sein
+                    if (added) {
+                        source.player?.sendText {
+                            text("you joined the team ") { color = TEXT_GRAY }
+                            text(team.name) { color = TEXT_BLUE }
+                        }
+                    } else {
                         source.player?.sendText("This team is full") { color = TEXT_GRAY }
                     }
                     pendingInvites[team]?.remove(hgPlayer)
+                } else {
+                    source.player?.sendText("You are not invited to this team.") { color = TEXT_GRAY }
                 }
             }
         }

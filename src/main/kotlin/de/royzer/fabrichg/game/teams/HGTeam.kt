@@ -42,10 +42,10 @@ class HGTeam(
             }
             hgPlayers.add(hgPlayer)
 //            scoreboard.addPlayerToTeam(hgPlayer.name, playerTeam)
-            hgPlayer.serverPlayer?.sendText {
+            /*hgPlayer.serverPlayer?.sendText {
                 text("You joined the team ") { color = TEXT_GRAY }
                 text(name) { color = TEXT_BLUE }
-            }
+            }*/
 
             return true
         }
@@ -72,7 +72,17 @@ class HGTeam(
         }
 
         if (hgPlayer == leader) {
+            if (hgPlayers.isEmpty()) {
+                hgPlayer.serverPlayer?.sendText("The team you left was deleted.") { color = TEXT_GRAY }
+                delete()
+                return
+            }
+
             leader = hgPlayers.random()
+            leader.serverPlayer?.sendText {
+                text("You are now the leader of the team ") { color = TEXT_GRAY }
+                text(name) { color = TEXT_BLUE }
+            }
         }
     }
 
