@@ -30,7 +30,7 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var gulagEndTime: Int = 10 * 60,
     @EncodeDefault
-    var minPlayersOutsideGulag: Int = 5,
+    var minPlayersOutsideGulag: Int = 3,
     @EncodeDefault
     var critDamage: Float = 1.25f,
     @EncodeDefault
@@ -44,7 +44,9 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var invincibilityTime: Int = 60 * 2,
     @EncodeDefault
-    var friendlyFire: Boolean = false
+    var friendlyFire: Boolean = false,
+    @EncodeDefault
+    var forbiddenKitCombinations: List<List<String>> = listOf(listOf("Anchor", "Urgal"), listOf("Gladiator", "Urgal")) //könnte man eig auch in kitconfig machen aber egal
 ) {
     override fun toString(): String {
         return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage, maxRecraftBeforeFeast=$maxRecraftBeforeFeast, surpriseOnlyEnabledKits=$surpriseOnlyEnabledKits, teamsEnabled=$teamsEnabled, teamSize=$teamSize, invincibilityTime=$invincibilityTime, friendlyFire=$friendlyFire)"

@@ -65,6 +65,7 @@ object ConfigManager {
         gameSettings.teamSize = gameConfigData.teamSize
         gameSettings.invincibilityTime = gameConfigData.invincibilityTime
         gameSettings.friendlyFire = gameConfigData.friendlyFire
+        gameSettings.forbiddenKitCombinations = gameConfigData.forbiddenKitCombinations
 
         if (gameSettings.teamsEnabled) {
             teamCommand.setupRegistrationCallback()

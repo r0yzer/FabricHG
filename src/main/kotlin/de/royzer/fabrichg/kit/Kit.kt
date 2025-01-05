@@ -32,7 +32,7 @@ class Kit(val name: String) {
                 server.players.filter { it.hgPlayer.hasKit(this) }.forEach {
                     onDisable?.invoke(it.hgPlayer, this)
                     val index = it.hgPlayer.kits.indexOf(this)
-                    it.hgPlayer.setKit(noneKit, index)
+                    it.hgPlayer.setKit(noneKit, index, force = true)
                     it.sendSystemMessage(literalText {
                         text("Das Kit ")
                         text(this@Kit.name) { color = TEXT_BLUE }
@@ -68,7 +68,7 @@ class Kit(val name: String) {
         if (remainingUses <= 0 && alternativeRemainingUses <= 0) return null
 
         return literalText {
-            text("$name remaining uses ") { color = TEXT_GRAY }
+            text("$name remaining uses: ") { color = TEXT_GRAY }
 
             if (remainingUses >= 0) text(remainingUses.toString()) { color = TEXT_BLUE }
             if (remainingUses >= 0 && alternativeRemainingUses >= 0) text("/") { color = TEXT_GRAY }
@@ -78,6 +78,14 @@ class Kit(val name: String) {
 
     override fun toString(): String {
         return name
+    }
+}
+
+val forbiddenKitCombinations: List<List<Kit>> by lazy {
+    ConfigManager.gameSettings.forbiddenKitCombinations.map {
+        it.map { kitName ->
+            kits.find { it.name == kitName } ?: error("No kit found $kitName for forbidden combination")
+        }
     }
 }
 
