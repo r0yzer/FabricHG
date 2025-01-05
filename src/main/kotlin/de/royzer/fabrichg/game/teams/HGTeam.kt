@@ -4,6 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.server
+import de.royzer.fabrichg.settings.ConfigManager
 import net.minecraft.world.scores.PlayerTeam
 import net.minecraft.world.scores.Scoreboard
 import net.silkmc.silk.core.text.literal
@@ -33,7 +34,7 @@ class HGTeam(
      * brauch man also nur aufrufen
      */
     fun addPlayer(hgPlayer: HGPlayer): Boolean {
-        if (hgPlayers.size < maxTeamSize) {
+        if (hgPlayers.size < ConfigManager.gameSettings.teamSize) {
             hgPlayers.forEach {
                 it.serverPlayer?.sendText {
                     text(hgPlayer.name) { color = TEXT_BLUE }
@@ -69,15 +70,11 @@ class HGTeam(
 
         if (hgPlayers.size == 0) {
             delete()
+            hgPlayer.serverPlayer?.sendText("The team you left was deleted.") { color = TEXT_GRAY }
+            return
         }
 
         if (hgPlayer == leader) {
-            if (hgPlayers.isEmpty()) { // das wird doch schon drüber gechecked oder
-                hgPlayer.serverPlayer?.sendText("The team you left was deleted.") { color = TEXT_GRAY }
-                delete()
-                return
-            }
-
             leader = hgPlayers.random()
             leader.serverPlayer?.sendText {
                 text("You are now the leader of the team ") { color = TEXT_GRAY }
