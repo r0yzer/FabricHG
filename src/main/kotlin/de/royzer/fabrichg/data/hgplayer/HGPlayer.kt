@@ -4,7 +4,6 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.bots.HGBot
-import de.royzer.fabrichg.commands.hgbotCommand
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.maxOfflineTime
@@ -12,6 +11,8 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.achievements.PlayerAchievementDto
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
+import de.royzer.fabrichg.kit.forbiddenKitCombinations
+import de.royzer.fabrichg.kit.kits.backupKit
 import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.surpriseKit
@@ -143,7 +144,7 @@ class HGPlayer(
 
     fun setKit(kit: Kit, index: Int, force: Boolean = false) {
         if (kits.contains(kit)) {
-            if (!(kit == surpriseKit || kit == noneKit)) {
+            if (!(kit == surpriseKit || kit == noneKit || kit == backupKit)) {
                 this.serverPlayer?.sendText {
                     text("You already have this kit")
                     color = TEXT_GRAY
@@ -160,7 +161,20 @@ class HGPlayer(
             }
             return
         }
+        val kitBefore = this.kits[index]
         this.kits[index] = kit
+        if (forbiddenKitCombinations.any { forbiddenKits ->
+                forbiddenKits.all { forbiddenKit -> this.kits.contains(forbiddenKit) }
+        } && !force) {
+            this.serverPlayer?.sendText {
+                text("This combination is not allowed") {
+                    color = TEXT_GRAY
+                    bold = true
+                }
+                this@HGPlayer.kits[index] = kitBefore
+            }
+            return
+        }
         this.serverPlayer?.sendSystemMessage(
             literalText {
                 text("You are now ") { color = TEXT_GRAY }

@@ -11,6 +11,7 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.kits.surpriseKit
 import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.scoreboard.formattedTime
+import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.tracker
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.level.GameType
@@ -57,6 +58,6 @@ object InvincibilityPhase : GamePhase() {
     }
 
     override val phaseType = PhaseType.INVINCIBILITY
-    override val maxPhaseTime = 120 * 1
+    override val maxPhaseTime by lazy { ConfigManager.gameSettings.invincibilityTime }
     override val nextPhase = IngamePhase
 }

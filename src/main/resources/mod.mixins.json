@@ -34,6 +34,7 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "commans.CommandsMixin",
     "entity.ZombieMixin",
     "entitylookup.EntityLookupMixin",
     "item.SwordItemMixin",

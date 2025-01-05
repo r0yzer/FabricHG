@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import de.royzer.fabrichg.data.hgplayer.HGPlayer;
 import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.game.PlayerList;
+import de.royzer.fabrichg.game.teams.HGTeam;
+import de.royzer.fabrichg.game.teams.TeamsKt;
 import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnLeftClickKt;
@@ -11,6 +13,7 @@ import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
+import de.royzer.fabrichg.settings.ConfigManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -127,6 +130,23 @@ public abstract class ServerPlayerMixin extends Player {
 
     @Unique
     public float reducedDamage(Player instance, DamageSource source, float amount) {
+        HGTeam team = TeamsKt.getHgTeam(HGPlayerKt.getHgPlayer((ServerPlayer) instance));
+
+        // if busting
+        if (team != null) {
+            if (source.getEntity() != null) {
+                HGPlayer otherHGPlayer = HGPlayerKt.getHgPlayer(source.getEntity());
+
+                if (otherHGPlayer != null) {
+                    if (team.getHgPlayers().contains(otherHGPlayer)) {
+                        if (!ConfigManager.INSTANCE.getGameSettings().getFriendlyFire()) {
+                            return 1f;
+                        }
+                    }
+                }
+            }
+        }
+
         if (source.is(DamageTypes.FALLING_STALACTITE)) {
             return amount * 0.5f;
         } else if (source.getEntity() instanceof ServerPlayer) {

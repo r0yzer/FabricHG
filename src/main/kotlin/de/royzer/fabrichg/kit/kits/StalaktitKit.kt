@@ -74,9 +74,11 @@ fun ServerPlayer.sendChatPacket(from: HGPlayer, message: String, type: ResourceK
     )
 }
 
+const val STALAKTIT_MESSAGE_SALT: Long = -53
+
 // kein plan ob das geht
 fun ServerPlayer.sendMessage(message: String) {
-    val salt = SaltSupplier.getLong()
+    val salt = STALAKTIT_MESSAGE_SALT
     val timestamp = Instant.now()
     val tracker = LastSeenMessagesTracker(20)
     val update = tracker.generateAndApplyUpdate()
