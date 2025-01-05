@@ -80,7 +80,7 @@ val kangarooKit = kit("Kangaroo") {
     description = "Allows you to jump higher and longer"
 
     val jumpVelocity by property(0.9f, "jump velocity")
-    val jumpShiftVelocity by property(1.6f, "jump velocity (shift)")
+    val jumpShiftVelocity by property(1.0f, "jump velocity (shift)")
     val maxLookDifference by property(50, "look difference")
     val valMaxTimeDiff by property(3.0, "time diff for debuff to go away (s)")
 
@@ -118,7 +118,7 @@ val kangarooKit = kit("Kangaroo") {
             if (serverPlayerEntity.isShiftKeyDown) {
                 val vec = serverPlayerEntity.lookDirection
                 val vec3d = Vec3(vec.x * jumpShiftVelocity, 0.0, vec.z * jumpShiftVelocity)
-                serverPlayerEntity.modifyVelocity(vec3d.x, vec3d.y, vec3d.z, false)
+                serverPlayerEntity.modifyVelocity(vec3d.x, 0.6, vec3d.z, false)
                 launchAchievement.awardLater(player, (jumpShiftVelocity * 3 * 10).roundToInt())
                 hgPlayer.playerData[kangaJumpStateKey] = KangaState.JumpedHorizontal
             } else if (kangaState != KangaState.JumpedVertical) {
