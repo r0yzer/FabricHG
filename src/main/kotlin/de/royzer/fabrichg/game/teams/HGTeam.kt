@@ -72,7 +72,7 @@ class HGTeam(
         }
 
         if (hgPlayer == leader) {
-            if (hgPlayers.isEmpty()) {
+            if (hgPlayers.isEmpty()) { // das wird doch schon drüber gechecked oder
                 hgPlayer.serverPlayer?.sendText("The team you left was deleted.") { color = TEXT_GRAY }
                 delete()
                 return
