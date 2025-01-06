@@ -199,7 +199,7 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         golemWolf.tame(it)
         golemWolf.setPos(it.pos)
         golemWolf.golem.setPos(it.pos)
-    }, 0.075)
+    }, 0.1)
     collection.add(GamblerAction("You won a diamond") {
         it.giveOrDropItem(itemStack(Items.DIAMOND, 1) {})
     }, 0.075)
