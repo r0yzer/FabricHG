@@ -5,11 +5,14 @@ import de.royzer.fabrichg.kit.events.kit.KitEventsBuilder
 import de.royzer.fabrichg.kit.events.kititem.KitItem
 import de.royzer.fabrichg.kit.events.kititem.KitItemBuilder
 import de.royzer.fabrichg.kit.info.InfoGenerator
+import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerPlayer
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.CustomData
+import net.silkmc.silk.nbt.dsl.nbtCompound
 
 class KitBuilder(val kit: Kit) {
     var kitSelectorItem: ItemStack = ItemStack(Items.AIR)
@@ -57,6 +60,9 @@ class KitBuilder(val kit: Kit) {
 
     private fun addKitItem(kitItem: KitItem) {
         kitItem.itemStack.setLore(listOf(literalText("Kititem")))
+        kitItem.itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbtCompound {
+            put("kit", kit.name)
+        }))
         kit.kitItems.add(kitItem)
     }
 

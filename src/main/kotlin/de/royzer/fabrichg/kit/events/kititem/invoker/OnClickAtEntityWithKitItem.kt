@@ -4,6 +4,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.events.kit.invokeKitAction
 import de.royzer.fabrichg.kit.events.kit.invoker.onRightClickEntity
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
+import de.royzer.fabrichg.kit.events.kititem.isKitItemOf
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.InteractionResult
@@ -24,6 +25,9 @@ fun onClickAtEntity(
     val offhandStack = serverPlayer?.offhandItem ?: hgBot?.offhandItem ?: return
     if (mainHandStack.isKitItem || offhandStack.isKitItem) {
         hgPlayer.kits.forEach { kit ->
+            // ehrlich kp
+            if (mainHandStack.isKitItemOf(kit) || offhandStack.isKitItemOf(kit)) return@forEach
+
             kit.kitItems.forEach { kitItem ->
                 if (kitItem.itemStack.item == mainHandStack.item || offhandStack.item == kitItem.itemStack.item) {
                     kitItem.invokeKitItemAction(hgPlayer, kit) {

@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionHand
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.item.ItemStack
+import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
 
@@ -33,6 +34,8 @@ class KitItem(
 ) {
     // prüft auf cooldown und ruft ggf. die übergebene action auf (meistens das invoken der entsprechenden action) + sendet ggf. cooldown msg
     fun invokeKitItemAction(hgPlayer: HGPlayer, kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {
+
+
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             action.invoke()
         } else if (hgPlayer.hasCooldown(kit)) {
@@ -49,3 +52,11 @@ val ItemStack.isKitItem: Boolean
         val lore = this.get(DataComponents.LORE).toString() // TODO
         return lore.contains("Kititem")
     }
+
+fun ItemStack.isKitItemOf(kit: Kit): Boolean {
+    if (!isKitItem) return false
+
+    val customData = get(DataComponents.CUSTOM_DATA) ?: return false
+
+    return customData.copyTag().getString("kit") == kit.name
+}
