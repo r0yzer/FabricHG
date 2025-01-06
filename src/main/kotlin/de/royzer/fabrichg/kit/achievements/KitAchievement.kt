@@ -78,6 +78,9 @@ abstract class KitAchievement {
     }
 
     fun sendLevelUpMessage(player: Player, newLevel: KitAchievementLevel?) {
+        return
+        // kein plan wieso das crasht
+
         when (newLevel) {
             null -> player.sendSystemMessage(literalText {
                 color = TEXT_GRAY

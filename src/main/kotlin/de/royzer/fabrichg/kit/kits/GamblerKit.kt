@@ -17,10 +17,17 @@ import de.royzer.fabrichg.util.WeightedCollection
 import de.royzer.fabrichg.util.giveOrDropItem
 import net.minecraft.core.Vec3i
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.EntityType
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.ai.attributes.Attributes
+import net.minecraft.world.entity.ai.targeting.TargetingConditions
+import net.minecraft.world.entity.animal.IronGolem
 import net.minecraft.world.entity.animal.MushroomCow
 import net.minecraft.world.entity.animal.Wolf
 import net.minecraft.world.entity.animal.horse.Horse
@@ -30,6 +37,7 @@ import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.hoglin.Hoglin
 import net.minecraft.world.entity.vehicle.Boat
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.entity.blockPos
 import net.silkmc.silk.core.entity.modifyVelocity
@@ -42,6 +50,98 @@ import net.silkmc.silk.core.text.sendText
 import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
+
+class GamingGolem(level: Level, val wolf: GamingGolemWolf) : IronGolem(EntityType.IRON_GOLEM, level) {
+    override fun tick() {
+        super.tick()
+
+        teleportTo(wolf.x, wolf.y, wolf.z)
+        setRot(wolf.xRot, wolf.yRot)
+
+        if (!wolf.isAlive) {
+            kill()
+            remove(RemovalReason.KILLED)
+        }
+    }
+
+    override fun canAttack(target: LivingEntity): Boolean {
+        return wolf.canAttack(target)
+    }
+
+    override fun canAttack(livingentity: LivingEntity, condition: TargetingConditions): Boolean {
+        return wolf.canAttack(livingentity, condition)
+    }
+}
+
+class GamingGolemWolf(level: Level, val owner: ServerPlayer) : Wolf(EntityType.WOLF, level) {
+    val golem = GamingGolem(level, this).also {
+        level.addFreshEntity(it)
+    }
+
+    init {
+        isInvisible = true
+        golem
+
+    }
+
+    override fun tick() {
+        isInvisible = true
+        health = maxHealth
+        super.tick()
+    }
+
+    override fun canAttack(livingentity: LivingEntity, condition: TargetingConditions): Boolean {
+        return livingentity != golem && livingentity != this && livingentity != owner
+    }
+
+    override fun canAttack(target: LivingEntity): Boolean {
+        return target != golem && target != this && target != owner
+    }
+
+    override fun doHurtTarget(target: Entity): Boolean {
+        if (target == golem) return false
+
+        return golem.doHurtTarget(target)
+    }
+
+    override fun canBeCollidedWith(): Boolean {
+        return false
+    }
+
+    override fun hurt(source: DamageSource, amount: Float): Boolean {
+        return false
+    }
+
+
+    override fun getAmbientSound(): SoundEvent? {
+        return SoundEvents.IRON_GOLEM_ATTACK
+    }
+
+    override fun getDeathSound(): SoundEvent? {
+        return SoundEvents.IRON_GOLEM_DEATH
+    }
+
+    override fun getHurtSound(damageSource: DamageSource): SoundEvent? {
+        return SoundEvents.IRON_GOLEM_HURT
+    }
+
+    override fun getSwimSound(): SoundEvent? {
+        return SoundEvents.GENERIC_SWIM
+    }
+
+    override fun getSwimSplashSound(): SoundEvent? {
+        return SoundEvents.GENERIC_SPLASH
+    }
+
+    override fun getSwimHighSpeedSplashSound(): SoundEvent? {
+        return SoundEvents.GENERIC_SPLASH
+    }
+
+    override fun getFallSounds(): Fallsounds {
+        return Fallsounds(SoundEvents.GENERIC_SMALL_FALL, SoundEvents.GENERIC_BIG_FALL)
+    }
+}
+
 
 val gamblerKit = kit("Gambler") {
     kitSelectorItem = Items.OAK_BUTTON.defaultInstance
@@ -93,6 +193,13 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.giveOrDropItem(itemStack(Items.DIAMOND_LEGGINGS, 1) {})
         it.giveOrDropItem(itemStack(Items.DIAMOND_BOOTS, 1) {})
     }, 0.01)
+    collection.add(GamblerAction("You won a gaming golem") {
+        val golemWolf = GamingGolemWolf(it.level(), it)
+        it.level().addFreshEntity(golemWolf)
+        golemWolf.tame(it)
+        golemWolf.setPos(it.pos)
+        golemWolf.golem.setPos(it.pos)
+    }, 0.075)
     collection.add(GamblerAction("You won a diamond") {
         it.giveOrDropItem(itemStack(Items.DIAMOND, 1) {})
     }, 0.075)

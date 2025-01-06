@@ -63,11 +63,13 @@ fun ServerPlayer.armorValue(): Double {
 }
 
 fun ServerPlayer.inventoryValue(): Double {
-    var value = armorValue() + recraft
+    val soupValue = 0.3
 
-    val goldValue = 1.25
-    val ironValue = 2.0
-    val diamondValue = 3.0
+    var value = armorValue() + (recraft * soupValue)
+
+    val goldValue = 1.5
+    val ironValue = 2.5
+    val diamondValue = 5.0
 
     inventory.forEach { item ->
         value += when (item.item) {
@@ -91,7 +93,7 @@ fun ServerPlayer.inventoryValue(): Double {
             Items.DIAMOND_PICKAXE -> diamondValue * 3
             Items.DIAMOND_AXE -> diamondValue * 3
 
-            Items.MUSHROOM_STEW -> 1.0
+            Items.MUSHROOM_STEW -> soupValue
 
             else -> 0.0
         } * item.count

@@ -107,10 +107,10 @@ class Minifeast(
         PlayerList.players.forEach { (_, hgPlayer) ->
             val value = hgPlayer.serverPlayer?.inventoryValue() ?: 0.0
             val range = when {
-                value < 5 -> 50
-                value < 10 -> 75
-                value < 25 -> 100
-                value < 50 -> 150
+                value < 15 -> 50
+                value < 25 -> 75
+                value < 50 -> 100
+                value < 75 -> 150
                 else -> -1
             }
             if (range == -1) hgPlayer.serverPlayer?.sendText {
@@ -222,13 +222,14 @@ private val minifeastSwiftnessPoion = itemStack(Items.SPLASH_POTION) {
 }
 
 private val miniFeastLoot = WeightedCollection<MiniFeastLoot>().also {
-    it.add(MiniFeastLoot(Items.IRON_INGOT.defaultInstance, 3), 0.5)
+    it.add(MiniFeastLoot(Items.IRON_INGOT.defaultInstance, 3), 0.7)
     it.add(MiniFeastLoot(Items.GOLD_INGOT.defaultInstance, 6), 1.5)
     it.add(MiniFeastLoot(Items.MUSHROOM_STEW.defaultInstance, 5), 2.25)
     it.add(MiniFeastLoot(Items.WHEAT.defaultInstance, 10), 2.25)
     it.add(MiniFeastLoot(Items.LAPIS_LAZULI.defaultInstance, 5), 2.0)
     it.add(MiniFeastLoot(Items.EXPERIENCE_BOTTLE.defaultInstance, 4), 1.5)
-    it.add(MiniFeastLoot(Items.DIAMOND.defaultInstance, 2), 0.35)
+    it.add(MiniFeastLoot(Items.DIAMOND.defaultInstance, 1), 0.15)
+    it.add(MiniFeastLoot(Items.DIAMOND.defaultInstance, 2), 0.05)
     it.add(MiniFeastLoot(Items.POISONOUS_POTATO.defaultInstance, 2), 0.5)
     it.add(MiniFeastLoot(Items.POTATO.defaultInstance, 3), 0.6)
     it.add(MiniFeastLoot(Items.BAKED_POTATO.defaultInstance, 4), 0.7)

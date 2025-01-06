@@ -72,7 +72,7 @@ val reaperKit = kit("Reaper") {
             world.addFreshEntity(ReaperProjectile(world, explosion.toDouble(), dangerousChance).also {
                 val lookVector = hgPlayer.serverPlayer!!.forward
 
-                it.setPos(hgPlayer.serverPlayer!!.pos.plus(lookVector.multiply(1.5, 1.0, 1.5)))
+                it.setPos(hgPlayer.serverPlayer!!.eyePosition.plus(lookVector.multiply(1.5, 1.0, 1.5)))
 
                 it.shoot(
                     lookVector.x,

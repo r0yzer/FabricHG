@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.events.kititem.invoker
 
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
+import de.royzer.fabrichg.kit.events.kititem.isKitItemOf
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.InteractionResultHolder
 import net.minecraft.world.entity.player.Player
@@ -16,8 +17,8 @@ fun onClick(
 ) {
     val serverPlayerEntity = player as? ServerPlayer ?: return
     val hgPlayer = serverPlayerEntity.hgPlayer
-    if (itemStack.isKitItem)
-        hgPlayer.kits.forEach { kit ->
+    hgPlayer.kits.forEach { kit ->
+        if (itemStack.isKitItemOf(kit)) {
             kit.kitItems.forEach {
                 if (it.itemStack.item == itemStack.item) {
                     it.invokeKitItemAction(hgPlayer, kit) {
@@ -26,4 +27,5 @@ fun onClick(
                 }
             }
         }
+    }
 }

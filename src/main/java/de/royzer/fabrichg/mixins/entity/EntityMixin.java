@@ -5,6 +5,8 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer;
 import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnMoveKt;
 import de.royzer.fabrichg.kit.events.kititem.invoker.OnClickAtEntityWithKitItemKt;
+import de.royzer.fabrichg.kit.kits.GamingGolem;
+import de.royzer.fabrichg.kit.kits.GamingGolemWolf;
 import de.royzer.fabrichg.kit.kits.TankKitKt;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -92,5 +94,15 @@ public abstract class EntityMixin {
         if (!hgPlayer.canUseKit(TankKitKt.getTankKit())) return;
 
         cir.setReturnValue(true);
+    }
+
+
+    // GAMBLER GAMING GOLEM
+    @Inject(method = "collide", at = @At("HEAD"), cancellable = true)
+    public void useGolemCollision(Vec3 vec, CallbackInfoReturnable<Vec3> cir) {
+        if (((Object) this) instanceof GamingGolemWolf) {
+            GamingGolem golem = ((GamingGolemWolf) (Object) this).getGolem();
+            cir.setReturnValue(((EntityAcessor) (Object) golem).collisionVector(vec));
+        }
     }
 }
