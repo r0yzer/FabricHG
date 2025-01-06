@@ -17,6 +17,9 @@ import de.royzer.fabrichg.util.WeightedCollection
 import de.royzer.fabrichg.util.giveOrDropItem
 import net.minecraft.core.Vec3i
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.Entity
@@ -36,7 +39,6 @@ import net.minecraft.world.entity.vehicle.Boat
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
-import net.minecraft.world.phys.Vec3
 import net.silkmc.silk.core.entity.blockPos
 import net.silkmc.silk.core.entity.modifyVelocity
 import net.silkmc.silk.core.entity.pos
@@ -84,6 +86,7 @@ class GamingGolemWolf(level: Level, val owner: ServerPlayer) : Wolf(EntityType.W
 
     override fun tick() {
         isInvisible = true
+        health = maxHealth
         super.tick()
     }
 
@@ -103,6 +106,39 @@ class GamingGolemWolf(level: Level, val owner: ServerPlayer) : Wolf(EntityType.W
 
     override fun canBeCollidedWith(): Boolean {
         return false
+    }
+
+    override fun hurt(source: DamageSource, amount: Float): Boolean {
+        return false
+    }
+
+
+    override fun getAmbientSound(): SoundEvent? {
+        return SoundEvents.IRON_GOLEM_ATTACK
+    }
+
+    override fun getDeathSound(): SoundEvent? {
+        return SoundEvents.IRON_GOLEM_DEATH
+    }
+
+    override fun getHurtSound(damageSource: DamageSource): SoundEvent? {
+        return SoundEvents.IRON_GOLEM_HURT
+    }
+
+    override fun getSwimSound(): SoundEvent? {
+        return SoundEvents.GENERIC_SWIM
+    }
+
+    override fun getSwimSplashSound(): SoundEvent? {
+        return SoundEvents.GENERIC_SPLASH
+    }
+
+    override fun getSwimHighSpeedSplashSound(): SoundEvent? {
+        return SoundEvents.GENERIC_SPLASH
+    }
+
+    override fun getFallSounds(): Fallsounds {
+        return Fallsounds(SoundEvents.GENERIC_SMALL_FALL, SoundEvents.GENERIC_BIG_FALL)
     }
 }
 
@@ -158,10 +194,11 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         it.giveOrDropItem(itemStack(Items.DIAMOND_BOOTS, 1) {})
     }, 0.01)
     collection.add(GamblerAction("You won a gaming golem") {
-        val golem = GamingGolemWolf(it.level(), it)
-        it.level().addFreshEntity(golem)
-        golem.tame(it)
-        golem.teleportTo(it.pos.x, it.pos.y, it.pos.z)
+        val golemWolf = GamingGolemWolf(it.level(), it)
+        it.level().addFreshEntity(golemWolf)
+        golemWolf.tame(it)
+        golemWolf.setPos(it.pos)
+        golemWolf.golem.setPos(it.pos)
     }, 100.075)
     collection.add(GamblerAction("You won a diamond") {
         it.giveOrDropItem(itemStack(Items.DIAMOND, 1) {})
