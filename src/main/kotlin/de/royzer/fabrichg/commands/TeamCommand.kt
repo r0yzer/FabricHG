@@ -13,7 +13,7 @@ import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 
 // eig team aber der vanilla command ist da schon kein plan wie man den removed
-val teamCommand = command("hgteam") {
+val teamCommand = command("team") {
     alias("hgteam")
 
     literal("create") {
@@ -55,7 +55,7 @@ val teamCommand = command("hgteam") {
                     text(" [Click to Join]") {
                         color = TEXT_GREEN
                         hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, literalText("Join team ${team.name}") { color = TEXT_GREEN })
-                        clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hgteam join ${team.name}")
+                        clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, """/team join "${team.name}" """)
                     }
                 }
                 inviter.sendText {
