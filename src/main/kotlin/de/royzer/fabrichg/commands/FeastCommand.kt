@@ -7,6 +7,7 @@ import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
 
 val feastCommand = command("feast") {
+    alias("feaßt")
     literal("start") {
         requiresPermissionLevel(4)
 

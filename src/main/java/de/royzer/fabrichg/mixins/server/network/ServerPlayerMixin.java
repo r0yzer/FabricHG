@@ -23,6 +23,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -151,6 +152,9 @@ public abstract class ServerPlayerMixin extends Player {
             return amount * 0.5f;
         } else if (source.getEntity() instanceof ServerPlayer) {
             double multiplier = 0.6;
+            if (((ServerPlayer) source.getEntity()).getMainHandItem().getItem() == Items.TRIDENT) {
+                multiplier = 0.1;
+            }
             if (((ServerPlayer) source.getEntity()).getMainHandItem().getDisplayName().getString().toLowerCase().contains("axe")) {
                 multiplier = 0.3;
             }
