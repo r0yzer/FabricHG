@@ -26,7 +26,7 @@ fun onClickAtEntity(
     if (mainHandStack.isKitItem || offhandStack.isKitItem) {
         hgPlayer.kits.forEach { kit ->
             // ehrlich kp
-            if (mainHandStack.isKitItemOf(kit) || offhandStack.isKitItemOf(kit)) return@forEach
+            if (!mainHandStack.isKitItemOf(kit) && !offhandStack.isKitItemOf(kit)) return@forEach
 
             kit.kitItems.forEach { kitItem ->
                 if (kitItem.itemStack.item == mainHandStack.item || offhandStack.item == kitItem.itemStack.item) {
