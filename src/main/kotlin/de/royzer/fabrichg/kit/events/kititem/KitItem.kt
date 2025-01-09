@@ -34,8 +34,6 @@ class KitItem(
 ) {
     // prüft auf cooldown und ruft ggf. die übergebene action auf (meistens das invoken der entsprechenden action) + sendet ggf. cooldown msg
     fun invokeKitItemAction(hgPlayer: HGPlayer, kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {
-
-
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             action.invoke()
         } else if (hgPlayer.hasCooldown(kit)) {

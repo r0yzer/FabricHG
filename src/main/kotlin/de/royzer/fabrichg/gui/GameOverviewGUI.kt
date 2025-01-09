@@ -5,6 +5,7 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.util.isOP
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.setCustomName
@@ -17,7 +18,7 @@ import net.silkmc.silk.igui.observable.toGuiList
 
 fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
     return igui(GuiType.NINE_BY_FIVE, "Game overview".literal, 1) {
-        val permitted = serverPlayer.hasPermissions(4) || serverPlayer.hgPlayer.status == HGPlayerStatus.SPECTATOR
+        val permitted = serverPlayer.isOP() || serverPlayer.hgPlayer.status == HGPlayerStatus.SPECTATOR
         page(1) {
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
 
