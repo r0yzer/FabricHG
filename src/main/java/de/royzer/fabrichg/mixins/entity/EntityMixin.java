@@ -5,6 +5,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer;
 import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnMoveKt;
 import de.royzer.fabrichg.kit.events.kititem.invoker.OnClickAtEntityWithKitItemKt;
+import de.royzer.fabrichg.kit.kits.DemomanKitKt;
 import de.royzer.fabrichg.kit.kits.GamingGolem;
 import de.royzer.fabrichg.kit.kits.GamingGolemWolf;
 import de.royzer.fabrichg.kit.kits.TankKitKt;
@@ -20,7 +21,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.phys.Vec3;
-import net.silkmc.silk.core.SilkKt;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -86,14 +86,14 @@ public abstract class EntityMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    public void tankIgnoreExplosions(Explosion explosion, CallbackInfoReturnable<Boolean> cir) {
+    public void kitIgnoreExplosions(Explosion explosion, CallbackInfoReturnable<Boolean> cir) {
         Entity entity = (Entity) (Object) this;
         HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(entity);
 
         if (hgPlayer == null) return;
-        if (!hgPlayer.canUseKit(TankKitKt.getTankKit())) return;
 
-        cir.setReturnValue(true);
+        if (hgPlayer.canUseKit(TankKitKt.getTankKit())) cir.setReturnValue(true);
+        if (hgPlayer.canUseKit(DemomanKitKt.getDemomanKit())) cir.setReturnValue(true);
     }
 
 
