@@ -90,7 +90,7 @@ fun HGPlayer.revive(executor: ServerPlayer? = null, gambler: Boolean = false) {
             color = TEXT_BLUE
             bold = true
         }
-        text(" was ${if (gambler) "randomly" else ""} revived by ") {
+        text(" was ${if (gambler) "randomly " else ""}revived by ") {
             color = TEXT_GRAY
         }
         if (executor != null) {
