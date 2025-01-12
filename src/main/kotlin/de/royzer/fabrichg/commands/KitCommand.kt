@@ -1,10 +1,12 @@
 package de.royzer.fabrichg.commands
 
 import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.gui.kitSelectorGUI
+import de.royzer.fabrichg.kit.enabledKits
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.kits.backupKit
 import de.royzer.fabrichg.kit.kits.noneKit
@@ -36,7 +38,7 @@ val kitCommand = command("kit") {
     }
     argument<Int>("index") { _index ->
         argument<String>("kit") { kitArg ->
-            suggestsListFiltering { kits.map { it.name } }
+            suggestsListFiltering { enabledKits.map { it.name } }
             runs {
                 val index = _index() - 1
 
@@ -89,7 +91,7 @@ val kitCommand = command("kit") {
     }
     argument<String>("kit") { kitArg ->
         val index = 0
-        suggestsListFiltering { kits.map { it.name } }
+        suggestsListFiltering { enabledKits.map { it.name } }
         runs {
             val player = source.playerOrException
             if (GamePhaseManager.isNotInPvpPhase || (player.hgPlayer.canUseKit(backupKit) && player.hgPlayer.kits[index] == backupKit) || player.hasPermissions(
@@ -109,17 +111,7 @@ val kitCommand = command("kit") {
             }
         }
     }
-    literal("info") runs {
-        val player = source.playerOrException
-        player.sendText {
-            player.hgPlayer.kits.forEach {
-                text(it.name) {
-                    strikethrough = player.hgPlayer.kitsDisabled
-                }
-            }
-            color = 0x00FF00
-        }
-    }
+
 }
 
 val kitinfoCommand = command("kitinfo") {
@@ -131,6 +123,15 @@ val kitinfoCommand = command("kitinfo") {
             source.player?.sendText {
                 text(kit?.description ?: "Es konnte kein Kit mit dem Namen gefunden werden")
                 color = TEXT_BLUE
+            }
+        }
+    }
+    runs {
+        val player = source.playerOrException
+        player.sendText {
+            text(player.hgPlayer.kits.joinToString(", ")) {
+                strikethrough = player.hgPlayer.kitsDisabled
+                color = TEXT_GRAY
             }
         }
     }
