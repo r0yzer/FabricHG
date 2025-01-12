@@ -3,7 +3,47 @@ package de.royzer.fabrichg.settings
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
+import kotlin.math.absoluteValue
 
+@Serializable
+enum class SoupMode {
+    Eat {
+        override fun toString(): String {
+            return "Eat"
+        }
+    },
+    EatAndDestroyBlock {
+        override fun toString(): String {
+            return "Eat & Hit Block"
+        }
+    },
+    EatAndHit {
+        override fun toString(): String {
+            return "Eat & Hit (anywhere)"
+        }
+    };
+
+
+    fun next(): SoupMode {
+        val index = SoupMode.entries.indexOf(this)
+
+        return get(index + 1)
+    }
+
+    fun last(): SoupMode {
+        val index = SoupMode.entries.indexOf(this)
+
+        return get(index - 1)
+    }
+
+    companion object {
+        fun get(i: Int): SoupMode {
+            if (i == -1) return entries.last()
+
+            return entries[i % SoupMode.entries.size]
+        }
+    }
+}
 
 @Serializable
 data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
@@ -48,7 +88,9 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var forbiddenKitCombinations: List<List<String>> = listOf(
         listOf("Anchor", "Urgal"), listOf("Gladiator", "Urgal"), listOf("Grappler", "Stomper"), listOf("Phantom", "Stomper"), listOf("Kangaroo", "Blink", "Phantom")
-    )
+    ),
+    @EncodeDefault
+    var soupMode: SoupMode = SoupMode.EatAndDestroyBlock
 ) {
     override fun toString(): String {
         return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage, maxRecraftBeforeFeast=$maxRecraftBeforeFeast, surpriseOnlyEnabledKits=$surpriseOnlyEnabledKits, teamsEnabled=$teamsEnabled, teamSize=$teamSize, invincibilityTime=$invincibilityTime, friendlyFire=$friendlyFire)"
