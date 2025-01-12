@@ -52,6 +52,10 @@ import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 class GamingGolem(level: Level, val wolf: GamingGolemWolf) : IronGolem(EntityType.IRON_GOLEM, level) {
+    init {
+        attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 7.5 // 15 normal
+    }
+
     override fun tick() {
         super.tick()
 
@@ -80,13 +84,18 @@ class GamingGolemWolf(level: Level, val owner: ServerPlayer) : Wolf(EntityType.W
 
     init {
         isInvisible = true
-        golem
 
     }
 
     override fun tick() {
         isInvisible = true
         health = maxHealth
+        golem.target = target
+
+        if (golem.isDeadOrDying || golem.isRemoved) {
+            kill()
+            remove(RemovalReason.KILLED)
+        }
         super.tick()
     }
 
@@ -99,9 +108,7 @@ class GamingGolemWolf(level: Level, val owner: ServerPlayer) : Wolf(EntityType.W
     }
 
     override fun doHurtTarget(target: Entity): Boolean {
-        if (target == golem) return false
-
-        return golem.doHurtTarget(target)
+        return false
     }
 
     override fun canBeCollidedWith(): Boolean {
@@ -372,11 +379,12 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         it.kill()
     }, 0.005)
     collection.add(GamblerAction("Kit change") {
-        it.hgPlayer.kits.clear()
+        val index = it.hgPlayer.kits.indexOfFirst { kit -> kit.name == "Gambler" } // indexOf(gamblerKit) rekursive problem
+
         val kit = randomKit()
-        it.hgPlayer.kits.add(kit)
+        it.hgPlayer.kits[index] = kit
         kit.onEnable?.invoke(it.hgPlayer, kit, it)
-        it.hgPlayer.giveKitItems()
+        it.hgPlayer.giveKitItems(kit)
     }, 0.03)
     collection.add(GamblerAction("Coords leak") {
         broadcastComponent(

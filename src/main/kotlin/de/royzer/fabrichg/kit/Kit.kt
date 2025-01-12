@@ -152,3 +152,5 @@ val kits = listOfNotNull(
 
 fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }
     .filter { if (ConfigManager.gameSettings.surpriseOnlyEnabledKits) it.enabled else true }.randomOrNull() ?: noneKit
+
+val enabledKits get() = kits.filter { it.enabled }

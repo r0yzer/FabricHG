@@ -2,6 +2,9 @@ package de.royzer.fabrichg.kit.kits
 
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
+import de.royzer.fabrichg.util.forceGiveItem
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import net.silkmc.silk.core.item.setCustomName
 import net.minecraft.world.item.Items
 import net.minecraft.world.item.alchemy.Potions
@@ -24,7 +27,7 @@ import kotlin.time.Duration.Companion.milliseconds
 
 val scoutPotion = itemStack(Items.SPLASH_POTION) {
     setPotion(Potions.SWIFTNESS)
-    count = 2
+    count = 1
     setCustomName {
         text("Scout Potion")
         color = 0x64F0FF
@@ -34,10 +37,10 @@ val scoutPotion = itemStack(Items.SPLASH_POTION) {
 val scoutKit = kit("Scout") {
 
     val scoutJobKey = "${this.kit.name}JobKey"
-    val scoutPotionPeriod by property(3.0, "scout potion period (minutes)")
+    val scoutPotionPeriod by property(5.0, "scout potion period (minutes)")
     kitSelectorItem = scoutPotion.copy()
 
-    description = "Recieve two speed potions every 5 minutes"
+    description = "Recieve a speed potions every 5 minutes"
 
     kitItem {
         itemStack = scoutPotion.copy()
@@ -50,8 +53,13 @@ val scoutKit = kit("Scout") {
             howOften = Long.MAX_VALUE,
             period = (scoutPotionPeriod * 60 * 1000L).milliseconds,
             delay = (scoutPotionPeriod * 60 * 1000L).milliseconds
-        ) { hgPlayer.serverPlayer?.inventory?.add(scoutPotion.copy()) }
+        ) { hgPlayer.serverPlayer?.forceGiveItem(scoutPotion.copy()) }
         job.start()
         hgPlayer.playerData[scoutJobKey] = job
+    }
+
+    onDisable { hgPlayer, kit ->
+        hgPlayer.getPlayerData<Job>(scoutJobKey)?.cancel("ich the oat killer")
+        hgPlayer.playerData.remove(scoutJobKey)
     }
 }

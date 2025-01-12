@@ -13,7 +13,9 @@ import de.royzer.fabrichg.kit.events.kit.invoker.OnTakeDamageKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnTickKt;
 import de.royzer.fabrichg.mixinskt.LivingEntityMixinKt;
 import de.royzer.fabrichg.mixinskt.ServerPlayerEntityMixinKt;
+import de.royzer.fabrichg.mixinskt.SoupHealingKt;
 import de.royzer.fabrichg.settings.ConfigManager;
+import de.royzer.fabrichg.settings.SoupMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -167,9 +169,22 @@ public abstract class ServerPlayerMixin extends Player {
 
     @Inject(
             method = "swing",
-            at = @At("HEAD")
+            at = @At("HEAD"),
+            cancellable = true
     )
     public void onSwing(InteractionHand hand, CallbackInfo ci) {
+        if (ConfigManager.INSTANCE.getGameSettings().getSoupMode() == SoupMode.EatAndHit) {
+            ServerPlayer player = (ServerPlayer) (Object) this;
+            boolean eatenSoup = SoupHealingKt.INSTANCE.potentialUseSoup(player, player.getItemInHand(hand).getItem());
+            if (eatenSoup) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, Items.BOWL.getDefaultInstance());
+                ci.cancel();
+            }
+
+            ci.cancel();
+            return;
+        }
+
         OnLeftClickKt.onLeftClick((ServerPlayer) (Object) this, hand);
     }
 

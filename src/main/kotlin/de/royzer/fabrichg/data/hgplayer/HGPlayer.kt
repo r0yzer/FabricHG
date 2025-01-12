@@ -16,6 +16,7 @@ import de.royzer.fabrichg.kit.kits.backupKit
 import de.royzer.fabrichg.kit.kits.neoKit
 import de.royzer.fabrichg.kit.kits.noneKit
 import de.royzer.fabrichg.kit.kits.surpriseKit
+import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.stats.Stats
@@ -182,6 +183,10 @@ class HGPlayer(
             }
         )
         if (GamePhaseManager.isIngame) {
+            if (kit == surpriseKit) {
+                setKit(randomKit(), index, force=true)
+                return
+            }
             this.kits[index].onDisable?.invoke(this, this.kits[index])
             this.giveKitItems(kit)
             val serverPlayer = this.serverPlayer ?: return

@@ -66,6 +66,7 @@ object ConfigManager {
         gameSettings.invincibilityTime = gameConfigData.invincibilityTime
         gameSettings.friendlyFire = gameConfigData.friendlyFire
         gameSettings.forbiddenKitCombinations = gameConfigData.forbiddenKitCombinations
+        gameSettings.soupMode = gameConfigData.soupMode
 
         if (gameSettings.teamsEnabled) {
             teamCommand.setupRegistrationCallback()

@@ -41,6 +41,8 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
             val gulagEndTime = GuiProperty(gameSettings.gulagEndTime)
             val kitAmountStatus = GuiProperty(gameSettings.kitAmount)
             val surpriseOnlyEnabledKitsStatus = GuiProperty(gameSettings.surpriseOnlyEnabledKits)
+            val soupModeStatus = GuiProperty(gameSettings.soupMode)
+
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
             button(5 sl 2, minifeastStatus.guiIcon { enabled ->
                 itemStack(Items.ENCHANTING_TABLE) {
@@ -123,6 +125,24 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
             }, onClick = {
                 gameSettings.surpriseOnlyEnabledKits = !gameSettings.surpriseOnlyEnabledKits
                 cowStatus.set(gameSettings.surpriseOnlyEnabledKits)
+            })
+            button(4 sl 3, soupModeStatus.guiIcon { soupMode ->
+                itemStack(Items.MUSHROOM_STEW) {
+                    this.setCustomName {
+                        text("Soup mode: ")
+                        text(soupMode.toString()) {
+                            color = TEXT_BLUE
+                            bold = true
+                        }
+                        italic = false
+                        color = TEXT_GRAY
+                    }
+                }
+            }, onClick = {
+                val after = if (it.type == SHIFT_CLICK) gameSettings.soupMode.last() else gameSettings.soupMode.next()
+
+                gameSettings.soupMode = after
+                soupModeStatus.set(after)
             })
 
             button(5 sl 7, kitAmountStatus.guiIcon { amount ->

@@ -15,14 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 const val SOUP_HEAL = 7F
 
 object SoupHealingKt {
-    fun onPotentialSoupUse(
-        player: Player, item: Item,
-        cir: CallbackInfoReturnable<InteractionResultHolder<ItemStack>>,
-        world: Level, hand: InteractionHand
-    ) {
+    fun potentialUseSoup(player: Player, item: Item): Boolean {
         val foodData = player.foodData
 
-        if (!item.isStew || player.health >= player.maxHealth && !foodData.needsFood()) return
+        if (!item.isStew || player.health >= player.maxHealth && !foodData.needsFood()) return false
 
         var consumedSoup = false
 
@@ -42,6 +38,17 @@ object SoupHealingKt {
             foodData.foodLevel += item.restoredFood
             consumedSoup = true
         }
+
+        return consumedSoup
+    }
+
+
+    fun onPotentialSoupUse(
+        player: Player, item: Item,
+        cir: CallbackInfoReturnable<InteractionResultHolder<ItemStack>>,
+        world: Level, hand: InteractionHand
+    ) {
+        val consumedSoup = potentialUseSoup(player, item)
 
         if (consumedSoup) cir.returnValue = InteractionResultHolder.pass(ItemStack(Items.BOWL))
     }
