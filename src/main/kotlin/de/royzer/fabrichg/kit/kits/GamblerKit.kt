@@ -16,6 +16,7 @@ import de.royzer.fabrichg.server
 import de.royzer.fabrichg.util.WeightedCollection
 import de.royzer.fabrichg.util.giveOrDropItem
 import net.minecraft.core.Vec3i
+import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
@@ -301,9 +302,11 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     }, 0.1)
     collection.add(GamblerAction("5 Sekunden fly") {
         it.abilities.mayfly = true
+        it.connection.send(ClientboundPlayerAbilitiesPacket(it.abilities))
         mcCoroutineTask(delay = 5.seconds) { _ ->
             if (it != null) {
                 it.abilities.mayfly = false
+                it.connection.send(ClientboundPlayerAbilitiesPacket(it.abilities))
             }
         }
     }, 0.1)
@@ -380,12 +383,12 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
     }, 0.005)
     collection.add(GamblerAction("Kit change") {
         val index = it.hgPlayer.kits.indexOfFirst { kit -> kit.name == "Gambler" } // indexOf(gamblerKit) rekursive problem
-
+        if (index < 0) return@GamblerAction
         val kit = randomKit()
         it.hgPlayer.kits[index] = kit
         kit.onEnable?.invoke(it.hgPlayer, kit, it)
         it.hgPlayer.giveKitItems(kit)
-    }, 0.03)
+    }, 0.02)
     collection.add(GamblerAction("Coords leak") {
         broadcastComponent(
             literalText {

@@ -30,6 +30,7 @@ const val TEXT_LIGHT_GRAY = 0xAAAAAA
 const val TEXT_YELLOW = 0xFFEE40
 const val TEXT_BRIGHT_YELLOW = 0xFFEE00
 const val TEXT_GREEN = 0x33FF33
+const val TEXT_YELLOW_CHAT = 0xFFFF55
 
 fun initServer() {
     kits
