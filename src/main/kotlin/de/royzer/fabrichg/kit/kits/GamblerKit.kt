@@ -377,7 +377,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         it.kill()
     }, 0.005)
     collection.add(GamblerAction("Kit change") {
-        val index = it.hgPlayer.kits.indexOfFirst { kit -> kit == gamblerKit } // indexOf(gamblerKit) rekursive problem
+        val index = it.hgPlayer.kits.indexOfFirst { kit -> kit.name == "Gambler" } // indexOf(gamblerKit) rekursive problem
 
         val kit = randomKit()
         it.hgPlayer.kits[index] = kit
