@@ -2,6 +2,7 @@ package de.royzer.fabrichg.game
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.TEXT_YELLOW_CHAT
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
@@ -45,32 +46,43 @@ object PlayerList {
 
     fun announcePlayerDeath(deadPlayer: HGPlayer, source: DamageSource, killer: Entity?, gulag: Boolean = false) {
         val sourceKiller = source.entity
-        val otherHGPlayer = killer?.hgPlayer
         broadcastComponent(
             literalText {
-                if (killer == sourceKiller && killer != null) {
-                    var killMessage = "getötet"
+                if (killer == sourceKiller && killer != null) { // killer ist ein entity und tötet hgplayer selber direkt
                     if (killer is ServerPlayer) {
-                        killMessage = "mit ${killer.mainHandItem?.item.toString().uppercase()} getötet"
+                        text(
+                            "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer.kits.joinToString { it.name }}) using ${
+                                killer.mainHandItem?.item.toString().uppercase()
+                            }"
+                        )
                     }
-                    if (killer is HGBot) {
-                        killMessage = "mit ${killer.mainHandItem?.item.toString().uppercase()} getötet"
+                    else if (killer is HGBot) { // hgbot und player haben beide mainhanditem aber nicht aus der gleichen subklasse oder so
+                        text(
+                            "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer?.kits?.joinToString { it.name }}) using ${
+                                killer.mainHandItem?.item.toString().uppercase()
+                            }"
+                        )
                     }
-                    text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) wurde von ${killer.name?.string}" +
-                            "(${otherHGPlayer?.kits?.joinToString { it.name }}) $killMessage"
-                    )
-                } else if (killer != null) {
-                    text("${deadPlayer.name} wurde von ${killer.name.string} getötet")
-                } else {
-                    when (val cause = source.type().msgId) {
-                        "cactus" -> text("${deadPlayer.name} ist an einem Kaktus gestorben")
-                        "mob_attack" -> text("${deadPlayer.name} ist an einem Mob gestorben")
-                        "fireball" -> text("${deadPlayer.name} ist an einem Feuerball gestorben")
-                        "generickill" -> text("${deadPlayer.name} wurde getötet")
-                        else -> text("${deadPlayer.name} ist an ${cause.uppercase()} gestorben")
+                } else if (killer != null) { // source ist nicht der killer selber aber tötet indirekt oder halt creeper etc
+                    if (killer is ServerPlayer) {
+                        text("${deadPlayer.name} was killed by ${killer.name.string}(${killer.hgPlayer.kits.joinToString { it.name }})")
+                    } else if (killer is HGBot){
+                        text("${deadPlayer.name} was killed by ${killer.name.string}(${killer.hgPlayer?.kits?.joinToString { it.name }})")
+                    } else { // mob
+                        text("${deadPlayer.name} was killed by ${killer.name.string}")
+                    }
+                } else { // ohne fremdeinwirkung
+                    val prefix = "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})"
+                    when (val cause = source.msgId) {
+                        "cactus" -> text("$prefix died from a cactus")
+                        "fireball" -> text("$prefix died from a fireball")
+                        "generickill" -> text("$prefix was killed")
+                        "fall" -> text("$prefix fell from a high place")
+                        "lightning_bolt" -> text("$prefix was struck by lightning")
+                        else -> text("$prefix was killed by ${cause.uppercase()}")
                     }
                 }
-                color = 0xFFFF55
+                color = TEXT_YELLOW_CHAT
             }
         )
         announceRemainingPlayers()
@@ -83,9 +95,10 @@ object PlayerList {
     fun announceRemainingPlayers() {
         broadcastComponent(
             literalText {
-                val v = if (alivePlayers.size == 1) "verbleibt" else "verbleiben"
-                text("Es $v ${alivePlayers.size} Spieler")
-                color = 0xFFFF55
+                val players = alivePlayers.size
+                text("$players player${if (players == 1) "" else "s"} remaining") {
+                    color = TEXT_YELLOW_CHAT
+                }
             }
         )
     }
