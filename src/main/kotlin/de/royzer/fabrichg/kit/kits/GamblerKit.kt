@@ -52,6 +52,10 @@ import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
 class GamingGolem(level: Level, val wolf: GamingGolemWolf) : IronGolem(EntityType.IRON_GOLEM, level) {
+    init {
+        attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 7.5 // 15 normal
+    }
+
     override fun tick() {
         super.tick()
 
@@ -80,13 +84,18 @@ class GamingGolemWolf(level: Level, val owner: ServerPlayer) : Wolf(EntityType.W
 
     init {
         isInvisible = true
-        golem
 
     }
 
     override fun tick() {
         isInvisible = true
         health = maxHealth
+        golem.target = target
+
+        if (golem.isDeadOrDying || golem.isRemoved) {
+            kill()
+            remove(RemovalReason.KILLED)
+        }
         super.tick()
     }
 
@@ -99,9 +108,7 @@ class GamingGolemWolf(level: Level, val owner: ServerPlayer) : Wolf(EntityType.W
     }
 
     override fun doHurtTarget(target: Entity): Boolean {
-        if (target == golem) return false
-
-        return golem.doHurtTarget(target)
+        return false
     }
 
     override fun canBeCollidedWith(): Boolean {
@@ -199,7 +206,7 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         golemWolf.tame(it)
         golemWolf.setPos(it.pos)
         golemWolf.golem.setPos(it.pos)
-    }, 0.1)
+    }, 100.1)
     collection.add(GamblerAction("You won a diamond") {
         it.giveOrDropItem(itemStack(Items.DIAMOND, 1) {})
     }, 0.075)
