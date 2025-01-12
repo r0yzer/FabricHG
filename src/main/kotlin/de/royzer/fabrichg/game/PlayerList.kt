@@ -63,15 +63,15 @@ object PlayerList {
                             }"
                         )
                     } else { // mob
-                        text("${deadPlayer.name} was killed by ${killer.name.string}")
+                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}")
                     }
                 } else if (killer != null) { // source ist nicht der killer selber aber tötet indirekt oder halt creeper etc
                     if (killer is ServerPlayer) {
-                        text("${deadPlayer.name} was killed by ${killer.name.string}(${killer.hgPlayer.kits.joinToString { it.name }})")
+                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer.kits.joinToString { it.name }})")
                     } else if (killer is HGBot){
-                        text("${deadPlayer.name} was killed by ${killer.name.string}(${killer.hgPlayer?.kits?.joinToString { it.name }})")
+                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer?.kits?.joinToString { it.name }})")
                     } else { // mob
-                        text("${deadPlayer.name} was killed by ${killer.name.string}")
+                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}")
                     }
                 } else { // ohne fremdeinwirkung
                     val prefix = "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})"
