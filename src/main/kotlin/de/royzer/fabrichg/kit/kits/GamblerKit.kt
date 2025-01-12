@@ -206,7 +206,7 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
         golemWolf.tame(it)
         golemWolf.setPos(it.pos)
         golemWolf.golem.setPos(it.pos)
-    }, 100.1)
+    }, 0.1)
     collection.add(GamblerAction("You won a diamond") {
         it.giveOrDropItem(itemStack(Items.DIAMOND, 1) {})
     }, 0.075)
@@ -377,11 +377,12 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         it.kill()
     }, 0.005)
     collection.add(GamblerAction("Kit change") {
-        it.hgPlayer.kits.clear()
+        val index = it.hgPlayer.kits.indexOfFirst { kit -> kit == gamblerKit } // indexOf(gamblerKit) rekursive problem
+
         val kit = randomKit()
-        it.hgPlayer.kits.add(kit)
+        it.hgPlayer.kits[index] = kit
         kit.onEnable?.invoke(it.hgPlayer, kit, it)
-        it.hgPlayer.giveKitItems()
+        it.hgPlayer.giveKitItems(kit)
     }, 0.03)
     collection.add(GamblerAction("Coords leak") {
         broadcastComponent(
