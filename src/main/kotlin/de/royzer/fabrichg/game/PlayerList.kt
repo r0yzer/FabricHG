@@ -62,6 +62,8 @@ object PlayerList {
                                 killer.mainHandItem?.item.toString().uppercase()
                             }"
                         )
+                    } else { // mob
+                        text("${deadPlayer.name} was killed by ${killer.name.string}")
                     }
                 } else if (killer != null) { // source ist nicht der killer selber aber tötet indirekt oder halt creeper etc
                     if (killer is ServerPlayer) {
