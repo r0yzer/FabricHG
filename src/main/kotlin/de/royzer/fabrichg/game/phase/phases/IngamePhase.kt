@@ -18,17 +18,21 @@ import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
 import de.royzer.fabrichg.util.recraft
+import net.minecraft.sounds.SoundEvents
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.logging.logInfo
+import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.Delegates
 import kotlin.random.Random
+import kotlin.time.Duration.Companion.seconds
 
 object IngamePhase : GamePhase() {
     var winner: HGPlayer? = null
@@ -110,6 +114,17 @@ object IngamePhase : GamePhase() {
                 if (serverPlayer.recraft > maxRecraft) {
                     serverPlayer.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 21, 3, false, false, true))
                     serverPlayer.sendText("You are carrying too much recraft") { color = TEXT_GRAY }
+
+                    val anvilSounds = 100
+                    val soundDuration = 1.seconds
+
+                    mcCoroutineTask(howOften = anvilSounds.toLong(), period = soundDuration/anvilSounds) {
+                        SoundSource.entries.forEach { source ->
+                            listOf(SoundEvents.ANVIL_PLACE, SoundEvents.ANVIL_LAND).forEach { sound ->
+                                serverPlayer.playNotifySound(sound, source, 300f, 1f)
+                            }
+                        }
+                    }
                 }
             }
         }
