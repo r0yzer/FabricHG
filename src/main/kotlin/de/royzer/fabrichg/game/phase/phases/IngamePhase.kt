@@ -24,6 +24,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.core.text.sendText
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.properties.Delegates
@@ -108,6 +109,7 @@ object IngamePhase : GamePhase() {
                 val serverPlayer = it.serverPlayer ?: return@forEach
                 if (serverPlayer.recraft > maxRecraft) {
                     serverPlayer.addEffect(MobEffectInstance(MobEffects.WEAKNESS, 21, 3, false, false, true))
+                    serverPlayer.sendText("You are carrying too much recraft") { color = TEXT_GRAY }
                 }
             }
         }

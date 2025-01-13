@@ -36,6 +36,7 @@ import net.minecraft.world.entity.boss.wither.WitherBoss
 import net.minecraft.world.entity.item.PrimedTnt
 import net.minecraft.world.entity.monster.Creeper
 import net.minecraft.world.entity.monster.hoglin.Hoglin
+import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.vehicle.Boat
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.Level
