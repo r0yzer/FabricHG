@@ -100,4 +100,8 @@ class KitEventsBuilder(val kit: Kit) {
             kit.events.noCooldownActions.add(action)
         }
     }
+
+    fun afterDamagePlayer(action: (HGPlayer, Kit, ServerPlayer) -> Unit) {
+        kit.events.afterDamagePlayerAction = action
+    }
 }
