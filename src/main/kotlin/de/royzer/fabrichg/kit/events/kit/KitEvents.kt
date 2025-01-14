@@ -16,7 +16,7 @@ import net.minecraft.world.phys.EntityHitResult
 
 
 class KitEvents(
-    var hitPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
+    var hitPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null, // wird unendlich oft ausgeführt mit unendlich clicks, auch wenn hit nicht durchgeht
     var hitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
     var afterHitEntityAction: ((HGPlayer, Kit, Entity) -> Unit)? = null,
     var moveAction: ((HGPlayer, Kit) -> Unit)? = null,
@@ -33,7 +33,8 @@ class KitEvents(
     val noCooldownActions: MutableList<Any> = mutableListOf(),
     var leftClickAction: ((HGPlayer, Kit) -> Unit)? = null,
     var attackedByPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Boolean)? = null,
-    var craftAction: ((HGPlayer, ItemStack, RecipeHolder<CraftingRecipe>, Kit) -> Unit)? = null
+    var craftAction: ((HGPlayer, ItemStack, RecipeHolder<CraftingRecipe>, Kit) -> Unit)? = null,
+    var afterDamagePlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
 )
 
 fun HGPlayer.invokeKitAction(kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {
