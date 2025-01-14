@@ -7,6 +7,20 @@ import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
+fun afterDamageEntity(target: Entity, entity: LivingEntity, ci: CallbackInfo) {
+    val attacker = entity.hgPlayer ?: return
+
+    if (target is ServerPlayer) {
+        attacker.kits.forEach { kit ->
+            attacker.invokeKitAction(kit, sendCooldown = false) {
+                if (attacker.serverPlayer != null) {
+                    kit.events.afterDamagePlayerAction?.invoke(attacker, kit, target)
+                }
+            }
+        }
+    }
+}
+
 fun onAttackEntity(target: Entity, entity: LivingEntity, ci: CallbackInfo) {
     val attacker = entity.hgPlayer ?: return
     val item = entity.mainHandItem

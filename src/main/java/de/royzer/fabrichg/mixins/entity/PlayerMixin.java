@@ -41,10 +41,18 @@ public abstract class PlayerMixin extends LivingEntity {
         super(entityType, level);
     }
 
-    // wäre dneke besser gucken ob der hit durchgeht aber kein bock ahnst
     @Inject(
             method = "attack",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;getKnockback(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)F"),
+            cancellable = true
+    )
+    public void afterDamageEntity(Entity target, CallbackInfo ci) {
+        OnAttackEntityKt.afterDamageEntity(target, this, ci);
+    }
+
+    @Inject(
+            method = "attack",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z"),
             cancellable = true
     )
     public void onAttackEntity(Entity target, CallbackInfo ci) {
