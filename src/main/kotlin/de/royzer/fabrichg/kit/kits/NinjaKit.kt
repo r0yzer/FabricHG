@@ -32,6 +32,9 @@ val ninjaKit = kit("Ninja") {
         onSneak { hgPlayer, kit ->
             val serverPlayer = hgPlayer.serverPlayer ?: return@onSneak
             val lastHitted = hgPlayer.getPlayerData<ServerPlayer>(lastHittedKey) ?: return@onSneak
+
+            if (lastHitted.isDeadOrDying || lastHitted.level() != serverPlayer.level()) return@onSneak
+
             val angle = Vec3(lastHitted.lookAngle.x, 0.0, lastHitted.lookAngle.z)
             val pos = lastHitted.pos.subtract(angle.normalize())
 
