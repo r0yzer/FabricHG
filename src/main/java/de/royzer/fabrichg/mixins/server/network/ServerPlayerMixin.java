@@ -132,23 +132,31 @@ public abstract class ServerPlayerMixin extends Player {
     }
 
     @Unique
+    public boolean applyTeamDamage(Player instance, DamageSource source) {
+        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer((ServerPlayer) instance);
+        HGTeam team = TeamsKt.getHgTeam(hgPlayer);
+
+        if (team == null) return false;
+
+        boolean isInGulagFight = GulagManager.INSTANCE.isInGulag(hgPlayer);
+        if (isInGulagFight) return false;
+
+        Entity sourceEntity = source.getEntity();
+        if (sourceEntity == null) return false;
+
+        HGPlayer otherHGPlayer = HGPlayerKt.getHgPlayer(sourceEntity);
+        if (otherHGPlayer == null) return false;
+
+        if (!team.getHgPlayers().contains(otherHGPlayer)) return false;
+        if (ConfigManager.INSTANCE.getGameSettings().getFriendlyFire()) return false;
+
+        return true;
+    }
+
+    @Unique
     public float reducedDamage(Player instance, DamageSource source, float amount) {
-        HGTeam team = TeamsKt.getHgTeam(HGPlayerKt.getHgPlayer((ServerPlayer) instance));
+        if (applyTeamDamage(instance, source)) return 1f;
 
-        // if busting
-        if (team != null) {
-            if (source.getEntity() != null) {
-                HGPlayer otherHGPlayer = HGPlayerKt.getHgPlayer(source.getEntity());
-
-                if (otherHGPlayer != null) {
-                    if (team.getHgPlayers().contains(otherHGPlayer)) {
-                        if (!ConfigManager.INSTANCE.getGameSettings().getFriendlyFire()) {
-                            return 1f;
-                        }
-                    }
-                }
-            }
-        }
 
         if (source.is(DamageTypes.FALLING_STALACTITE)) {
             return amount * 0.5f;
@@ -178,11 +186,7 @@ public abstract class ServerPlayerMixin extends Player {
             boolean eatenSoup = SoupHealingKt.INSTANCE.potentialUseSoup(player, player.getItemInHand(hand).getItem());
             if (eatenSoup) {
                 player.setItemInHand(InteractionHand.MAIN_HAND, Items.BOWL.getDefaultInstance());
-                ci.cancel();
             }
-
-            ci.cancel();
-            return;
         }
 
         OnLeftClickKt.onLeftClick((ServerPlayer) (Object) this, hand);

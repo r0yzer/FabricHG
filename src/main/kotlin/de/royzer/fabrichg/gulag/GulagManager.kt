@@ -219,6 +219,11 @@ object GulagManager {
             it.onDisable?.invoke(player, it)
         }
 
+        player.serverPlayer?.let { serverPlayer ->
+            serverPlayer.health = 40f
+            serverPlayer.foodData.foodLevel = 20
+        }
+
         val opp = gulagQueue.peek()
 
         val isFightEmpty = fighting.isEmpty()
