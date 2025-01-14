@@ -37,6 +37,7 @@
     "commans.CommandsMixin",
     "entity.ZombieMixin",
     "entitylookup.EntityLookupMixin",
+    "item.ArmorItemMixin",
     "item.SwordItemMixin",
     "kits.BeamMixin",
     "kits.FrogMixin",
