@@ -19,7 +19,7 @@ public abstract class SwordItemMixin extends TieredItem {
 
     @Inject(method = "postHurtEnemy", at = @At("HEAD"), cancellable = true)
     public void breakReduction(ItemStack stack, LivingEntity target, LivingEntity attacker, CallbackInfo ci) {
-        double breakReduction = 0.5;
+        double breakReduction = 0.75;
 
         if (Random.Default.nextDouble() <= breakReduction) {
             ci.cancel();

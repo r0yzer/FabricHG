@@ -91,7 +91,6 @@ public abstract class ServerGamePacketListenerMixin
 
         if (usedSoup) {
             player.setItemInHand(InteractionHand.MAIN_HAND, Items.BOWL.getDefaultInstance());
-            ci.cancel();
         }
     }
 }
