@@ -154,7 +154,7 @@ object IngamePhase : GamePhase() {
             // wer dafür verantwortlich ist ...
             teamMembers.forEach brain@ { teamMember ->
                 val teamMemberServerPlayer = teamMember.serverPlayer ?: return@brain
-                val glowingEffect = MobEffectInstance(MobEffects.GLOWING, 2100, 100, false, false)
+                val glowingEffect = MobEffectInstance(MobEffects.GLOWING, 21, 1, false, false)
 
                 serverPlayer.connection.send(ClientboundUpdateMobEffectPacket(teamMemberServerPlayer.id, glowingEffect, true))
 
