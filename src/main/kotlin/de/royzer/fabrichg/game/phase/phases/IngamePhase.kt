@@ -12,18 +12,22 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.teams.hgTeam
 import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.kit.achievements.AchievementManager
+import de.royzer.fabrichg.mixins.entity.EntityAcessor
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
 import de.royzer.fabrichg.util.recraft
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.entity.EntityAccess
 import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
@@ -140,6 +144,23 @@ object IngamePhase : GamePhase() {
 
         if (timer == pitStartTime && pitEnabled) {
             Pit.start()
+        }
+
+        PlayerList.players.forEach { (uuid, hgPlayer) ->
+            val serverPlayer = hgPlayer.serverPlayer ?: return@forEach
+            val team = hgPlayer.hgTeam ?: return@forEach
+            val teamMembers = team.hgPlayers.filterNot { it.uuid == uuid }
+
+            // wer dafür verantwortlich ist ...
+            teamMembers.forEach brain@ { teamMember ->
+                val teamMemberServerPlayer = teamMember.serverPlayer ?: return@brain
+                val glowingEffect = MobEffectInstance(MobEffects.GLOWING, 21, 1, false, false)
+
+                serverPlayer.connection.send(ClientboundUpdateMobEffectPacket(teamMemberServerPlayer.id, glowingEffect, true))
+
+                (teamMemberServerPlayer as EntityAcessor).setBrainBusting(6, true)
+            }
+
         }
 
         when (val timeLeft = maxPhaseTime - timer) {
