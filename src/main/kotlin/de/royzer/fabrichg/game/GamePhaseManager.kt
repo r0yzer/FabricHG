@@ -3,9 +3,14 @@ package de.royzer.fabrichg.game
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
+import de.royzer.fabrichg.game.teams.hgTeam
+import de.royzer.fabrichg.util.sendEntityDataUpdate
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.Component
+import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket
 import net.minecraft.server.dedicated.DedicatedServer
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.level.GameRules
 import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.task.mcCoroutineTask
@@ -30,6 +35,7 @@ object GamePhaseManager {
         mcCoroutineTask(howOften = Long.MAX_VALUE, period = 1000.milliseconds, delay = 0.milliseconds) {
             try {
                 currentPhase.tick(timer.getAndIncrement())
+                tick()
             } catch (e: Exception) {
                 broadcastComponent("error: $e wird ignoriert".literal)
                 logError(e)
@@ -37,6 +43,35 @@ object GamePhaseManager {
             }
         }
     }
+
+    private fun tick() {
+        PlayerList.players.forEach { (uuid, hgPlayer) ->
+            val serverPlayer = hgPlayer.serverPlayer ?: return@forEach
+
+            PlayerList.players.forEach { _, player ->
+                player.serverPlayer?.let {
+                    val hasGlowingEffect = it.hasEffect(MobEffects.GLOWING)
+
+                    serverPlayer.sendEntityDataUpdate(it, 6, hasGlowingEffect, force=true)
+                }
+            }
+
+            val team = hgPlayer.hgTeam ?: return@forEach
+            val teamMembers = team.hgPlayers.filterNot { it.uuid == uuid }
+
+            // wer dafür verantwortlich ist ...
+            teamMembers.forEach brain@ { teamMember ->
+                val teamMemberServerPlayer = teamMember.serverPlayer ?: return@brain
+                val glowingEffect = MobEffectInstance(MobEffects.GLOWING, 21, 1, false, false)
+
+                serverPlayer.connection.send(ClientboundUpdateMobEffectPacket(teamMemberServerPlayer.id, glowingEffect, true))
+                serverPlayer.sendEntityDataUpdate(teamMemberServerPlayer, 6, true)
+            }
+
+        }
+
+    }
+
     fun resetTimer() = timer.set(0)
 
     val isBuildingForbidden get() = currentPhaseType == PhaseType.LOBBY || currentPhaseType == PhaseType.END

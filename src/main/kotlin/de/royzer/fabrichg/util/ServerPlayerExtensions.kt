@@ -1,7 +1,10 @@
 package de.royzer.fabrichg.util
 
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
+import de.royzer.fabrichg.mixins.entity.EntityAcessor
+import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
@@ -112,4 +115,23 @@ fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
 
 
     inventory.clearContent()
+}
+
+fun ServerPlayer.sendEntityDataUpdate(forEntity: LivingEntity, changeFlag: Int? = null, changeValue: Boolean? = null, force: Boolean = false) {
+    val entityData = forEntity.entityData ?: return
+    val forEntityAccessor = forEntity as EntityAcessor
+    val beforeFlag = changeFlag?.let { forEntity.getBrainBusting(it) }
+
+    if (changeFlag != null && changeValue != null) {
+        if (force) forEntityAccessor.setBrainBusting(changeFlag, !changeValue)
+        forEntityAccessor.setBrainBusting(changeFlag, changeValue)
+    }
+
+    val packedDirty = entityData.packDirty()
+
+    if (packedDirty != null) connection.send(ClientboundSetEntityDataPacket(forEntity.id, packedDirty))
+
+    if (changeFlag != null && changeValue != null && beforeFlag != null) forEntityAccessor.setBrainBusting(changeFlag, beforeFlag)
+
+    entityData.packDirty()
 }
