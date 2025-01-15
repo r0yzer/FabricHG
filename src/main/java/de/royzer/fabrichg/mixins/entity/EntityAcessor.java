@@ -16,4 +16,8 @@ public interface EntityAcessor {
 
     @Invoker("collide")
     Vec3 collisionVector(Vec3 vec);
+
+    @Invoker("setSharedFlag")
+    void setBrainBusting(int flag, boolean set);
+
 }
