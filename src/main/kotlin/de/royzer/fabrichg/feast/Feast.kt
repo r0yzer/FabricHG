@@ -4,6 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
+import de.royzer.fabrichg.kit.kits.urgalTime
 import de.royzer.fabrichg.scoreboard.formattedTime
 import de.royzer.fabrichg.sendPlayerStatus
 import de.royzer.fabrichg.server
@@ -12,11 +13,16 @@ import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.tracker
 import kotlinx.coroutines.Job
 import net.minecraft.core.BlockPos
+import net.minecraft.core.Holder
 import net.minecraft.core.Vec3i
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.world.effect.MobEffectInstance
+import net.minecraft.world.effect.MobEffects
+import net.minecraft.world.item.Item
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.alchemy.Potion
 import net.minecraft.world.item.alchemy.Potions
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.entity.BlockEntity
@@ -27,6 +33,7 @@ import net.silkmc.silk.core.math.geometry.produceFilledCirclePositions
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
 import java.time.Instant
+import kotlin.math.ceil
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -52,7 +59,7 @@ object Feast {
     val feastBlockPositions = mutableListOf<BlockPos>()
 
     fun spawn() {
-        feastStrengthPotion // sonst ist null oder so
+        feastStrengthPotionItem // sonst ist null oder so
         server.playerList.players.forEach { it.sendPlayerStatus() }
         spawned = true
         feastCenter = getRandomHighestPos(150)
@@ -135,6 +142,7 @@ object Feast {
                 repeat(8) {
                     val slot = Random.nextInt(27)
                     val loot = feastLoot.get() ?: return@repeat
+                    if (loot.shouldBeDamaged) loot.item.breakItem()
                     val amount = Random.nextInt(1, loot.maxAmount + 1)
                     blockEntity.setItem(slot, loot.item.copy().also { it.count = amount })
                 }
@@ -144,18 +152,32 @@ object Feast {
     }
 }
 
-private val feastStrengthPotion = itemStack(Items.SPLASH_POTION) {
-    setPotion(Potions.STRENGTH)
+val feastStrengthPotion =
+    Potion(
+        MobEffectInstance(MobEffects.DAMAGE_BOOST, 60 * 20, 0)
+    )
+
+private val feastStrengthPotionItem = itemStack(Items.SPLASH_POTION) {
+    setPotion(Holder.direct(feastStrengthPotion))
     count = 1
 }
 
+fun ItemStack.breakItem() {
+    val max = maxDamage.toDouble()
+    val min = max / 2
+
+    val durability = Random.nextDouble(min, max)
+
+    damageValue = ceil(max - durability).toInt()
+}
+
 val feastLoot = WeightedCollection<FeastLoot>().also {
-    it.add(FeastLoot(Items.DIAMOND_HELMET.defaultInstance, 1), 1.0)
-    it.add(FeastLoot(Items.DIAMOND_LEGGINGS.defaultInstance, 1), 1.0)
-    it.add(FeastLoot(Items.DIAMOND_CHESTPLATE.defaultInstance, 1), 1.0)
-    it.add(FeastLoot(Items.DIAMOND_BOOTS.defaultInstance, 1), 1.0)
+    it.add(FeastLoot(Items.DIAMOND_HELMET.defaultInstance, 1, true), 1.0)
+    it.add(FeastLoot(Items.DIAMOND_LEGGINGS.defaultInstance, 1, true), 1.0)
+    it.add(FeastLoot(Items.DIAMOND_CHESTPLATE.defaultInstance, 1, true), 1.0)
+    it.add(FeastLoot(Items.DIAMOND_BOOTS.defaultInstance, 1, true), 1.0)
     it.add(FeastLoot(Items.DIAMOND_SWORD.defaultInstance, 1), 1.0)
-    it.add(FeastLoot(feastStrengthPotion, 1), 0.3)
+    it.add(FeastLoot(feastStrengthPotionItem, 1), 0.3)
     it.add(FeastLoot(tracker, 1), 0.5)
     it.add(FeastLoot(Items.COBWEB.defaultInstance, 5), 2.0)
     it.add(FeastLoot(Items.BOW.defaultInstance, 1), 1.5)
@@ -170,4 +192,5 @@ val feastLoot = WeightedCollection<FeastLoot>().also {
 data class FeastLoot(
     val item: ItemStack,
     val maxAmount: Int,
+    val shouldBeDamaged: Boolean = false
 )

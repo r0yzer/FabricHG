@@ -3,6 +3,7 @@ package de.royzer.fabrichg.commands
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.feast.Feast
+import kotlinx.coroutines.cancel
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket
 import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.text.literalText
@@ -25,6 +26,25 @@ val feastCommand = command("feast") {
                     Feast.spawn()
                 }
             }
+        }
+    }
+
+    literal("skip") {
+        requiresPermissionLevel(4)
+
+        runs {
+            if (!Feast.spawned) {
+                source.player?.sendText("das feaßt hat noch nicht gestartet. Helm") { color = TEXT_GRAY }
+                return@runs
+            }
+            if (Feast.started) {
+                source.player?.sendText("das feaßt ist gespawned. Helm") { color = TEXT_GRAY }
+                return@runs
+            }
+
+            Feast.feastJob?.cancel(":3")
+            Feast.feastJob = null
+            Feast.start()
         }
     }
 
