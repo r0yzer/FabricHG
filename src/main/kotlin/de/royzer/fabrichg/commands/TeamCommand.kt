@@ -4,6 +4,7 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.TEXT_GREEN
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.teams.*
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.network.chat.ClickEvent
@@ -26,15 +27,21 @@ val teamCommand = command("team") {
                     return@runs
                 }
                 val name = _name()
+                if (name.length > 16 || name.contains(" ")) {
+                    player.sendText("Invalid team name") { color = TEXT_GRAY }
+                    return@runs
+                }
                 val existingTeam = teams.firstOrNull { it.name.equals(name, true) }
                 if (existingTeam != null) {
-                    player.sendText("the team ${existingTeam.name} already exists (by ${existingTeam.leader.name})") { color = TEXT_GRAY }
+                    player.sendText("The team ${existingTeam.name} already exists (by ${existingTeam.leader.name})") {
+                        color = TEXT_GRAY
+                    }
                     return@runs
                 }
                 val team = HGTeam(name, hgPlayer)
                 player.sendText {
                     text("You successfully created the team ") { color = TEXT_GRAY }
-                    text(name) {color = TEXT_BLUE}
+                    text(name) { color = TEXT_BLUE }
                 }
                 teams.add(team)
             }
@@ -54,8 +61,10 @@ val teamCommand = command("team") {
                     text(inviter.name.string) { color = TEXT_BLUE }
                     text(" [Click to Join]") {
                         color = TEXT_GREEN
-                        hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, literalText("Join team ${team.name}") { color = TEXT_GREEN })
-                        clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, """/team join "${team.name}" """)
+                        hoverEvent = HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            literalText("Join team ${team.name}") { color = TEXT_GREEN })
+                        clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/team join ${team.name}")
                     }
                 }
                 inviter.sendText {
@@ -110,6 +119,30 @@ val teamCommand = command("team") {
         } else {
             source.player?.sendText {
                 text("You are in no team") { color = TEXT_GRAY }
+            }
+        }
+    }
+    literal("kick") {
+        argument<String>("name") { _name ->
+            suggestsListFiltering {
+                val hgPlayer = source.player?.hgPlayer ?: return@suggestsListFiltering listOf()
+                val team = hgPlayer.hgTeam ?: return@suggestsListFiltering listOf()
+                return@suggestsListFiltering if (team.leader == hgPlayer) team.hgPlayers.map { it.name } else listOf()
+            }
+            runs {
+                val name = _name()
+                val hgPlayer = source.player?.hgPlayer ?: return@runs
+                val team = hgPlayer.hgTeam ?: return@runs
+                if (team.leader == hgPlayer) {
+                    val kickedPlayer = PlayerList.players.values.find { it.name == name } ?: return@runs
+                    if (hgPlayer != kickedPlayer) {
+                        team.removePlayer(kickedPlayer, kicked = true)
+                    }
+                } else {
+                    source.player?.sendText {
+                        text("You cannot kick players from this team") { color = TEXT_GRAY }
+                    }
+                }
             }
         }
     }

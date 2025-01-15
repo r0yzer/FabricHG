@@ -53,24 +53,24 @@ class HGTeam(
         return false
     }
 
-    fun removePlayer(hgPlayer: HGPlayer) {
+    fun removePlayer(hgPlayer: HGPlayer, kicked: Boolean = false) {
         hgPlayers.remove(hgPlayer)
 //        scoreboard.removePlayerFromTeam(name, playerTeam)
         hgPlayer.serverPlayer?.sendText {
-            text("You left the team ") { color = TEXT_GRAY }
+            text(if (kicked) "You were kicked from team " else "You left team ") { color = TEXT_GRAY }
             text(name) { color = TEXT_BLUE }
         }
 
         hgPlayers.forEach {
             it.serverPlayer?.sendText {
                 text(hgPlayer.name) { color = TEXT_BLUE }
-                text(" left your team") { color = TEXT_GRAY }
+                text(if (kicked) " was kicked from your team" else " left your team") { color = TEXT_GRAY }
             }
         }
 
         if (hgPlayers.size == 0) {
             delete()
-            hgPlayer.serverPlayer?.sendText("The team you left was deleted.") { color = TEXT_GRAY }
+            hgPlayer.serverPlayer?.sendText("The team you left was deleted") { color = TEXT_GRAY }
             return
         }
 

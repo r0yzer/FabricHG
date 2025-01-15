@@ -5,7 +5,10 @@ import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.game.teams.hgTeam
+import de.royzer.fabrichg.game.teams.isInTeam
 import de.royzer.fabrichg.util.isOP
+import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.setCustomName
@@ -24,7 +27,7 @@ fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
 
             val compound = compound(
                 (2 sl 2) rectTo (4 sl 8),
-                PlayerList.aliveOrGulagPlayers.sortedBy { it.kills }.toGuiList(),
+                PlayerList.aliveOrGulagPlayers.sortedByDescending { it.kills }.toGuiList(),
                 iconGenerator = { hgPlayer ->
                     val skull = Items.PLAYER_HEAD.defaultInstance
                     hgPlayer.serverPlayer?.let { skull.setSkullPlayer(it) }
@@ -37,19 +40,30 @@ fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
                         }
                         text(" Kills: " + hgPlayer.kills.toString()) { color = TEXT_BLUE }
                     }
-                    if (permitted) {
-                        skull.setLore(listOf(
-                            literalText {
-                                text(if (hgPlayer.kits.size == 1) "Kit: " else "Kits: ")
-                                text(hgPlayer.kits.joinToString()) {
-                                    color = TEXT_BLUE
-                                    bold = true
-                                }
-                                color = TEXT_GRAY
-                                italic = false
+                    val lore = mutableListOf<Component>()
+                    if (hgPlayer.isInTeam) {
+                        lore.add(literalText {
+                            text("Team: ")
+                            text(hgPlayer.hgTeam?.name.toString()) {
+                                color = TEXT_BLUE
+                                bold = true
                             }
-                        ))
+                            color = TEXT_GRAY
+                            italic = false
+                        })
                     }
+                    if (permitted) {
+                        lore.add(literalText {
+                            text(if (hgPlayer.kits.size == 1) "Kit: " else "Kits: ")
+                            text(hgPlayer.kits.joinToString()) {
+                                color = TEXT_BLUE
+                                bold = true
+                            }
+                            color = TEXT_GRAY
+                            italic = false
+                        })
+                    }
+                    skull.setLore(lore)
 
                     skull
                 },
