@@ -71,7 +71,7 @@ fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
                 onClick = { event, hgPlayer ->
                     val selectedPlayer = hgPlayer.serverPlayer ?: return@compound
                     val spectatorPlayer = event.player as? ServerPlayer ?: return@compound
-                    event.player.teleportTo(
+                    spectatorPlayer.teleportTo(
                         selectedPlayer.level() as ServerLevel,
                         selectedPlayer.x,
                         selectedPlayer.y,
