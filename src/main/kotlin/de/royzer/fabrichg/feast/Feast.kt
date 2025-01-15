@@ -13,7 +13,6 @@ import de.royzer.fabrichg.util.tracker
 import kotlinx.coroutines.Job
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Vec3i
-import net.minecraft.network.protocol.game.ClientboundSoundPacket
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.ItemStack
@@ -34,6 +33,13 @@ import kotlin.time.Duration.Companion.milliseconds
 
 // TODO
 object Feast {
+    /**
+     * If the feast platform has been generated
+     */
+    var spawned = false
+    /**
+     * If the feast chests have been generated
+     */
     var started = false
     var timeLeft = 300
 
@@ -43,10 +49,12 @@ object Feast {
 
     private var radius = 25
 
-    fun start() {
+    val feastBlockPositions = mutableListOf<BlockPos>()
+
+    fun spawn() {
         feastStrengthPotion // sonst ist null oder so
         server.playerList.players.forEach { it.sendPlayerStatus() }
-        started = true
+        spawned = true
         feastCenter = getRandomHighestPos(150)
         feastTimestamp = Instant.now().plusSeconds(timeLeft.toLong())
 
@@ -71,6 +79,7 @@ object Feast {
 
         feastCenter.produceFilledCirclePositions(radius) {
             server.overworld().setBlockAndUpdate(it, Blocks.GRASS_BLOCK.defaultBlockState())
+            feastBlockPositions.add(it)
         }
 
         feastJob =
@@ -88,14 +97,14 @@ object Feast {
                     })
 
                     0 -> {
-                        spawn()
+                        start()
                     }
                 }
                 timeLeft -= 1
             }
     }
 
-    fun spawn() {
+    fun start() {
         val world = server.overworld()
 
         world.setBlock(
@@ -131,7 +140,7 @@ object Feast {
                 }
             }
         }
-
+        started = true
     }
 }
 

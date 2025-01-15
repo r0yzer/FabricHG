@@ -38,14 +38,14 @@ val anchorKit = kit("Anchor") {
     description = "You and other players do not take knockback"
 
     onEnable { hgPlayer, kit, serverPlayer ->
-        if (!Feast.started) {
+        if (!Feast.spawned) {
             serverPlayer.inventory?.armor?.set(2, anchorAnvil.copy())
             serverPlayer.inventory?.armor?.set(3, anchorAnvil.copy())
         }
     }
 
     onDisable { hgPlayer, kit ->
-        if (!Feast.started) {
+        if (!Feast.spawned) {
             hgPlayer.serverPlayer?.inventory?.armor?.set(2, Items.AIR.defaultInstance)
             hgPlayer.serverPlayer?.inventory?.armor?.set(3, Items.AIR.defaultInstance)
         }
@@ -110,7 +110,7 @@ private fun Entity.applyAnchorKnockback(ci: CallbackInfo) {
 
 fun onAnchorJoin(serverPlayer: ServerPlayer) {
     if (serverPlayer.hgPlayer.hasKit(anchorKit)) {
-        if (Feast.started) {
+        if (Feast.spawned) {
             if (serverPlayer.inventory?.armor?.get(2) == anchorAnvil.copy()) {
                 serverPlayer.inventory?.armor?.set(2, Items.AIR.defaultInstance)
             }

@@ -97,7 +97,7 @@ class HGBot(
 
     private val sword: Item
         get() {
-            return if (Feast.started) {
+            return if (Feast.spawned) {
                 if (kills == 0) Items.IRON_SWORD
                 else Items.DIAMOND_SWORD
             } else {
@@ -112,7 +112,7 @@ class HGBot(
 
     val armor: List<ItemStack>
         get() {
-            return if (Feast.started) {
+            return if (Feast.spawned) {
                 if (kills == 0) listOf(air, Items.IRON_CHESTPLATE.defaultInstance, air, air)
                 if (kills == 2) listOf(Items.IRON_HELMET.defaultInstance, air, Items.IRON_LEGGINGS.defaultInstance, air)
                 if (kills == 3) listOf(
@@ -336,7 +336,7 @@ class HGBot(
 
     fun shouldWalkToFeast(): Boolean {
         if (target != null) return false
-        if (!Feast.started) return false
+        if (!Feast.spawned) return false
         if ((Instant.now().toEpochMilli() - (Feast.feastTimestamp?.toEpochMilli()
                 ?: Long.MAX_VALUE)) > 1000 * 60
         ) return false

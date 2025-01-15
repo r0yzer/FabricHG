@@ -58,6 +58,7 @@ dependencies {
 
 loom {
     serverOnlyMinecraftJar()
+    accessWidenerPath = file("src/main/resources/fabrichg.accessWidener")
 }
 
 tasks {
