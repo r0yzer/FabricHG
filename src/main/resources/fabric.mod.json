@@ -18,5 +18,6 @@
   },
   "mixins": [
     "mod.mixins.json"
-  ]
+  ],
+  "accessWidener": "fabrichg.accessWidener"
 }

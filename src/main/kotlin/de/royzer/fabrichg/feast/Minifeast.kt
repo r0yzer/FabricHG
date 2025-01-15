@@ -153,6 +153,7 @@ private fun clickFeastItemGift(itemStack: ItemStack, player: Player) {
     val lore = itemStack.get(DataComponents.LORE).toString() // TODO
     if (itemStack.displayName.string.contains("Feast item gift") && lore.contains("Item gift")) {
         val loot = feastLoot.get() ?: return
+        if (loot.shouldBeDamaged) loot.item.breakItem()
         val amount = Random.nextInt(1, loot.maxAmount + 1)
         player.inventory.removeItem(itemStack)
 

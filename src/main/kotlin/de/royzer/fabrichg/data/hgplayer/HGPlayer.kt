@@ -166,7 +166,7 @@ class HGPlayer(
         this.kits[index] = kit
         if (forbiddenKitCombinations.any { forbiddenKits ->
                 forbiddenKits.all { forbiddenKit -> this.kits.contains(forbiddenKit) }
-        } && !force) {
+            } && !force) {
             this.serverPlayer?.sendText {
                 text("This combination is not allowed") {
                     color = TEXT_GRAY
@@ -184,7 +184,7 @@ class HGPlayer(
         )
         if (GamePhaseManager.isIngame) {
             if (kit == surpriseKit) {
-                setKit(randomKit(), index, force=true)
+                setKit(randomKit(), index, force = true)
                 return
             }
             this.kits[index].onDisable?.invoke(this, this.kits[index])
@@ -213,9 +213,9 @@ class HGPlayer(
         get() {
             val combatTracker = serverPlayer?.combatTracker ?: return false
             val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
-            if(lastCombatEntry?.source?.entity is HGBot){
+            if (lastCombatEntry?.source?.entity is HGBot) {
                 val hgBot = lastCombatEntry.source?.entity as HGBot
-                (combatTracker as CombatTrackerAcessor).entries[(combatTracker as CombatTrackerAcessor).entries.size-1] =
+                (combatTracker as CombatTrackerAcessor).entries[(combatTracker as CombatTrackerAcessor).entries.size - 1] =
                     CombatEntry(
                         DamageSource(
                             Holder.direct<DamageType>(DamageType("player", 0.1f)),

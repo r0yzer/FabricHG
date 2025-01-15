@@ -161,7 +161,7 @@ public abstract class ServerPlayerMixin extends Player {
         if (source.is(DamageTypes.FALLING_STALACTITE)) {
             return amount * 0.5f;
         } else if (source.getEntity() instanceof ServerPlayer) {
-            double multiplier = 0.6;
+            double multiplier = 0.65;
             if (((ServerPlayer) source.getEntity()).getMainHandItem().getItem() == Items.TRIDENT) {
                 multiplier = 0.1;
             }

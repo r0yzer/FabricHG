@@ -54,6 +54,7 @@ val perfectKit = kit("Perfect") {
 
     kitEvents {
         onSoupEat { hgPlayer, kit, item ->
+            if (!hgPlayer.inFight) return@onSoupEat
             val serverPlayer = hgPlayer.serverPlayer ?: return@onSoupEat
             val streak = hgPlayer.getPlayerData<Int>(streakKey) ?: 0
 
@@ -69,7 +70,7 @@ val perfectKit = kit("Perfect") {
                 }
                 if ((streak + 1) % soupsForReward == 0) {
                     val soupsToBeAdded =
-                        round(sqrt(((streak + 1) / soupsForReward).toDouble() * 0.8)).toInt() + 1 // round(sqrt(x*0.8))+1 auf https://www.geogebra.org/calculator
+                        round(sqrt(((streak + 1) / soupsForReward).toDouble() * 0.8)).toInt()  // round(sqrt(x*0.8)) auf https://www.geogebra.org/calculator
                     repeat(soupsToBeAdded) {
                         serverPlayer.giveOrDropItem(perfectSoup)
                         serverPlayer.playNotifySound(SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.MASTER,1f, 1f)

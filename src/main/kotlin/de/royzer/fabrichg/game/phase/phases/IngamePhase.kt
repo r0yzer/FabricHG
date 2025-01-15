@@ -94,7 +94,7 @@ object IngamePhase : GamePhase() {
         }
 
         if (timer == feastStartTime) {
-            Feast.start()
+            Feast.spawn()
         }
 
         // nach 10 min normalerweise (config)
@@ -108,7 +108,7 @@ object IngamePhase : GamePhase() {
             }
         }
 
-        if (!Feast.started) {
+        if (!Feast.spawned) {
             PlayerList.alivePlayers.forEach {
                 val serverPlayer = it.serverPlayer ?: return@forEach
                 if (serverPlayer.recraft > maxRecraft) {

@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.mixins.server.network;
 
+import de.royzer.fabrichg.feast.Feast;
 import de.royzer.fabrichg.game.GamePhaseManager;
 import de.royzer.fabrichg.kit.events.kititem.invoker.OnDestroyBlockWithKitemKt;
 import de.royzer.fabrichg.kit.kits.GladiatorKitKt;
@@ -42,12 +43,18 @@ abstract public class ServerPlayerInteractionManagerMixin {
             ci.cancel();
             return;
         }
-        if (this.player.level().getBlockState(pos).getBlock() == Blocks.HONEY_BLOCK) { // dass darf godtrouyvs nicht rausfinden
+        if (this.player.level().getBlockState(pos).getBlock() == Blocks.HONEY_BLOCK) { // das darf godtrouyvs nicht rausfinden
             ci.cancel();
             return;
         }
         if (this.player.level().getBlockState(pos).getBlock() == Blocks.GLASS && GladiatorKitKt.getGladiatorBlockPositions().contains(pos)) {
             ci.cancel();
+            return;
+        }
+        if (this.player.level().getBlockState(pos).getBlock() == Blocks.GRASS_BLOCK && Feast.INSTANCE.getFeastBlockPositions().contains(pos)) {
+            if (!Feast.INSTANCE.getStarted()) {
+                ci.cancel();
+            }
             return;
         }
         if (TurtleKitKt.getShellBlocks().contains(pos)) {
