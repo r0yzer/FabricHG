@@ -9,6 +9,7 @@ import de.royzer.fabrichg.game.teams.hgTeam
 import de.royzer.fabrichg.game.teams.isInTeam
 import de.royzer.fabrichg.util.isOP
 import net.minecraft.network.chat.Component
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.item.setCustomName
@@ -67,7 +68,19 @@ fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
 
                     skull
                 },
-                onClick = { event, element ->
+                onClick = { event, hgPlayer ->
+                    val selectedPlayer = hgPlayer.serverPlayer ?: return@compound
+                    val spectatorPlayer = event.player as? ServerPlayer ?: return@compound
+                    event.player.teleportTo(
+                        selectedPlayer.level() as ServerLevel,
+                        selectedPlayer.x,
+                        selectedPlayer.y,
+                        selectedPlayer.z,
+                        setOf(),
+                        selectedPlayer.yRot,
+                        selectedPlayer.xRot
+                    )
+                    spectatorPlayer.closeContainer()
                 }
             )
 
