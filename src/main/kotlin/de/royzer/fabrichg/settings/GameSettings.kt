@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.settings
 
+import de.royzer.fabrichg.kit.kits.*
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -87,12 +88,13 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     var friendlyFire: Boolean = false,
     @EncodeDefault
     var forbiddenKitCombinations: List<List<String>> = listOf(
-        listOf("Anchor", "Urgal"), listOf("Gladiator", "Urgal"), listOf("Grappler", "Stomper"), listOf("Phantom", "Stomper"), listOf("Kangaroo", "Blink", "Phantom")
+        listOf(anchorKit.name, urgalKit.name), listOf(gladiatorKit.name, urgalKit.name), listOf(grapplerKit.name, stomperKit.name),
+        listOf(phantomKit.name, stomperKit.name), listOf(kangarooKit.name, blinkKit.name, phantomKit.name), listOf(switcherKit.name, demomanKit.name)
     ),
     @EncodeDefault
     var soupMode: SoupMode = SoupMode.EatAndDestroyBlock
 ) {
     override fun toString(): String {
-        return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage, maxRecraftBeforeFeast=$maxRecraftBeforeFeast, surpriseOnlyEnabledKits=$surpriseOnlyEnabledKits, teamsEnabled=$teamsEnabled, teamSize=$teamSize, invincibilityTime=$invincibilityTime, friendlyFire=$friendlyFire)"
+        return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage, maxRecraftBeforeFeast=$maxRecraftBeforeFeast, surpriseOnlyEnabledKits=$surpriseOnlyEnabledKits, teamsEnabled=$teamsEnabled, teamSize=$teamSize, invincibilityTime=$invincibilityTime, friendlyFire=$friendlyFire, soupMode=$soupMode)"
     }
 }
