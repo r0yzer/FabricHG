@@ -158,7 +158,7 @@ val feastStrengthPotion =
     )
 
 private val feastStrengthPotionItem = itemStack(Items.SPLASH_POTION) {
-    setPotion(Holder.direct(feastStrengthPotion))
+    setPotion(/*Holder.direct(feastStrengthPotion)*/Potions.STRENGTH)
     count = 1
 }
 
