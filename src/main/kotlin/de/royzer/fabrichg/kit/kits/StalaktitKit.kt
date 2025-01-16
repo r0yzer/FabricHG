@@ -1,9 +1,12 @@
 package de.royzer.fabrichg.kit.kits
 
+import de.royzer.fabrichg.TEXT_BLUE
+import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
+import de.royzer.fabrichg.game.teams.HGTeam
 import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
@@ -28,10 +31,12 @@ import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.PointedDripstoneBlock
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.DripstoneThickness
+import net.minecraft.world.scores.PlayerTeam
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
+import net.silkmc.silk.core.text.sendText
 import java.time.Instant
 import java.util.*
 import kotlin.random.Random
@@ -50,44 +55,17 @@ fun createDripstonePosMap(original: BlockPos, overPlayer: Int): Map<BlockPos, Bl
     )
 }
 
-
-
-fun ServerPlayer.sendChatPacket(from: HGPlayer, message: String, type: ResourceKey<ChatType>) { // junge buster bist du auf crack
-    val body = SignedMessageBody.Packed(
-        message,
-        Instant.now(),
-        Random.nextLong(0, Long.MAX_VALUE),
-        LastSeenMessages.Packed(listOf())
-    )
-    val chatType = ChatType.bind(type, from.serverPlayer ?: return)
-
-    connection.send(
-        ClientboundPlayerChatPacket(
-            from.uuid,
-            0,
-            null,
-            body,
-            null,
-            FilterMask.PASS_THROUGH,
-            chatType
-        )
-    )
-}
-
-const val STALAKTIT_MESSAGE_SALT: Long = -53
-
-// kein plan ob das geht
-fun ServerPlayer.sendMessage(message: String) {
-    val salt = STALAKTIT_MESSAGE_SALT
-    val timestamp = Instant.now()
-    val tracker = LastSeenMessagesTracker(20)
-    val update = tracker.generateAndApplyUpdate()
-    val encoder = SignedMessageChain.Encoder.UNSIGNED
-    val signature = encoder.pack(SignedMessageBody(message, timestamp, salt, update.lastSeen))
-
-    connection.handleChat(ServerboundChatPacket(
-        message, timestamp, salt, signature, update.update
-    ))
+fun ServerPlayer.sendHGLaborChatMessage(from: ServerPlayer, message: String, team: HGTeam? = null) {
+    // nah genug
+    sendText {
+        if (team != null) {
+            text(team.name) { color = TEXT_BLUE }
+            text(" | ") { color = TEXT_GRAY }
+        }
+        text(from.name.string) { color = TEXT_BLUE }
+        text(" » ") { color = TEXT_GRAY }
+        text(message)
+    }
 }
 
 val stalaktitKit = kit("Stalaktit") {
@@ -129,14 +107,14 @@ val stalaktitKit = kit("Stalaktit") {
             }
 
             if (clickedPlayer != null) {
-                //clickedPlayer.sendChatPacket(hgPlayer, messageToPlayer, ChatType.MSG_COMMAND_INCOMING)
-                clickedPlayer.sendMessage(messageFromPlayer)
+                clickedPlayer.sendHGLaborChatMessage(player, messageToPlayer)
 
 
-                //PlayerList.players.forEach { (_, hgPlayer) ->
-                //    if (hgPlayer.uuid == entity.uuid) return@forEach;
-                //    hgPlayer.serverPlayer?.sendChatPacket(clickedPlayer.hgPlayer, messageFromPlayer, ChatType.CHAT)
-                //}
+                PlayerList.players.forEach { (_, hgPlayer) ->
+                    if (hgPlayer.uuid == clickedPlayer.uuid) return@forEach
+
+                    hgPlayer.serverPlayer?.sendHGLaborChatMessage(clickedPlayer, messageFromPlayer)
+                }
             }
 
             stalaktitSpawnerAchievement.awardLater(player, dripstoneCount)
@@ -145,7 +123,7 @@ val stalaktitKit = kit("Stalaktit") {
                     this.coroutineContext.cancel()
                     return@mcCoroutineTask
                 }
-                Items.POINTED_DRIPSTONE
+
                 val dripstoneHeight = dripstoneHigherBy
                 val overPos = entity.onPos.higherBy(dripstoneHeight + 1)
                 val blockMap = createDripstonePosMap(entity.onPos, dripstoneHeight)

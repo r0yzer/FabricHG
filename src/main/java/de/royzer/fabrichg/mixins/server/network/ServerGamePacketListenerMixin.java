@@ -1,5 +1,10 @@
 package de.royzer.fabrichg.mixins.server.network;
 
+import de.royzer.fabrichg.commands.TeamChatCommandKt;
+import de.royzer.fabrichg.data.hgplayer.HGPlayer;
+import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
+import de.royzer.fabrichg.game.teams.HGTeam;
+import de.royzer.fabrichg.game.teams.TeamsKt;
 import de.royzer.fabrichg.kit.kits.StalaktitKitKt;
 import de.royzer.fabrichg.mixinskt.ServerGamePacketListenerMixinKt;
 import de.royzer.fabrichg.mixinskt.SoupHealingKt;
@@ -60,20 +65,14 @@ public abstract class ServerGamePacketListenerMixin
 
     // neimals geht das auf hglabor
     @Inject(method = "handleChat", at = @At("HEAD"), cancellable = true)
-    public void stalaktitChat(ServerboundChatPacket packet, CallbackInfo ci) {
-        if (packet.salt() != StalaktitKitKt.STALAKTIT_MESSAGE_SALT) return;
+    public void teamChat(ServerboundChatPacket packet, CallbackInfo ci) {
+        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(player);
+        HGTeam hgTeam = TeamsKt.getHgTeam(hgPlayer);
 
-        this.tryHandleChat(packet.message(), () -> {
-            PlayerChatMessage playerChatMessage = PlayerChatMessage.unsigned(getPlayer().getUUID(), packet.message());
+        if (hgTeam == null) return;
+        if (!hgPlayer.getTeamChat()) return;
 
-            CompletableFuture<FilteredText> filteredTextPacket = this.filterTextPacket(playerChatMessage.signedContent());
-            Component decoratedMessage = this.server.getChatDecorator().decorate(this.player, playerChatMessage.decoratedContent());
-            this.chatMessageChain.append(filteredTextPacket, filteredText -> {
-                PlayerChatMessage playerChatMessageWithUnsignedContent = playerChatMessage.withUnsignedContent(decoratedMessage).filter(filteredText.mask());
-                this.broadcastChatMessage(playerChatMessageWithUnsignedContent);
-            });
-        });
-
+        TeamChatCommandKt.sendTeamMessage(player, packet.message());
 
         ci.cancel();
     }

@@ -85,6 +85,7 @@ fun registerCommands() {
     invCommand
     teamCommand // wird nicht registriert hier registrierung in ConfigManager
     gueldemuerCommand
+    teamChatCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?
