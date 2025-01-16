@@ -8,6 +8,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.combatlog.maxOfflineTime
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.teams.hgTeam
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.achievements.PlayerAchievementDto
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
@@ -53,6 +54,25 @@ class HGPlayer(
 
     var achievements: List<PlayerAchievementDto> = listOf()
     var kitInfos = mutableListOf<Component>()
+    var teamChat: Boolean = false
+        set(value) {
+            serverPlayer?.sendText {
+                color = TEXT_GRAY
+
+                if (value) {
+                    text("You are now using the team chat")
+                    hgTeam?.let {
+                        text(" (")
+                        text(it.name) { color = TEXT_BLUE }
+                        text(")")
+                    }
+
+                } else {
+                    text("You are now using the global chat")
+                }
+            }
+            field = value
+        }
 
     val playerData = mutableMapOf<String, Any?>()
 
