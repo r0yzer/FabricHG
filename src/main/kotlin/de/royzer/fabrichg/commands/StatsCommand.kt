@@ -15,7 +15,11 @@ import net.silkmc.silk.core.text.sendText
 
 fun <T> ArgumentCommandBuilder<CommandSourceStack, T>.suggestsListFiltering(block: CommandContext<CommandSourceStack>.() -> List<T>) {
     suggestList { context ->
-        context.block().filter { listItem -> listItem.toString().contains(context.input.split(" ").last(), true) } // das ist bisschen kacke weil das ncith richtig das string argumet macht mit "brain busting" und so aber egal
+        val filtered = context.block().filter { listItem -> listItem.toString().contains(context.input.split(" ").last(), true) }
+        filtered.map {
+            val string = it.toString()
+            if (string.contains(" ")) """"$string"""" else string
+        }
     }
 }
 
