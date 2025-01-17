@@ -92,9 +92,11 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
         listOf(phantomKit.name, stomperKit.name), listOf(kangarooKit.name, blinkKit.name, phantomKit.name), listOf(switcherKit.name, demomanKit.name)
     ),
     @EncodeDefault
-    var soupMode: SoupMode = SoupMode.EatAndDestroyBlock
+    var soupMode: SoupMode = SoupMode.EatAndDestroyBlock,
+    @EncodeDefault
+    var crossteamingAllowed: Boolean = false,
 ) {
     override fun toString(): String {
-        return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage, maxRecraftBeforeFeast=$maxRecraftBeforeFeast, surpriseOnlyEnabledKits=$surpriseOnlyEnabledKits, teamsEnabled=$teamsEnabled, teamSize=$teamSize, invincibilityTime=$invincibilityTime, friendlyFire=$friendlyFire, soupMode=$soupMode)"
+        return "GameSettings(minPlayers=$minPlayers, maxIngameTime=$maxIngameTime, feastStartTime=$feastStartTime, minifeastEnabled=$minifeastEnabled, mushroomCowNerf=$mushroomCowNerf, kitAmount=$kitAmount, pitEnabled=$pitEnabled, pitStartTime=$pitStartTime, gulagEnabled=$gulagEnabled, achievementsEnabled=$achievementsEnabled, gulagEndTime=$gulagEndTime, minPlayersOutsideGulag=$minPlayersOutsideGulag, critDamage=$critDamage, maxRecraftBeforeFeast=$maxRecraftBeforeFeast, surpriseOnlyEnabledKits=$surpriseOnlyEnabledKits, teamsEnabled=$teamsEnabled, teamSize=$teamSize, invincibilityTime=$invincibilityTime, friendlyFire=$friendlyFire, soupMode=$soupMode, crossteamingAllowed=$crossteamingAllowed)"
     }
 }

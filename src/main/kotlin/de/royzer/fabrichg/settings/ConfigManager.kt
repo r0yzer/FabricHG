@@ -67,6 +67,7 @@ object ConfigManager {
         gameSettings.friendlyFire = gameConfigData.friendlyFire
         gameSettings.forbiddenKitCombinations = gameConfigData.forbiddenKitCombinations
         gameSettings.soupMode = gameConfigData.soupMode
+        gameSettings.crossteamingAllowed = gameConfigData.crossteamingAllowed
 
         if (gameSettings.teamsEnabled) {
             teamCommand.setupRegistrationCallback()
