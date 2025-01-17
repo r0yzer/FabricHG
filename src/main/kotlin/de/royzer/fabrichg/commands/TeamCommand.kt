@@ -4,8 +4,10 @@ import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.TEXT_GREEN
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.teams.*
+import de.royzer.fabrichg.settings.ConfigManager
 import net.minecraft.commands.arguments.EntityArgument
 import net.minecraft.network.chat.ClickEvent
 import net.minecraft.network.chat.HoverEvent
@@ -21,6 +23,12 @@ val teamCommand = command("team") {
         argument<String>("name") { _name ->
             runs {
                 val player = source.player ?: return@runs
+                if (!ConfigManager.gameSettings.crossteamingAllowed) {
+                    if (!GamePhaseManager.isNotInPvpPhase) {
+                        player.sendText("Crossteaming is disabled") { color = TEXT_GRAY }
+                        return@runs
+                    }
+                }
                 val hgPlayer = player.hgPlayer
                 if (hgPlayer.isInTeam) {
                     player.sendText("You are already in a team") { color = TEXT_GRAY }
@@ -52,6 +60,12 @@ val teamCommand = command("team") {
         argument("player", EntityArgument.player()) { player ->
             runs {
                 val inviter = source.player ?: return@runs
+                if (!ConfigManager.gameSettings.crossteamingAllowed) {
+                    if (!GamePhaseManager.isNotInPvpPhase) {
+                        inviter.sendText("Crossteaming is disabled") { color = TEXT_GRAY }
+                        return@runs
+                    }
+                }
                 val invitedPlayer = player(this).findPlayers(this.source).first() ?: return@runs
                 val team: HGTeam = inviter.hgPlayer.hgTeam ?: return@runs
                 invitedPlayer.sendText {
@@ -84,6 +98,12 @@ val teamCommand = command("team") {
             }
 
             runs {
+                if (!ConfigManager.gameSettings.crossteamingAllowed) {
+                    if (!GamePhaseManager.isNotInPvpPhase) {
+                        source.player?.sendText("Crossteaming is disabled") { color = TEXT_GRAY }
+                        return@runs
+                    }
+                }
                 val hgPlayer = source.player?.hgPlayer ?: return@runs
                 if (hgPlayer.isInTeam) {
                     source.player?.sendText("You are already in a team") { color = TEXT_GRAY }
