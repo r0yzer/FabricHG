@@ -33,10 +33,4 @@ val teamChatCommand = command("tchat") {
             serverPlayer.sendTeamMessage(message)
         }
     }
-
-    runs {
-        val hgPlayer = source.player?.hgPlayer ?: return@runs
-
-        hgPlayer.teamChat = !hgPlayer.teamChat
-    }
 }
