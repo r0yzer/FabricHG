@@ -299,16 +299,16 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     collection.add(GamblerAction("Helm") {
         it.inventory.armor[3] = Items.IRON_HELMET.defaultInstance
     }, 0.1)
-    collection.add(GamblerAction("5 Sekunden fly") {
-        it.abilities.mayfly = true
-        it.connection.send(ClientboundPlayerAbilitiesPacket(it.abilities))
-        mcCoroutineTask(delay = 5.seconds) { _ ->
-            if (it != null) {
-                it.abilities.mayfly = false
-                it.connection.send(ClientboundPlayerAbilitiesPacket(it.abilities))
-            }
-        }
-    }, 0.1)
+//    collection.add(GamblerAction("5 Sekunden fly") {
+//        it.abilities.mayfly = true
+//        it.connection.send(ClientboundPlayerAbilitiesPacket(it.abilities))
+//        mcCoroutineTask(delay = 5.seconds) { _ ->
+//            if (it != null) {
+//                it.abilities.mayfly = false
+//                it.connection.send(ClientboundPlayerAbilitiesPacket(it.abilities))
+//            }
+//        }
+//    }, 0.1)
     collection.add(GamblerAction("End crystal") {
         it.giveOrDropItem(itemStack(Items.END_CRYSTAL, 1) {})
         it.giveOrDropItem(itemStack(Items.OBSIDIAN, 1) {})
