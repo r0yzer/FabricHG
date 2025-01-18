@@ -48,18 +48,23 @@ object PlayerList {
     fun announcePlayerDeath(deadPlayer: HGPlayer, source: DamageSource, killer: Entity?, gulag: Boolean = false) {
         val sourceKiller = source.entity
 
-        val deathMessage = literalText { "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})" } //Player(Kit)
-        if(killer != null) {
+        val deathMessage =
+            literalText { "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})" } //Player(Kit)
+        if (killer != null) {
             deathMessage.append(" was killed by ${killer.name.string}") //Player(Kit) was killed by Killer
-            if(killer == sourceKiller && killer is ServerPlayer || killer is HGBot) {
+            if (killer == sourceKiller && killer is ServerPlayer || killer is HGBot) {
                 deathMessage.append("(${killer.hgPlayer?.kits?.joinToString { it.name }})") //Player(Kit) was killed by Killer(Kit)
                 val itemName = (killer as LivingEntity).mainHandItem?.item.toString().uppercase()
                 deathMessage.append(" using $itemName") //Player(Kit) was killed by Killer(Kit) using IRON_AXE
             }
         } else {
-            //KA ob das simpel sein soll wie in der originalen impl, aber das hier wäre standard death message aber mit Player(Kit) statt Player
             deathMessage.siblings.removeLast()
-            deathMessage.append(Component.translatable("death.attack.${source.msgId}.player", "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})"))
+            deathMessage.append(
+                Component.translatable(
+                    "death.attack.${source.msgId}.player",
+                    "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})"
+                )
+            )
         }
 
         broadcastComponent(deathMessage.withColor(TEXT_YELLOW_CHAT))
