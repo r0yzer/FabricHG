@@ -117,13 +117,12 @@ fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
     inventory.clearContent()
 }
 
-fun ServerPlayer.sendEntityDataUpdate(forEntity: LivingEntity, changeFlag: Int? = null, changeValue: Boolean? = null, force: Boolean = false) {
+fun ServerPlayer.sendEntityDataUpdate(forEntity: LivingEntity, changeFlag: Int? = null, changeValue: Boolean? = null) {
     val entityData = forEntity.entityData ?: return
     val forEntityAccessor = forEntity as EntityAcessor
     val beforeFlag = changeFlag?.let { forEntity.getBrainBusting(it) }
 
     if (changeFlag != null && changeValue != null) {
-        if (force) forEntityAccessor.setBrainBusting(changeFlag, !changeValue)
         forEntityAccessor.setBrainBusting(changeFlag, changeValue)
     }
 

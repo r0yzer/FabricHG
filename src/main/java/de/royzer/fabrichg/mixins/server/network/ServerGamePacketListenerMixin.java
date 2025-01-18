@@ -63,21 +63,6 @@ public abstract class ServerGamePacketListenerMixin
         ServerGamePacketListenerMixinKt.INSTANCE.onClickSlot(packet, player, ci);
     }
 
-    // neimals geht das auf hglabor
-    @Inject(method = "handleChat", at = @At("HEAD"), cancellable = true)
-    public void teamChat(ServerboundChatPacket packet, CallbackInfo ci) {
-        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(player);
-        HGTeam hgTeam = TeamsKt.getHgTeam(hgPlayer);
-
-        if (hgTeam == null) return;
-        if (!hgPlayer.getTeamChat()) return;
-
-        TeamChatCommandKt.sendTeamMessage(player, packet.message());
-
-        ci.cancel();
-    }
-
-
     @Inject(method = "handlePlayerAction", at = @At("HEAD"), cancellable = true)
     public void handleStartBlockBreak(ServerboundPlayerActionPacket packet, CallbackInfo ci) {
         if (ConfigManager.INSTANCE.getGameSettings().getSoupMode() != SoupMode.EatAndDestroyBlock) return;

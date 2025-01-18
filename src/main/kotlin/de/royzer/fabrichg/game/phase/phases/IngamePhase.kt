@@ -12,17 +12,12 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
-import de.royzer.fabrichg.game.teams.hgTeam
 import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.kit.achievements.AchievementManager
-import de.royzer.fabrichg.mixins.entity.EntityAcessor
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
 import de.royzer.fabrichg.util.recraft
-import de.royzer.fabrichg.util.sendEntityDataUpdate
-import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
-import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.effect.MobEffectInstance

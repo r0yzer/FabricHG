@@ -52,7 +52,7 @@ object GamePhaseManager {
                 player.serverPlayer?.let {
                     val hasGlowingEffect = it.hasEffect(MobEffects.GLOWING)
 
-                    serverPlayer.sendEntityDataUpdate(it, 6, hasGlowingEffect, force=true)
+                    serverPlayer.sendEntityDataUpdate(it, 6, hasGlowingEffect)
                 }
             }
 
