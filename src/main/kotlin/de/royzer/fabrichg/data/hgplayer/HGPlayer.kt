@@ -54,25 +54,6 @@ class HGPlayer(
 
     var achievements: List<PlayerAchievementDto> = listOf()
     var kitInfos = mutableListOf<Component>()
-    var teamChat: Boolean = false
-        set(value) {
-            serverPlayer?.sendText {
-                color = TEXT_GRAY
-
-                if (value) {
-                    text("You are now using the team chat")
-                    hgTeam?.let {
-                        text(" (")
-                        text(it.name) { color = TEXT_BLUE }
-                        text(")")
-                    }
-
-                } else {
-                    text("You are now using the global chat")
-                }
-            }
-            field = value
-        }
 
     val playerData = mutableMapOf<String, Any?>()
 
