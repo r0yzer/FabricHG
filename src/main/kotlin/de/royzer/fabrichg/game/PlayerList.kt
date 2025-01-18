@@ -53,12 +53,8 @@ object PlayerList {
             deathMessage.append(" was killed by ${killer.name.string}") //Player(Kit) was killed by Killer
             if(killer == sourceKiller && killer is ServerPlayer || killer is HGBot) {
                 deathMessage.append("(${killer.hgPlayer?.kits?.joinToString { it.name }})") //Player(Kit) was killed by Killer(Kit)
-                val mainHandItem = (killer as LivingEntity).mainHandItem?.item
-                val key = mainHandItem?.descriptionId
-                if(key != null) {
-                    deathMessage.append(" using ")
-                    deathMessage.append(Component.translatable(key)) //Player(Kit) was killed by Killer(Kit) using Translated Item
-                }
+                val itemName = (killer as LivingEntity).mainHandItem?.item.toString().uppercase()
+                deathMessage.append(" using $itemName") //Player(Kit) was killed by Killer(Kit) using IRON_AXE
             }
         } else {
             //KA ob das simpel sein soll wie in der originalen impl, aber das hier wäre standard death message aber mit Player(Kit) statt Player
