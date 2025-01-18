@@ -4,6 +4,7 @@ import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.game.teams.hgTeam
+import de.royzer.fabrichg.kit.kits.demomanKit
 import de.royzer.fabrichg.util.sendEntityDataUpdate
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.Component
@@ -42,6 +43,7 @@ object GamePhaseManager {
                 logError(e.stackTrace)
             }
         }
+        demomanKit.enabled = false
     }
 
     private fun tick() {
