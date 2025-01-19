@@ -432,7 +432,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         }
 
         LecternBlock.tryPlaceBook(it, it.world, it.blockPos, blockState, book)
-    }, 110.15)
+    }, 0.15)
     collection.add(GamblerAction("Inventory clear") {
         it.inventory.clearContent()
         it.hgPlayer.giveKitItems()
