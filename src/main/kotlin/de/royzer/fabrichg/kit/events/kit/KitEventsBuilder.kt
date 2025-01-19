@@ -47,8 +47,11 @@ class KitEventsBuilder(val kit: Kit) {
         kit.events.soupEatAction = action
     }
 
-    fun onKillPlayer(action: (HGPlayer, Kit, killed: ServerPlayer) -> Unit) {
+    fun onKillPlayer(ignoreCooldown: Boolean = false, action: (HGPlayer, Kit, killed: ServerPlayer) -> Unit) {
         kit.events.killPlayerAction = action
+        if (ignoreCooldown) {
+            kit.events.noCooldownActions.add(action)
+        }
     }
 
     fun onKillEntity(ignoreCooldown: Boolean = false, action: (HGPlayer, Kit, killed: Entity) -> Unit) {

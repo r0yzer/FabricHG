@@ -35,7 +35,7 @@ object ServerPlayerEntityMixinKt {
             cir.returnValue = false
             return
         }
-        serverPlayerEntity.hgPlayer.kits.forEach { kit ->
+        serverPlayerEntity.hgPlayer.allKits.forEach { kit ->
             if (stack.item in kit.kitItems.filterNot { it.droppable }.map { it.itemStack.item } && stack.isKitItem) {
                 serverPlayerEntity.sendPlayerStatus()
                 cir.returnValue = false
@@ -57,7 +57,7 @@ object ServerPlayerEntityMixinKt {
             serverPlayerEntity.inventory.add(droppedItem)
             return
         }
-        serverPlayerEntity.hgPlayer.kits.forEach { kit ->
+        serverPlayerEntity.hgPlayer.allKits.forEach { kit ->
             if (stack.item in kit.kitItems.filterNot { it.droppable }.map { it.itemStack.item } && stack.isKitItem) {
                 serverPlayerEntity.sendPlayerStatus()
                 cir.returnValue = null

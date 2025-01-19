@@ -10,7 +10,7 @@ import net.minecraft.world.item.context.UseOnContext
 fun onUseOnBlock(player: Player, context: UseOnContext) {
     val serverPlayerEntity = player as? ServerPlayer ?: return
     val hgPlayer = serverPlayerEntity.hgPlayer
-    hgPlayer.kits.forEach { kit ->
+    hgPlayer.allKits.forEach { kit ->
         if (context.itemInHand.isKitItemOf(kit)) {
             kit.kitItems.forEach { kitItem ->
                 if (kitItem.itemStack.item == context.itemInHand.item) {

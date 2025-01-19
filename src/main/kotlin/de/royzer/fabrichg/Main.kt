@@ -86,6 +86,7 @@ fun registerCommands() {
     gueldemuerCommand
     teamChatCommand
     hgplayerRemoveCommand
+    banditKitCommand
 }
 
 fun ServerPlayer.sendPlayerStatus() = GamePhaseManager.server.playerList.sendAllPlayerInfo(this) // ?

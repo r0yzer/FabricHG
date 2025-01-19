@@ -55,8 +55,8 @@ fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
                     }
                     if (permitted) {
                         lore.add(literalText {
-                            text(if (hgPlayer.kits.size == 1) "Kit: " else "Kits: ")
-                            text(hgPlayer.kits.joinToString()) {
+                            text(if (hgPlayer.allKits.size == 1) "Kit: " else "Kits: ")
+                            text(hgPlayer.allKits.joinToString()) {
                                 color = TEXT_BLUE
                                 bold = true
                             }

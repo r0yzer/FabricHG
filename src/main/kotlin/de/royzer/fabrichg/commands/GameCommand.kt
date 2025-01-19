@@ -24,7 +24,7 @@ val gameCommand = command("game") {
                 newLine()
                 text("Kills: ${hgPlayer.kills}") { color = TEXT_GRAY }
                 newLine()
-                text("Kit(s): ${hgPlayer.kits.joinToString(",", postfix = "")}") { color = TEXT_GRAY }
+                text("Kit(s): ${hgPlayer.allKits.joinToString(",", postfix = "")}") { color = TEXT_GRAY }
             }
         )
     }

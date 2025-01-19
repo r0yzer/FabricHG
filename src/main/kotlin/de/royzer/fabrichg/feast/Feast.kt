@@ -70,7 +70,7 @@ object Feast {
         }
 
         PlayerList.players.forEach { e ->
-            e.value.kits.forEach {
+            e.value.allKits.forEach {
                 if (it.name == "Anchor") {
                     e.value.serverPlayer?.inventory?.armor?.set(2, Items.AIR.defaultInstance)
                     e.value.serverPlayer?.inventory?.armor?.set(3, Items.AIR.defaultInstance)

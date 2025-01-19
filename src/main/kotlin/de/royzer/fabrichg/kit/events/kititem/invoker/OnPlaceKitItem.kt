@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 fun onPlace(context: BlockPlaceContext, cir: CallbackInfoReturnable<InteractionResult>) {
     val serverPlayerEntity = (context.player as? ServerPlayer) ?: return
 
-    serverPlayerEntity.hgPlayer.kits.forEach { kit ->
+    serverPlayerEntity.hgPlayer.allKits.forEach { kit ->
         if (context.itemInHand.isKitItemOf(kit)) {
             cir.returnValue = InteractionResult.PASS
 

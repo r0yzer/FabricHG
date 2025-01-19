@@ -13,10 +13,7 @@ import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.achievements.PlayerAchievementDto
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.forbiddenKitCombinations
-import de.royzer.fabrichg.kit.kits.backupKit
-import de.royzer.fabrichg.kit.kits.neoKit
-import de.royzer.fabrichg.kit.kits.noneKit
-import de.royzer.fabrichg.kit.kits.surpriseKit
+import de.royzer.fabrichg.kit.kits.*
 import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
 import de.royzer.fabrichg.settings.ConfigManager
@@ -46,6 +43,14 @@ class HGPlayer(
     var kills: Int = 0
     var offlineTime = maxOfflineTime
     val kits = mutableListOf<Kit>()
+    val allKits: List<Kit>
+        get() {
+            val allKits = mutableListOf(*kits.toTypedArray())
+
+            getPlayerData<Kit>(BANDIT_KIT_KEY)?.let { allKits.add(it) }
+
+            return allKits
+        }
     var stats: Stats = Stats(uuid.toString())
         set(value) {
             field = value
@@ -71,7 +76,7 @@ class HGPlayer(
     /**
      * @return True if player has kit, even if currently not useable
      */
-    fun hasKit(kit: Kit) = kit in kits
+    fun hasKit(kit: Kit) = kit in allKits
 
     /**
      * @return True if player has kit and kit is currently useable
@@ -97,7 +102,7 @@ class HGPlayer(
      */
     fun giveKitItems(singleKit: Kit? = null) {
         if (singleKit == null) {
-            kits.forEach { kit ->
+            allKits.forEach { kit ->
                 kit.kitItems.forEach { item ->
                     serverPlayer?.forceGiveItem(item.itemStack.copy().also {
                         it.setLore(listOf(literalText("Kititem")))
