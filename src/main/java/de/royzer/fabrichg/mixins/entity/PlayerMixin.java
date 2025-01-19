@@ -1,10 +1,14 @@
 package de.royzer.fabrichg.mixins.entity;
 
+import de.royzer.fabrichg.data.hgplayer.HGPlayer;
+import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.game.GamePhaseManager;
 import de.royzer.fabrichg.game.phase.PhaseType;
+import de.royzer.fabrichg.gulag.GulagManager;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnAttackEntityKt;
 import de.royzer.fabrichg.kit.events.kit.invoker.OnSneakKt;
 import de.royzer.fabrichg.settings.ConfigManager;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -107,12 +111,13 @@ public abstract class PlayerMixin extends LivingEntity {
         }
     }
 
-    @Inject(method = "interactOn", at = @At("HEAD"), cancellable = true)
-    public void cancelChestInteraction(Entity entityToInteractOn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
-        // geht nicht kp
-        if (GamePhaseManager.INSTANCE.getCurrentPhaseType() == PhaseType.LOBBY) {
-            cir.setReturnValue(InteractionResult.PASS);
-            cir.cancel();
-        }
+    @Inject(method = "canInteractWithBlock", at = @At("HEAD"), cancellable = true)
+    public void disallowBlockInteractions(BlockPos pos, double distance, CallbackInfoReturnable<Boolean> cir) {
+        if (GamePhaseManager.INSTANCE.getCurrentPhaseType() == PhaseType.LOBBY) cir.setReturnValue(false);
+
+        HGPlayer hgPlayer = HGPlayerKt.getHgPlayer(this);
+        if (hgPlayer == null) return;
+
+        if (GulagManager.INSTANCE.isInGulag(hgPlayer)) cir.setReturnValue(false);
     }
 }

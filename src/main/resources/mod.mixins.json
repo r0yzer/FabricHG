@@ -46,6 +46,7 @@
     "server.level.TrackedEntityAccessor",
     "server.level.block.MushroomBlockMixin",
     "server.network.ServerGamePacketListenerMixin",
+    "server.network.SynchedEntityDataAccessor",
     "world.ResultSlotMixin",
     "world.block.PressurePlateMixin"
   ]

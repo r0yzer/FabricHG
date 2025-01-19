@@ -66,10 +66,11 @@ class KitBuilder(val kit: Kit) {
         kit.kitItems.add(kitItem)
     }
 
-    fun kitItem(itemStack: ItemStack = Items.BARRIER.defaultInstance, builder: KitItemBuilder.() -> Unit) {
-        val kitItem = KitItem(itemStack)
+    fun kitItem(itemStack: ItemStack = Items.BARRIER.defaultInstance, builder: KitItemBuilder.() -> Unit): KitItem {
+        val kitItem = KitItem(itemStack, kit)
         kitItem.apply { KitItemBuilder(kitItem).apply(builder) }
         addKitItem(kitItem)
+        return kitItem
     }
 
     fun onDisable(action: (hgPlayer: HGPlayer, kit: Kit) -> Unit) {

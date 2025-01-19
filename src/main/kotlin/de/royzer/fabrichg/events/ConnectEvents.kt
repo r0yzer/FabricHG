@@ -2,6 +2,7 @@ package de.royzer.fabrichg.events
 
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
+import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.data.hgplayer.HGPlayerStatus
 import de.royzer.fabrichg.data.hgplayer.giveKitSelectors
@@ -43,6 +44,12 @@ object ConnectEvents {
 
             if (player is FakeServerPlayer) {
                 return@register
+            }
+
+            val isHgBot = player.stringUUID == HGBot.HGBOT_UUID
+
+            if (isHgBot) {
+                player.attributes.getInstance(Attributes.ENTITY_INTERACTION_RANGE)?.baseValue = 2.9 // kp die haben so grosse range
             }
 
             val uuid = player.uuid

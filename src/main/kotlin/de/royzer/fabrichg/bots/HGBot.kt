@@ -39,6 +39,7 @@ import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.time.Instant
+import java.util.UUID
 import kotlin.time.Duration.Companion.milliseconds
 
 
@@ -51,6 +52,9 @@ class HGBot(
     private val range: Double = 1.5,
     val serverPlayer: FakeServerPlayer
 ) : Zombie(world) {
+    companion object {
+        const val HGBOT_UUID = "ac846f00-1622-4f7e-98ce-7c90c57ab47a"
+    }
 
     init {
         serverPlayer.hgBot = this

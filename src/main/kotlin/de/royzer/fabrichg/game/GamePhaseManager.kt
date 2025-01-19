@@ -13,7 +13,9 @@ import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.level.GameRules
+import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.logging.logError
+import net.silkmc.silk.core.task.infiniteMcCoroutineTask
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.util.concurrent.atomic.AtomicInteger
@@ -33,16 +35,20 @@ object GamePhaseManager {
         server.overworld().dayTime = 0
         server.overworld().worldBorder.size = 1000.0
         currentPhase.init()
-        mcCoroutineTask(howOften = Long.MAX_VALUE, period = 1000.milliseconds, delay = 0.milliseconds) {
+        infiniteMcCoroutineTask(period = 1000.milliseconds, delay = 0.milliseconds) {
             try {
                 currentPhase.tick(timer.getAndIncrement())
-                tick()
             } catch (e: Exception) {
                 broadcastComponent("error: $e wird ignoriert".literal)
                 logError(e)
                 logError(e.stackTrace)
             }
         }
+
+        infiniteMcCoroutineTask(period = 1.ticks) {
+            tick() // hoffe das geht von performance her das fixt bisschen dass man oft fast 1 sekunde nicht leuchtet
+        }
+
         demomanKit.enabled = false
     }
 
