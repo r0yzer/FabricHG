@@ -31,6 +31,7 @@ val banditKitCommand = command("banditKit") {
             kitToGive.onEnable?.invoke(hgPlayer, kitToGive, source.playerOrException)
             hgPlayer.giveKitItems(kitToGive)
 
+            hgPlayer.getPlayerData<Kit>(BANDIT_KIT_KEY)?.let { it.onDisable?.invoke(hgPlayer, it) }
             hgPlayer.playerData[BANDIT_KIT_KEY] = kitToGive
 
             hgPlayer.activateCooldown(banditKit)
