@@ -48,14 +48,14 @@ object PlayerList {
     fun announcePlayerDeath(deadPlayer: HGPlayer, source: DamageSource, killer: Entity?, gulag: Boolean = false) {
         val sourceKiller = source.entity
 
-        val deathMessage =
-            literalText { "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})" } //Player(Kit)
+        val deathMessage = Component.literal("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})") //Player(Kit)
         if (killer != null) {
             deathMessage.append(" was killed by ${killer.name.string}") //Player(Kit) was killed by Killer
             if (killer == sourceKiller && killer is ServerPlayer || killer is HGBot) {
                 deathMessage.append("(${killer.hgPlayer?.kits?.joinToString { it.name }})") //Player(Kit) was killed by Killer(Kit)
-                val itemName = (killer as LivingEntity).mainHandItem?.item.toString().uppercase()
-                deathMessage.append(" using $itemName") //Player(Kit) was killed by Killer(Kit) using IRON_AXE
+                val mainHandItem = (killer as ServerPlayer).mainHandItem
+                val itemName = mainHandItem?.item.toString().uppercase()
+                if(mainHandItem != null && !mainHandItem.isEmpty) deathMessage.append(" using $itemName") //Player(Kit) was killed by Killer(Kit) using IRON_AXE
             }
         } else {
             deathMessage.siblings.removeLast()
