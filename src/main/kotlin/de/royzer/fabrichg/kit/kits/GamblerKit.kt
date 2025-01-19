@@ -16,8 +16,10 @@ import de.royzer.fabrichg.server
 import de.royzer.fabrichg.util.WeightedCollection
 import de.royzer.fabrichg.util.giveOrDropItem
 import net.minecraft.core.Vec3i
+import net.minecraft.core.component.DataComponents
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
 import net.minecraft.server.level.ServerPlayer
+import net.minecraft.server.network.Filterable
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.damagesource.DamageSource
@@ -39,16 +41,21 @@ import net.minecraft.world.entity.monster.hoglin.Hoglin
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.entity.vehicle.Boat
 import net.minecraft.world.item.Items
+import net.minecraft.world.item.component.WrittenBookContent
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.Blocks
+import net.minecraft.world.level.block.LecternBlock
+import net.minecraft.world.level.block.entity.LecternBlockEntity
 import net.silkmc.silk.core.entity.blockPos
 import net.silkmc.silk.core.entity.modifyVelocity
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.task.mcCoroutineTask
+import net.silkmc.silk.core.text.literal
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
+import java.util.logging.Filter
 import kotlin.math.pow
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
@@ -400,9 +407,31 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         )
     }, 0.15)
     collection.add(GamblerAction("Nothing") {}, 0.2)
-    collection.add(GamblerAction("Time to read") {
-        it.world.setBlockAndUpdate(it.blockPos, Blocks.LECTERN.defaultBlockState())
-    }, 0.15)
+    /*collection.add(GamblerAction("Time to read") {
+        val blockState = Blocks.LECTERN.defaultBlockState()
+        it.world.setBlockAndUpdate(it.blockPos, blockState)
+
+        val book = itemStack(Items.BOOK) {
+            set(
+                DataComponents.WRITTEN_BOOK_CONTENT, WrittenBookContent(
+                    Filterable.passThrough("Literatur"),
+                    "Gehirnbuster",
+                    1,
+                    if (Random.nextBoolean()) "Man müsste ein video machen in dem man sich übers gendern beschwer und alle linken die drunter kommentieren in einen mixer werfen die masse härten lassen und ein boxautomat draus machen"
+                        .split(" ")
+                        .map { word ->
+                            Filterable.passThrough(literalText {
+                                text(word)
+                                color = TEXT_GRAY
+                            })
+                        } else listOf(Filterable.passThrough("Man müsste ein video machen in dem man sich übers gendern beschwer und alle linken die drunter kommentieren in einen mixer werfen die masse härten lassen und ein boxautomat draus machen".literal)),
+                    false
+                )
+            )
+        }
+
+        println(LecternBlock.tryPlaceBook(it, it.world, it.blockPos, blockState, book))
+    }, 100.15)*/
     collection.add(GamblerAction("Inventory clear") {
         it.inventory.clearContent()
         it.hgPlayer.giveKitItems()

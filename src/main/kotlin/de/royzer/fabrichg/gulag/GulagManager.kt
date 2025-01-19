@@ -8,7 +8,9 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.removeHGPlayer
+import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.mixins.server.MinecraftServerAccessor
+import de.royzer.fabrichg.sendPlayerStatus
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
@@ -21,7 +23,11 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
+import net.minecraft.tags.DamageTypeTags
+import net.minecraft.world.InteractionHand
+import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameType
 import net.minecraft.world.phys.Vec3
@@ -159,7 +165,13 @@ object GulagManager {
     }
 
     // guckt ob player ins gulag kann und cancelt dementsprechend den tod
-    fun beforeDeath(killer: Entity?, player: ServerPlayer): Boolean {
+    fun beforeDeath(killer: Entity?, player: ServerPlayer, source: DamageSource): Boolean {
+        if ((player as LivingEntityAccessor).invokeTryUseTotem(source)) { // ?! kein plan wieso nicht ghet
+            player.sendPlayerStatus()
+
+            return false
+        }
+
         val hgPlayer = player.hgPlayer
         if (!canGoToGulag(hgPlayer)) return false
 
@@ -242,6 +254,8 @@ object GulagManager {
     fun startGulagFight(player1: HGPlayer, player2: HGPlayer) {
         listOf(player1, player2).forEach { player ->
             if (gulagQueue.contains(player)) gulagQueue.remove(player)
+
+            player.serverPlayer?.closeContainer()
         }
 
         fighting.add(player1)

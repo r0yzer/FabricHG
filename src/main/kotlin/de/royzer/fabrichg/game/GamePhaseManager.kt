@@ -54,7 +54,7 @@ object GamePhaseManager {
                 player.serverPlayer?.let {
                     val hasGlowingEffect = it.hasEffect(MobEffects.GLOWING)
 
-                    serverPlayer.sendEntityDataUpdate(it, 6, hasGlowingEffect)
+                    //serverPlayer.sendEntityDataUpdate(it, 6, hasGlowingEffect)
                 }
             }
 
@@ -66,8 +66,8 @@ object GamePhaseManager {
                 val teamMemberServerPlayer = teamMember.serverPlayer ?: return@brain
                 val glowingEffect = MobEffectInstance(MobEffects.GLOWING, 21, 1, false, false)
 
-                serverPlayer.connection.send(ClientboundUpdateMobEffectPacket(teamMemberServerPlayer.id, glowingEffect, true))
-                serverPlayer.sendEntityDataUpdate(teamMemberServerPlayer, 6, true)
+                // serverPlayer.connection.send(ClientboundUpdateMobEffectPacket(teamMemberServerPlayer.id, glowingEffect, true))
+                //serverPlayer.sendEntityDataUpdate(teamMemberServerPlayer, 6, true)
             }
 
         }

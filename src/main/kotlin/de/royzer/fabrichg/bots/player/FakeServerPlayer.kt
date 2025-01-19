@@ -38,12 +38,12 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
 
     override fun hurt(source: DamageSource, amount: Float): Boolean {
         if ((health - amount) <= 0) {
-            val cancelDeath = GulagManager.beforeDeath(source.entity, this)
+            val cancelDeath = GulagManager.beforeDeath(source.entity, this, source)
 
             if (cancelDeath) return false
         }
 
-        if(health > 0){
+        if (health > 0){
             hgBot.hurt(source, amount)
         }
 
@@ -73,7 +73,7 @@ class FakeServerPlayer(gameProfile: GameProfile) : ServerPlayer(server, server.o
     }
 
     fun justDie(damageSource: DamageSource) {
-        super.health = 0f
+        health = 0f // wieso kommt da auf einmal ein fehler
         super.kill()
         super.die(damageSource)
         super.remove(RemovalReason.KILLED)

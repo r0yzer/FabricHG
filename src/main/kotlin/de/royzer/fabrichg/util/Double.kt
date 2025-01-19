@@ -10,5 +10,7 @@ fun Double.round(digits: Int): Double {
 }
 
 fun Double.toStringWithoutTrailing0s(): String {
+    if (isInfinite() || isNaN()) return toString()
+
     return BigDecimal(this).stripTrailingZeros().toPlainString()
 }

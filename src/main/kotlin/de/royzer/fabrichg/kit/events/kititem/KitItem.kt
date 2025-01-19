@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.kit.events.kititem
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
+import de.royzer.fabrichg.data.hgplayer.hasCustomHoverName
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
@@ -13,13 +14,19 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.context.UseOnContext
 import net.minecraft.world.level.Level
+import net.silkmc.silk.core.item.setCustomName
+import net.silkmc.silk.core.item.setLore
+import net.silkmc.silk.core.text.literalText
+import kotlin.reflect.KProperty
 
-fun kitItem(itemStack: ItemStack): KitItem {
-    return KitItem(itemStack)
+fun kitItem(itemStack: ItemStack, kit: Kit): KitItem {
+    return KitItem(itemStack, kit)
 }
+
 
 class KitItem(
     var itemStack: ItemStack,
+    val kit: Kit,
     var droppable: Boolean = false,
     internal var clickAtEntityAction: ((HGPlayer, Kit, Entity, InteractionHand) -> Unit)? = null,
     internal var clickAtPlayerAction: ((HGPlayer, Kit, ServerPlayer, InteractionHand) -> Unit)? = null,
@@ -32,8 +39,21 @@ class KitItem(
     internal var destroyBlockAction: ((HGPlayer, Kit, BlockPos) -> Unit)? = null,
     internal var whenHeldAction: ((HGPlayer, Kit) -> Unit)? = null,
 ) {
+    private val kitItemStack: ItemStack get() = itemStack.apply {
+        setLore(listOf(literalText("Kititem")))
+        if (!hasCustomHoverName()) {
+            setCustomName(kit.name)
+        }
+    }.copy()
+
     // prüft auf cooldown und ruft ggf. die übergebene action auf (meistens das invoken der entsprechenden action) + sendet ggf. cooldown msg
-    fun invokeKitItemAction(hgPlayer: HGPlayer, kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {
+    fun invokeKitItemAction(
+        hgPlayer: HGPlayer,
+        kit: Kit,
+        sendCooldown: Boolean = true,
+        ignoreCooldown: Boolean = false,
+        action: () -> Unit
+    ) {
         if (hgPlayer.canUseKit(kit, ignoreCooldown)) {
             action.invoke()
         } else if (hgPlayer.hasCooldown(kit)) {
@@ -41,6 +61,10 @@ class KitItem(
                 hgPlayer.serverPlayer?.sendCooldown(kit)
             }
         }
+    }
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): ItemStack {
+        return kitItemStack
     }
 }
 

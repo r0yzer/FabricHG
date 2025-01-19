@@ -7,6 +7,11 @@ import de.royzer.fabrichg.bots.HGBot
 import de.royzer.fabrichg.bots.player.FakeServerPlayer
 import de.royzer.fabrichg.bots.skin.SkinManager
 import de.royzer.fabrichg.server
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.network.Connection
 import net.minecraft.network.PacketListener
@@ -20,18 +25,41 @@ import net.silkmc.silk.commands.command
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.text.literal
+import net.silkmc.silk.core.text.sendText
 import java.util.*
+import kotlin.concurrent.thread
 
 
 val hgbotCommand = command("hgbot") {
     requiresPermissionLevel(1)
+
     argument<String>("name") { name ->
         runs {
             val botname = name().toString()
             if (botname.toString().length <= 16) {
-                createBot(botname)
+                try {
+                    createBot(botname.toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString().toString())
+                } catch (e: Exception) {
+                    source.player?.sendText("error: $e beim placen von bot $botname")
+                }
             }
 
+        }
+    }
+
+    literal("spawn") {
+        argument<Int>("amount") { amount ->
+            runs {
+                thread(name = "bot spawn thread") {
+                    repeat(amount()) {
+                        try {
+                            createBot("HGBot ${server.playerCount}")
+                        } catch (e: Exception) {
+                            source.player?.sendText("error: $e beim placen von bot $it")
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -45,9 +73,10 @@ private val playersWithSkin = listOf(
     "Asbach_URALT",
     "olaf_scholz",
     "r0yzer",
-    "ASB4CH_URALT",
     "Hotkeyyy",
-    "V8_BITURBO",
+    "BestAuto",
+    "Growing_Potato",
+    "Blockbuster_710"
 )
 
 private var i = 0;

@@ -13,10 +13,7 @@ import de.royzer.fabrichg.settings.SoupMode;
 import net.minecraft.network.Connection;
 import net.minecraft.network.TickablePacketListener;
 import net.minecraft.network.chat.*;
-import net.minecraft.network.protocol.game.ServerGamePacketListener;
-import net.minecraft.network.protocol.game.ServerboundChatPacket;
-import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
-import net.minecraft.network.protocol.game.ServerboundPlayerActionPacket;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.*;
@@ -76,5 +73,10 @@ public abstract class ServerGamePacketListenerMixin
         if (usedSoup) {
             player.setItemInHand(InteractionHand.MAIN_HAND, Items.BOWL.getDefaultInstance());
         }
+    }
+
+    @Inject(method = "handleContainerClose", at = @At("HEAD"))
+    public void onContainerClose(ServerboundContainerClosePacket packet, CallbackInfo ci) {
+        ServerGamePacketListenerMixinKt.INSTANCE.onCloseContainer(packet, player, ci);
     }
 }
