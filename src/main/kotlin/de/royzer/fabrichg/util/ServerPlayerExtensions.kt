@@ -1,8 +1,12 @@
 package de.royzer.fabrichg.util
 
+import com.google.common.collect.Lists
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import de.royzer.fabrichg.mixins.entity.EntityAcessor
+import de.royzer.fabrichg.mixins.server.network.SynchedEntityDataAccessor
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket
+import net.minecraft.network.syncher.SynchedEntityData
+import net.minecraft.network.syncher.SynchedEntityData.DataValue
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.entity.item.ItemEntity
@@ -10,6 +14,7 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
+
 
 fun ServerPlayer.giveOrDropItem(item: ItemStack) {
     if (!inventory.add(item)) {
@@ -117,20 +122,21 @@ fun ServerPlayer.dropInventoryItemsWithoutKitItems() {
     inventory.clearContent()
 }
 
+
 fun ServerPlayer.sendEntityDataUpdate(forEntity: LivingEntity, changeFlag: Int? = null, changeValue: Boolean? = null) {
     val entityData = forEntity.entityData ?: return
-    val forEntityAccessor = forEntity as EntityAcessor
+    forEntity as EntityAcessor
     val beforeFlag = changeFlag?.let { forEntity.getBrainBusting(it) }
 
     if (changeFlag != null && changeValue != null) {
-        forEntityAccessor.setBrainBusting(changeFlag, changeValue)
+        forEntity.setBrainBusting(changeFlag, changeValue)
     }
 
-    val packedDirty = entityData.packDirty()
+    val packedDirty = (entityData as SynchedEntityDataAccessor).allItems.map { it.value() } // entityData.packDirty()
 
-    if (packedDirty != null) connection.send(ClientboundSetEntityDataPacket(forEntity.id, packedDirty))
+    connection.send(ClientboundSetEntityDataPacket(forEntity.id, packedDirty))
 
-    if (changeFlag != null && changeValue != null && beforeFlag != null) forEntityAccessor.setBrainBusting(changeFlag, beforeFlag)
+    if (changeFlag != null && changeValue != null && beforeFlag != null) forEntity.setBrainBusting(changeFlag, beforeFlag)
 
     entityData.packDirty()
 }
