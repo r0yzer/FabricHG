@@ -481,6 +481,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         }
         serverPlayer.sendText {
             text("You were randomly swapped with a gambler")
+            color = TEXT_GRAY
         }
         val pos = it.pos.add(0.0, 0.0, 0.0) // eigentlich muss man nicht kopieren
         it.teleportTo(serverPlayer.x, serverPlayer.y, serverPlayer.z)
