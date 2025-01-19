@@ -10,10 +10,12 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.IngamePhase
 import de.royzer.fabrichg.gulag.GulagManager
+import net.minecraft.network.chat.Component
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.level.GameType
 import net.silkmc.silk.core.text.sendText
 import java.util.*
@@ -43,56 +45,36 @@ object PlayerList {
         players.remove(uuid)
     }
 
-
     fun announcePlayerDeath(deadPlayer: HGPlayer, source: DamageSource, killer: Entity?, gulag: Boolean = false) {
         val sourceKiller = source.entity
-        broadcastComponent(
-            literalText {
-                if (killer == sourceKiller && killer != null) { // killer ist ein entity und tötet hgplayer selber direkt
-                    if (killer is ServerPlayer) {
-                        text(
-                            "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer.kits.joinToString { it.name }}) using ${
-                                killer.mainHandItem?.item.toString().uppercase()
-                            }"
-                        )
-                    }
-                    else if (killer is HGBot) { // hgbot und player haben beide mainhanditem aber nicht aus der gleichen subklasse oder so
-                        text(
-                            "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer?.kits?.joinToString { it.name }}) using ${
-                                killer.mainHandItem?.item.toString().uppercase()
-                            }"
-                        )
-                    } else { // mob
-                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}")
-                    }
-                } else if (killer != null) { // source ist nicht der killer selber aber tötet indirekt oder halt creeper etc
-                    if (killer is ServerPlayer) {
-                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer.kits.joinToString { it.name }})")
-                    } else if (killer is HGBot){
-                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer?.kits?.joinToString { it.name }})")
-                    } else { // mob
-                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}")
-                    }
-                } else { // ohne fremdeinwirkung
-                    val prefix = "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})"
-                    when (val cause = source.msgId) {
-                        "cactus" -> text("$prefix died from a cactus")
-                        "fireball" -> text("$prefix died from a fireball")
-                        "generickill" -> text("$prefix was killed")
-                        "fall" -> text("$prefix fell from a high place")
-                        "lightning_bolt" -> text("$prefix was struck by lightning")
-                        else -> text("$prefix was killed by ${cause.uppercase()}")
-                    }
-                }
-                color = TEXT_YELLOW_CHAT
+
+        val deathMessage =
+            Component.literal("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})") //Player(Kit)
+        if (killer != null) {
+            deathMessage.append(" was killed by ${killer.name.string}") //Player(Kit) was killed by Killer
+            if (killer == sourceKiller && killer is ServerPlayer || killer is HGBot) {
+                deathMessage.append("(${killer.hgPlayer?.kits?.joinToString { it.name }})") //Player(Kit) was killed by Killer(Kit)
+                val mainHandItem = (killer as LivingEntity).mainHandItem
+                val itemName = mainHandItem?.item.toString().uppercase().replace("MINECRAFT:", "")
+                if (mainHandItem != null && !mainHandItem.isEmpty) deathMessage.append(" using $itemName") //Player(Kit) was killed by Killer(Kit) using IRON_AXE
             }
-        )
+        } else {
+            deathMessage.siblings.removeLast()
+            deathMessage.append(
+                Component.translatable(
+                    "death.attack.${source.msgId}.player",
+                    "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})"
+                )
+            )
+        }
+
+        broadcastComponent(deathMessage.withColor(TEXT_YELLOW_CHAT))
+
         announceRemainingPlayers()
         if (alivePlayers.size < GulagManager.minPlayersOutsideGulag) {
             GulagManager.close()
         }
     }
-
 
     fun announceRemainingPlayers() {
         broadcastComponent(
