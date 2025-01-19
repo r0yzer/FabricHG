@@ -55,7 +55,7 @@ object PlayerList {
             if (killer == sourceKiller && killer is ServerPlayer || killer is HGBot) {
                 deathMessage.append("(${killer.hgPlayer?.kits?.joinToString { it.name }})") //Player(Kit) was killed by Killer(Kit)
                 val mainHandItem = (killer as LivingEntity).mainHandItem
-                val itemName = mainHandItem?.item.toString().uppercase()
+                val itemName = mainHandItem?.item.toString().uppercase().replace("MINECRAFT:", "")
                 if (mainHandItem != null && !mainHandItem.isEmpty) deathMessage.append(" using $itemName") //Player(Kit) was killed by Killer(Kit) using IRON_AXE
             }
         } else {
