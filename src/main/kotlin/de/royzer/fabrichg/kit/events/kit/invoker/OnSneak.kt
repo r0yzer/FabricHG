@@ -11,7 +11,7 @@ fun onSneak(player: Player, pose: Pose) {
     hgPlayer.kits.forEach { kit ->
         val ignoreCooldown = kit.events.noCooldownActions.contains<Any?>(kit.events.sneakAction)
 
-        hgPlayer.invokeKitAction(kit, ignoreCooldown = ignoreCooldown) {
+        hgPlayer.invokeKitAction(kit, ignoreCooldown = ignoreCooldown, sendCooldown = kit.events.sneakAction != null) {
             kit.events.sneakAction?.invoke(hgPlayer, kit)
         }
     }

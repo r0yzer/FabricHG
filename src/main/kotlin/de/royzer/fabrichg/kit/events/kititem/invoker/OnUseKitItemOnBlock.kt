@@ -14,7 +14,7 @@ fun onUseOnBlock(player: Player, context: UseOnContext) {
         if (context.itemInHand.isKitItemOf(kit)) {
             kit.kitItems.forEach { kitItem ->
                 if (kitItem.itemStack.item == context.itemInHand.item) {
-                    kitItem.invokeKitItemAction(hgPlayer, kit) {
+                    kitItem.invokeKitItemAction(hgPlayer, kit, sendCooldown = kitItem.useOnBlockAction != null) {
                         kitItem.useOnBlockAction?.invoke(hgPlayer, kit, context)
                     }
                 }

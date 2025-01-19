@@ -32,11 +32,11 @@ fun onClickAtEntity(
                 if (kitItem.itemStack.item == mainHandStack.item || offhandStack.item == kitItem.itemStack.item) {
                     kitItem.invokeKitItemAction(hgPlayer, kit) {
                         if (clickedEntity is ServerPlayer) {
-                            hgPlayer.invokeKitAction(kit) {
+                            hgPlayer.invokeKitAction(kit, sendCooldown = kitItem.clickAtPlayerAction != null) {
                                 kitItem.clickAtPlayerAction?.invoke(hgPlayer, kit, clickedEntity, hand)
                             }
                         }
-                        hgPlayer.invokeKitAction(kit) {
+                        hgPlayer.invokeKitAction(kit, sendCooldown = kitItem.clickAtEntityAction != null) {
                             kitItem.clickAtEntityAction?.invoke(hgPlayer, kit, clickedEntity, hand)
                         }
 

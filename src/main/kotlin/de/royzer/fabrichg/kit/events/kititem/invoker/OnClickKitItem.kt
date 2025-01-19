@@ -21,7 +21,7 @@ fun onClick(
         if (itemStack.isKitItemOf(kit)) {
             kit.kitItems.forEach {
                 if (it.itemStack.item == itemStack.item) {
-                    it.invokeKitItemAction(hgPlayer, kit) {
+                    it.invokeKitItemAction(hgPlayer, kit, sendCooldown = it.clickAction != null) {
                         it.clickAction?.invoke(hgPlayer, kit)
                     }
                 }

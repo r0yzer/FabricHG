@@ -65,6 +65,10 @@ import kotlin.time.Duration.Companion.seconds
 class GamingGolem(level: Level, val wolf: GamingGolemWolf) : IronGolem(EntityType.IRON_GOLEM, level) {
     init {
         attributes.getInstance(Attributes.ATTACK_DAMAGE)?.baseValue = 7.5 // 15 normal
+        customName = literalText {
+            text(wolf.owner.name.string) { color = TEXT_BLUE }
+            text("'s Gaming Golem")
+        }
     }
 
     override fun tick() {
@@ -471,7 +475,20 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
             return@GamblerAction
         }
         it.teleportTo(serverPlayer.x, serverPlayer.y, serverPlayer.z)
-    }, 0.1)
+    }, 0.07)
+    collection.add(GamblerAction("Random swap") {
+        val random = PlayerList.alivePlayers.random()
+        val serverPlayer = random.serverPlayer ?: run {
+            it.sendText {
+                text("You were lucky. The player you wanted to swap with is disconnected.")
+                color = TEXT_GRAY
+            }
+            return@GamblerAction
+        }
+        val pos = it.pos.add(0.0, 0.0, 0.0) // eigentlich muss man nicht kopieren
+        it.teleportTo(serverPlayer.x, serverPlayer.y, serverPlayer.z)
+        serverPlayer.teleportTo(pos.x, pos.y, pos.z)
+    }, 0.03)
     collection.add(GamblerAction("Creeper") {
         val creeper = Creeper(EntityType.CREEPER, it.level())
         it.level().addFreshEntity(creeper)

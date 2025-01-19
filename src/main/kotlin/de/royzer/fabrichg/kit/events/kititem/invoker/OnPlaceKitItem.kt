@@ -18,10 +18,10 @@ fun onPlace(context: BlockPlaceContext, cir: CallbackInfoReturnable<InteractionR
 
             kit.kitItems.filter { it.itemStack.item == context.itemInHand.item }.forEach {
                 val hgPlayer = serverPlayerEntity.hgPlayer
-                it.invokeKitItemAction(hgPlayer, kit) {
+                it.invokeKitItemAction(hgPlayer, kit, sendCooldown = it.clickAction != null) {
                     it.clickAction?.invoke(hgPlayer, kit)
                 }
-                it.invokeKitItemAction(hgPlayer, kit) {
+                it.invokeKitItemAction(hgPlayer, kit, sendCooldown = it.placeAction != null) {
                     it.placeAction?.invoke(hgPlayer, kit, context.itemInHand, context.clickedPos, context.level)
                 }
             }
