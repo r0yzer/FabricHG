@@ -51,6 +51,8 @@ import net.silkmc.silk.core.entity.modifyVelocity
 import net.silkmc.silk.core.entity.pos
 import net.silkmc.silk.core.entity.world
 import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.math.vector.plus
+import net.silkmc.silk.core.task.infiniteMcCoroutineTask
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import net.silkmc.silk.core.text.literalText
@@ -407,16 +409,17 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         )
     }, 0.15)
     collection.add(GamblerAction("Nothing") {}, 0.2)
-    /*collection.add(GamblerAction("Time to read") {
-        val blockState = Blocks.LECTERN.defaultBlockState()
+    collection.add(GamblerAction("Time to read") {
+        var blockState = Blocks.LECTERN.defaultBlockState()
         it.world.setBlockAndUpdate(it.blockPos, blockState)
+        blockState = it.world.getBlockState(it.blockPos) ?: error("brain=!")
 
-        val book = itemStack(Items.BOOK) {
+        val book = itemStack(Items.WRITTEN_BOOK) {
             set(
                 DataComponents.WRITTEN_BOOK_CONTENT, WrittenBookContent(
                     Filterable.passThrough("Literatur"),
-                    "Gehirnbuster",
-                    1,
+                    it.name.string,
+                    0,
                     if (Random.nextBoolean()) "Man müsste ein video machen in dem man sich übers gendern beschwer und alle linken die drunter kommentieren in einen mixer werfen die masse härten lassen und ein boxautomat draus machen"
                         .split(" ")
                         .map { word ->
@@ -425,13 +428,13 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
                                 color = TEXT_GRAY
                             })
                         } else listOf(Filterable.passThrough("Man müsste ein video machen in dem man sich übers gendern beschwer und alle linken die drunter kommentieren in einen mixer werfen die masse härten lassen und ein boxautomat draus machen".literal)),
-                    false
+                    true
                 )
             )
         }
 
-        println(LecternBlock.tryPlaceBook(it, it.world, it.blockPos, blockState, book))
-    }, 100.15)*/
+        LecternBlock.tryPlaceBook(it, it.world, it.blockPos, blockState, book)
+    }, 0.15)
     collection.add(GamblerAction("Inventory clear") {
         it.inventory.clearContent()
         it.hgPlayer.giveKitItems()
