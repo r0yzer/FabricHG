@@ -479,10 +479,13 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
             }
             return@GamblerAction
         }
+        serverPlayer.sendText {
+            text("You were randomly swapped with a gambler")
+        }
         val pos = it.pos.add(0.0, 0.0, 0.0) // eigentlich muss man nicht kopieren
         it.teleportTo(serverPlayer.x, serverPlayer.y, serverPlayer.z)
         serverPlayer.teleportTo(pos.x, pos.y, pos.z)
-    }, 0.03)
+    }, 0.01)
     collection.add(GamblerAction("Creeper") {
         val creeper = Creeper(EntityType.CREEPER, it.level())
         it.level().addFreshEntity(creeper)
