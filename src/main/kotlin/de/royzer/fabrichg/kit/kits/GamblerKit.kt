@@ -430,14 +430,7 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
                     Filterable.passThrough("Literatur"),
                     it.name.string,
                     0,
-                    if (Random.nextBoolean()) "Man müsste ein video machen in dem man sich übers gendern beschwer und alle linken die drunter kommentieren in einen mixer werfen die masse härten lassen und ein boxautomat draus machen"
-                        .split(" ")
-                        .map { word ->
-                            Filterable.passThrough(literalText {
-                                text(word)
-                                color = TEXT_GRAY
-                            })
-                        } else listOf(Filterable.passThrough("Man müsste ein video machen in dem man sich übers gendern beschwer und alle linken die drunter kommentieren in einen mixer werfen die masse härten lassen und ein boxautomat draus machen".literal)),
+                    listOf(Filterable.passThrough(busterMessages.random().literal)),
                     true
                 )
             )
@@ -491,10 +484,14 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
             }
             return@GamblerAction
         }
+        serverPlayer.sendText {
+            text("You were randomly swapped with a gambler")
+            color = TEXT_GRAY
+        }
         val pos = it.pos.add(0.0, 0.0, 0.0) // eigentlich muss man nicht kopieren
         it.teleportTo(serverPlayer.x, serverPlayer.y, serverPlayer.z)
         serverPlayer.teleportTo(pos.x, pos.y, pos.z)
-    }, 0.03)
+    }, 0.01)
     collection.add(GamblerAction("Creeper") {
         val creeper = Creeper(EntityType.CREEPER, it.level())
         it.level().addFreshEntity(creeper)
@@ -527,10 +524,11 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         tnt.setPos(it.pos)
     }, 0.1)
     collection.add(GamblerAction("Random spectator revive") {
-        val player = server.playerList.players.filter { it.hgPlayer.status == HGPlayerStatus.SPECTATOR }.randomOrNull() ?: run {
-            it.sendSystemMessage(literalText("There is no spectator online..") {color = TEXT_GRAY})
-            return@GamblerAction
-        }
+        val player =
+            server.playerList.players.filter { it.hgPlayer.status == HGPlayerStatus.SPECTATOR }.randomOrNull() ?: run {
+                it.sendSystemMessage(literalText("There is no spectator online..") { color = TEXT_GRAY })
+                return@GamblerAction
+            }
         player.hgPlayer.revive(gambler = true)
     }, 0.01)
 }
@@ -539,4 +537,31 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
 private data class GamblerAction(
     val text: String,
     val action: ((ServerPlayer) -> Unit),
+)
+
+private val busterMessages = listOf<String>(
+    "Man müsste ein video machen in dem man sich übers gendern beschwer und alle linken die drunter kommentieren in einen mixer werfen die masse härten lassen und ein boxautomat draus machen",
+    "Nie wieder scheisshaus irschenberg ich bin am scheissen klobrille macht 360",
+    "meine eier stecken gerade unter einem lkw fest",
+    "Ich mach eine tankstelle auf und aus dem super zapfhahn kommt diesel",
+    "Hab mal eine kamera aufgestellt und gesehen dass ich nachts beim schlafwandeln jedem nachbar von mir sage er solle wo anders waren, er mache meine tür heiß",
+    "Kennt ihr das wenn ihr zeit messen müsst und abmesst wie oft nizi19s tür heiß gemacht wird",
+    "https://www.yallashoot.video/video/germany-vs-netherlands-live-stream-26-3-2024/",
+    "Ich lade seit 3 jahren bastighg videos mit dubiosen titeln auf sämtlichen porno seiten hoch und verdiene mir ein gutes nebeneinkommen",
+    "was ist wenn wir alle spermien in irgendwelchen eiern sind und die so krass sind dass die pcs in ihren eiern haben",
+    "es gibt nix schlimmeeres als wenn man warm duscht oder so und dann nachdem man das wasser ausgestellt hat so ein kalter tropfen auf deinen schwanz fällt",
+    "Ich bin gerade so auf achse vorhin noch tille eingeschmissen anders müde kann nicht einschlafen danke frau merkel und ich geh noch behindert wegen Reservierung fixkt die GRÜNEN",
+    "ich habe mich bei homag eingeschlichen und die nächste maschine heisst homag hoden",
+    "ich leide seit 3 jahren an akkuter gynokonose",
+    "Ich fahre mit dem auto nach münchen damit die polizei systematisch jede kleinfamilie für die nächsten 3 stunden durchsuchr",
+    "ich arbeite bei gehirn25 und bin damit ruehl24s grösster konkurent",
+    "Ich werde von 2 fliegen belästigt @bluefireoly cancel die mal du bist doch links",
+    "ich habe mich beim bestellen flerschrieben kann mir jemand helfen eine 120m lange musikbox in den kofferraum zu stecken",
+    "ich besitze ein 50ccm roller und es schiesst mein arschloch zum mars",
+    "wenn für jedes kilo grammm wichse ein kind geboren wird aber frauen nicht mehr funktionieren gibt es mehr oder weniger kinder als davor",
+    "es ist offiziell hanybal lässt sich die eier vermöbeln bevor er anfängt zu rappen",
+    "hätte bayreuther nicht eine scheissrate von 25% wäre das eines der besten biere jeden 4. kasten kann man nicht trinken",
+    "ich hab jahre lang vorm schlafen mein bett zu ner couch geklappt aber gestern habe ich gemerkt dass man das andersru machen sollte",
+    "Falls ihr während ich dusche im nebenzimmer seit und komische geräudche hört, ich wichse nicht ich ficke einfach die wand",
+    "wenn bluefireoly ein 0kmh schild sieht weiss er sich nicht zu helfen als sich ein neues auto zu kaufen",
 )
