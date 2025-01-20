@@ -7,7 +7,7 @@ import net.minecraft.world.InteractionHand
 
 fun onLeftClick(serverPlayer: ServerPlayer, hand: InteractionHand) {
     val hgPlayer = serverPlayer.hgPlayer
-    hgPlayer.kits.forEach { kit ->
+    hgPlayer.allKits.forEach { kit ->
         hgPlayer.invokeKitAction(kit, sendCooldown = false) {
             kit.events.leftClickAction?.invoke(hgPlayer, kit)
         }

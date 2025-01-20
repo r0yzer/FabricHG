@@ -11,7 +11,7 @@ fun afterDamageEntity(target: Entity, entity: LivingEntity, ci: CallbackInfo) {
     val attacker = entity.hgPlayer ?: return
 
     if (target is ServerPlayer) {
-        attacker.kits.forEach { kit ->
+        attacker.allKits.forEach { kit ->
             attacker.invokeKitAction(kit, sendCooldown = false) {
                 if (attacker.serverPlayer != null) {
                     kit.events.afterDamagePlayerAction?.invoke(attacker, kit, target)
@@ -25,7 +25,7 @@ fun onAttackEntity(target: Entity, entity: LivingEntity, ci: CallbackInfo) {
     val attacker = entity.hgPlayer ?: return
     val item = entity.mainHandItem
     val offhandItem = entity.mainHandItem
-    attacker.kits.forEach { kit ->
+    attacker.allKits.forEach { kit ->
         kit.kitItems.forEach { kitItem ->
             if (kitItem.itemStack.item == item.item || offhandItem.item == kitItem.itemStack.item) {
                 kitItem.invokeKitItemAction(attacker, kit) {
@@ -51,7 +51,7 @@ fun onAttackEntity(target: Entity, entity: LivingEntity, ci: CallbackInfo) {
         }
     }
     if (target is ServerPlayer) {
-        target.hgPlayer.kits.forEach { kit ->
+        target.hgPlayer.allKits.forEach { kit ->
             target.hgPlayer.invokeKitAction(kit, sendCooldown = false) {
                 if (attacker.serverPlayer != null) {
                     val shouldCancel = kit.events.attackedByPlayerAction?.invoke(target.hgPlayer, kit, attacker.serverPlayer!!)
@@ -69,7 +69,7 @@ fun onAttackEntity(target: Entity, entity: LivingEntity, ci: CallbackInfo) {
 fun afterAttackEntity(target: Entity, entity: LivingEntity) {
     val hgPlayer = entity.hgPlayer ?: return
 
-    hgPlayer.kits.forEach { kit ->
+    hgPlayer.allKits.forEach { kit ->
         // TODO das muss nochmal besser werden wenn mehr kits als das eber kit das machen wollen
         val ignoreEntityCooldown = kit.events.noCooldownActions.contains<Any?>(kit.events.afterHitEntityAction)
         hgPlayer.invokeKitAction(kit, sendCooldown = false, ignoreCooldown = ignoreEntityCooldown) {

@@ -8,6 +8,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcast
 import de.royzer.fabrichg.game.broadcastComponent
+import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.achievements.delegate.achievement
 import de.royzer.fabrichg.kit.cooldown.activateCooldown
 import de.royzer.fabrichg.kit.kit
@@ -394,9 +395,13 @@ private val badGambler = WeightedCollection<GamblerAction>().also { collection -
         it.kill()
     }, 0.005)
     collection.add(GamblerAction("Kit change") {
-        val index =
-            it.hgPlayer.kits.indexOfFirst { kit -> kit.name == "Gambler" } // indexOf(gamblerKit) rekursive problem
-        if (index < 0) return@GamblerAction
+        val index = it.hgPlayer.kits.indexOfFirst { kit -> kit.name == "Gambler" } // indexOf(gamblerKit) rekursive problem
+        if (index < 0) {
+            if (it.hgPlayer.getPlayerData<Kit>(BANDIT_KIT_KEY)?.name == "Gambler") {
+                it.hgPlayer.playerData.remove(BANDIT_KIT_KEY)
+            }
+            return@GamblerAction
+        }
         val kit = randomKit()
         it.hgPlayer.kits[index] = kit
         kit.onEnable?.invoke(it.hgPlayer, kit, it)

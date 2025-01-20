@@ -8,7 +8,7 @@ import net.minecraft.server.level.ServerPlayer
 fun onTick(serverPlayer: ServerPlayer) {
     val hgPlayer = PlayerList.getPlayer(serverPlayer.uuid) ?: return
 
-    hgPlayer.kits.forEach { kit ->
+    hgPlayer.allKits.forEach { kit ->
         hgPlayer.invokeKitAction(kit, sendCooldown = false, ignoreCooldown = true) {
             kit.events.tickAction?.invoke(hgPlayer, kit)
         }

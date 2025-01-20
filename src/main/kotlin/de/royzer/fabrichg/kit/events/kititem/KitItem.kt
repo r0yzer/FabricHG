@@ -5,6 +5,9 @@ import de.royzer.fabrichg.data.hgplayer.hasCustomHoverName
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
+import de.royzer.fabrichg.sendPlayerStatus
+import de.royzer.fabrichg.server
+import de.royzer.fabrichg.util.everything
 import net.minecraft.core.BlockPos
 import net.minecraft.core.component.DataComponents
 import net.minecraft.server.level.ServerPlayer
@@ -17,10 +20,23 @@ import net.minecraft.world.level.Level
 import net.silkmc.silk.core.item.setCustomName
 import net.silkmc.silk.core.item.setLore
 import net.silkmc.silk.core.text.literalText
+import net.silkmc.silk.nbt.dsl.nbtCompound
 import kotlin.reflect.KProperty
 
 fun kitItem(itemStack: ItemStack, kit: Kit): KitItem {
     return KitItem(itemStack, kit)
+}
+
+fun ItemStack.withKitItemProperties(kit: Kit): ItemStack {
+    setLore(listOf(literalText("Kititem")))
+    if (!hasCustomHoverName()) {
+        setCustomName(kit.name)
+    }
+    set(DataComponents.CUSTOM_DATA, CustomData.of(nbtCompound {
+        put("kit", kit.name)
+    }))
+
+    return this
 }
 
 
@@ -39,12 +55,8 @@ class KitItem(
     internal var destroyBlockAction: ((HGPlayer, Kit, BlockPos) -> Unit)? = null,
     internal var whenHeldAction: ((HGPlayer, Kit) -> Unit)? = null,
 ) {
-    private val kitItemStack: ItemStack get() = itemStack.apply {
-        setLore(listOf(literalText("Kititem")))
-        if (!hasCustomHoverName()) {
-            setCustomName(kit.name)
-        }
-    }.copy()
+    val kitItemStack: ItemStack
+        get() = itemStack.withKitItemProperties(kit).copy()
 
     // prüft auf cooldown und ruft ggf. die übergebene action auf (meistens das invoken der entsprechenden action) + sendet ggf. cooldown msg
     fun invokeKitItemAction(
@@ -61,6 +73,14 @@ class KitItem(
                 hgPlayer.serverPlayer?.sendCooldown(kit)
             }
         }
+    }
+
+    fun updateFor(player: HGPlayer, update: ItemStack.() -> Unit) {
+        val serverPlayer = player.serverPlayer ?: return
+
+        val kitItem = serverPlayer.inventory.everything.find { it.isKitItemOf(kit) }
+        kitItem?.update()
+        serverPlayer.sendPlayerStatus()
     }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): ItemStack {

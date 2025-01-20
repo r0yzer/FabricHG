@@ -117,7 +117,7 @@ object GulagManager {
 
         serverPlayer.inventory.clearContent()
         player.kitsDisabled = false
-        player.kits.forEach {
+        player.allKits.forEach {
             it.onEnable?.invoke(player, it, serverPlayer)
         }
         player.giveKitItems()
@@ -224,7 +224,7 @@ object GulagManager {
         player.playerData["gulag"] = true
 
         player.kitsDisabled = true
-        player.kits.forEach {
+        player.allKits.forEach {
             it.onDisable?.invoke(player, it)
         }
 

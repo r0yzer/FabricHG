@@ -12,7 +12,7 @@ fun onCraft(player: Player, stack: ItemStack, recipe: RecipeHolder<CraftingRecip
     if (player !is ServerPlayer) return
 
     val hgPlayer = player.hgPlayer
-    hgPlayer.kits.forEach { kit ->
+    hgPlayer.allKits.forEach { kit ->
         hgPlayer.invokeKitAction(kit, sendCooldown = false) {
             kit.events.craftAction?.invoke(hgPlayer, stack, recipe, kit)
         }

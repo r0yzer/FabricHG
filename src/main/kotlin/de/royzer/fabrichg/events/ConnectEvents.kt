@@ -101,7 +101,7 @@ object ConnectEvents {
                     }
 
 
-                    hgPlayer.kits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
+                    hgPlayer.allKits.forEach { it.onEnable?.invoke(player.hgPlayer, it, player) }
                 }
 
                 PhaseType.INGAME -> {
@@ -111,7 +111,7 @@ object ConnectEvents {
                             combatloggedPlayers[uuid]?.job?.cancel()
                             player.hgPlayer.status = HGPlayerStatus.ALIVE
                             logInfo("${player.name.string} ist wieder da")
-                            hgPlayer.kits.forEach { it.onEnable?.invoke(hgPlayer, it, player) }
+                            hgPlayer.allKits.forEach { it.onEnable?.invoke(hgPlayer, it, player) }
                         }
 
                         HGPlayerStatus.ALIVE -> {
@@ -163,7 +163,7 @@ object ConnectEvents {
 
                 PhaseType.INGAME -> {
                     if (player.hgPlayer.status == HGPlayerStatus.ALIVE) {
-                        hgPlayer.kits.forEach { it.onDisable?.invoke(hgPlayer, it) }
+                        hgPlayer.allKits.forEach { it.onDisable?.invoke(hgPlayer, it) }
                         val combatTracker = player.combatTracker
                         val lastCombatEntry = (combatTracker as CombatTrackerAcessor).entries.lastOrNull()
                         if (lastCombatEntry?.source?.entity is ServerPlayer) {

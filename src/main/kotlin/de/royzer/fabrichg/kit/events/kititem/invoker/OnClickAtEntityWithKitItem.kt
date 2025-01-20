@@ -24,7 +24,7 @@ fun onClickAtEntity(
     val mainHandStack = serverPlayer?.mainHandItem ?: hgBot?.mainHandItem ?: return
     val offhandStack = serverPlayer?.offhandItem ?: hgBot?.offhandItem ?: return
     if (mainHandStack.isKitItem || offhandStack.isKitItem) {
-        hgPlayer.kits.forEach { kit ->
+        hgPlayer.allKits.forEach { kit ->
             // ehrlich kp
             if (!mainHandStack.isKitItemOf(kit) && !offhandStack.isKitItemOf(kit)) return@forEach
 
@@ -46,7 +46,7 @@ fun onClickAtEntity(
             }
         }
     } else {
-        hgPlayer.kits.forEach { kit ->
+        hgPlayer.allKits.forEach { kit ->
             if (serverPlayer != null) {
                 onRightClickEntity(serverPlayer.hgPlayer, clickedEntity)
             }
