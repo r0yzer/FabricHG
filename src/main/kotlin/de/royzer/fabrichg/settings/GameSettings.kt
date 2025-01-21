@@ -88,8 +88,14 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     var friendlyFire: Boolean = false,
     @EncodeDefault
     var forbiddenKitCombinations: List<List<String>> = listOf(
-        listOf(anchorKit.name, urgalKit.name), listOf(gladiatorKit.name, urgalKit.name), listOf(grapplerKit.name, stomperKit.name),
-        listOf(phantomKit.name, stomperKit.name), listOf(kangarooKit.name, blinkKit.name, phantomKit.name), listOf(switcherKit.name, demomanKit.name)
+        listOf(anchorKit.name, urgalKit.name),
+        listOf(gladiatorKit.name, urgalKit.name),
+        listOf(grapplerKit.name, stomperKit.name),
+        listOf(phantomKit.name, stomperKit.name),
+        listOf(kangarooKit.name, blinkKit.name, phantomKit.name),
+        listOf(switcherKit.name, demomanKit.name),
+        listOf(switcherKit.name, jackhammerKit.name),
+        listOf(anchorKit.name, beerKit.name)
     ),
     @EncodeDefault
     var soupMode: SoupMode = SoupMode.EatAndDestroyBlock,

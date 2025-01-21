@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.entity.ai.attributes.Attributes
 import net.minecraft.world.level.GameType
 import net.silkmc.silk.commands.command
+import net.silkmc.silk.core.Silk
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 
@@ -73,6 +74,8 @@ fun HGPlayer.revive(executor: ServerPlayer? = null, gambler: Boolean = false) {
     } else {
         val randomHighestPos = getRandomHighestPos(200).toVec3()
         serverPlayer.teleportTo(randomHighestPos.x, randomHighestPos.y, randomHighestPos.z)
+        Silk.server?.overworld()
+            ?.let { serverPlayer.teleportTo(it, randomHighestPos.x, randomHighestPos.y, randomHighestPos.z, 0f, 0f) }
     }
     serverPlayer.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
     serverPlayer.inventory.clearContent()
