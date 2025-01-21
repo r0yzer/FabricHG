@@ -38,7 +38,7 @@ object PlayerDeath {
         val killer: Entity? = (deadEntity as LivingEntityAccessor).attackingMob
 
         val hgPlayer = killer?.hgPlayer
-        hgPlayer?.kits?.forEach {
+        hgPlayer?.allKits?.forEach {
             if (hgPlayer.canUseKit(it, true)) {
                 it.events.killEntityAction?.invoke(hgPlayer, it, deadEntity)
             }
@@ -67,7 +67,7 @@ object PlayerDeath {
 //        if(serverPlayerEntity is FakeServerPlayer){
 //            serverPlayerEntity.connection.onDisconnect(Component.literal("Dead"))
 //        }
-        hgPlayer?.kits?.forEach {
+        hgPlayer?.allKits?.forEach {
             if (hgPlayer.canUseKit(it, true)) {
                 it.events.killPlayerAction?.invoke(hgPlayer, it, serverPlayerEntity)
             }

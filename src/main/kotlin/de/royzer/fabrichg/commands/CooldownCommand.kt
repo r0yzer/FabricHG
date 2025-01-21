@@ -9,7 +9,7 @@ val cooldownCommand = command("cooldown") {
     requiresPermissionLevel(4)
     literal("skip") runs {
         val hgPlayer = source.player?.hgPlayer ?: return@runs
-        hgPlayer.kits.forEach {
+        hgPlayer.allKits.forEach {
             cooldownMap.remove(Cooldown(hgPlayer, it))
         }
     }

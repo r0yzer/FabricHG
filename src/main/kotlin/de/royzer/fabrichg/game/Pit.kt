@@ -3,6 +3,8 @@ package de.royzer.fabrichg.game
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.bots.HGBot
+import de.royzer.fabrichg.kit.kits.GamingGolem
+import de.royzer.fabrichg.kit.kits.GamingGolemWolf
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import net.minecraft.core.BlockPos
@@ -37,7 +39,7 @@ object Pit {
         })
         server.overworld().allEntities.forEach { entity ->
             if (entity == null) return@forEach
-            if (entity !is ServerPlayer && entity !is Wolf && entity !is HGBot) {
+            if (entity !is ServerPlayer && entity !is Wolf && entity !is HGBot && entity !is GamingGolem && entity !is GamingGolemWolf) {
                 entity.kill()
             }
         }

@@ -24,7 +24,7 @@ fun onClickAtEntity(
     val mainHandStack = serverPlayer?.mainHandItem ?: hgBot?.mainHandItem ?: return
     val offhandStack = serverPlayer?.offhandItem ?: hgBot?.offhandItem ?: return
     if (mainHandStack.isKitItem || offhandStack.isKitItem) {
-        hgPlayer.kits.forEach { kit ->
+        hgPlayer.allKits.forEach { kit ->
             // ehrlich kp
             if (!mainHandStack.isKitItemOf(kit) && !offhandStack.isKitItemOf(kit)) return@forEach
 
@@ -32,11 +32,11 @@ fun onClickAtEntity(
                 if (kitItem.itemStack.item == mainHandStack.item || offhandStack.item == kitItem.itemStack.item) {
                     kitItem.invokeKitItemAction(hgPlayer, kit) {
                         if (clickedEntity is ServerPlayer) {
-                            hgPlayer.invokeKitAction(kit) {
+                            hgPlayer.invokeKitAction(kit, sendCooldown = kitItem.clickAtPlayerAction != null) {
                                 kitItem.clickAtPlayerAction?.invoke(hgPlayer, kit, clickedEntity, hand)
                             }
                         }
-                        hgPlayer.invokeKitAction(kit) {
+                        hgPlayer.invokeKitAction(kit, sendCooldown = kitItem.clickAtEntityAction != null) {
                             kitItem.clickAtEntityAction?.invoke(hgPlayer, kit, clickedEntity, hand)
                         }
 
@@ -46,7 +46,7 @@ fun onClickAtEntity(
             }
         }
     } else {
-        hgPlayer.kits.forEach { kit ->
+        hgPlayer.allKits.forEach { kit ->
             if (serverPlayer != null) {
                 onRightClickEntity(serverPlayer.hgPlayer, clickedEntity)
             }

@@ -23,11 +23,8 @@ import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
-import net.minecraft.tags.DamageTypeTags
-import net.minecraft.world.InteractionHand
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.GameRules
 import net.minecraft.world.level.GameType
@@ -100,7 +97,7 @@ object GulagManager {
         return if (player == player1) player2 else player1
     }
 
-    fun onWin(player: HGPlayer, loser: HGPlayer?) {
+    fun respawnPlayer(player: HGPlayer, loser: HGPlayer?) {
         val highest = getRandomHighestPos(200)
 
         val serverPlayer = player.serverPlayer ?: return
@@ -123,7 +120,7 @@ object GulagManager {
 
         serverPlayer.inventory.clearContent()
         player.kitsDisabled = false
-        player.kits.forEach {
+        player.allKits.forEach {
             it.onEnable?.invoke(player, it, serverPlayer)
         }
         player.giveKitItems()
@@ -153,7 +150,7 @@ object GulagManager {
             val opponent = getOpponent(player)
 
             if (opponent != null) {
-                onWin(opponent, player)
+                respawnPlayer(opponent, player)
             }
         } else if (gulagQueue.contains(player)) {
             gulagQueue.remove(player)
@@ -197,7 +194,7 @@ object GulagManager {
         if (fighting.contains(hgPlayer)) {
             val otherHgPlayer = getOpponent(hgPlayer) ?: return
 
-            onWin(otherHgPlayer, hgPlayer)
+            respawnPlayer(otherHgPlayer, hgPlayer)
         }
     }
 
@@ -213,7 +210,7 @@ object GulagManager {
                 })
                 currentFightJob?.cancel()
                 currentFightJob = null
-                onWin(lastPlayer, null)
+                respawnPlayer(lastPlayer, null)
             } else {
                 return
             }
@@ -230,7 +227,7 @@ object GulagManager {
         player.playerData["gulag"] = true
 
         player.kitsDisabled = true
-        player.kits.forEach {
+        player.allKits.forEach {
             it.onDisable?.invoke(player, it)
         }
 

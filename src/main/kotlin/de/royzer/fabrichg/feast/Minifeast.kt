@@ -182,7 +182,7 @@ private fun clickKitItemGift(itemStack: ItemStack, player: Player) {
 
     val lore = itemStack.get(DataComponents.LORE).toString() // TODO
     if (itemStack.displayName.string.contains("Kit item gift") && lore.contains("Item gift")) {
-        player.hgPlayer.kits.forEach { kit ->
+        player.hgPlayer.allKits.forEach { kit ->
             kit.kitItems.random().also { kitItem ->
                 player.inventory.removeItem(itemStack)
                 player.forceGiveItem(kitItem.itemStack.copy())

@@ -17,11 +17,11 @@ fun onClick(
 ) {
     val serverPlayerEntity = player as? ServerPlayer ?: return
     val hgPlayer = serverPlayerEntity.hgPlayer
-    hgPlayer.kits.forEach { kit ->
+    hgPlayer.allKits.forEach { kit ->
         if (itemStack.isKitItemOf(kit)) {
             kit.kitItems.forEach {
                 if (it.itemStack.item == itemStack.item) {
-                    it.invokeKitItemAction(hgPlayer, kit) {
+                    it.invokeKitItemAction(hgPlayer, kit, sendCooldown = it.clickAction != null) {
                         it.clickAction?.invoke(hgPlayer, kit)
                     }
                 }

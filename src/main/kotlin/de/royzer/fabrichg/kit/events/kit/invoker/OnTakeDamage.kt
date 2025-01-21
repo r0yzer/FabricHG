@@ -9,7 +9,7 @@ fun onTakeDamage(player: ServerPlayer, source: DamageSource, amount: Float): Flo
     val hgPlayer = player.hgPlayer
     var newDamage = amount
 
-    hgPlayer.kits.forEach { kit ->
+    hgPlayer.allKits.forEach { kit ->
         hgPlayer.invokeKitAction(kit, sendCooldown = false) {
             kit.events.takeDamageAction?.let { newDamage = it.invoke(hgPlayer, kit, source, newDamage) }
         }

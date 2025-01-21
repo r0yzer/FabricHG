@@ -7,11 +7,11 @@
         "feature": "minecraft:fancy_oak_checked"
       },
       {
-        "chance": 0.2,
+        "chance": 0.1,
         "feature": "minecraft:jungle_bush"
       },
       {
-        "chance": 0.33333334,
+        "chance": 0.383333334,
         "feature": "fabrichg:mega_jungle_tree"
       }
     ],

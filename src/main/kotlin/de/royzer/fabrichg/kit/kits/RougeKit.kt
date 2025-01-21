@@ -31,7 +31,7 @@ val rougeKit = kit("Rouge") {
                 it != player
             }.filter { !it.hgPlayer.isNeo }.filter { it.isAlive }
             nearbyPlayers.forEach { otherPlayer ->
-                otherPlayer.hgPlayer.kits.forEach { kit ->
+                otherPlayer.hgPlayer.allKits.forEach { kit ->
                     kit.onDisable?.invoke(otherPlayer.hgPlayer, kit)
                     otherPlayer.hgPlayer.kitsDisabled = true
                     mcCoroutineTask(delay = disableTime.seconds) {

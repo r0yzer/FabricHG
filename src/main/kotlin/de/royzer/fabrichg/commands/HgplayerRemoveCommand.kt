@@ -18,7 +18,7 @@ val hgplayerRemoveCommand = command("hgplayerremove") {
             val hgPlayer = PlayerList.players.values.find { it.name == name } ?: return@runs
             hgPlayer.status = HGPlayerStatus.SPECTATOR
             hgPlayer.serverPlayer?.setGameMode(GameType.SPECTATOR)
-            hgPlayer.kits.forEach {
+            hgPlayer.allKits.forEach {
                 it.onDisable?.invoke(hgPlayer, it)
             }
         }

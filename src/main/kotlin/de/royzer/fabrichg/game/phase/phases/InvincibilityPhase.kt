@@ -26,7 +26,7 @@ object InvincibilityPhase : GamePhase() {
             hgPlayer.serverPlayer?.setGameMode(GameType.SURVIVAL)
             hgPlayer.serverPlayer?.closeContainer()
             hgPlayer.serverPlayer?.removeAllEffects()
-            hgPlayer.kits.forEachIndexed { index, kit ->
+            hgPlayer.allKits.forEachIndexed { index, kit ->
                 if (kit == surpriseKit) {
                     hgPlayer.setKit(randomKit(), index, force=true)
                 }

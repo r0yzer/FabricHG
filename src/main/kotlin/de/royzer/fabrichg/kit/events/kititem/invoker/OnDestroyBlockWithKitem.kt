@@ -9,10 +9,10 @@ import net.minecraft.server.level.ServerPlayer
 fun onDestroyBlock(serverPlayer: ServerPlayer, pos: BlockPos) {
     val hgPlayer = serverPlayer.hgPlayer
     val itemStack = serverPlayer.mainHandItem
-    hgPlayer.kits.forEach { kit ->
+    hgPlayer.allKits.forEach { kit ->
         kit.kitItems.forEach { kitItem ->
             if (itemStack.isKitItemOf(kit)) {
-                kitItem.invokeKitItemAction(hgPlayer, kit) {
+                kitItem.invokeKitItemAction(hgPlayer, kit, sendCooldown = kitItem.destroyBlockAction != null) {
                     kitItem.destroyBlockAction?.invoke(hgPlayer, kit, pos)
                 }
             }
