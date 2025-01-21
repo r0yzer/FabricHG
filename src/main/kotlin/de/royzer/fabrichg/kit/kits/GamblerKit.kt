@@ -564,4 +564,6 @@ private val busterMessages = listOf<String>(
     "ich hab jahre lang vorm schlafen mein bett zu ner couch geklappt aber gestern habe ich gemerkt dass man das andersru machen sollte",
     "Falls ihr während ich dusche im nebenzimmer seit und komische geräudche hört, ich wichse nicht ich ficke einfach die wand",
     "wenn bluefireoly ein 0kmh schild sieht weiss er sich nicht zu helfen als sich ein neues auto zu kaufen",
+    "Junge bin immer so lange scheissen dass alles einschläft und ich nichtmehr laufen kann",
+    "Jvcv: blitzer app, schild weg, anal: nope"
 )
