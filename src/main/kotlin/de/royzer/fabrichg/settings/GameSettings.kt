@@ -94,6 +94,7 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
         listOf(phantomKit.name, stomperKit.name),
         listOf(kangarooKit.name, blinkKit.name, phantomKit.name),
         listOf(switcherKit.name, demomanKit.name),
+        listOf(switcherKit.name, jackhammerKit.name),
         listOf(anchorKit.name, beerKit.name)
     ),
     @EncodeDefault
