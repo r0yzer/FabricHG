@@ -70,10 +70,7 @@ object ConfigManager {
         gameSettings.soupMode = gameConfigData.soupMode
         gameSettings.crossteamingAllowed = gameConfigData.crossteamingAllowed
 
-        if (gameSettings.teamsEnabled) { // das geht nicht aber erstmal egal besser als immer an
-            teamCommand.setupRegistrationCallback()
-            teamChatCommand.setupRegistrationCallback()
-        }
+
 
         setKitValues()
         updateGameConfigFile()

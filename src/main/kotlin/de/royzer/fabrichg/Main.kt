@@ -82,9 +82,9 @@ fun registerCommands() {
     achievementsCommand
     kititemCommand
     invCommand
-    //teamCommand // wird nicht registriert hier registrierung in ConfigManager
+    teamCommand
     gueldemuerCommand
-    // teamChatCommand auch nich
+    teamChatCommand
     hgplayerRemoveCommand
     banditKitCommand
 }
