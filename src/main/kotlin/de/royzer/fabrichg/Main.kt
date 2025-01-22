@@ -32,18 +32,18 @@ const val TEXT_GREEN = 0x33FF33
 const val TEXT_YELLOW_CHAT = 0xFFFF55
 
 fun initServer() {
-    kits
 
 
     registerCommands()
     ConnectEvents
     PlayerDeath
-    ConfigManager
 
     ServerLifecycleEvents.SERVER_STARTING.register {
         GamePhaseManager.server = it as DedicatedServer
         Stats.init()
         AchievementManager.init()
+        kits
+        ConfigManager
     }
 
     ServerLifecycleEvents.SERVER_STARTED.register {
