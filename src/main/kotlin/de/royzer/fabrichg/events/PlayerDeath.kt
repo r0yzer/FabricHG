@@ -49,6 +49,10 @@ object PlayerDeath {
         val deadHGPlayer = deadEntity.hgPlayer ?: return true
         val serverPlayerEntity = deadHGPlayer.serverPlayer ?: return true
 
+        if (deadHGPlayer.status == HGPlayerStatus.SPECTATOR) {
+            return true
+        }
+
         if (killer is HGBot) {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
