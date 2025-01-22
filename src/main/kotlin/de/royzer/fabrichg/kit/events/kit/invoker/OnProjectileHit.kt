@@ -14,7 +14,7 @@ fun onProjectileHit(entityHitResult: EntityHitResult, projectileEntity: Projecti
 }
 
 private fun HGPlayer.hitWithProjectile(entityHitResult: EntityHitResult, projectileEntity: Projectile) {
-    kits.forEach { kit ->
+    allKits.forEach { kit ->
         invokeKitAction(kit, sendCooldown = false) {
             kit.events.projectileHitAction?.invoke(this, kit, entityHitResult, projectileEntity)
         }
@@ -22,7 +22,7 @@ private fun HGPlayer.hitWithProjectile(entityHitResult: EntityHitResult, project
 }
 
 private fun HGPlayer.hitByProjectile(entityHitResult: EntityHitResult, projectileEntity: Projectile) {
-    kits.forEach { kit ->
+    allKits.forEach { kit ->
         invokeKitAction(kit, sendCooldown = false) {
             kit.events.projectileHitByAction?.invoke(this, kit, entityHitResult, projectileEntity)
         }

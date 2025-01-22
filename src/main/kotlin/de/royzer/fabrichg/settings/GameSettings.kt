@@ -59,7 +59,7 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var mushroomCowNerf: Boolean = true,
     @EncodeDefault
-    var kitAmount: Int = 1,
+    var kitAmount: Int = 2,
     @EncodeDefault
     var pitEnabled: Boolean = false,
     @EncodeDefault
