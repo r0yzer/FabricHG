@@ -19,6 +19,8 @@ import net.silkmc.silk.core.text.sendText
 val teamCommand = command("team") {
     alias("hgteam")
 
+    requires { ConfigManager.gameSettings.teamsEnabled }
+
     literal("create") {
         argument<String>("name") { _name ->
             runs {

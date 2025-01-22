@@ -4,7 +4,6 @@ import de.royzer.fabrichg.kit.kits.*
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
-import kotlin.math.absoluteValue
 
 @Serializable
 enum class SoupMode {
@@ -59,7 +58,7 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
     @EncodeDefault
     var mushroomCowNerf: Boolean = true,
     @EncodeDefault
-    var kitAmount: Int = 1,
+    var kitAmount: Int = 2,
     @EncodeDefault
     var pitEnabled: Boolean = false,
     @EncodeDefault
@@ -95,7 +94,8 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
         listOf(kangarooKit.name, blinkKit.name, phantomKit.name),
         listOf(switcherKit.name, demomanKit.name),
         listOf(switcherKit.name, jackhammerKit.name),
-        listOf(anchorKit.name, beerKit.name)
+        listOf(anchorKit.name, beerKit.name),
+        listOf(banditKit.name, copycatKit.name), // sollte eigentlich gehen aber kp trotzdem dumm
     ),
     @EncodeDefault
     var soupMode: SoupMode = SoupMode.EatAndDestroyBlock,

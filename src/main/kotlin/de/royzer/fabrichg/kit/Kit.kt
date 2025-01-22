@@ -149,10 +149,20 @@ val kits = listOfNotNull(
     tankKit,
     demomanKit,
     banditKit,
-    minerKit
+    minerKit,
+    copycatKit,
 )
 
+/**
+ * Random kit ausser Surprise und None, guckt für Surprise ob auch nur enabled
+ */
 fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }
     .filter { if (ConfigManager.gameSettings.surpriseOnlyEnabledKits) it.enabled else true }.randomOrNull() ?: noneKit
+
+/**
+ * Einfach ein random Kit ausser die angegebenen
+ */
+fun randomKit(exempt: List<Kit>): Kit = kits.filter { !exempt.contains(it) }.randomOrNull() ?: noneKit
+
 
 val enabledKits get() = kits.filter { it.enabled }

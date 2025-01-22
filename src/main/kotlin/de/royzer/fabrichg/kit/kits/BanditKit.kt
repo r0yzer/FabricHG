@@ -50,7 +50,7 @@ private fun ItemStack.setBanditContent(player: HGPlayer?) {
                         text(kit.name) { color = TEXT_BLUE }
                         text(" Kit") { color = TEXT_GRAY }
                     })
-                    clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, "/banditKit ${kit.name}")
+                    clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND, """/banditKit "${kit.name}"""")
                 }
                 newLine()
             }
@@ -68,11 +68,12 @@ private fun ItemStack.setBanditContent(player: HGPlayer?) {
     )
 }
 
-private fun Kit.isBanditApplicable() = this != noneKit && this.name != "Bandit"
+private fun Kit.isBanditApplicable(): Boolean =
+    this != noneKit && this != banditKit && this != copycatKit && this != backupKit && this != surpriseKit && this != urgalKit
 
 val banditKit = kit("Bandit") {
     kitSelectorItem = Items.WRITABLE_BOOK.defaultInstance
-    description = "steal enemies kits"
+    description = "Steal kits of your enemies"
 
     cooldown = 120.0
 
@@ -94,14 +95,12 @@ val banditKit = kit("Bandit") {
     kitEvents {
         onKillPlayer(ignoreCooldown = true) { hgPlayer, _, killed ->
             val killedHGPlayer = killed.hgPlayer
-
-            val killedPlayerKits = killedHGPlayer.kits.filter { it.isBanditApplicable() }
-            println("applicable: $killedPlayerKits")
-
             val currentKits = hgPlayer.getPlayerData<List<Kit>>(BANDIT_KITS_KEY) ?: listOf()
+
+            val killedPlayerKits = killedHGPlayer.kits.filter { it.isBanditApplicable() && !currentKits.contains(it) }
+
             val newKits = currentKits.plus(killedPlayerKits)
 
-            println("new: $newKits")
             hgPlayer.playerData[BANDIT_KITS_KEY] = newKits
 
             kitItem.updateFor(hgPlayer) {

@@ -46,7 +46,7 @@ fun onSpitHit(result: EntityHitResult, spitEntity: LlamaSpit) {
 
     if (hitted.hgPlayer.isNeo) return
 
-    result.entity.hurt(spitter.damageSources().playerAttack(spitter), 1f)
+    result.entity.hurt(spitter.damageSources().playerAttack(spitter), 4f)
 
     if (!hitted.inventory.hasAnyOf(setOf(Items.MUSHROOM_STEW))) {
         return
