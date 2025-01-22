@@ -152,6 +152,7 @@ val kits = listOfNotNull(
     minerKit,
     copycatKit,
 //    goatKit,
+    pacifistKit,
 )
 
 /**
