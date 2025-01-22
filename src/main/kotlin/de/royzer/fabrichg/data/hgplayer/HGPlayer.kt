@@ -43,11 +43,16 @@ class HGPlayer(
     var kills: Int = 0
     var offlineTime = maxOfflineTime
     val kits = mutableListOf<Kit>()
+
+    /**
+     * Alle Kits die der HGPlayer haben kann, d.h. seine eigenen plus evtl Kits durch copycat / bandit
+     */
     val allKits: List<Kit>
         get() {
             val allKits = mutableListOf(*kits.toTypedArray())
 
             getPlayerData<Kit>(BANDIT_KIT_KEY)?.let { allKits.add(it) }
+            getPlayerData<Kit>(COPYCAT_KIT_KEY)?.let { allKits.add(it) }
 
             return allKits
         }
@@ -200,6 +205,18 @@ class HGPlayer(
         }
 
         updateScoreboard()
+    }
+
+    val allKitsString get() = kits.joinToString {
+        if (it == banditKit) {
+            val kit = getPlayerData<Kit>(BANDIT_KIT_KEY) ?: "None"
+            return@joinToString "${it.name}/$kit"
+        }
+        if (it == copycatKit) {
+            val kit = getPlayerData<Kit>(COPYCAT_KIT_KEY) ?: "None"
+            return@joinToString "${it.name}/$kit"
+        }
+        it.name
     }
 
     fun fillKits() {

@@ -51,30 +51,30 @@ object PlayerList {
                 if (killer == sourceKiller && killer != null) { // killer ist ein entity und tötet hgplayer selber direkt
                     if (killer is ServerPlayer) {
                         text(
-                            "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer.kits.joinToString { it.name }}) using ${
+                            "${deadPlayer.name}(${deadPlayer.allKitsString}) was killed by ${killer.name.string}(${killer.hgPlayer.allKitsString}) using ${
                                 killer.mainHandItem?.item.toString().uppercase()
                             }"
                         )
                     }
                     else if (killer is HGBot) { // hgbot und player haben beide mainhanditem aber nicht aus der gleichen subklasse oder so
                         text(
-                            "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer?.kits?.joinToString { it.name }}) using ${
+                            "${deadPlayer.name}(${deadPlayer.allKitsString}) was killed by ${killer.name.string}(${killer.hgPlayer?.allKitsString}) using ${
                                 killer.mainHandItem?.item.toString().uppercase()
                             }"
                         )
                     } else { // mob
-                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}")
+                        text("${deadPlayer.name}(${deadPlayer.allKitsString}) was killed by ${killer.name.string}")
                     }
                 } else if (killer != null) { // source ist nicht der killer selber aber tötet indirekt oder halt creeper etc
                     if (killer is ServerPlayer) {
-                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer.kits.joinToString { it.name }})")
+                        text("${deadPlayer.name}(${deadPlayer.allKitsString}) was killed by ${killer.name.string}(${killer.hgPlayer.allKitsString})")
                     } else if (killer is HGBot){
-                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}(${killer.hgPlayer?.kits?.joinToString { it.name }})")
+                        text("${deadPlayer.name}(${deadPlayer.allKitsString}) was killed by ${killer.name.string}(${killer.hgPlayer?.allKitsString})")
                     } else { // mob
-                        text("${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }}) was killed by ${killer.name.string}")
+                        text("${deadPlayer.name}(${deadPlayer.allKitsString}) was killed by ${killer.name.string}")
                     }
                 } else { // ohne fremdeinwirkung
-                    val prefix = "${deadPlayer.name}(${deadPlayer.kits.joinToString { it.name }})"
+                    val prefix = "${deadPlayer.name}(${deadPlayer.allKitsString})"
                     when (val cause = source.msgId) {
                         "cactus" -> text("$prefix died from a cactus")
                         "fireball" -> text("$prefix died from a fireball")
