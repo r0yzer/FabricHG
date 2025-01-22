@@ -47,7 +47,7 @@ val ServerPlayer.recraft: Int
                 Items.COCOA_BEANS -> rc += it.count * 1
                 Items.RED_MUSHROOM -> rc += it.count * 0.5
                 Items.BROWN_MUSHROOM -> rc += it.count * 0.5
-                Items.CACTUS -> rc += it.count * 0.5
+                Items.CACTUS -> rc += it.count * 1
                 Items.PINK_PETALS -> rc += it.count * 0.125
             }
         }
