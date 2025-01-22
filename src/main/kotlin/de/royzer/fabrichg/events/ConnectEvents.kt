@@ -67,6 +67,23 @@ object ConnectEvents {
 
             hgPlayer.fillKits()
 
+            mcCoroutineTask(sync = false) {
+                val playerResult = Stats.get(player)
+                val allResults = Stats.getAll()
+                try {
+                    playerResult.await()
+                    allResults.await()
+                    val stats = playerResult.getCompleted()
+                    if (stats.kills < 20 || (stats.kills / stats.deaths) < 0.3) {
+                        hgPlayer.isBeginner = true
+                    }
+                } catch (e: Exception) {
+                    println("isBeginner check fehler: $e")
+                    e.printStackTrace()
+                }
+            }
+
+
             when (gamePhase) {
                 PhaseType.LOBBY -> {
                     player.removeAllEffects()

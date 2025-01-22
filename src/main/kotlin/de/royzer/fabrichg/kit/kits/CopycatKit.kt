@@ -66,5 +66,5 @@ val copycatKit = kit("Copycat") {
 // kits die man nicht bekommen soll
 // noch einmal Type checking has run into a recursive problem. Easiest workaround: specify the types of your declarations explicitly. und es passiert was
 private val copycatExemptKits: List<Kit> = listOf(
-    banditKit, backupKit, noneKit, surpriseKit, copycatKit
+    banditKit, backupKit, noneKit, surpriseKit, copycatKit, automaticKit
 )

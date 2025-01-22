@@ -102,6 +102,11 @@ class HGPlayer(
     }
 
     /**
+     * Ob er Automatic spielen darf
+     */
+    var isBeginner = false
+
+    /**
      * @param singleKit null wenn die items aller kits gegeben werden sollen sonst das kit
      * das ist beschissen
      */
@@ -172,6 +177,15 @@ class HGPlayer(
                 bold = true
             }
             return
+        }
+        if (kit == automaticKit) {
+            if (!isBeginner) {
+                this.serverPlayer?.sendText {
+                    text("You are too good for this kit")
+                    color = TEXT_GRAY
+                    bold = true
+                }
+            }
         }
         val kitBefore = this.kits[index]
         this.kits[index] = kit
