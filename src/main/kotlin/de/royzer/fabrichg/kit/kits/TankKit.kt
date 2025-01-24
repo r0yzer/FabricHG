@@ -12,8 +12,8 @@ import net.silkmc.silk.core.entity.pos
 val tankKit = kit("Tank") {
     kitSelectorItem = Items.GRAVEL.defaultInstance
 
-    val recraftExplosionSize by property(3f, "recraft explosion size")
-    val entityExplosionSize by property(4f, "entity explosion size")
+    val recraftExplosionSize by property(1.5f, "recraft explosion size")
+    val entityExplosionSize by property(3.5f, "entity explosion size")
     val playerExplosionSize by property(5f, "player explosion size")
 
     kitEvents {

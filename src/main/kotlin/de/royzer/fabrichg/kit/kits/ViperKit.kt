@@ -16,7 +16,7 @@ val viperKit = kit("Viper") {
     description = "Poison your enemies when hitting them"
 
     val maxInt by property(4, "max int (0 = always poison)")
-    val poisonSeconds by property(4, "seconds poisoned")
+    val poisonSeconds by property(3, "seconds poisoned")
     val poisonLevel by property(0, "poison level (0 = Poison I)")
 
     kitEvents {
