@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.item.ItemStack
 import net.silkmc.silk.core.server.players
 import net.silkmc.silk.core.text.literalText
+import viperKit
 
 class Kit(val name: String) {
     val kitItems = mutableListOf<KitItem>()
@@ -149,7 +150,8 @@ val kits = listOfNotNull(
     tankKit,
     demomanKit,
     banditKit,
-    minerKit
+    minerKit,
+    viperKit
 )
 
 fun randomKit(): Kit = kits.filter { it != surpriseKit && it != noneKit }
