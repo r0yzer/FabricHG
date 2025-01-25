@@ -4,6 +4,7 @@ import de.royzer.fabrichg.mixinskt.ServerGamePacketListenerMixinKt;
 import de.royzer.fabrichg.mixinskt.SoupHealingKt;
 import de.royzer.fabrichg.settings.ConfigManager;
 import de.royzer.fabrichg.settings.SoupMode;
+import de.royzer.fabrichg.util.ServerPlayerExtensionsKt;
 import net.minecraft.network.Connection;
 import net.minecraft.network.TickablePacketListener;
 import net.minecraft.network.chat.*;
@@ -54,7 +55,10 @@ public abstract class ServerGamePacketListenerMixin
     }
 
     @Redirect(method = "handleContainerClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSpectator()Z"))
-    public boolean dontIgnoreSpectators(ServerPlayer instance) {
+    public boolean dontIgnoreSpectators(ServerPlayer instance, ServerboundContainerClickPacket packet) {
+        if (instance.isSpectator()) {
+            return !ServerPlayerExtensionsKt.canSpectatorClickIn(player, packet.getContainerId());
+        }
         return false;
     }
 
