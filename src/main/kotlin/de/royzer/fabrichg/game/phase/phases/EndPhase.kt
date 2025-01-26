@@ -8,11 +8,10 @@ import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.teams.HGTeam
 import de.royzer.fabrichg.server
-import de.royzer.fabrichg.util.DitherMode
 import de.royzer.fabrichg.util.MapRenderer
 import de.royzer.fabrichg.util.cloudnet.CloudNetManager
-import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.toHighestPos
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.minecraft.core.BlockPos
@@ -30,8 +29,10 @@ import net.minecraft.world.item.component.Fireworks
 import net.minecraft.world.level.block.Blocks
 import net.silkmc.silk.core.entity.changePos
 import net.silkmc.silk.core.item.itemStack
+import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.task.mcCoroutineTask
+import net.silkmc.silk.core.text.literal
 import net.silkmc.silk.core.text.literalText
 import java.net.URL
 import javax.imageio.ImageIO
@@ -39,7 +40,7 @@ import kotlin.math.min
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
-class EndPhase(private val winner: HGPlayer?) : GamePhase() {
+class EndPhase(private val winnable: HGWinnable?) : GamePhase() {
 
     val endTime by lazy { GamePhaseManager.timer.get() }
 
@@ -48,24 +49,34 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
         combatloggedPlayers.forEach { (_, u) -> u.cancel() }
         endTime
         GamePhaseManager.resetTimer()
-        with(winner?.serverPlayer ?: return) {
-            connection.send(ClientboundPlayerAbilitiesPacket(abilities.also {
-                it.flying = true
-                it.mayfly = true
-            }))
-            addEffect(MobEffectInstance(MobEffects.GLOWING, -1, 0, false, false))
-        }
-        winner.updateStats(wins = 1)
-
-        val imageUrl = "https://i.imgur.com/o2alDIv.png" // kp von wo sonst discord webp geht nciht
-
         placeKuchen()
 
-        winner.serverPlayer?.let {
-            it.setItemInHand(InteractionHand.OFF_HAND, MapRenderer.render(
-                ImageIO.read(URL(imageUrl)),
-                it
-            ))
+        winnable?.winners?.forEach { winner ->
+            with(winner.serverPlayer ?: return) {
+                connection.send(ClientboundPlayerAbilitiesPacket(abilities.also {
+                    it.flying = true
+                    it.mayfly = true
+                }))
+                addEffect(MobEffectInstance(MobEffects.GLOWING, -1, 0, false, false))
+            }
+            winner.updateStats(wins = 1)
+
+
+            try {
+                val imageUrl = "https://i.imgur.com/o2alDIv.png" // kp von wo sonst discord webp geht nciht
+
+                winner.serverPlayer?.let {
+                    it.setItemInHand(
+                        InteractionHand.OFF_HAND, MapRenderer.render(
+                            ImageIO.read(URL(imageUrl)),
+                            it
+                        )
+                    )
+                }
+            } catch (e: Exception) {
+                logError("failed to get image")
+                e.printStackTrace()
+            }
         }
     }
 
@@ -96,7 +107,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 
         val explosions = listOf(starExplosion, creeperExplosion, burstExplosion)
 
-        val player = winner?.serverPlayer ?: return
+        val player = winnable?.winners?.map { it.serverPlayer }?.filterNotNull()?.firstOrNull() ?: return
 
         val y = min(server.overworld().height - 10, BlockPos(0, 0, 0).toHighestPos().y + 50)
 
@@ -131,7 +142,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
     }
 
     override fun tick(timer: Int) {
-        broadcastComponent(winnerText(winner))
+        broadcastComponent(winnable?.text ?: "Kein sieger?".literal)
 //        if (timer == maxPhaseTime - 1) {
 //            GamePhaseManager.server.playerList.players.forEach {
 //                it.connection.disconnect(literalText("Der Server startet neu") { color = 0xFF0000 })
@@ -139,7 +150,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 //        }
         if (timer == maxPhaseTime) {
             logInfo("Spiel endet")
-            logInfo("Sieger: ${winner?.name}, Kills: ${winner?.kills}")
+            logInfo("Sieger: ${winnable?.winners?.map { it.name }}, Kills: ${winnable?.winners?.sumOf { it.kills }}")
 
             runCatching {
                 CloudNetManager.stopCloudNetService()
@@ -167,15 +178,14 @@ fun playerInfoText(player: HGPlayer): Component {
     }
 }
 
-fun winnerText(winner: HGPlayer?): Component {
-    if (winner == null) return literalText("Kein Sieger?")
+fun teamInfoText(team: HGTeam): Component {
     return literalText {
-        color = TEXT_GRAY
-        text(winner.name) {
-            color = TEXT_BLUE
-            underline = true
+        text("Kills: ${team.hgPlayers.sumOf { it.kills }}\n") {
+            color = 0x00FF51
         }
-        text(" hat gewonnen!")
-        hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, playerInfoText(winner))
+        text("Player(s): ") {
+            color = 0x42FF51
+            text(team.hgPlayers.joinToString { it.name })
+        }
     }
 }

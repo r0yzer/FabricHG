@@ -61,5 +61,5 @@ val phantomKit = kit("Phantom") {
 }
 
 fun shouldGlide(player: ServerPlayer): Boolean {
-    return player.hgPlayer.getPlayerData<Boolean>(flyingKey) == true
+    return player.hgPlayer.getPlayerData<Boolean>(flyingKey) == true && player.hgPlayer.canUseKit(phantomKit)
 }

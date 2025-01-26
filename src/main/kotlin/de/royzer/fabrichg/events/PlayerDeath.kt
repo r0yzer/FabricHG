@@ -15,7 +15,7 @@ import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
 import net.minecraft.world.entity.LivingEntity
-import net.minecraft.world.entity.player.Player
+import net.minecraft.world.entity.animal.Wolf
 import net.silkmc.silk.core.logging.logInfo
 
 object PlayerDeath {
@@ -35,7 +35,13 @@ object PlayerDeath {
             return false
         }
 
-        val killer: Entity? = (deadEntity as LivingEntityAccessor).attackingMob
+        var killer: Entity? = (deadEntity as LivingEntityAccessor).attackingMob
+
+        if (killer is Wolf) {
+            if (killer.owner != null) {
+                killer = killer.owner
+            }
+        }
 
         val hgPlayer = killer?.hgPlayer
         hgPlayer?.allKits?.forEach {
@@ -57,8 +63,6 @@ object PlayerDeath {
             killer.kill(serverPlayerEntity.hgPlayer)
         }
 
-//        (serverPlayerEntity as LivingEntityAccessor).invokeDropAllDeathLoot(serverPlayerEntity.serverLevel(), damageSource)
-
         if (deadHGPlayer.status != HGPlayerStatus.GULAG) {
             hgPlayer?.kills = hgPlayer?.kills?.plus(1) ?: 1
             hgPlayer?.updateStats(1)
@@ -68,17 +72,11 @@ object PlayerDeath {
 
         serverPlayerEntity.removeHGPlayer()
         PlayerList.announcePlayerDeath(deadHGPlayer, damageSource, killer)
-//        if(serverPlayerEntity is FakeServerPlayer){
-//            serverPlayerEntity.connection.onDisconnect(Component.literal("Dead"))
-//        }
         hgPlayer?.allKits?.forEach {
             if (hgPlayer.canUseKit(it, true)) {
                 it.events.killPlayerAction?.invoke(hgPlayer, it, serverPlayerEntity)
             }
         }
-
-
-//        serverPlayerEntity.hgPlayer.kits.clear()
 
         return true
     }

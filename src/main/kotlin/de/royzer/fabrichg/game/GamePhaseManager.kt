@@ -5,6 +5,7 @@ import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.phase.phases.LobbyPhase
 import de.royzer.fabrichg.game.teams.hgTeam
 import de.royzer.fabrichg.kit.kits.demomanKit
+import de.royzer.fabrichg.kit.kits.trymacsKit
 import de.royzer.fabrichg.util.sendEntityDataUpdate
 import net.silkmc.silk.core.text.literalText
 import net.minecraft.network.chat.Component
@@ -16,7 +17,6 @@ import net.minecraft.world.level.GameRules
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.logging.logError
 import net.silkmc.silk.core.task.infiniteMcCoroutineTask
-import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literal
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.milliseconds
@@ -50,6 +50,7 @@ object GamePhaseManager {
         }
 
         demomanKit.enabled = false
+        trymacsKit.enabled = false
     }
 
     private fun tick() {

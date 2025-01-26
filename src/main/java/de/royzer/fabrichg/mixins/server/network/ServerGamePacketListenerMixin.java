@@ -1,15 +1,10 @@
 package de.royzer.fabrichg.mixins.server.network;
 
-import de.royzer.fabrichg.commands.TeamChatCommandKt;
-import de.royzer.fabrichg.data.hgplayer.HGPlayer;
-import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
-import de.royzer.fabrichg.game.teams.HGTeam;
-import de.royzer.fabrichg.game.teams.TeamsKt;
-import de.royzer.fabrichg.kit.kits.StalaktitKitKt;
 import de.royzer.fabrichg.mixinskt.ServerGamePacketListenerMixinKt;
 import de.royzer.fabrichg.mixinskt.SoupHealingKt;
 import de.royzer.fabrichg.settings.ConfigManager;
 import de.royzer.fabrichg.settings.SoupMode;
+import de.royzer.fabrichg.util.ServerPlayerExtensionsKt;
 import net.minecraft.network.Connection;
 import net.minecraft.network.TickablePacketListener;
 import net.minecraft.network.chat.*;
@@ -25,12 +20,11 @@ import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Mixin(ServerGamePacketListenerImpl.class)
@@ -58,6 +52,14 @@ public abstract class ServerGamePacketListenerMixin
     @Inject(method = "handleContainerClick", at = @At("HEAD"), cancellable = true)
     public void onContainerClick(ServerboundContainerClickPacket packet, CallbackInfo ci) {
         ServerGamePacketListenerMixinKt.INSTANCE.onClickSlot(packet, player, ci);
+    }
+
+    @Redirect(method = "handleContainerClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSpectator()Z"))
+    public boolean dontIgnoreSpectators(ServerPlayer instance, ServerboundContainerClickPacket packet) {
+        if (instance.isSpectator()) {
+            return !ServerPlayerExtensionsKt.canSpectatorClickIn(player, packet.getContainerId());
+        }
+        return false;
     }
 
     @Inject(method = "handlePlayerAction", at = @At("HEAD"), cancellable = true)

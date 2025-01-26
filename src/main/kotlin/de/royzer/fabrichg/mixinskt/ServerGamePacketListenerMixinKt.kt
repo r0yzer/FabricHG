@@ -3,6 +3,9 @@ package de.royzer.fabrichg.mixinskt
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
+import de.royzer.fabrichg.util.canSpectatorClickIn
+import de.royzer.fabrichg.util.isOP
+import de.royzer.fabrichg.util.spectatorClickableGuis
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket
 import net.minecraft.server.level.ServerPlayer
@@ -10,6 +13,7 @@ import net.minecraft.world.entity.player.Player
 import net.minecraft.world.inventory.ChestMenu
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraft.world.level.GameType
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 import java.util.UUID
 
@@ -17,6 +21,14 @@ object ServerGamePacketListenerMixinKt {
     val itemsInMouse = hashMapOf<UUID, ItemStack>()
 
     fun onClickSlot(packet: ServerboundContainerClickPacket, player: ServerPlayer, ci: CallbackInfo) {
+        if (player.gameMode.gameModeForPlayer == GameType.SPECTATOR) {
+            if (!player.canSpectatorClickIn(packet.containerId)) {
+                ci.cancel()
+                player.containerMenu.sendAllDataToRemote()
+                return
+            }
+        }
+
         if (GamePhaseManager.currentPhaseType == PhaseType.LOBBY) {
             if (player.containerMenu is ChestMenu) return
             ci.cancel()

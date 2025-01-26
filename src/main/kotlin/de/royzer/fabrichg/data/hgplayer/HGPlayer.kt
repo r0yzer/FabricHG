@@ -102,7 +102,7 @@ class HGPlayer(
     }
 
     /**
-     * Ob er Automatic spielen darf
+     * Ob er Automatic/Pacifist spielen darf
      */
     var isBeginner = false
 
@@ -178,7 +178,7 @@ class HGPlayer(
             }
             return
         }
-        if (kit == automaticKit) {
+        if (kit == automaticKit || kit == pacifistKit) {
             if (!isBeginner) {
                 this.serverPlayer?.sendText {
                     text("You are too good for this kit")
