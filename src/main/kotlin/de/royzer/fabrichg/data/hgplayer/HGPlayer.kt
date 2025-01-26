@@ -178,7 +178,7 @@ class HGPlayer(
             }
             return
         }
-        if (kit == automaticKit || kit == pacifistKit) {
+        if ((kit == automaticKit || kit == pacifistKit) && !force) {
             if (!isBeginner) {
                 this.serverPlayer?.sendText {
                     text("You are too good for this kit")
@@ -186,6 +186,7 @@ class HGPlayer(
                     bold = true
                 }
             }
+            return
         }
         val kitBefore = this.kits[index]
         this.kits[index] = kit
