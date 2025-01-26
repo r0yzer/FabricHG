@@ -9,6 +9,8 @@ val automaticKit = kit("Automatic") {
 
     description = "Soups automatically in your hotbar"
 
+    beginnerKit = true
+
     val automaticSoupAchievement by achievement("automatic soup") {
         level(100)
         level(2500)

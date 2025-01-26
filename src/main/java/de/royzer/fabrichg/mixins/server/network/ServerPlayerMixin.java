@@ -1,6 +1,7 @@
 package de.royzer.fabrichg.mixins.server.network;
 
 import com.mojang.authlib.GameProfile;
+import de.royzer.fabrichg.bots.HGBot;
 import de.royzer.fabrichg.data.hgplayer.HGPlayer;
 import de.royzer.fabrichg.data.hgplayer.HGPlayerKt;
 import de.royzer.fabrichg.game.PlayerList;
@@ -161,13 +162,18 @@ public abstract class ServerPlayerMixin extends Player {
         if (source.is(DamageTypes.FALLING_STALACTITE)) {
             return amount * 0.5f;
         } else if (source.getEntity() instanceof ServerPlayer) {
-            double multiplier = 0.65;
+            double multiplier = 0.75;
             if (((ServerPlayer) source.getEntity()).getMainHandItem().getItem() == Items.TRIDENT) {
                 multiplier = 0.1;
             }
             if (((ServerPlayer) source.getEntity()).getMainHandItem().getDisplayName().getString().toLowerCase().contains("axe")) {
                 multiplier = 0.3;
             }
+
+            if (instance.getStringUUID().equals(HGBot.HGBOT_UUID)) multiplier = multiplier * 1.05;
+            if (source.getEntity().getStringUUID().equals(HGBot.HGBOT_UUID)) multiplier = multiplier * 0.95;
+
+
             return (float) (amount * multiplier);
         } else {
             return amount;

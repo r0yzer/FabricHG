@@ -7,6 +7,8 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.game.removeHGPlayer
+import de.royzer.fabrichg.kit.kits.GamingGolem
+import de.royzer.fabrichg.kit.kits.GamingGolemWolf
 import de.royzer.fabrichg.mixins.entity.LivingEntityAccessor
 import de.royzer.fabrichg.sendPlayerStatus
 import de.royzer.fabrichg.util.dropInventoryItemsWithoutKitItems
@@ -37,10 +39,9 @@ object PlayerDeath {
 
         var killer: Entity? = (deadEntity as LivingEntityAccessor).attackingMob
 
-        if (killer is Wolf) {
-            if (killer.owner != null) {
-                killer = killer.owner
-            }
+        when (killer) {
+            is Wolf -> killer = killer.owner
+            is GamingGolem -> killer = killer.hgPlayer?.serverPlayer
         }
 
         val hgPlayer = killer?.hgPlayer

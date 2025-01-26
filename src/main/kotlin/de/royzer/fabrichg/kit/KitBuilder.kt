@@ -58,6 +58,16 @@ class KitBuilder(val kit: Kit) {
             field = value
         }
 
+    /**
+     * Ob man nur unter ner bestimmten k/d / kills das spielen kann
+     */
+    var beginnerKit: Boolean = false
+        get() = kit.beginnerKit
+        set(value) {
+            kit.beginnerKit = value
+            field = value
+        }
+
     private fun addKitItem(kitItem: KitItem) {
         kitItem.itemStack.setLore(listOf(literalText("Kititem")))
         kitItem.itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(nbtCompound {

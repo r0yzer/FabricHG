@@ -54,6 +54,7 @@ class Kit(val name: String) {
     var properties: HashMap<String, KitProperty> = hashMapOf()
     var achievements: MutableList<KitAchievement> = mutableListOf()
     var infoGenerator: InfoGenerator? = null
+    var beginnerKit = false
 
     fun getInfo(player: HGPlayer): Component? {
         val text = infoGenerator?.invoke(player, this)
