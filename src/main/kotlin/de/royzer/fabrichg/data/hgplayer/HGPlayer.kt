@@ -178,7 +178,7 @@ class HGPlayer(
             }
             return
         }
-        if ((kit == automaticKit || kit == pacifistKit) && !force) {
+        if (kit.beginnerKit && !force) {
             if (!isBeginner) {
                 this.serverPlayer?.sendText {
                     text("You are too good for this kit")
