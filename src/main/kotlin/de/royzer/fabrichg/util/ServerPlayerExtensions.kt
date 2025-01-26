@@ -14,6 +14,9 @@ import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.kotlin.ticks
 import net.silkmc.silk.core.task.mcCoroutineTask
+import net.silkmc.silk.igui.Gui
+import net.silkmc.silk.igui.openGui
+import java.util.UUID
 
 
 fun ServerPlayer.giveOrDropItem(item: ItemStack) {
@@ -47,7 +50,7 @@ val ServerPlayer.recraft: Int
                 Items.COCOA_BEANS -> rc += it.count * 1
                 Items.RED_MUSHROOM -> rc += it.count * 0.5
                 Items.BROWN_MUSHROOM -> rc += it.count * 0.5
-                Items.CACTUS -> rc += it.count * 0.5
+                Items.CACTUS -> rc += it.count * 1
                 Items.PINK_PETALS -> rc += it.count * 0.125
             }
         }
@@ -140,3 +143,16 @@ fun ServerPlayer.sendEntityDataUpdate(forEntity: LivingEntity, changeFlag: Int? 
 
     entityData.packDirty()
 }
+
+val spectatorClickableGuis = hashMapOf<UUID, Int>()
+
+fun ServerPlayer.openSpectatorClickableGUI(gui: Gui, page: Any = 1) {
+    openGui(gui, page)
+
+    mcCoroutineTask(delay=1.ticks) {
+        spectatorClickableGuis[uuid] = containerMenu.containerId
+    }
+}
+
+fun ServerPlayer.canSpectatorClickIn(containerId: Int)
+     = spectatorClickableGuis[uuid] == containerId

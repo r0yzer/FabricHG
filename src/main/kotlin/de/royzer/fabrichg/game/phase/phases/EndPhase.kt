@@ -9,7 +9,10 @@ import de.royzer.fabrichg.game.combatlog.combatloggedPlayers
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.server
+import de.royzer.fabrichg.util.DitherMode
+import de.royzer.fabrichg.util.MapRenderer
 import de.royzer.fabrichg.util.cloudnet.CloudNetManager
+import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.toHighestPos
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import net.minecraft.core.BlockPos
@@ -17,6 +20,7 @@ import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket
+import net.minecraft.world.InteractionHand
 import net.minecraft.world.effect.MobEffectInstance
 import net.minecraft.world.effect.MobEffects
 import net.minecraft.world.entity.projectile.FireworkRocketEntity
@@ -29,6 +33,8 @@ import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
+import java.net.URL
+import javax.imageio.ImageIO
 import kotlin.math.min
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
@@ -51,10 +57,15 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
         }
         winner.updateStats(wins = 1)
 
+        val imageUrl = "https://i.imgur.com/o2alDIv.png" // kp von wo sonst discord webp geht nciht
+
         placeKuchen()
 
-        server.playerList.players.forEach { player ->
-            player.changePos(0, 101, 0, server.overworld())
+        winner.serverPlayer?.let {
+            it.setItemInHand(InteractionHand.OFF_HAND, MapRenderer.render(
+                ImageIO.read(URL(imageUrl)),
+                it
+            ))
         }
     }
 
@@ -87,13 +98,16 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
 
         val player = winner?.serverPlayer ?: return
 
-        val pos = BlockPos(0, 0, 0).toHighestPos()
-        val height = min(server.overworld().height + 100, pos.y)
+        val y = min(server.overworld().height - 10, BlockPos(0, 0, 0).toHighestPos().y + 50)
+
+        server.playerList.players.forEach { player ->
+            player.changePos(0, y + 1, 0, server.overworld())
+        }
 
         mcCoroutineTask(howOften = 5, period = 1.seconds) { task ->
             for (x in -size..size) {
                 for (z in -size..size) {
-                    server.overworld().setBlockAndUpdate(BlockPos(x, height, z), Blocks.CAKE.defaultBlockState())
+                    server.overworld().setBlockAndUpdate(BlockPos(x, y, z), Blocks.CAKE.defaultBlockState())
 
                     val fireworkStack = itemStack(Items.FIREWORK_ROCKET) {
                         set(
@@ -106,7 +120,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
                         server.overworld(),
                         player,
                         x.toDouble(),
-                        height.toDouble(),
+                        y.toDouble(),
                         z.toDouble(),
                         fireworkStack.copy()
                     );
@@ -126,6 +140,7 @@ class EndPhase(private val winner: HGPlayer?) : GamePhase() {
         if (timer == maxPhaseTime) {
             logInfo("Spiel endet")
             logInfo("Sieger: ${winner?.name}, Kills: ${winner?.kills}")
+
             runCatching {
                 CloudNetManager.stopCloudNetService()
             }.onFailure {

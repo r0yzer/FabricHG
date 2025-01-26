@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.settings
 
+import de.royzer.fabrichg.commands.teamChatCommand
 import de.royzer.fabrichg.commands.teamCommand
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.kit.property.Value
@@ -69,9 +70,7 @@ object ConfigManager {
         gameSettings.soupMode = gameConfigData.soupMode
         gameSettings.crossteamingAllowed = gameConfigData.crossteamingAllowed
 
-        if (gameSettings.teamsEnabled) {
-            teamCommand.setupRegistrationCallback()
-        }
+
 
         setKitValues()
         updateGameConfigFile()

@@ -14,11 +14,12 @@ import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 
 fun <T> ArgumentCommandBuilder<CommandSourceStack, T>.suggestsListFiltering(block: CommandContext<CommandSourceStack>.() -> List<T>) {
+    val umlaute: List<Char> = listOf(' ', 'ä', 'ü', 'ö', 'ß')
     suggestList { context ->
         val filtered = context.block().filter { listItem -> listItem.toString().contains(context.input.split(" ").last(), true) }
         filtered.map {
             val string = it.toString()
-            if (string.contains(" ")) """"$string"""" else string
+            if (string.any { umlaute.contains(it) }) """"$string"""" else string
         }
     }
 }
@@ -49,7 +50,7 @@ val statsCommand = command("stats") {
 
             text("K/D: ") { color = TEXT_LIGHT_GRAY }
             val kd = stats.kills.toDouble() / stats.deaths.toDouble()
-            text(kd.round(2).let { if (it.isNaN()) 0.0 else it }.toStringWithoutTrailing0s()) { color = TEXT_YELLOW }
+            text(String.format("%.2f", kd)) { color = TEXT_YELLOW }
             newLine()
 
             text("Wins: ") { color = TEXT_LIGHT_GRAY }

@@ -43,11 +43,16 @@ class HGPlayer(
     var kills: Int = 0
     var offlineTime = maxOfflineTime
     val kits = mutableListOf<Kit>()
+
+    /**
+     * Alle Kits die der HGPlayer haben kann, d.h. seine eigenen plus evtl Kits durch copycat / bandit
+     */
     val allKits: List<Kit>
         get() {
             val allKits = mutableListOf(*kits.toTypedArray())
 
             getPlayerData<Kit>(BANDIT_KIT_KEY)?.let { allKits.add(it) }
+            getPlayerData<Kit>(COPYCAT_KIT_KEY)?.let { allKits.add(it) }
 
             return allKits
         }
@@ -95,6 +100,11 @@ class HGPlayer(
         return if (ignoreCooldown) hasKit(kit) && GamePhaseManager.isIngame && !kitsDisabled
         else canUseKit(kit)
     }
+
+    /**
+     * Ob er Automatic/Pacifist spielen darf
+     */
+    var isBeginner = false
 
     /**
      * @param singleKit null wenn die items aller kits gegeben werden sollen sonst das kit
@@ -168,6 +178,15 @@ class HGPlayer(
             }
             return
         }
+        if (kit == automaticKit || kit == pacifistKit) {
+            if (!isBeginner) {
+                this.serverPlayer?.sendText {
+                    text("You are too good for this kit")
+                    color = TEXT_GRAY
+                    bold = true
+                }
+            }
+        }
         val kitBefore = this.kits[index]
         this.kits[index] = kit
         if (forbiddenKitCombinations.any { forbiddenKits ->
@@ -200,6 +219,18 @@ class HGPlayer(
         }
 
         updateScoreboard()
+    }
+
+    val allKitsString get() = kits.joinToString {
+        if (it == banditKit) {
+            val kit = getPlayerData<Kit>(BANDIT_KIT_KEY) ?: "None"
+            return@joinToString "${it.name}/$kit"
+        }
+        if (it == copycatKit) {
+            val kit = getPlayerData<Kit>(COPYCAT_KIT_KEY) ?: "None"
+            return@joinToString "${it.name}/$kit"
+        }
+        it.name
     }
 
     fun fillKits() {
