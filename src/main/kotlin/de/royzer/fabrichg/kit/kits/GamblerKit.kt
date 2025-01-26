@@ -232,21 +232,21 @@ private val goodGambler = WeightedCollection<GamblerAction>().also { collection 
     collection.add(GamblerAction("You won wood") {
         it.giveOrDropItem(itemStack(Items.OAK_PLANKS, 32) {})
     }, 0.6)
-    collection.add(GamblerAction("You a full chain set") {
+    collection.add(GamblerAction("You won a full chain set") {
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_HELMET, 1) {})
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_CHESTPLATE, 1) {})
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_LEGGINGS, 1) {})
         it.giveOrDropItem(itemStack(Items.CHAINMAIL_BOOTS, 1) {})
         it.giveOrDropItem(itemStack(Items.STONE_SWORD, 1) {})
     }, 0.15)
-    collection.add(GamblerAction("You a full gold set") {
+    collection.add(GamblerAction("You won a full gold set") {
         it.giveOrDropItem(itemStack(Items.GOLDEN_HELMET, 1) {})
         it.giveOrDropItem(itemStack(Items.GOLDEN_CHESTPLATE, 1) {})
         it.giveOrDropItem(itemStack(Items.GOLDEN_LEGGINGS, 1) {})
         it.giveOrDropItem(itemStack(Items.GOLDEN_BOOTS, 1) {})
         it.giveOrDropItem(itemStack(Items.GOLDEN_SWORD, 1) {})
     }, 0.2)
-    collection.add(GamblerAction("You a full leather set") {
+    collection.add(GamblerAction("You won a full leather set") {
         it.giveOrDropItem(itemStack(Items.LEATHER_HELMET, 1) {})
         it.giveOrDropItem(itemStack(Items.LEATHER_CHESTPLATE, 1) {})
         it.giveOrDropItem(itemStack(Items.LEATHER_LEGGINGS, 1) {})
