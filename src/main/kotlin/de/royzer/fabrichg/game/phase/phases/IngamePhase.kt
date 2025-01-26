@@ -12,12 +12,17 @@ import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.GamePhase
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.game.teams.HGTeam
+import de.royzer.fabrichg.game.teams.hgTeam
+import de.royzer.fabrichg.game.teams.teams
 import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.kit.achievements.AchievementManager
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
 import de.royzer.fabrichg.util.recraft
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.HoverEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.effect.MobEffectInstance
@@ -26,6 +31,7 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.item.Items
 import net.silkmc.silk.core.logging.logInfo
 import net.silkmc.silk.core.task.mcCoroutineTask
+import net.silkmc.silk.core.text.literal
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
 import kotlin.math.max
@@ -34,8 +40,53 @@ import kotlin.properties.Delegates
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
+data class HGWinnable(
+    val text: Component,
+    val winners: List<HGPlayer>
+) {
+    companion object {
+        private fun singleWinnerText(winner: HGPlayer) = literalText {
+            color = TEXT_GRAY
+            text(winner.name) {
+                color = TEXT_BLUE
+                underline = true
+            }
+            text(" hat gewonnen!")
+            hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, playerInfoText(winner))
+        }
+
+        private fun teamWinnerText(team: HGTeam) = literalText {
+            color = TEXT_GRAY
+            text(team.name) {
+                color = TEXT_BLUE
+                underline = true
+            }
+            text(" hat gewonnen!")
+            newLine()
+            team.hgPlayers.forEach {
+                text {
+                    text(" - ")
+                    text(it.name) { color = TEXT_BLUE }
+                    text(" (")
+                    text(it.kills.toString()) { color = TEXT_BLUE }
+                    text(" kills)")
+
+                    hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, playerInfoText(it))
+                }
+
+                newLine()
+            }
+
+            hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, teamInfoText(team))
+        }
+
+        fun fromPlayer(winner: HGPlayer) = HGWinnable(singleWinnerText(winner), listOf(winner))
+        fun fromTeam(team: HGTeam) = HGWinnable(teamWinnerText(team), team.hgPlayers)
+    }
+}
+
 object IngamePhase : GamePhase() {
-    var winner: HGPlayer? = null
+    var winner: HGWinnable? = null
     override val phaseType = PhaseType.INGAME
     override val maxPhaseTime by lazy { ConfigManager.gameSettings.maxIngameTime }
     override val nextPhase by lazy { EndPhase(winner) }
@@ -87,11 +138,29 @@ object IngamePhase : GamePhase() {
         }
     }
 
-    override fun tick(timer: Int) {
-        if (PlayerList.alivePlayers.size <= 1) {
-            winner = PlayerList.alivePlayers.firstOrNull()
-            startNextPhase()
+    private fun checkForWinner() {
+        if (ConfigManager.gameSettings.teamsEnabled) {
+            val aliveTeams = teams.filter { it.hgPlayers.any { it.isAlive } }
+            val playersWithoutTeam = PlayerList.alivePlayers.filter { it.hgTeam == null }
+
+            if (aliveTeams.size <= 1 && playersWithoutTeam.isEmpty()) {
+                winner = aliveTeams.firstOrNull()?.let { HGWinnable.fromTeam(it) }
+                startNextPhase()
+            } else if (aliveTeams.isEmpty() && playersWithoutTeam.size == 1) {
+                winner = HGWinnable.fromPlayer(playersWithoutTeam.first())
+                startNextPhase()
+            }
+            // gibt es da noch mehr cases?
+        } else {
+            if (PlayerList.alivePlayers.size <= 1) {
+                winner = PlayerList.alivePlayers.firstOrNull()?.let { HGWinnable.fromPlayer(it) }
+                startNextPhase()
+            }
         }
+    }
+
+    override fun tick(timer: Int) {
+        checkForWinner()
 
         if (timer == feastStartTime) {
             Feast.spawn()
@@ -151,7 +220,14 @@ object IngamePhase : GamePhase() {
             })
 
             0 -> {
-                winner = PlayerList.alivePlayers.shuffled().maxByOrNull { it.kills }
+                winner = PlayerList.alivePlayers.shuffled().maxByOrNull { it.kills }?.let {
+                    val team = it.hgTeam
+                    if (ConfigManager.gameSettings.teamsEnabled && team != null) {
+                        HGWinnable.fromTeam(team)
+                    } else {
+                        HGWinnable.fromPlayer(it)
+                    }
+                }
                 startNextPhase()
             }
         }

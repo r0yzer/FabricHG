@@ -4,6 +4,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.phase.PhaseType
 import de.royzer.fabrichg.kit.events.kititem.isKitItem
 import de.royzer.fabrichg.util.canSpectatorClickIn
+import de.royzer.fabrichg.util.isOP
 import de.royzer.fabrichg.util.spectatorClickableGuis
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket
@@ -23,6 +24,7 @@ object ServerGamePacketListenerMixinKt {
         if (player.gameMode.gameModeForPlayer == GameType.SPECTATOR) {
             if (!player.canSpectatorClickIn(packet.containerId)) {
                 ci.cancel()
+                player.containerMenu.sendAllDataToRemote()
                 return
             }
         }
