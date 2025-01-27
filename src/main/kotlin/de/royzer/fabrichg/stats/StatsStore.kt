@@ -4,7 +4,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import net.minecraft.world.entity.player.Player
-import org.dizitart.no2.repository.Cursor
 import java.util.*
 
 interface StatsStore {

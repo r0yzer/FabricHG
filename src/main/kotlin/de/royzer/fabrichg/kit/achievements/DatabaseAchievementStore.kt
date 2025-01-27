@@ -1,78 +1,56 @@
 package de.royzer.fabrichg.kit.achievements
 
+import com.mongodb.client.model.Filters
+import com.mongodb.client.model.ReplaceOptions
+import com.mongodb.kotlin.client.coroutine.MongoCollection
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
+import de.royzer.fabrichg.kit.achievements.IAchievementStore.Companion.achievementScope
+import de.royzer.fabrichg.mongodb.MongoManager
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import net.minecraft.world.entity.player.Player
-import org.dizitart.kno2.getRepository
-import org.dizitart.kno2.nitrite
-import org.dizitart.kno2.serialization.KotlinXSerializationMapper
-import org.dizitart.no2.Nitrite
-import org.dizitart.no2.common.module.NitriteModule
-import org.dizitart.no2.mvstore.MVStoreModule
-import org.dizitart.no2.repository.Cursor
-import org.dizitart.no2.repository.ObjectRepository
 
 object DatabaseAchievementStore : IAchievementStore {
-    private lateinit var storeModule: MVStoreModule
-
-    private lateinit var db: Nitrite
-    private lateinit var repository: ObjectRepository<PlayerAchievementDto>
+    private lateinit var collection: MongoCollection<PlayerAchievementDto>
 
     override fun init(): DatabaseAchievementStore {
-        storeModule = MVStoreModule.withConfig()
-            .filePath("achievements.db")
-            .build()
-        db = nitrite {
-            loadModule(storeModule)
-            loadModule(NitriteModule.module(KotlinXSerializationMapper()))
-        }
-
-        repository = db.getRepository<PlayerAchievementDto>()
+        collection = MongoManager.getOrCreateCollection("achievements")
         return this
     }
 
-    override fun update(stats: PlayerAchievementDto) {
-        IAchievementStore.achievementScope.launch {
-            if (repository.getById(stats.playerAchievementId) == null) {
-                repository.insert(stats)
-            } else {
-                repository.update(stats)
-            }
+    override fun update(achievements: PlayerAchievementDto) {
+        achievementScope.launch {
+            collection.replaceOne(
+                Filters.eq("_id", achievements.playerAchievementId),
+                achievements,
+                ReplaceOptions().upsert(true)
+            )
         }
     }
 
-    fun getAll(): Deferred<Cursor<PlayerAchievementDto>> {
-        return IAchievementStore.achievementScope.async {
-            repository.find()
+    fun getAll(): Deferred<List<PlayerAchievementDto>> {
+        return achievementScope.async {
+            collection.find().toList()
         }
     }
 
     override fun get(player: Player, achievementId: Int): Deferred<PlayerAchievementDto> {
         val id = "${player.uuid}$achievementId"
 
-        return IAchievementStore.achievementScope.async {
-            val achievement = repository.getById(id)
-            if (achievement == null) {
-                val newStats = PlayerAchievementDto(id, player.uuid.toString(), achievementId, 0)
-                update(newStats)
-                newStats
-            } else achievement
+        return achievementScope.async {
+            val achievement = collection.find(Filters.eq("_id")).firstOrNull()
+                ?: PlayerAchievementDto(id, player.uuid, achievementId, 0).also { update(it) }
+            achievement
         }
     }
 
     override fun initAchievement(player: Player, achievementId: Int) {
-        val id = "${player.uuid}$achievementId"
-
-        val stats = PlayerAchievementDto(id, player.uuid.toString(), achievementId, 0)
-        IAchievementStore.achievementScope.launch {
-            val result = repository.getById(player.uuid.toString())
-            if (result == null) {
-                update(stats)
-                return@launch
-            } else player.hgPlayer!!.achievements = listOf(result)
+        achievementScope.launch {
+            val achievement = get(player, achievementId).await()
+            player.hgPlayer!!.achievements = listOf(achievement)
         }
     }
-
 }

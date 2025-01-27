@@ -43,13 +43,15 @@ dependencies {
     modImplementation("net.silkmc:silk-network:$silkVersion")
     modImplementation("net.silkmc:silk-game:$silkVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
-    transitiveInclude(implementation(platform("org.dizitart:nitrite-bom:4.2.2"))!!)
-    transitiveInclude(implementation ("org.dizitart:potassium-nitrite")!!)
-    transitiveInclude(implementation ("org.dizitart:nitrite-mvstore-adapter")!!)
 
     modCompileOnly("eu.cloudnetservice.cloudnet:driver:$cloudNetVersion")
     modCompileOnly("eu.cloudnetservice.cloudnet:bridge:$cloudNetVersion")
     modCompileOnly("eu.cloudnetservice.cloudnet:wrapper-jvm:$cloudNetVersion")
+
+    transitiveInclude(implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.2.0")!!)
+    transitiveInclude(implementation("org.mongodb:bson-kotlinx:5.2.0")!!)
+    transitiveInclude(implementation("org.mongodb:mongodb-driver-core:5.2.0")!!)
+    modCompileOnly("net.luckperms:api:5.4")
 
     transitiveInclude.resolvedConfiguration.resolvedArtifacts.forEach {
         include(it.moduleVersion.id.toString())

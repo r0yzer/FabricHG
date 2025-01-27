@@ -6,6 +6,7 @@ import de.royzer.fabrichg.events.PlayerDeath
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.kit.achievements.AchievementManager
 import de.royzer.fabrichg.kit.kits
+import de.royzer.fabrichg.mongodb.MongoManager
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.stats.Stats
 import kotlinx.coroutines.CoroutineScope
@@ -16,6 +17,7 @@ import net.minecraft.core.BlockPos
 import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.GameRules
+import net.silkmc.silk.core.logging.logger
 
 //val String.hgId get() = Identifier("fabrichg", this)
 
@@ -32,11 +34,18 @@ const val TEXT_GREEN = 0x33FF33
 const val TEXT_YELLOW_CHAT = 0xFFFF55
 
 fun initServer() {
-
-
     registerCommands()
     ConnectEvents
     PlayerDeath
+
+    runCatching {
+        MongoManager.connect()
+    }.onFailure {
+        logger().warn("Failed to establish mongodb connection")
+        it.printStackTrace()
+    }.onSuccess {
+        logger().warn("Successfully established mongodb connection")
+    }
 
     ServerLifecycleEvents.SERVER_STARTING.register {
         GamePhaseManager.server = it as DedicatedServer

@@ -1,17 +1,22 @@
 package de.royzer.fabrichg.stats
 
+import de.royzer.fabrichg.serialization.UUIDSerializer
 import kotlinx.coroutines.Deferred
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.world.entity.player.Player
-import org.dizitart.no2.repository.Cursor
-import org.dizitart.no2.repository.annotations.Id
 import java.util.*
 
 @Serializable
-data class Stats(@Id val uuid: String, val kills: Int = 0, val deaths: Int = 0, val wins: Int = 0) {
+data class Stats(
+    @SerialName("_id") @Serializable(with = UUIDSerializer::class) val uuid: UUID,
+    val kills: Int = 0,
+    val deaths: Int = 0,
+    val wins: Int = 0,
+) {
     val score: Int get() = (kills * 3) + (wins * 15) - (deaths * 2)
 
-    companion object: StatsStore {
+    companion object : StatsStore {
         private lateinit var store: StatsStore
 
         override fun init(): StatsStore {

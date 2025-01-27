@@ -23,7 +23,7 @@ object MemoryAchievementStore : IAchievementStore {
         val id = PlayerAchievementDto.id(player.uuid, achievementId)
 
         return statsScope.async {
-            achievementsMap.computeIfAbsent(id) { PlayerAchievementDto(id, player.uuid.toString(), achievementId, 0) }
+            achievementsMap.computeIfAbsent(id) { PlayerAchievementDto(id, player.uuid, achievementId, 0) }
         }
     }
 
@@ -33,13 +33,13 @@ object MemoryAchievementStore : IAchievementStore {
     ): PlayerAchievementDto {
         val id = PlayerAchievementDto.id(player.uuid, achievementId)
 
-        return achievementsMap.computeIfAbsent(id) { PlayerAchievementDto(id, player.uuid.toString(), achievementId, 0) }
+        return achievementsMap.computeIfAbsent(id) { PlayerAchievementDto(id, player.uuid, achievementId, 0) }
     }
 
     override fun initAchievement(player: Player, achievementId: Int) {
         val id = PlayerAchievementDto.id(player.uuid, achievementId)
 
-        achievementsMap.computeIfAbsent(id) { PlayerAchievementDto(id, player.uuid.toString(), achievementId, 0) }
+        achievementsMap.computeIfAbsent(id) { PlayerAchievementDto(id, player.uuid, achievementId, 0) }
     }
 
 }

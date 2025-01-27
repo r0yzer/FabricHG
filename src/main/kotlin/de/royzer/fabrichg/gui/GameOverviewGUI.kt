@@ -7,7 +7,7 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.PlayerList
 import de.royzer.fabrichg.game.teams.hgTeam
 import de.royzer.fabrichg.game.teams.isInTeam
-import de.royzer.fabrichg.util.isOP
+import de.royzer.fabrichg.util.luckperms.hasPermission
 import net.minecraft.network.chat.Component
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.server.level.ServerPlayer
@@ -22,7 +22,7 @@ import net.silkmc.silk.igui.observable.toGuiList
 
 fun gameOverviewGUI(serverPlayer: ServerPlayer): Gui {
     return igui(GuiType.NINE_BY_FIVE, "Game overview".literal, 1) {
-        val permitted = serverPlayer.isOP() || serverPlayer.hgPlayer.status == HGPlayerStatus.SPECTATOR
+        val permitted = serverPlayer.hasPermission("gamesettings") || serverPlayer.hgPlayer.status == HGPlayerStatus.SPECTATOR
         page(1) {
             placeholder(Slots.Border, Items.GRAY_STAINED_GLASS_PANE.guiIcon)
 
