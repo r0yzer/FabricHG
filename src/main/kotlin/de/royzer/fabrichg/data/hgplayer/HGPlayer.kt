@@ -56,7 +56,7 @@ class HGPlayer(
 
             return allKits
         }
-    var stats: Stats = Stats(uuid.toString())
+    var stats: Stats = Stats(uuid)
         set(value) {
             field = value
             Stats.update(value)

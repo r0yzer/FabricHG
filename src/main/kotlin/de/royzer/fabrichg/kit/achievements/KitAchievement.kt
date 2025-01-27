@@ -3,11 +3,13 @@ package de.royzer.fabrichg.kit.achievements
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.kit.Kit
+import de.royzer.fabrichg.serialization.UUIDSerializer
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import it.unimi.dsi.fastutil.ints.IntArrayList
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.core.component.DataComponents
 import net.minecraft.sounds.SoundEvents
@@ -19,9 +21,7 @@ import net.minecraft.world.item.component.FireworkExplosion
 import net.minecraft.world.item.component.Fireworks
 import net.silkmc.silk.core.item.itemStack
 import net.silkmc.silk.core.text.literalText
-import org.dizitart.no2.repository.annotations.Id
-import java.util.UUID
-import kotlin.random.Random
+import java.util.*
 
 data class KitAchievementState(
     val player: Player,
@@ -144,8 +144,7 @@ abstract class KitAchievement {
 
         val newState = state.state + amount
 
-        val newDto = PlayerAchievementDto(PlayerAchievementDto.id(player.uuid, id),
-            player.stringUUID, id, newState)
+        val newDto = PlayerAchievementDto(PlayerAchievementDto.id(player.uuid, id), player.uuid, id, newState)
 
         val newLevel = getLevel(newState)
 
@@ -157,7 +156,14 @@ abstract class KitAchievement {
 }
 
 @Serializable
-data class PlayerAchievementDto(@Id val playerAchievementId: String, val playerId: String, val achievementId: Int, val status: Int) {
+data class PlayerAchievementDto(
+    @SerialName("_id")
+    val playerAchievementId: String,
+    @Serializable(with = UUIDSerializer::class)
+    val playerId: UUID,
+    val achievementId: Int,
+    val status: Int
+) {
     val id: String get() = "$playerId$achievementId"
 
     companion object {

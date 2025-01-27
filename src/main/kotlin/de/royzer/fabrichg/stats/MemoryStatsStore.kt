@@ -4,7 +4,6 @@ import de.royzer.fabrichg.stats.StatsStore.Companion.statsScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import net.minecraft.world.entity.player.Player
-import org.dizitart.no2.repository.Cursor
 import java.util.*
 
 class MemoryStatsStore: StatsStore {
@@ -14,7 +13,7 @@ class MemoryStatsStore: StatsStore {
     }
 
     override fun update(stats: Stats) {
-        statsMap[UUID.fromString(stats.uuid)] = stats
+        statsMap[stats.uuid] = stats
     }
 
     override fun get(player: Player): Deferred<Stats> {
@@ -23,7 +22,7 @@ class MemoryStatsStore: StatsStore {
 
     override fun get(uuid: UUID): Deferred<Stats> {
         return statsScope.async {
-            statsMap.computeIfAbsent(uuid) { Stats(uuid.toString()) }
+            statsMap.computeIfAbsent(uuid) { Stats(uuid) }
         }
     }
 
@@ -34,6 +33,6 @@ class MemoryStatsStore: StatsStore {
     }
 
     override fun initPlayer(player: Player) {
-        statsMap.computeIfAbsent(player.uuid) { Stats(player.uuid.toString()) }
+        statsMap.computeIfAbsent(player.uuid) { Stats(player.uuid) }
     }
 }
