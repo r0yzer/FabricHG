@@ -1,6 +1,6 @@
 package de.royzer.fabrichg.commands
 
-import de.royzer.fabrichg.util.isOP
+import de.royzer.fabrichg.util.luckperms.hasPermission
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import net.minecraft.commands.arguments.EntityArgument
@@ -26,7 +26,7 @@ val invCommand = command("inv") {
     argument("player", EntityArgument.player()) { player ->
         runs {
             val sourcePlayer = source.player ?: return@runs
-            val serverPlayer = if (sourcePlayer.isOP()) player().findPlayers(source).first() else sourcePlayer
+            val serverPlayer = if (sourcePlayer.hasPermission("invsee")) player().findPlayers(source).first() else sourcePlayer
 
             val gui = igui(GuiType.NINE_BY_FOUR, "${serverPlayer.name.string}s inv".literal, 1) {
                 page(1) { }
