@@ -51,6 +51,11 @@ dependencies {
     modCompileOnly("eu.cloudnetservice.cloudnet:bridge:$cloudNetVersion")
     modCompileOnly("eu.cloudnetservice.cloudnet:wrapper-jvm:$cloudNetVersion")
 
+    transitiveInclude(implementation("org.mongodb:mongodb-driver-kotlin-coroutine:5.2.0")!!)
+    transitiveInclude(implementation("org.mongodb:bson-kotlinx:5.2.0")!!)
+    transitiveInclude(implementation("org.mongodb:mongodb-driver-core:5.2.0")!!)
+    modCompileOnly("net.luckperms:api:5.4")
+
     transitiveInclude.resolvedConfiguration.resolvedArtifacts.forEach {
         include(it.moduleVersion.id.toString())
     }
