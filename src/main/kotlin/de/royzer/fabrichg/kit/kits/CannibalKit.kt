@@ -14,7 +14,7 @@ val cannibalKit = kit("Cannibal") {
     description = "Give your enemies hunger when attacking them"
 
     val hungerDuration by property(30, "hunger duration")
-    val hungerAmplifier by property(1, "hunger amplifier")
+    val hungerAmplifier by property(0, "hunger amplifier")
 
     kitEvents {
         onHitPlayer { _, _, target ->
