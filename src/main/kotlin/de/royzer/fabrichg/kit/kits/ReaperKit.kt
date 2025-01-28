@@ -47,7 +47,6 @@ val reaperKit = kit("Reaper") {
     cooldown = 12.5
 
     maxUses = 3
-    alternativeMaxUses = 2
 
     val explosion by property(1.25f, "explosion grösse")
     val velocity by property(3.0f, "velocity")
@@ -63,7 +62,7 @@ val reaperKit = kit("Reaper") {
 
             entity.addEffect(MobEffectInstance(MobEffects.WITHER, 20 * witherDuration, witherLevel))
 
-            hgPlayer.checkUsesForCooldown(kit, alternativeMaxUses!!)
+            hgPlayer.checkUsesForCooldown(kit, maxUses!!)
         }
 
         onClick { hgPlayer, kit ->
