@@ -67,8 +67,8 @@ val diggerKit = kit("Digger") {
                             val x = _x - size / 2
                             val z = _z - size / 2
                             val pos = blockPos.subtract(Vec3i(x, _y, z))
-                            if (world.getBlockState(pos).block != Blocks.BEDROCK && world.getBlockState(pos).block != Blocks.AIR) {
-                                world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState())
+                            if (world.getBlockState(pos).block != Blocks.BEDROCK) {
+                                world.destroyBlock(pos, false)
                                 blocksReplacedAchievement.award(player, 1)
                             }
                         }

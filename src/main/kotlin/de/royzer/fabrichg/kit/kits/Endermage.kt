@@ -64,13 +64,13 @@ val endermageKit = kit("Endermage") {
                             level as ServerLevel, centerPos.x,
                             centerPos.y + 1, centerPos.z, 180f, 0f
                         )
-                        it.invulnerableTime = 2 * 20
+                        it.invulnerableTime = 4 * 20
                     }
                     serverPlayer.teleportTo(
                         level as ServerLevel, centerPos.x,
                         centerPos.y + 1, centerPos.z, 180f, 0f
                     )
-                    serverPlayer.invulnerableTime = 5 * 20
+                    serverPlayer.invulnerableTime = 4 * 20
                     serverPlayer.sendSystemMessage(literalText {
                         text("Du hast ")
                         text("${nearbyPlayers.size}") { color = TEXT_BLUE }

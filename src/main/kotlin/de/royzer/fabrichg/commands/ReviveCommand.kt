@@ -8,6 +8,8 @@ import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.game.broadcastComponent
 import de.royzer.fabrichg.game.phase.PhaseType
+import de.royzer.fabrichg.kit.kits.noneKit
+import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.toVec3
@@ -80,6 +82,11 @@ fun HGPlayer.revive(executor: ServerPlayer? = null, gambler: Boolean = false) {
     serverPlayer.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
     serverPlayer.inventory.clearContent()
     serverPlayer.inventory.add(tracker)
+    if (hgPlayer.kits.all { it == noneKit }) {
+        repeat(hgPlayer.kits.size) {
+            hgPlayer.kits[it] = randomKit()
+        }
+    }
     hgPlayer.kitsDisabled = false
     hgPlayer.kits.forEach {
         it.onEnable?.invoke(hgPlayer, it, serverPlayer)

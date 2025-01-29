@@ -45,7 +45,6 @@ class Kit(val name: String) {
 
         }
     var maxUses: Int? = null
-    var alternativeMaxUses: Int? = null
     var usableInInvincibility = true
     var onDisable: ((HGPlayer, Kit) -> Unit)? = null
     var onEnable: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null
@@ -64,17 +63,13 @@ class Kit(val name: String) {
         val uses = player.getPlayerData<Int>(key) ?: 1
 
         val remainingUses = (maxUses ?: -10) - uses + 1
-        val alternativeRemainingUses = (alternativeMaxUses ?: -10) - uses + 1
 
         if (player.cooldown(this) > 0.0) return null
-        if (remainingUses <= 0 && alternativeRemainingUses <= 0) return null
+        if (remainingUses <= 0) return null
 
         return literalText {
             text("$name remaining uses: ") { color = TEXT_GRAY }
-
-            if (remainingUses >= 0) text(remainingUses.toString()) { color = TEXT_BLUE }
-            if (remainingUses >= 0 && alternativeRemainingUses >= 0) text("/") { color = TEXT_GRAY }
-            if (alternativeRemainingUses >= 0) text(alternativeRemainingUses.toString()) { color = TEXT_BLUE }
+            text(remainingUses.toString()) { color = TEXT_BLUE }
         }
     }
 

@@ -14,12 +14,13 @@ val snailKit = kit("Snail") {
     usableInInvincibility = false
     description = "Give your enemies slowness when attacking them"
 
-    val maxInt by property(4, "max int (0 = always slow)")
+    val maxInt by property(4, "chance 1 over this)")
+    val slownessAmplifier by property(0, "slowness amplifier")
 
     kitEvents {
         onHitPlayer { _, _, target ->
             if (!target.hgPlayer.isNeo && Random.nextInt(maxInt) == 0)
-                target.addEffect(MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, 1))
+                target.addEffect(MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 25, slownessAmplifier))
         }
     }
 }

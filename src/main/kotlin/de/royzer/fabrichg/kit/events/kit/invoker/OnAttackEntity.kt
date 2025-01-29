@@ -29,7 +29,7 @@ fun onAttackEntity(target: Entity, entity: LivingEntity, ci: CallbackInfo) {
         kit.kitItems.forEach { kitItem ->
             if (kitItem.itemStack.item == item.item || offhandItem.item == kitItem.itemStack.item) {
                 kitItem.invokeKitItemAction(attacker, kit) {
-                    kitItem.hitEntityAction?.invoke(attacker, kit, entity)
+                    kitItem.hitEntityAction?.invoke(attacker, kit, target)
                 }
                 if (target is ServerPlayer) {
                     kitItem.invokeKitItemAction(attacker, kit) {

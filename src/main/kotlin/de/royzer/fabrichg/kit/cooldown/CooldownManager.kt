@@ -65,3 +65,20 @@ fun HGPlayer.sendCooldown(kit: Kit) {
         color = TEXT_GRAY
     })
 }
+
+/**
+ * @return true if cooldown was applied
+ * @param additionalUsedUses kp muss 0 default sein aber bei gravity halt gucken wenn was mehr uses kosten soll
+ */
+fun HGPlayer.checkUsesForCooldown(kit: Kit, maxUses: Int, additionalUsedUses: Int = 0): Boolean {
+    val key = kit.name + "uses"
+    val uses = this.getPlayerData<Int>(key) ?: 1
+    return if (uses + additionalUsedUses >= maxUses) {
+        this.activateCooldown(kit)
+        this.playerData.remove(key)
+        true
+    } else {
+        this.playerData[key] = uses + additionalUsedUses + 1
+        false
+    }
+}
