@@ -1,5 +1,6 @@
 package de.royzer.fabrichg.stats
 
+import de.royzer.fabrichg.mongodb.MongoManager
 import de.royzer.fabrichg.serialization.UUIDSerializer
 import kotlinx.coroutines.Deferred
 import kotlinx.serialization.SerialName
@@ -20,11 +21,13 @@ data class Stats(
         private lateinit var store: StatsStore
 
         override fun init(): StatsStore {
-            runCatching {
-                store = DatabaseStatsStore().init()
-            }.onFailure {
-                store = MemoryStatsStore().init()
+            if (MongoManager.isConnected) {
+                runCatching {
+                    store = DatabaseStatsStore().init()
+                    return this
+                }
             }
+            store = MemoryStatsStore().init()
             return this
         }
 

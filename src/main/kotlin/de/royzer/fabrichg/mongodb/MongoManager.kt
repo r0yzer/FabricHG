@@ -6,19 +6,26 @@ import com.mongodb.ServerAddress
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
 import net.fabricmc.loader.api.FabricLoader
 import net.silkmc.silk.core.logging.logger
 import org.bson.UuidRepresentation
+import java.util.concurrent.TimeUnit
 
 object MongoManager {
     lateinit var client: MongoClient
     lateinit var database: MongoDatabase
+    var isConnected: Boolean = false
 
-    fun connect() {
+    suspend fun connect(): MongoDatabase {
         client = if (FabricLoader.getInstance().isDevelopmentEnvironment) {
-            MongoClient.create(MongoClientSettings.builder().uuidRepresentation(UuidRepresentation.STANDARD).build())
+            MongoClient.create(
+                MongoClientSettings.builder()
+                    .timeout(2, TimeUnit.SECONDS)
+                    .uuidRepresentation(UuidRepresentation.STANDARD)
+                    .build()
+            )
         } else {
             MongoClient.create(
                 MongoClientSettings.builder()
@@ -42,10 +49,12 @@ object MongoManager {
             )
         }
         database = client.getDatabase("hg")
+        isConnected = true
+        return database
     }
 
     inline fun <reified T : Any> getOrCreateCollection(
-        collectionName: String
+        collectionName: String,
     ): MongoCollection<T> {
         runBlocking {
             if (collectionName !in database.listCollectionNames().toList()) {

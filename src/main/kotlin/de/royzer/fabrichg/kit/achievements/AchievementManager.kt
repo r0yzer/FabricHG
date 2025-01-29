@@ -1,16 +1,22 @@
 package de.royzer.fabrichg.kit.achievements
 
+import de.royzer.fabrichg.mongodb.MongoManager
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import net.minecraft.world.entity.player.Player
 
 object AchievementManager : IAchievementStore {
+    private lateinit var store: IAchievementStore
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun init(): IAchievementStore {
-        MemoryAchievementStore.init()
-        DatabaseAchievementStore.init()
-
+        if (MongoManager.isConnected) {
+            runCatching {
+                store = DatabaseAchievementStore.init()
+            }
+        }
+        store = MemoryAchievementStore.init()
         val all = DatabaseAchievementStore.getAll()
 
         IAchievementStore.achievementScope.launch {
@@ -40,7 +46,7 @@ object AchievementManager : IAchievementStore {
     }
 
     fun copyMemoryToDb() {
-        MemoryAchievementStore.achievementsMap.forEach { (key, achievement) ->
+        MemoryAchievementStore.achievementsMap.forEach { (_, achievement) ->
             DatabaseAchievementStore.update(achievement)
         }
     }
