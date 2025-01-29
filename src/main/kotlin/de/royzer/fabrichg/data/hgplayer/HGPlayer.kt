@@ -16,10 +16,12 @@ import de.royzer.fabrichg.kit.forbiddenKitCombinations
 import de.royzer.fabrichg.kit.kits.*
 import de.royzer.fabrichg.kit.randomKit
 import de.royzer.fabrichg.mixins.world.CombatTrackerAcessor
+import de.royzer.fabrichg.mongodb.mongoScope
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.stats.Stats
 import de.royzer.fabrichg.util.forceGiveItem
 import de.royzer.fabrichg.util.kitSelector
+import kotlinx.coroutines.launch
 import net.minecraft.core.Holder
 import net.minecraft.core.component.DataComponents
 import net.minecraft.network.chat.Component
@@ -59,7 +61,9 @@ class HGPlayer(
     var stats: Stats = Stats(uuid)
         set(value) {
             field = value
-            Stats.update(value)
+            mongoScope.launch {
+                Stats.update(value)
+            }
         }
 
     var achievements: List<PlayerAchievementDto> = listOf()

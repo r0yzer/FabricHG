@@ -3,8 +3,6 @@ package de.royzer.fabrichg.commands
 import com.mojang.brigadier.context.CommandContext
 import de.royzer.fabrichg.*
 import de.royzer.fabrichg.stats.Stats
-import de.royzer.fabrichg.util.round
-import de.royzer.fabrichg.util.toStringWithoutTrailing0s
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.network.chat.MutableComponent
@@ -71,18 +69,10 @@ val statsCommand = command("stats") {
 
 
     runsAsync {
-        val playerResult = Stats.get(source.playerOrException)
-        val allResults = Stats.getAll()
-
         try {
-            playerResult.await()
-            allResults.await()
-
-            val completedPlayerStats = playerResult.getCompleted()
-            val completedAllStats = allResults.getCompleted()
-
-            val statsMessage = getStatsMessage(source.playerOrException.name.string, completedPlayerStats, completedAllStats)
-
+            val playerStats = Stats.get(source.playerOrException)
+            val allStats = Stats.getAll()
+            val statsMessage = getStatsMessage(source.playerOrException.name.string, playerStats, allStats)
             source.playerOrException.sendSystemMessage(statsMessage)
         } catch (e: Exception) {
             println("stats command fehler: $e")
@@ -110,19 +100,10 @@ val statsCommand = command("stats") {
             }
 
             val cachedGameProfile = server.profileCache?.get(name)!!.get()
-
-            val playerResult = Stats.get(cachedGameProfile.id)
-            val allResults = Stats.getAll()
-
             try {
-                playerResult.await()
-                allResults.await()
-
-                val completedPlayerStats = playerResult.getCompleted()
-                val completedAllStats = allResults.getCompleted()
-
-                val statsMessage = getStatsMessage(cachedGameProfile.name, completedPlayerStats, completedAllStats)
-
+                val playerStats = Stats.get(cachedGameProfile.id)
+                val allStats = Stats.getAll()
+                val statsMessage = getStatsMessage(cachedGameProfile.name, playerStats, allStats)
                 source.playerOrException.sendSystemMessage(statsMessage)
             } catch (e: Exception) {
                 println("stats command fehler: $e")

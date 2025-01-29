@@ -17,10 +17,12 @@ import de.royzer.fabrichg.game.teams.hgTeam
 import de.royzer.fabrichg.game.teams.teams
 import de.royzer.fabrichg.gulag.GulagManager
 import de.royzer.fabrichg.kit.achievements.AchievementManager
+import de.royzer.fabrichg.mongodb.mongoScope
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.util.getRandomHighestPos
 import de.royzer.fabrichg.util.lerp
 import de.royzer.fabrichg.util.recraft
+import kotlinx.coroutines.launch
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.HoverEvent
 import net.minecraft.sounds.SoundEvents
@@ -104,7 +106,9 @@ object IngamePhase : GamePhase() {
     val maxPlayers by lazy { PlayerList.alivePlayers.size }
 
     override fun init() {
-        AchievementManager.copyMemoryToDb()
+        mongoScope.launch {
+            AchievementManager.copyMemoryToDb()
+        }
 
         GamePhaseManager.server.motd = "${GamePhaseManager.MOTD_STRING}\nCURRENT GAME PHASE: \u00A7eINGAME"
         logInfo("IngamePhase startet")

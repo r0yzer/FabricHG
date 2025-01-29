@@ -1,51 +1,40 @@
 package de.royzer.fabrichg.kit.achievements
 
 import de.royzer.fabrichg.mongodb.MongoManager
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.launch
 import net.minecraft.world.entity.player.Player
 
 object AchievementManager : IAchievementStore {
-    private lateinit var store: IAchievementStore
+    override suspend fun init(): IAchievementStore {
+        MemoryAchievementStore.init()
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun init(): IAchievementStore {
         if (MongoManager.isConnected) {
             runCatching {
-                store = DatabaseAchievementStore.init()
+                DatabaseAchievementStore.init()
+                DatabaseAchievementStore.getAll().forEach { achievement ->
+                    MemoryAchievementStore.update(achievement)
+                }
             }
         }
-        store = MemoryAchievementStore.init()
-        val all = DatabaseAchievementStore.getAll()
-
-        IAchievementStore.achievementScope.launch {
-            all.join()
-
-            all.getCompleted().forEach { achievement ->
-                MemoryAchievementStore.update(achievement)
-            }
-        }
-
         return this
     }
 
-    override fun update(achievements: PlayerAchievementDto) {
+    override suspend fun update(achievements: PlayerAchievementDto) {
         MemoryAchievementStore.update(achievements)
     }
 
-    override fun get(
+    override suspend fun get(
         player: Player,
-        achievementId: Int
-    ): Deferred<PlayerAchievementDto> {
+        achievementId: Int,
+    ): PlayerAchievementDto {
         return MemoryAchievementStore.get(player, achievementId)
     }
 
-    override fun initAchievement(player: Player, achievementId: Int) {
+    override suspend fun initAchievement(player: Player, achievementId: Int) {
         MemoryAchievementStore.initAchievement(player, achievementId)
     }
 
-    fun copyMemoryToDb() {
+    suspend fun copyMemoryToDb() {
+        if (!MongoManager.isConnected) return
         MemoryAchievementStore.achievementsMap.forEach { (_, achievement) ->
             DatabaseAchievementStore.update(achievement)
         }

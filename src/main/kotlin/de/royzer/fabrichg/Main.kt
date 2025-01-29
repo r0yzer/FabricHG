@@ -7,6 +7,7 @@ import de.royzer.fabrichg.game.GamePhaseManager
 import de.royzer.fabrichg.kit.achievements.AchievementManager
 import de.royzer.fabrichg.kit.kits
 import de.royzer.fabrichg.mongodb.MongoManager
+import de.royzer.fabrichg.mongodb.mongoScope
 import de.royzer.fabrichg.settings.ConfigManager
 import de.royzer.fabrichg.stats.Stats
 import kotlinx.coroutines.CoroutineScope
@@ -19,6 +20,7 @@ import net.minecraft.server.dedicated.DedicatedServer
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.level.GameRules
 import net.silkmc.silk.core.logging.logger
+import net.silkmc.silk.core.task.mcCoroutineTask
 
 //val String.hgId get() = Identifier("fabrichg", this)
 
@@ -39,7 +41,7 @@ fun initServer() {
     ConnectEvents
     PlayerDeath
 
-    CoroutineScope(Dispatchers.IO).launch {
+    mongoScope.launch {
         runCatching {
             MongoManager.connect()
         }.onFailure {
@@ -53,8 +55,10 @@ fun initServer() {
 
     ServerLifecycleEvents.SERVER_STARTING.register {
         GamePhaseManager.server = it as DedicatedServer
-        Stats.init()
-        AchievementManager.init()
+        mongoScope.launch {
+            Stats.init()
+            AchievementManager.init()
+        }
         kits
         ConfigManager
     }

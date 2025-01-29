@@ -10,8 +10,8 @@ interface IAchievementStore {
         val achievementScope = CoroutineScope(Dispatchers.IO)
     }
 
-    fun init(): IAchievementStore
-    fun update(achievements: PlayerAchievementDto)
-    fun get(player: Player, achievementId: Int): Deferred<PlayerAchievementDto>
-    fun initAchievement(player: Player, achievementId: Int)
+    suspend fun init(): IAchievementStore
+    suspend fun update(achievements: PlayerAchievementDto)
+    suspend fun get(player: Player, achievementId: Int): PlayerAchievementDto
+    suspend fun initAchievement(player: Player, achievementId: Int)
 }

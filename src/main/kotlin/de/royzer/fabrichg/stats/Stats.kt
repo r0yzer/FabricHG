@@ -2,7 +2,6 @@ package de.royzer.fabrichg.stats
 
 import de.royzer.fabrichg.mongodb.MongoManager
 import de.royzer.fabrichg.serialization.UUIDSerializer
-import kotlinx.coroutines.Deferred
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.world.entity.player.Player
@@ -20,7 +19,7 @@ data class Stats(
     companion object : StatsStore {
         private lateinit var store: StatsStore
 
-        override fun init(): StatsStore {
+        override suspend fun init(): StatsStore {
             if (MongoManager.isConnected) {
                 runCatching {
                     store = DatabaseStatsStore().init()
@@ -31,23 +30,23 @@ data class Stats(
             return this
         }
 
-        override fun update(stats: Stats) {
+        override suspend fun update(stats: Stats) {
             store.update(stats)
         }
 
-        override fun get(player: Player): Deferred<Stats> {
+        override suspend fun get(player: Player): Stats {
             return store.get(player)
         }
 
-        override fun get(uuid: UUID): Deferred<Stats> {
+        override suspend fun get(uuid: UUID): Stats {
             return store.get(uuid)
         }
 
-        override fun getAll(): Deferred<Iterable<Stats>> {
+        override suspend fun getAll(): Iterable<Stats> {
             return store.getAll()
         }
 
-        override fun initPlayer(player: Player) {
+        override suspend fun initPlayer(player: Player) {
             store.initPlayer(player)
         }
     }

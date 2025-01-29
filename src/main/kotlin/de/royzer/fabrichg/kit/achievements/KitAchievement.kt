@@ -3,12 +3,12 @@ package de.royzer.fabrichg.kit.achievements
 import de.royzer.fabrichg.TEXT_BLUE
 import de.royzer.fabrichg.TEXT_GRAY
 import de.royzer.fabrichg.kit.Kit
+import de.royzer.fabrichg.mongodb.mongoScope
 import de.royzer.fabrichg.serialization.UUIDSerializer
 import de.royzer.fabrichg.server
 import de.royzer.fabrichg.settings.ConfigManager
 import it.unimi.dsi.fastutil.ints.IntArrayList
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.minecraft.core.component.DataComponents
@@ -51,21 +51,17 @@ abstract class KitAchievement {
         return currentLevel
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun getState(player: Player): KitAchievementState {
-        val deferredDto = AchievementManager.get(player, id)
-        deferredDto.await()
-        val dto = deferredDto.getCompleted()
+        val achievement = AchievementManager.get(player, id)
 
         return KitAchievementState(
             player,
             this,
-            getLevel(dto.status),
-            dto.status
+            getLevel(achievement.status),
+            achievement.status
         )
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
     fun getMemoryState(player: Player): KitAchievementState {
         val dto = MemoryAchievementStore.getInstant(player, id)
 
@@ -134,7 +130,8 @@ abstract class KitAchievement {
         server.overworld().addFreshEntity(fireworkRocketEntity);
     }
 
-    fun awardLater(player: Player, amount: Int = 1) = IAchievementStore.achievementScope.async { award(player, amount) }
+    fun awardLater(player: Player, amount: Int = 1) = mongoScope.launch { award(player, amount) }
+
     suspend fun award(player: Player, amount: Int = 1) {
         if (!ConfigManager.gameSettings.achievementsEnabled) return
 

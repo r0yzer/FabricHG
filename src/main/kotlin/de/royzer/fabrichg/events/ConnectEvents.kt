@@ -34,7 +34,6 @@ import net.silkmc.silk.core.task.mcCoroutineScope
 import net.silkmc.silk.core.task.mcCoroutineTask
 import net.silkmc.silk.core.text.literalText
 import net.silkmc.silk.core.text.sendText
-import kotlin.time.Duration.Companion.seconds
 
 object ConnectEvents {
     init {
@@ -62,18 +61,14 @@ object ConnectEvents {
                 delay(200)
                 player.showScoreboard()
             }
-            Stats.initPlayer(player)
             player.attributes.getInstance(Attributes.ATTACK_SPEED)?.baseValue = 550.0
 
             hgPlayer.fillKits()
 
             mcCoroutineTask(sync = false) {
-                val playerResult = Stats.get(player)
-                val allResults = Stats.getAll()
+                Stats.initPlayer(player)
                 try {
-                    playerResult.await()
-                    allResults.await()
-                    val stats = playerResult.getCompleted()
+                    val stats = Stats.get(player)
                     if (stats.kills < 20 || (stats.kills / stats.deaths) < 0.3) {
                         hgPlayer.isBeginner = true
                     }

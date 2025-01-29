@@ -13,6 +13,8 @@ import net.silkmc.silk.core.logging.logger
 import org.bson.UuidRepresentation
 import java.util.concurrent.TimeUnit
 
+val mongoScope = CoroutineScope(Dispatchers.IO) + SupervisorJob()
+
 object MongoManager {
     lateinit var client: MongoClient
     lateinit var database: MongoDatabase
