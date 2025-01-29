@@ -69,7 +69,7 @@ object ConnectEvents {
                 Stats.initPlayer(player)
                 try {
                     val stats = Stats.get(player)
-                    if (stats.kills < 20 || (stats.kills / stats.deaths) < 0.3) {
+                    if (stats.kills < 20 || (stats.kills / stats.deaths.coerceAtLeast(1)) < 0.3) {
                         hgPlayer.isBeginner = true
                     }
                 } catch (e: Exception) {

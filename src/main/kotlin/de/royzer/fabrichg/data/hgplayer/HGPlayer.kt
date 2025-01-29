@@ -189,8 +189,8 @@ class HGPlayer(
                     color = TEXT_GRAY
                     bold = true
                 }
+                return
             }
-            return
         }
         val kitBefore = this.kits[index]
         this.kits[index] = kit
