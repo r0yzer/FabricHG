@@ -2,6 +2,7 @@ package de.royzer.fabrichg.kit.events.kit
 
 import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.Kit
+import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
@@ -106,5 +107,9 @@ class KitEventsBuilder(val kit: Kit) {
 
     fun afterDamagePlayer(action: (HGPlayer, Kit, ServerPlayer) -> Unit) {
         kit.events.afterDamagePlayerAction = action
+    }
+
+    fun destroyBlockAction(action: (HGPlayer, Kit, BlockPos) -> Unit) {
+        kit.events.destroyBlockAction = action
     }
 }

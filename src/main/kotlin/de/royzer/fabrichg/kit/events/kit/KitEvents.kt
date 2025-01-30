@@ -4,6 +4,7 @@ import de.royzer.fabrichg.data.hgplayer.HGPlayer
 import de.royzer.fabrichg.kit.Kit
 import de.royzer.fabrichg.kit.cooldown.hasCooldown
 import de.royzer.fabrichg.kit.cooldown.sendCooldown
+import net.minecraft.core.BlockPos
 import net.minecraft.server.level.ServerPlayer
 import net.minecraft.world.damagesource.DamageSource
 import net.minecraft.world.entity.Entity
@@ -35,6 +36,7 @@ class KitEvents(
     var attackedByPlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Boolean)? = null,
     var craftAction: ((HGPlayer, ItemStack, RecipeHolder<CraftingRecipe>, Kit) -> Unit)? = null,
     var afterDamagePlayerAction: ((HGPlayer, Kit, ServerPlayer) -> Unit)? = null,
+    var destroyBlockAction: ((HGPlayer, Kit, BlockPos) -> Unit)? = null,
 )
 
 fun HGPlayer.invokeKitAction(kit: Kit, sendCooldown: Boolean = true, ignoreCooldown: Boolean = false, action: () -> Unit) {
