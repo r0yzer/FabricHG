@@ -1,3 +1,5 @@
+package de.royzer.fabrichg.kit.kits
+
 import de.royzer.fabrichg.data.hgplayer.hgPlayer
 import de.royzer.fabrichg.kit.kit
 import de.royzer.fabrichg.kit.property.property
@@ -8,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
 import kotlin.random.Random
+
 
 val viperKit = kit("Viper") {
     kitSelectorItem = ItemStack(Items.SPIDER_EYE)

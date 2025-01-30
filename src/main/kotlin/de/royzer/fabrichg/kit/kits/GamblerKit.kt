@@ -580,5 +580,6 @@ private val busterMessages = listOf<String>(
     "Falls ihr während ich dusche im nebenzimmer seit und komische geräudche hört, ich wichse nicht ich ficke einfach die wand",
     "wenn bluefireoly ein 0kmh schild sieht weiss er sich nicht zu helfen als sich ein neues auto zu kaufen",
     "Junge bin immer so lange scheissen dass alles einschläft und ich nichtmehr laufen kann",
-    "Jvcv: blitzer app, schild weg, anal: nope"
+    "Jvcv: blitzer app, schild weg, anal: nope",
+    "Falls ihr während ich dusche im nebenzimmer seit und komische geräudche hört, ich wichse nicht ich ficke einfach die wand"
 )
