@@ -97,6 +97,7 @@ data class GameSettings @OptIn(ExperimentalSerializationApi::class) constructor(
         listOf(anchorKit.name, beerKit.name),
         listOf(banditKit.name, copycatKit.name), // sollte eigentlich gehen aber kp trotzdem dumm
         listOf(stomperKit.name, gravityKit.name),
+        listOf(berserkerKit.name, beeKit.name),
     ),
     @EncodeDefault
     var soupMode: SoupMode = SoupMode.EatAndDestroyBlock,
