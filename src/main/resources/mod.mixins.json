@@ -45,6 +45,7 @@
     "server.level.ChunkMapAccessor",
     "server.level.TrackedEntityAccessor",
     "server.level.block.MushroomBlockMixin",
+    "server.level.block.BlockMixin",
     "server.network.ServerGamePacketListenerMixin",
     "server.network.SynchedEntityDataAccessor",
     "world.MapColorAccessor",

@@ -13,11 +13,11 @@ import net.silkmc.silk.core.text.literalText
 
 val jokerKit = kit("Joker") {
     kitSelectorItem = Items.MUSIC_DISC_5.defaultInstance
-    cooldown = 45.0
+    cooldown = 70.0
 
     val shuffleDelay by property(7, "shuffle delay (in ticks)")
-    val shuffleTimes by property(7, "shuffle times")
-    val shufflesPerShuffle by property(7, "shuffles per shuffle")
+    val shuffleTimes by property(6, "shuffle times")
+    val shufflesPerShuffle by property(4, "shuffles per shuffle")
 
     val shuffleTimesAchievement by achievement("shuffle times") {
         level(500)

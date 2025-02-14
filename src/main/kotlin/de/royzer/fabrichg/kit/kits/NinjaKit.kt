@@ -45,7 +45,7 @@ val ninjaKit = kit("Ninja") {
 
         onHitPlayer { hgPlayer, kit, serverPlayer ->
             hgPlayer.playerData[lastHittedKey] = serverPlayer
-            mcCoroutineTask(delay = 15.seconds) {
+            mcCoroutineTask(delay = 20.seconds) {
                 if (hgPlayer.getPlayerData<ServerPlayer>(lastHittedKey) == serverPlayer) {
                     hgPlayer.playerData.remove(lastHittedKey)
                 }
