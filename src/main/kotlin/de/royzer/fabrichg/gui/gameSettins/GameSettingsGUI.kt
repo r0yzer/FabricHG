@@ -259,7 +259,10 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
                 }
             }.guiIcon, onClick = {
 
-                kits.filter { it != noneKit }.forEach { it.enabled = false }
+                kits.filter { it != noneKit }.forEach {
+                    it.enabled = false
+                    ConfigManager.updateKit(it.name)
+                }
 
                 serverPlayer.sendText {
                     text("All kits") {
@@ -283,10 +286,8 @@ suspend fun gameSettingsGUI(serverPlayer: ServerPlayer): Gui {
             }.guiIcon) {
                 ConfigManager.updateConfigFile()
                 it.player.sendText {
-                    literalText {
-                        text("Config saved") {
-                            color = TEXT_BLUE
-                        }
+                    text("Config saved") {
+                        color = TEXT_BLUE
                     }
                 }
             }

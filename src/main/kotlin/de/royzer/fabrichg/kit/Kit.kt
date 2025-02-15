@@ -29,6 +29,7 @@ class Kit(val name: String) {
             if (value) {
                 // wird enabled, nix sollte passieren
             } else {
+                if (!server.isReady) return
                 server.players.filter { it.hgPlayer.hasKit(this) }.forEach {
                     onDisable?.invoke(it.hgPlayer, this)
                     val index = it.hgPlayer.kits.indexOf(this)
